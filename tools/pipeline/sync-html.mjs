@@ -50,8 +50,14 @@ if (html.includes(BEGIN) && html.includes(END)) {
 
 writeFileSync(HTML, html)
 console.log(`geo ${geoFiles.length} 个 / data ${dataFiles.length} 个 → ${HTML}`)
-console.log('  缺底图的城市：')
+
+/*
+ * 缺底图的检查要跳过两类文件，否则每次跑都会报两条假警报：
+ *  - data_cities.js：这是 54 城聚合文件，不是城市 id，没有也不需要 geo_cities.js
+ *  - data_tutorial.js：教程城青湾是虚构地图，底图直接内联在自己的 data 里
+ */
+const AGGREGATE = new Set(['cities', 'tutorial'])
 const missing = dataFiles
   .map((f) => f.replace(/^data_/, '').replace(/\.js$/, ''))
-  .filter((id) => !geoFiles.includes(`geo_${id}.js`))
-console.log('  ' + (missing.length ? missing.join(', ') : '（无）'))
+  .filter((id) => !AGGREGATE.has(id) && !geoFiles.includes(`geo_${id}.js`))
+console.log('  缺底图的城市：' + (missing.length ? missing.join(', ') : '（无）'))
