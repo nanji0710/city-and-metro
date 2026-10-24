@@ -557,14 +557,25 @@ function camOf(b) {
     if (y < minY) minY = y
     if (y > maxY) maxY = y
   }
-  const span = Math.max(maxX - minX, maxY - minY, 2)
+  const spanX = Math.max(2, maxX - minX)
+  const spanY = Math.max(2, maxY - minY)
   /*
    * zoom 的语义（js/render.js）：世界坐标 × zoom = 屏幕像素。
-   * 所以「线网跨度 span 格要占屏幕约 55%」⇒ zoom = 视口宽 × 0.55 / span。
-   * 视口宽按 1200 px 估（1680 窗口减去两侧浮层）。
+   *
+   * 但默认视图是 2.5D 等轴投影，世界坐标不是直接映到屏幕的：
+   * ISO = [0.7071, -0.7071, 0.3536, 0.3536]，一个 w×h 的矩形在屏幕上变成
+   * 宽 (w+h)×0.7071×zoom、高 (w+h)×0.3536×zoom 的菱形。
+   * 所以按「线网格数跨度」算 zoom 是错的 —— 第一版就是这么写的，
+   * 南京 68×128 的图算出 zoom 7.1，开局整座城只占屏幕中间一小块菱形。
+   *
+   * 正确做法：让线网在屏幕上占约 85% 视口。视口按 1680×1050 估（减去两侧浮层后约 1428×890）。
+   *   宽约束：1428 / ((spanX+spanY) × 0.7071)
+   *   高约束： 890 / ((spanX+spanY) × 0.3536)
+   * 取小者，化简后宽约束更紧 ⇒ zoom = 2020 / (spanX+spanY)。
+   *
    * 夹在 [6, 30]：低于 6 街道糊成一团，高于 30 只剩几个街区、看不出线网形状。
    */
-  const zoom = Math.max(6, Math.min(30, (1200 * 0.55) / span))
+  const zoom = Math.max(6, Math.min(30, 2020 / (spanX + spanY)))
   return { cx: +((minX + maxX) / 2).toFixed(2), cy: +((minY + maxY) / 2).toFixed(2), zoom: +zoom.toFixed(1) }
 }
 
