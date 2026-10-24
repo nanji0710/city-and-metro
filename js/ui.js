@@ -86,6 +86,8 @@
     staffBtn.appendChild(this.staffCnt);
     // 排班（本作独有）：发车间隔与调度策略是玩家自己定的，入口必须常驻且好找
     const opsBtn = hb('ops', 'clock', '排班 · 发车间隔与调度策略', function () { self.openTop('ops'); });
+    // 公司（本作独有）：多城扩张的总账，金库与分部都在这里
+    const companyBtn = hb('company', 'globe', '公司 · 多城分部与金库', function () { self.openTop('company'); });
     this.top = h('header', { id: 'hudTop', class: 'hud hidden' },
       h('div', { class: 'cluster glass citybar' },
         h('div', { class: 'brand' }, h('img', { src: 'img/logo-white.png', alt: '城市与地铁' })),
@@ -101,6 +103,7 @@
         taskBtn,
         staffBtn,
         opsBtn,
+        companyBtn,
         hb('stats', 'chart', '城市统计', function () { self.openStats(); }, 'G'),
         hb('theme', 'moon', '深色模式', function () { self.toggleTheme(); }, 'N'),
         hb('settings', 'gear', '设置', function () { self.showSettings(); }),
@@ -1014,6 +1017,10 @@
       if (open && top.kind === 'ops') { this.closePanel(); return; }
       this.openPage('ops', null, { root: true });
     }
+    else if (key === 'company') {
+      if (open && top.kind === 'company') { this.closePanel(); return; }
+      this.openPage('company', null, { root: true });
+    }
     else if (key === 'save') this.openPage('saves', null, { toggle: true, root: true });
     else this.openPage('metric', key, { toggle: true, root: true });
   };
@@ -1757,6 +1764,9 @@
       if (self.g() !== g) return r;
       if (r.ok) { if (self.saveSeq === ver) self.markSaved(g, r.savedAt, snap); }
       else { self.save = Object.assign({}, self.save, { state: 'error', at: Date.now(), msg: r.error }); self.toast('自动保存失败：' + r.error, 'bad'); }
+      // 多城扩张（本作独有）：存档落盘后把这一局的现金同步进公司记录。
+      // 放在 r.ok 之后 —— 存档没写成功就同步金库，会出现「公司里显示有钱但读档回去没钱」。
+      if (r.ok && CM.Company) CM.Company.onSaved(g, r.slotId);
       return r;
     });
     return this.saving;

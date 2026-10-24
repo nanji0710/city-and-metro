@@ -16,7 +16,7 @@ const ORDER = [
   'util', 'config', 'news', 'geo_gz', 'geo', 'data_gz', 'data_tutorial',
   'geo_hz', 'data_hz', 'geo_hk', 'data_hk', 'geo_tk', 'data_tk', 'geo_tp', 'data_tp',
   'maps', 'facility', 'city', 'metro', 'sim', 'economy', 'difficulty', 'ops', 'staff', 'incidents',
-  'macro', 'game', 'milestones', 'save',
+  'macro', 'game', 'milestones', 'save', 'company',
 ];
 
 const sandbox = {
@@ -332,6 +332,72 @@ if (CM.Incidents) {
   check('lastDay 有 payroll', ld && typeof ld.payroll === 'number');
   console.log('\n  一年后：资金 ' + CM.U.fmtMoney(g.econ.funds) + '  满意度 ' + g.econ.sat.toFixed(1) + '  车站 ' + g.compiled.stations.length);
   console.log('  当日：票款 ' + CM.U.fmtMoney(ld.fare) + '  运营 ' + CM.U.fmtMoney(ld.ops) + '（其中维保 ' + CM.U.fmtMoney(ld.maint) + '、工资 ' + CM.U.fmtMoney(ld.payroll) + '）');
+}
+
+// ---------- 多城扩张（本作独有） ----------
+if (CM.Company) {
+  const CO = CM.Company;
+  // 从干净状态开始，避免上一次运行留下的公司影响断言
+  for (const c of CO.all()) CO.remove(c.id);
+  const cr = CO.create('测试公司', 'gz');
+  check('公司可以创建', cr.ok && !!cr.company, cr.error || '');
+  const co = cr.company;
+  CO.setActive(co.id);
+  check('新公司没有分部', co.branches.length === 0);
+  check('空公司金库为 0', CO.treasury(co) === 0);
+
+  CO.addBranch(co, { mapId: 'gz', name: '广州分部', funds: 500000 });
+  check('分部可以登记', CO.branchOf(co, 'gz') !== null);
+  check('金库 = 分部现金合计', Math.round(CO.treasury(co)) === 500000);
+
+  const fee = CO.accessFee('hz');
+  check('进驻费按难度档位定价', fee > 0 && CO.accessFee('aomen') <= fee, 'hz=' + fee + ' aomen=' + CO.accessFee('aomen'));
+
+  const chk1 = CO.canJoin(co, 'hz', 'gz');
+  check('进驻资格按付款分部账判断', chk1.ok === true, chk1.reason || '');
+  const chk2 = CO.canJoin(co, 'hz', 'nosuchcity');
+  check('付款分部不存在时不放行', chk2.ok === false, chk2.reason || '');
+
+  const jo = CO.joinOpts(co, 'hz', 'normal', null, 'gz');
+  check('进驻参数可生成', jo.ok === true, jo.error || '');
+  check('启动金不超过标准开局资金', jo.startFunds <= CM.Difficulty.startFundsOf('normal'), String(jo.startFunds));
+
+  // 扣费：接入费 + 启动金都必须真的从付款分部划走，不能凭空印钱
+  const before = CO.branchOf(co, 'gz').funds;
+  const pay = CO.payAccess(co, 'gz', jo.fee, jo.startFunds);
+  const after = CO.branchOf(co, 'gz').funds;
+  check('进驻扣费从付款分部划走', pay.ok && Math.round(before - after) === Math.round(jo.fee + jo.startFunds), (before - after).toFixed(0) + ' vs ' + (jo.fee + jo.startFunds).toFixed(0));
+
+  // 账上不够时必须拒绝，而不是把余额扣成负数
+  CO.updateBranch(co, 'gz', { funds: 10 });
+  const pay2 = CO.payAccess(co, 'gz', 30000, 0);
+  check('钱不够时拒绝进驻', pay2.ok === false && CO.branchOf(co, 'gz').funds === 10, pay2.error || '');
+
+  // 分部上缴：净利为正才抽，亏损月不抽
+  CO.updateBranch(co, 'gz', { funds: 400000 });
+  const fakeG = {
+    mapId: 'gz', company: { id: co.id, name: co.name }, clock: { y: 2025, m: 3 },
+    econ: { isFree: () => false, funds: 400000, cur: { fare: 100000, ops: 40000 } },
+  };
+  const rm = CO.remit(fakeG, 2025, 3);
+  const expect = (100000 - 40000) * CO.REMIT_RATE;
+  check('分部按月按净利上缴', rm && Math.abs(rm.paid - expect) < 1, rm ? rm.paid.toFixed(1) + ' vs ' + expect.toFixed(1) : 'null');
+  const fakeG2 = {
+    mapId: 'gz', company: { id: co.id, name: co.name }, clock: { y: 2025, m: 4 },
+    econ: { isFree: () => false, funds: 400000, cur: { fare: 10000, ops: 90000 } },
+  };
+  const rm2 = CO.remit(fakeG2, 2025, 4);
+  check('亏损月不抽成', rm2 && rm2.paid === 0, rm2 ? String(rm2.paid) : 'null');
+
+  // 破产分部不拖垮公司：只把该分部标停运
+  const c2 = CO.get(co.id);
+  CO.updateBranch(c2, 'gz', { failed: true });
+  check('分部破产只标停运', CO.get(co.id).branches.length >= 1 && CO.branchOf(CO.get(co.id), 'gz').failed === true);
+
+  for (const c of CO.all()) CO.remove(c.id);
+  check('公司可清理', CO.all().length === 0);
+} else {
+  check('CM.Company 已注册', false);
 }
 
 // ---------- 汇总 ----------

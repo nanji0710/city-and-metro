@@ -1,4 +1,4 @@
-﻿/**
+/**
  * city-and-metro-vf 界面截图（Edge headless + CDP，零依赖）
  *
  * 用法：
@@ -78,6 +78,42 @@ const SCENES = {
       return 'TAKEOVER ' + (r.ok ? 'ok' : 'fail') + ' ' + o.peakHeadwaySec + '/' + o.offHeadwaySec + '/' + o.policy;
     })()`],
     ['wait', 1200],
+  ],
+  // 公司面板（本作独有）：开一局 → 触发自动保存（登记分部）→ 打开公司页 → 看金库与可进驻城市
+  company: [
+    ['wait', 3000],
+    ['eval', `(() => {
+      if (!window.CM || !window.CM.newGame) return 'NO-CM';
+      if (!window.CM.MAPS.guangzhou) return 'NO-MAP';
+      window.CM.newGame({ map: 'guangzhou', mode: 'challenge', name: '公司试验局', difficulty: 'normal' });
+      return 'NEWGAME';
+    })()`],
+    ['wait', 9000],
+    ['eval', `(async () => {
+      const t0 = Date.now();
+      while (Date.now() - t0 < 30000) {
+        const g = window.CM && window.CM.game;
+        if (g && g.city && (g.city.roadGroups || []).length && !g.pending && !g.model.refreshing) break;
+        await new Promise(r => setTimeout(r, 400));
+      }
+      return 'READY';
+    })()`],
+    // 触发一次自动保存，让 Company.onSaved 真的把这一局登记成分部
+    ['eval', `(async () => {
+      const g = window.CM && window.CM.game;
+      if (!g) return 'NO-GAME';
+      try { window.CM.ui.closeScreen(); } catch (e) {}
+      try { window.CM.ui.closePanel(true); } catch (e) {}
+      await window.CM.ui.doAutosave(true);
+      const c = window.CM.Company && window.CM.Company.active();
+      return 'SAVED company=' + (c ? c.name + '/' + c.branches.length : 'none') + ' gCompany=' + !!(g.company);
+    })()`],
+    ['wait', 800],
+    ['eval', `(() => {
+      window.CM.ui.openTop('company');
+      return 'OPEN';
+    })()`],
+    ['wait', 1500],
   ],
   // 人员面板：进游戏后直接调 UI 打开（不依赖按钮文案，避免选择器漂移）
   staff: [

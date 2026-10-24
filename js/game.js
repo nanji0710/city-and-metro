@@ -1,4 +1,4 @@
-﻿'use strict';
+'use strict';
 // 游戏状态与流程：时钟、日/月结算、跳月/跳年、建设草案、预测与存档序列化
 (function (CM) {
   const U = CM.U, CFG = CM.CFG, D = CM.DATA, M = CM.Metro;
@@ -29,6 +29,11 @@
     // 任何惩罚倍率都会让新手以为「点了按钮就掉钱」。存档里由 econ.difficulty 恢复。
     g.difficulty = CM.Difficulty ? CM.Difficulty.norm(opts.difficulty || CM.Difficulty.DEFAULT_KEY) : null;
     if (g.mode === 'free') g.difficulty = 'easy';
+    /*
+     * 多城扩张（本作独有）：这一局属于哪家公司。opts.company 只在「进驻新城」时给，
+     * 普通开局为空 —— 公司层是可选玩法，不给也完全能玩，这样基底的单局体验不被破坏。
+     */
+    g.company = opts.company ? { id: opts.company.id, name: opts.company.name } : null;
     g.seed = opts.seed || (CFG.START.y * 10000 + 101);
     if (opts.tutorial) g.tutorial = { step: 0, done: [], started: Date.now() };
     g.createdAt = Date.now();
@@ -47,7 +52,7 @@
     g.mapInit = buildInitialNetwork(g);   // 开局既有地铁（东京 1950 年等），只在新建时生成一次，随存档保存
     g.compiled = M.compile(g.net, g.city);
     g.model.setNetwork(g.compiled);
-    g.econ = new CM.Economy(g.mode, g.clock.y, g.clock.m, g.difficulty);
+    g.econ = new CM.Economy(g.mode, g.clock.y, g.clock.m, g.difficulty, opts.startFunds);
     g.model.fare = g.econ.fare;
     g.tasks = new CM.Tasks();
     // 人员：开局给一个空队伍 + 一批候选人。开局就有市场，玩家第一眼就能看到「人是有价的」
@@ -309,6 +314,12 @@
     if (this.staff && CM.Staff) { this.staff.month(this, y, m); this.invalidateStaff(); }
     this.econ.payGrant(y, m);
     this.econ.serviceDebt(y, m);   // 债券：到期利息与本金、逾期处理（每月一次，不会重复结算）
+    /*
+     * 多城扩张（本作独有）：分部按月向公司金库上缴。
+     * 放在拨款与债券之后 —— 只有把本月所有收入与固定支出都记完，「本月净利」才是真的，
+     * 否则会出现「刚拨下来还没还利息就被抽走 35%」这种账面对不上的情况。
+     */
+    if (this.company && CM.Company) CM.Company.remit(this, y, m);
     this.recordHistory();
     if (CM.Milestones) CM.Milestones.onMonth(this);
     if (this.draft) {
@@ -574,7 +585,7 @@
   // ---------------- 存档 ----------------
   Game.prototype.serialize = function () {
     return {
-      meta: { gameId: this.id, name: this.name, mode: this.mode, difficulty: this.difficulty || null, seed: this.seed, createdAt: this.createdAt, gameVersion: CFG.GAME_VERSION, map: this.mapId || 'gz', mapVersion: (CM.MAPS[this.mapId || 'gz'] || {}).mapVersion || 1, scenario: (CM.MAPS[this.mapId || 'gz'] || {}).scenario || '', mapFp: (CM.MAPS[this.mapId || 'gz'] || {}).fp || '' },
+      meta: { gameId: this.id, name: this.name, mode: this.mode, difficulty: this.difficulty || null, company: this.company || null, seed: this.seed, createdAt: this.createdAt, gameVersion: CFG.GAME_VERSION, map: this.mapId || 'gz', mapVersion: (CM.MAPS[this.mapId || 'gz'] || {}).mapVersion || 1, scenario: (CM.MAPS[this.mapId || 'gz'] || {}).scenario || '', mapFp: (CM.MAPS[this.mapId || 'gz'] || {}).fp || '' },
       clock: Object.assign({}, this.clock),
       city: this.city.serialize(),
       net: this.net,
@@ -598,6 +609,8 @@
     const m = s.meta;
     g.id = m.gameId; g.name = m.name; g.mode = m.mode; g.seed = m.seed; g.createdAt = m.createdAt;
     g.mapId = m.map || 'gz';   // 调用前 CM.useMap 已切换到该地图
+    // 多城扩张：旧存档没有 company 字段，读成 null（= 独立单局），不影响任何既有逻辑
+    g.company = m.company || null;
     if (s.tutorial) g.tutorial = s.tutorial;
     g.clock = Object.assign({}, s.clock);
     g.city = new CM.City();

@@ -17,7 +17,7 @@
   Economy.BUILD_KINDS = BUILD_KINDS;
   Economy.MONEY_EPS = MONEY_EPS;
 
-  function Economy(mode, y, m, difficulty) {
+  function Economy(mode, y, m, difficulty, startFunds) {
     this.mode = mode;
     /*
      * 难度档位（本作独有）。由 Game.create / Economy.restore 传入；缺省 normal。
@@ -26,7 +26,14 @@
      */
     this.difficulty = CM.Difficulty ? CM.Difficulty.norm(difficulty) : 'normal';
     const d = CM.Difficulty ? CM.Difficulty.get(this.difficulty) : { startFundsMult: 1 };
-    this.funds = mode === 'free' ? 0 : Math.round(CFG.economy.startFunds * d.startFundsMult);   // 一般资金（拨款、票款等；运营、利息与还本只能从这里支付）
+    /*
+     * 起始资金（多城扩张，本作独有）。opts 里带 startFunds 时以它为准 ——
+     * 进驻新城时这局的启动金来自公司金库扣掉进驻费后的余额，而不是难度的标准值。
+     * 用构造参数而不是事后赋值：blankMonth(y, m, this.funds, 0) 就在下面几行，
+     * 事后改 this.funds 会让本月账期从错误的起点开始记。
+     */
+    const custom = typeof startFunds === 'number' && isFinite(startFunds) && startFunds >= 0;
+    this.funds = mode === 'free' ? 0 : (custom ? Math.round(startFunds) : Math.round(CFG.economy.startFunds * d.startFundsMult));   // 一般资金（拨款、票款等；运营、利息与还本只能从这里支付）
     this.capex = 0;            // 建设专项资金：债券募集，只能用于地铁建设及改扩建
     this.bonds = [];           // 已发行的债券
     this.bondIssued = {};      // 每年已发行额 { 年份: { local, ct } }

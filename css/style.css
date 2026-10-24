@@ -1652,3 +1652,27 @@ td .tag { margin-left: 4px; padding: 0 6px; font-size: 10px; }
 .ops-sl input[type=range] { width: 100%; accent-color: var(--accent); }
 .ops-note { line-height: 1.55; }
 @media (max-width: 460px) { .ops-pol { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ==================== v2.4 公司面板（多城扩张，本作独有） ==================== */
+/* 这一页只有两种东西：分部卡（横向信息块）和可进驻城市的行（列表）。
+   不用卡片网格，因为分部数量是个位数，横条读起来比网格快。 */
+.co-page { display: flex; flex-direction: column; gap: 10px; }
+.co-sec { border: 1px solid var(--line); background: var(--surface-solid); border-radius: 13px; overflow: hidden; }
+.co-sh { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.co-sh b { font-size: 13px; }
+.co-sh .tiny { margin-left: auto; }
+.co-branch { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.co-branch:last-child { border-bottom: none; }
+.co-branch.on { background: var(--accent-soft); }
+.co-bh { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.co-bh b { font-size: 13px; }
+.co-jrow { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.co-jrow:last-child { border-bottom: none; }
+.co-jrow:hover { background: var(--hover); }
+.co-jrow.short { opacity: .62; }
+.co-jrow .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+.co-fee { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.co-join { max-height: 320px; overflow-y: auto; }
+@media (max-width: 460px) {
+  .co-jrow .co-fee { display: none; }
+}
