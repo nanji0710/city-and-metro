@@ -1,4 +1,4 @@
-﻿/* 城市与地铁 · 界面样式（浅色 / 深色主题） */
+/* 城市与地铁 · 界面样式（浅色 / 深色主题） */
 :root {
   color-scheme: light;
   --navy: #1b365c;
@@ -1633,6 +1633,19 @@ td .tag { margin-left: 4px; padding: 0 6px; font-size: 10px; }
 .msel-diffstars { font-size: 9.5px; letter-spacing: .5px; opacity: .75; }
 .msel-diffchip.on { background: var(--surface); border-color: currentColor; box-shadow: 0 0 0 2px color-mix(in srgb, currentColor 16%, transparent); }
 .msel-diffchip.on b { font-weight: 700; }
+/* 选中态必须「颜色 + 背景」双重区分。
+ * .b-teal/.b-blue/… 是单类选择器、且定义在本文件更早处，会被上面的
+ * `.msel-diffchip { color: var(--muted) }` 按「同特异性、后者胜」覆盖掉，
+ * 结果选中的芯片仍是灰色，只靠那圈 16% currentColor 的阴影 —— 浅色底上几乎看不见，
+ * 玩家会以为根本没选中。这里显式提权到双类，并补一层淡底。 */
+.msel-diffchip.on.b-teal { color: #1f8f82; background: rgba(42, 157, 143, .10); }
+.msel-diffchip.on.b-blue { color: #2f6fa8; background: rgba(47, 111, 168, .10); }
+.msel-diffchip.on.b-orange { color: #cf6328; background: rgba(226, 110, 48, .10); }
+.msel-diffchip.on.b-red { color: #d83a3a; background: rgba(216, 58, 58, .09); }
+:root[data-theme="dark"] .msel-diffchip.on.b-teal { color: #57c4b7; }
+:root[data-theme="dark"] .msel-diffchip.on.b-blue { color: #7fb4ec; }
+:root[data-theme="dark"] .msel-diffchip.on.b-orange { color: #f39a63; }
+:root[data-theme="dark"] .msel-diffchip.on.b-red { color: #ff8a8a; }
 @media (max-width: 420px) { .msel-diffchips { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* ===== 排班面板（v2.3，本作独有） ===== */
