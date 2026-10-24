@@ -80,6 +80,10 @@
     this.taskCnt = h('span', { class: 'cnt' }, '0');
     const taskBtn = hb('tasks', 'flag', '任务', function () { self.openTop('tasks'); });
     taskBtn.appendChild(this.taskCnt);
+    // 人员（本作独有）：常驻入口 + 在编人数角标。没有人员系统时这个按钮会自动隐藏
+    this.staffCnt = h('span', { class: 'cnt' }, '0');
+    const staffBtn = hb('staff', 'people', '人员 · 雇佣与委派', function () { self.openTop('staff'); });
+    staffBtn.appendChild(this.staffCnt);
     this.top = h('header', { id: 'hudTop', class: 'hud hidden' },
       h('div', { class: 'cluster glass citybar' },
         h('div', { class: 'brand' }, h('img', { src: 'img/logo-white.png', alt: '城市与地铁' })),
@@ -93,6 +97,7 @@
       h('div', { class: 'cluster glass actions' },
         hb('search', 'search', '搜索车站、线路、道路、区域', function () { self.openSearch(); }, '/'),
         taskBtn,
+        staffBtn,
         hb('stats', 'chart', '城市统计', function () { self.openStats(); }, 'G'),
         hb('theme', 'moon', '深色模式', function () { self.toggleTheme(); }, 'N'),
         hb('settings', 'gear', '设置', function () { self.showSettings(); }),
@@ -427,6 +432,14 @@
     if (c.sat.ico !== sk) { c.sat.ico = sk; c.sat.badge.className = 'badge ' + (sk === 'smile' ? 'b-green' : (sk === 'meh' ? 'b-orange' : 'b-red')); c.sat.badge.innerHTML = ''; c.sat.badge.appendChild(ic(sk)); }
     const n = g.tasks.active.length;
     this.taskCnt.textContent = n; this.taskCnt.style.display = n ? '' : 'none';
+    // 人员（本作独有）：在编人数角标；待处置事故时按钮亮红点
+    if (this.staffCnt) {
+      const hc = g.staff ? g.staff.hired.length : 0;
+      this.staffCnt.textContent = hc; this.staffCnt.style.display = hc ? '' : 'none';
+      const pending = (g.lastIncidents || []).some(function (r) { return !r.handled; });
+      this.hbtns.staff.classList.toggle('warn-dot', pending);
+      this.hbtns.staff.style.display = g.staff ? '' : 'none';
+    }
     const s = this.save;
     this.hbtns.menu.classList.toggle('warn-dot', s.state === 'error');
     // 存档状态：保存中在菜单按钮上显示脉动小点；悬停提示注明是否已保存
@@ -988,6 +1001,11 @@
       if (open && top.kind === 'tasks') { this.closePanel(); return; }
       this.taskTab = 'active';
       this.openPage('tasks', 'active', { root: true });
+    }
+    else if (key === 'staff') {
+      if (open && top.kind === 'staff') { this.closePanel(); return; }
+      this.staffTab = this.staffTab || 'team';
+      this.openPage('staff', this.staffTab, { root: true });
     }
     else if (key === 'save') this.openPage('saves', null, { toggle: true, root: true });
     else this.openPage('metric', key, { toggle: true, root: true });

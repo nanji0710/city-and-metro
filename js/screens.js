@@ -5,7 +5,7 @@
   const h = U.h, ic = CM.icon;
   const snd = function (name) { if (CM.Sound) CM.Sound.play(name); };
   const LEVEL = ['入门', '普通', '进阶', '挑战'];
-  const REGION_ORDER = ['中国内地', '中国香港', '中国台湾', '日本', '虚构'];
+  const REGION_ORDER = ['中国内地', '中国香港', '中国澳门', '虚构'];
 
   // 公告是否已读（本机记录；无法访问本地存储时视为已读，不打扰）
   const NEWS_KEY = 'cm1.newsSeen';
@@ -20,8 +20,6 @@
     d.appendChild(h('b', null, LEVEL[n - 1]));
     return d;
   };
-  const eraOf = function (mp) { return Math.floor(mp.cfg.START.y / 10) * 10; };
-  const eraName = function (e) { return e + ' 年代'; };
 
   // ======================== 开始界面 ========================
   // 标题装饰：线路、车站与城市剪影
@@ -64,15 +62,14 @@
   UI.prototype.showMapSelect = function (selId) {
     const self = this, all = CM.MAP_ORDER.slice();
     let sel = selId && CM.MAPS[selId] ? selId : (this._mapSel && CM.MAPS[this._mapSel] ? this._mapSel : all[0]);
-    const F = this._mapFilter || (this._mapFilter = { q: '', era: 'all', region: 'all' });
-    if (selId) { F.q = ''; F.era = 'all'; F.region = 'all'; }
+    const F = this._mapFilter || (this._mapFilter = { q: '', region: 'all' });
+    if (selId) { F.q = ''; F.region = 'all'; }
     const theme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
-    const eras = Array.from(new Set(all.map(function (id) { return eraOf(CM.MAPS[id]); }))).sort();
     const regions = REGION_ORDER.filter(function (r) { return all.some(function (id) { return CM.MAPS[id].region === r; }); });
     const back = function () { self.showStart(); };
 
     // ---- 左侧：搜索、筛选、地图列表 ----
-    const search = h('input', { type: 'search', class: 'msel-q', placeholder: '搜索城市、年代或特色', 'aria-label': '搜索地图', value: F.q, autocomplete: 'off' });
+    const search = h('input', { type: 'search', class: 'msel-q', placeholder: '搜索城市或特色', 'aria-label': '搜索地图', value: F.q, autocomplete: 'off' });
     const clear = h('button', { class: 'iconbtn sm', 'data-tip': '清除', 'aria-label': '清除搜索', onclick: function () { search.value = ''; F.q = ''; clear.classList.add('gone'); drawList(); search.focus(); } }, ic('close', 15));
     if (!F.q) clear.classList.add('gone');
     search.addEventListener('input', function () { F.q = search.value.trim(); clear.classList.toggle('gone', !F.q); drawList(); });
@@ -92,17 +89,15 @@
       return row;
     };
     const filters = h('div', { class: 'msel-filters' },
-      chipRow('年代', 'calYear', 'era', [['all', '全部']].concat(eras.map(function (e) { return [String(e), eraName(e)]; }))),
       chipRow('地区', 'globe', 'region', [['all', '全部']].concat(regions.map(function (r) { return [r, r]; }))));
     const list = h('div', { class: 'msel-list', role: 'listbox', 'aria-label': '地图' });
     const empty = h('div', { class: 'msel-empty hidden-el' }, ic('search', 22), h('b', null, '没有符合条件的地图'), h('span', null, '换个关键词，或把筛选改回「全部」。'),
-      h('button', { class: 'btn sm', onclick: function () { F.q = ''; F.era = 'all'; F.region = 'all'; self.showMapSelect(sel); } }, '清除筛选'));
+      h('button', { class: 'btn sm', onclick: function () { F.q = ''; F.region = 'all'; self.showMapSelect(sel); } }, '清除筛选'));
     const count = h('span', { class: 'msel-count' });
     const items = {};
-    const text = function (mp) { return [mp.title, mp.name, mp.sub, mp.tagline, mp.region, eraName(eraOf(mp)), String(mp.cfg.START.y), (mp.tags || []).join(' '), mp.data.city].join(' ').toLowerCase(); };
+    const text = function (mp) { return [mp.title, mp.name, mp.sub, mp.tagline, mp.region, String(mp.cfg.START.y), (mp.tags || []).join(' '), mp.data.city].join(' ').toLowerCase(); };
     const match = function (id) {
       const mp = CM.MAPS[id];
-      if (F.era !== 'all' && String(eraOf(mp)) !== F.era) return false;
       if (F.region !== 'all' && mp.region !== F.region) return false;
       if (F.q) { const t = text(mp); for (const w of F.q.toLowerCase().split(/\s+/)) if (w && t.indexOf(w) < 0) return false; }
       return true;

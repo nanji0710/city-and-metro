@@ -42,6 +42,9 @@
     g.econ = new CM.Economy(g.mode, g.clock.y, g.clock.m);
     g.model.fare = g.econ.fare;
     g.tasks = new CM.Tasks();
+    // 人员：开局给一个空队伍 + 一批候选人。开局就有市场，玩家第一眼就能看到「人是有价的」
+    g.staff = CM.Staff ? new CM.Staff() : null;
+    if (g.staff) g.staff.refreshMarket(CM.Staff.rngFor(g, g.clock.y, g.clock.m), g.clock.y, g.clock.m, 7);
     g.model.solveNow(2);
     g.econ.startMonth(g.clock.y, g.clock.m);
     const e0 = D.events && D.events[0];
@@ -131,7 +134,11 @@
   Game.prototype.dayType = function () { return CM.Model.dayType(this.clock.y, this.clock.m, this.clock.d); };
   Game.prototype.endDay = function () {
     const dt = this.dayType();
-    this.econ.day(this.model.dailyFor(dt), this.compiled, this.clock.y, dt);
+    // 人员效果：每天重算一次（人的作用随队伍变化，且工资是日结的）
+    const se = this.staffEffects();
+    this.econ.day(this.model.dailyFor(dt), this.compiled, this.clock.y, dt, se);
+    // 突发事件：按「在途列车数 × 分钟」的概率判定。没有线长的线路，事故只能玩家亲手处置
+    if (CM.Incidents) this.runIncidents(dt, se);
     this.clock.d++;
     this.rev++;
     if (this.clock.d > U.daysInMonth(this.clock.y, this.clock.m)) {
@@ -150,6 +157,65 @@
   };
   // 交通模型升级过渡期（旧存档升级当月，至该月月末结算）：满意度不因统计口径变化而下降，任务不判失败、连续进度不清零
   Game.prototype.inTransition = function (ym) { const t = this.traffic; return !!(t && t.until != null && ym <= t.until); };
+
+  // ---------------- 人员（本作独有） ----------------
+  // 每天把在编人员折算成一组系数交给结算。缓存一天，避免同一帧里多个面板重复算。
+  Game.prototype.staffEffects = function () {
+    if (!this.staff || !CM.Staff) return null;
+    const key = this.clock.y + ':' + this.clock.m + ':' + this.clock.d + ':' + this.staff.hired.length;
+    if (this._seKey === key) return this._seCache;
+    const se = CM.Staff.effects(this.staff, this.clock.y);
+    this._seKey = key;
+    this._seCache = se;
+    return se;
+  };
+  // 改动队伍后必须让缓存失效，否则玩家刚雇的人当天不生效
+  Game.prototype.invalidateStaff = function () { this._seKey = null; this._seCache = null; };
+
+  // ---------------- 突发事件（本作独有） ----------------
+  // 按「在途列车数 × 分钟」判定。没有线长的线路只能玩家亲手处置，
+  // 有 line_manager 的线路自动处置但更贵更慢 —— 这是「用钱买时间」唯一的存在理由。
+  Game.prototype.runIncidents = function (dt, se) {
+    if (!CM.Incidents || !this.compiled) return;
+    // 昨天没处置的事件先按「不处置」结算掉：玩家没点，就是默认放弃
+    CM.Incidents.sweep(this);
+    const r = CM.Incidents.roll(this, dt, se);
+    if (r) {
+      this.lastIncidents = this.lastIncidents || [];
+      this.lastIncidents.push(r);
+      if (this.lastIncidents.length > 12) this.lastIncidents.shift();
+      this.logEvent({ tag: '突发', title: r.title, desc: r.desc });
+      // 线长在线就直接处置（贵、慢，但玩家不用管）
+      if (r.auto) CM.Incidents.resolve(this, r, 'auto');
+      else this.emit('incident', r);
+    }
+    this.syncDisruptions();
+  };
+
+  // 把「已处置事件」的运力损失汇总成 {routeId: 损失比例}，交给 sim.js 的自动配车环节读。
+  // 每天结算前与每次处置后都要调一次，否则模型读到的是昨天的损失。
+  Game.prototype.syncDisruptions = function () {
+    if (!this.model) return;
+    const map = {};
+    if (CM.Incidents && this.lastIncidents) {
+      for (const r of this.lastIncidents) {
+        if (!r.handled || r.routeId == null) continue;
+        map[r.routeId] = Math.min(0.9, (map[r.routeId] || 0) + (r.capLossApplied || 0));
+      }
+    }
+    this.model.disrupt = map;
+  };
+
+  // 玩家亲手处置（面板上的按钮）。没处置的事件会在当日结算里按损失计。
+  Game.prototype.handleIncident = function (id) {
+    if (!CM.Incidents || !this.lastIncidents) return { ok: false, error: '没有待处置的事件' };
+    const r = this.lastIncidents.find(function (x) { return x.id === id; });
+    if (!r) return { ok: false, error: '这件事已经不在了' };
+    if (r.handled) return { ok: false, error: '已经处置过了' };
+    const c = CM.Incidents.resolve(this, r, 'manual');
+    if (c && c.ok) { this.rev++; this.invalidateStaff(); this.emit('finance'); }
+    return c;
+  };
   Game.prototype.onFailure = function (f) {
     this.setSpeed(0);
     this.logEvent({ tag: '经营', title: '经营挑战失败', desc: f.reasons.join('；') });
@@ -227,9 +293,12 @@
     yield;
     // 经营与任务：上月已封账，先开新月账本，任务奖励记入新月，最后按本月任务结果发放拨款
     // 满意度按周平均日（5 个工作日 + 2 个周末日）计算，通勤时间按工作日；升级过渡期内不因统计口径变化而下降
-    this.econ.updateSatisfaction(model.daily, model, y, m, { protect: this.inTransition(this.ym()) });
+    this.econ.updateSatisfaction(model.daily, model, y, m, { protect: this.inTransition(this.ym()), staffSat: (this.staffEffects() || {}).satAdd || 0 });
     this.econ.openMonth(y, m);
     this.tasks.monthly(this).forEach((o) => this.logTask(o));
+    // 人员：每月换一批候选人、老员工要求涨薪。放在任务之后、拨款之前，
+    // 这样本月的工资账单已经包含涨薪，玩家不会「先看到拨款再被涨薪打脸」
+    if (this.staff && CM.Staff) { this.staff.month(this, y, m); this.invalidateStaff(); }
     this.econ.payGrant(y, m);
     this.econ.serviceDebt(y, m);   // 债券：到期利息与本金、逾期处理（每月一次，不会重复结算）
     this.recordHistory();
@@ -512,6 +581,8 @@
       mapInit: this.mapInit || null,
       macro: this.macro && CM.Macro ? CM.Macro.serialize(this.macro) : null,
       traffic: this.traffic || { v: CFG.TRAFFIC_MODEL },
+      staff: this.staff ? this.staff.serialize() : null,
+      incidents: this.lastIncidents || null,
     };
   };
   Game.restore = function (s) {
@@ -542,6 +613,11 @@
     g.econ = CM.Economy.restore(s.econ);
     g.model.fare = g.econ.fare;
     g.tasks = CM.Tasks.restore(s.tasks);
+    // 人员：1.x 存档没有这一层，按空队伍接入（不影响原有资金与进度）
+    g.staff = CM.Staff ? CM.Staff.restore(s.staff) : null;
+    if (g.staff && !g.staff.market.length) g.staff.refreshMarket(CM.Staff.rngFor(g, g.clock.y, g.clock.m), g.clock.y, g.clock.m, 7);
+    // 突发事件：旧存档没有这一层，按「今天还没出事」接入
+    g.lastIncidents = s.incidents || [];
     g.events = s.events || []; g.history = s.history || []; g.firedEvents = s.firedEvents || {};
     g.favs = { stations: (s.favs && s.favs.stations) || [], lines: (s.favs && s.favs.lines) || [], names: (s.favs && s.favs.names) || {} };
     g.mapInit = s.mapInit || null;

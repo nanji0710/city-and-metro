@@ -1009,7 +1009,12 @@
         const rt = net.C.routes[r], re = net.rideEdge[r];
         let mx = 0;
         for (let q = 0; q < re.length; q++) if (P.load[re[q]] > mx) mx = P.load[re[q]];
-        const need = U.clamp(Math.max(mx / (rt.cap * mc.targetLF), Model.serviceFloor(rt, p)), 1, mc.fMax);
+        const need0 = U.clamp(Math.max(mx / (rt.cap * mc.targetLF), Model.serviceFloor(rt, p)), 1, mc.fMax);
+        // 突发事件（本作独有）：事故当天这条线开不出全部车次，运力打折。
+        // 这里改的是「目标发车频率」而不是直接把客流扣掉 —— 让挤不上去的人自己改走别的路，
+        // 票款自然掉，这才是玩家能看懂的那条因果链。
+        const dis = (this.disrupt && this.disrupt[rt.id]) || 0;
+        const need = dis > 0 ? Math.max(1, need0 * (1 - dis)) : need0;
         const oldFreq = P.freq[r]; P.freq[r] = oldFreq * 0.55 + need * 0.45;
         if (oldFreq !== P.freq[r]) stable = false;
         for (let q = 0; q < re.length; q++) {

@@ -59,19 +59,31 @@
   Economy.prototype.opsIndex = function (year) { return U.priceIndex(year, CFG.ops.inflation, CFG.econBase || 1990); };
 
   // 每日结算：票款与运营费用，按当天的日类型（工作日 / 周末）的模拟结果逐日累计（v1.9 起；之前按典型工作日）
-  Economy.prototype.day = function (daily, compiled, year, dt) {
-    const fareWan = daily && daily.ready ? daily.fare / 10000 : 0;
-    let ops = 0;
+  //
+  // extra（本作独有，人员体系接入）：
+  //   revenueMult  票款与广告收入乘数（客运商业）
+  //   maintMult    车公里维保成本乘数（车辆检修）
+  //   payroll      当日人员工资（万元/天，Staff.effects 已按月薪 ÷30 折算）
+  // 为什么工资走日结而不是月底一次性扣：月底扣会让玩家在月中看到的日净利是假的，
+  // 而「这条线今天养了几个人」恰恰是他每天都在做的决定。
+  Economy.prototype.day = function (daily, compiled, year, dt, extra) {
+    const rev = (extra && extra.revenueMult) || 1;
+    const mm = (extra && extra.maintMult) || 1;
+    const fareWan = daily && daily.ready ? daily.fare / 10000 * rev : 0;
+    let ops = 0, maint = 0;
     if (daily && compiled) {
       const oi = this.opsIndex(year);
-      ops += daily.carKm * CFG.ops.carKmCost * oi;
+      maint = daily.carKm * CFG.ops.carKmCost * oi * mm;
+      ops += maint;
       for (const s of compiled.stations) ops += CFG.ops.stationDaily[s.size] * oi;
     }
+    const payroll = (extra && extra.payroll) || 0;
+    ops += payroll;
     this.income('fare', fareWan);
     this.spend('ops', ops);
     this.cur.days++;
     if (dt === 'we') this.cur.weDays = (this.cur.weDays || 0) + 1; else if (dt === 'wd') this.cur.wdDays = (this.cur.wdDays || 0) + 1;
-    this.lastDay = { fare: fareWan, ops: ops, dt: dt || null };
+    this.lastDay = { fare: fareWan, ops: ops, dt: dt || null, maint: maint, payroll: payroll, staff: (extra && extra.headcount) || 0 };
   };
 
   // 拨款与满意度调整（mods）：until 为最后一个生效的月份（含当月），N 个月的效果记为 ym + N − 1
@@ -131,6 +143,10 @@
     const burden = daily.metro > 1 ? daily.avgFare / (vot * 0.35) : 0;
     f.push({ label: '票价负担（平均 ' + daily.avgFare.toFixed(1) + ' ' + CFG.money.unit + '）', v: -9 * U.clamp((burden - 1) / 2, 0, 1) });
     f.push({ label: '车厢拥挤（周平均超载客公里 ' + U.fmtPct(daily.crowdShare, 0) + '）', v: -9 * U.clamp(daily.crowdShare / 0.25, 0, 1) });
+    // 人员（本作独有）：站务与线长直接改善乘车体验。放在满意度里而不是乘到票款上，
+    // 是因为玩家的直觉是「多派人→体验好→有人坐」，而不是「多派人→票款变多」。
+    const satAdd = (opts && opts.staffSat) || 0;
+    if (satAdd) f.push({ label: '在编人员服务水平', v: satAdd });
     const ym = U.ymIndex(y, m);
     for (const md of this.mods) if (md.kind === 'sat' && md.until >= ym) f.push({ label: md.reason, v: md.delta });
     let target = 55;

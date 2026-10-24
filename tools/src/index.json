@@ -1,0 +1,758 @@
+[
+  {
+    "id": "beijing",
+    "name": "北京",
+    "province": "北京市",
+    "center": [
+      116.38866,
+      39.91465
+    ],
+    "stats": {
+      "lines": 29,
+      "stations": 542,
+      "lengthKm": 910.1
+    }
+  },
+  {
+    "id": "shanghai",
+    "name": "上海",
+    "province": "上海市",
+    "center": [
+      121.44792,
+      31.19144
+    ],
+    "stats": {
+      "lines": 21,
+      "stations": 572,
+      "lengthKm": 846.1
+    }
+  },
+  {
+    "id": "chengdu",
+    "name": "成都",
+    "province": "四川省",
+    "center": [
+      104.06134,
+      30.62516
+    ],
+    "stats": {
+      "lines": 19,
+      "stations": 480,
+      "lengthKm": 779.2
+    }
+  },
+  {
+    "id": "guangzhou",
+    "name": "广州",
+    "province": "广东省",
+    "center": [
+      113.34084,
+      23.12344
+    ],
+    "stats": {
+      "lines": 19,
+      "stations": 313,
+      "lengthKm": 718.1
+    }
+  },
+  {
+    "id": "nanjing",
+    "name": "南京",
+    "province": "江苏省",
+    "center": [
+      118.79642,
+      31.99864
+    ],
+    "stats": {
+      "lines": 20,
+      "stations": 264,
+      "lengthKm": 701.6
+    }
+  },
+  {
+    "id": "shenzhen",
+    "name": "深圳",
+    "province": "广东省",
+    "center": [
+      114.03757,
+      22.60514
+    ],
+    "stats": {
+      "lines": 17,
+      "stations": 346,
+      "lengthKm": 667.5
+    }
+  },
+  {
+    "id": "wuhan",
+    "name": "武汉",
+    "province": "湖北省",
+    "center": [
+      114.31346,
+      30.54497
+    ],
+    "stats": {
+      "lines": 16,
+      "stations": 398,
+      "lengthKm": 594.4
+    }
+  },
+  {
+    "id": "hangzhou",
+    "name": "杭州",
+    "province": "浙江省",
+    "center": [
+      120.19743,
+      30.27643
+    ],
+    "stats": {
+      "lines": 14,
+      "stations": 259,
+      "lengthKm": 580.9
+    }
+  },
+  {
+    "id": "chongqing",
+    "name": "重庆",
+    "province": "重庆市",
+    "center": [
+      106.51233,
+      29.58959
+    ],
+    "stats": {
+      "lines": 13,
+      "stations": 315,
+      "lengthKm": 564.7
+    }
+  },
+  {
+    "id": "suzhou",
+    "name": "苏州",
+    "province": "江苏省",
+    "center": [
+      120.67463,
+      31.31155
+    ],
+    "stats": {
+      "lines": 11,
+      "stations": 228,
+      "lengthKm": 440.9
+    }
+  },
+  {
+    "id": "zhengzhou",
+    "name": "郑州",
+    "province": "河南省",
+    "center": [
+      113.70231,
+      34.68421
+    ],
+    "stats": {
+      "lines": 12,
+      "stations": 277,
+      "lengthKm": 439
+    }
+  },
+  {
+    "id": "xian",
+    "name": "西安",
+    "province": "陕西省",
+    "center": [
+      108.92695,
+      34.27033
+    ],
+    "stats": {
+      "lines": 13,
+      "stations": 303,
+      "lengthKm": 437.5
+    }
+  },
+  {
+    "id": "qingdao",
+    "name": "青岛",
+    "province": "山东省",
+    "center": [
+      120.31979,
+      36.10354
+    ],
+    "stats": {
+      "lines": 10,
+      "stations": 188,
+      "lengthKm": 430.1
+    }
+  },
+  {
+    "id": "tianjin",
+    "name": "天津",
+    "province": "天津市",
+    "center": [
+      117.24826,
+      39.11126
+    ],
+    "stats": {
+      "lines": 13,
+      "stations": 227,
+      "lengthKm": 359.4
+    }
+  },
+  {
+    "id": "ningbo",
+    "name": "宁波",
+    "province": "浙江省",
+    "center": [
+      121.5754,
+      29.85882
+    ],
+    "stats": {
+      "lines": 9,
+      "stations": 179,
+      "lengthKm": 353.4
+    }
+  },
+  {
+    "id": "hongkong",
+    "name": "香港",
+    "province": "香港特别行政区",
+    "center": [
+      114.06528,
+      22.37478
+    ],
+    "stats": {
+      "lines": 22,
+      "stations": 376,
+      "lengthKm": 348
+    }
+  },
+  {
+    "id": "shenyang",
+    "name": "沈阳",
+    "province": "辽宁省",
+    "center": [
+      123.42723,
+      41.77775
+    ],
+    "stats": {
+      "lines": 8,
+      "stations": 164,
+      "lengthKm": 271.5
+    }
+  },
+  {
+    "id": "hefei",
+    "name": "合肥",
+    "province": "安徽省",
+    "center": [
+      117.27548,
+      31.83609
+    ],
+    "stats": {
+      "lines": 7,
+      "stations": 183,
+      "lengthKm": 259.8
+    }
+  },
+  {
+    "id": "changsha",
+    "name": "长沙",
+    "province": "湖南省",
+    "center": [
+      112.98113,
+      28.17752
+    ],
+    "stats": {
+      "lines": 8,
+      "stations": 179,
+      "lengthKm": 247.8
+    }
+  },
+  {
+    "id": "jinan",
+    "name": "济南",
+    "province": "山东省",
+    "center": [
+      117.13156,
+      36.69015
+    ],
+    "stats": {
+      "lines": 8,
+      "stations": 138,
+      "lengthKm": 245.7
+    }
+  },
+  {
+    "id": "changchun",
+    "name": "长春",
+    "province": "吉林省",
+    "center": [
+      125.32107,
+      43.8624
+    ],
+    "stats": {
+      "lines": 11,
+      "stations": 142,
+      "lengthKm": 241.3
+    }
+  },
+  {
+    "id": "dalian",
+    "name": "大连",
+    "province": "辽宁省",
+    "center": [
+      121.62896,
+      38.99375
+    ],
+    "stats": {
+      "lines": 7,
+      "stations": 105,
+      "lengthKm": 224.8
+    }
+  },
+  {
+    "id": "fuzhou",
+    "name": "福州",
+    "province": "福建省",
+    "center": [
+      119.34066,
+      26.03527
+    ],
+    "stats": {
+      "lines": 6,
+      "stations": 101,
+      "lengthKm": 207.3
+    }
+  },
+  {
+    "id": "foshan",
+    "name": "佛山",
+    "province": "广东省",
+    "center": [
+      113.18961,
+      23.01189
+    ],
+    "stats": {
+      "lines": 7,
+      "stations": 120,
+      "lengthKm": 203.8
+    }
+  },
+  {
+    "id": "kunming",
+    "name": "昆明",
+    "province": "云南省",
+    "center": [
+      102.73701,
+      25.00649
+    ],
+    "stats": {
+      "lines": 6,
+      "stations": 100,
+      "lengthKm": 158
+    }
+  },
+  {
+    "id": "xiamen",
+    "name": "厦门",
+    "province": "福建省",
+    "center": [
+      118.09164,
+      24.53926
+    ],
+    "stats": {
+      "lines": 5,
+      "stations": 92,
+      "lengthKm": 157.9
+    }
+  },
+  {
+    "id": "guiyang",
+    "name": "贵阳",
+    "province": "贵州省",
+    "center": [
+      106.67292,
+      26.56702
+    ],
+    "stats": {
+      "lines": 4,
+      "stations": 93,
+      "lengthKm": 146.7
+    }
+  },
+  {
+    "id": "xianyang",
+    "name": "咸阳",
+    "province": "陕西省",
+    "center": [
+      108.86091,
+      34.2937
+    ],
+    "stats": {
+      "lines": 4,
+      "stations": 89,
+      "lengthKm": 145.1
+    }
+  },
+  {
+    "id": "nanchang",
+    "name": "南昌",
+    "province": "江西省",
+    "center": [
+      115.88201,
+      28.66604
+    ],
+    "stats": {
+      "lines": 4,
+      "stations": 103,
+      "lengthKm": 142.1
+    }
+  },
+  {
+    "id": "wuxi",
+    "name": "无锡",
+    "province": "江苏省",
+    "center": [
+      120.30582,
+      31.58666
+    ],
+    "stats": {
+      "lines": 5,
+      "stations": 91,
+      "lengthKm": 141
+    }
+  },
+  {
+    "id": "nanning",
+    "name": "南宁",
+    "province": "广西壮族自治区",
+    "center": [
+      108.33004,
+      22.80729
+    ],
+    "stats": {
+      "lines": 5,
+      "stations": 95,
+      "lengthKm": 132.7
+    }
+  },
+  {
+    "id": "wenzhou",
+    "name": "温州",
+    "province": "浙江省",
+    "center": [
+      120.79212,
+      27.92913
+    ],
+    "stats": {
+      "lines": 2,
+      "stations": 36,
+      "lengthKm": 116.1
+    }
+  },
+  {
+    "id": "jinhua",
+    "name": "金华",
+    "province": "浙江省",
+    "center": [
+      119.9905,
+      29.23271
+    ],
+    "stats": {
+      "lines": 2,
+      "stations": 27,
+      "lengthKm": 106.3
+    }
+  },
+  {
+    "id": "dongguan",
+    "name": "东莞",
+    "province": "广东省",
+    "center": [
+      113.81074,
+      22.95086
+    ],
+    "stats": {
+      "lines": 3,
+      "stations": 54,
+      "lengthKm": 101.1
+    }
+  },
+  {
+    "id": "changzhou",
+    "name": "常州",
+    "province": "江苏省",
+    "center": [
+      119.96184,
+      31.77718
+    ],
+    "stats": {
+      "lines": 4,
+      "stations": 43,
+      "lengthKm": 96.2
+    }
+  },
+  {
+    "id": "haerbin",
+    "name": "哈尔滨",
+    "province": "黑龙江省",
+    "center": [
+      126.62678,
+      45.74059
+    ],
+    "stats": {
+      "lines": 3,
+      "stations": 73,
+      "lengthKm": 91.6
+    }
+  },
+  {
+    "id": "xuzhou",
+    "name": "徐州",
+    "province": "江苏省",
+    "center": [
+      117.21424,
+      34.23766
+    ],
+    "stats": {
+      "lines": 4,
+      "stations": 70,
+      "lengthKm": 79.4
+    }
+  },
+  {
+    "id": "shijiazhuang",
+    "name": "石家庄",
+    "province": "河北省",
+    "center": [
+      114.52664,
+      38.04204
+    ],
+    "stats": {
+      "lines": 3,
+      "stations": 60,
+      "lengthKm": 77.2
+    }
+  },
+  {
+    "id": "ziyang",
+    "name": "资阳",
+    "province": "四川省",
+    "center": [
+      104.59746,
+      30.15745
+    ],
+    "stats": {
+      "lines": 2,
+      "stations": 6,
+      "lengthKm": 76.1
+    }
+  },
+  {
+    "id": "xuchang",
+    "name": "许昌",
+    "province": "河南省",
+    "center": [
+      113.83722,
+      34.34723
+    ],
+    "stats": {
+      "lines": 1,
+      "stations": 26,
+      "lengthKm": 66.7
+    }
+  },
+  {
+    "id": "nantong",
+    "name": "南通",
+    "province": "江苏省",
+    "center": [
+      120.87468,
+      32.01562
+    ],
+    "stats": {
+      "lines": 2,
+      "stations": 43,
+      "lengthKm": 58.7
+    }
+  },
+  {
+    "id": "shaoxing",
+    "name": "绍兴",
+    "province": "浙江省",
+    "center": [
+      120.53103,
+      30.05248
+    ],
+    "stats": {
+      "lines": 2,
+      "stations": 36,
+      "lengthKm": 56.9
+    }
+  },
+  {
+    "id": "xiangtan",
+    "name": "湘潭",
+    "province": "湖南省",
+    "center": [
+      112.9638,
+      28.11685
+    ],
+    "stats": {
+      "lines": 1,
+      "stations": 33,
+      "lengthKm": 53.5
+    }
+  },
+  {
+    "id": "taiyuan",
+    "name": "太原",
+    "province": "山西省",
+    "center": [
+      112.55704,
+      37.82833
+    ],
+    "stats": {
+      "lines": 2,
+      "stations": 45,
+      "lengthKm": 51.9
+    }
+  },
+  {
+    "id": "huhehaote",
+    "name": "呼和浩特",
+    "province": "内蒙古自治区",
+    "center": [
+      111.69299,
+      40.82284
+    ],
+    "stats": {
+      "lines": 2,
+      "stations": 43,
+      "lengthKm": 50.4
+    }
+  },
+  {
+    "id": "taizhou",
+    "name": "台州",
+    "province": "浙江省",
+    "center": [
+      121.36077,
+      28.50611
+    ],
+    "stats": {
+      "lines": 1,
+      "stations": 15,
+      "lengthKm": 49.7
+    }
+  },
+  {
+    "id": "wuhu",
+    "name": "芜湖",
+    "province": "安徽省",
+    "center": [
+      118.38966,
+      31.36182
+    ],
+    "stats": {
+      "lines": 2,
+      "stations": 35,
+      "lengthKm": 45.8
+    }
+  },
+  {
+    "id": "chuzhou",
+    "name": "滁州",
+    "province": "安徽省",
+    "center": [
+      118.40948,
+      32.26033
+    ],
+    "stats": {
+      "lines": 1,
+      "stations": 10,
+      "lengthKm": 44.4
+    }
+  },
+  {
+    "id": "luoyang",
+    "name": "洛阳",
+    "province": "河南省",
+    "center": [
+      112.43163,
+      34.66589
+    ],
+    "stats": {
+      "lines": 2,
+      "stations": 33,
+      "lengthKm": 41.9
+    }
+  },
+  {
+    "id": "ezhou",
+    "name": "鄂州",
+    "province": "湖北省",
+    "center": [
+      114.45479,
+      30.50101
+    ],
+    "stats": {
+      "lines": 1,
+      "stations": 23,
+      "lengthKm": 40.7
+    }
+  },
+  {
+    "id": "lanzhou",
+    "name": "兰州",
+    "province": "甘肃省",
+    "center": [
+      103.81553,
+      36.05969
+    ],
+    "stats": {
+      "lines": 2,
+      "stations": 26,
+      "lengthKm": 34.2
+    }
+  },
+  {
+    "id": "wulumuqi",
+    "name": "乌鲁木齐",
+    "province": "新疆维吾尔自治区",
+    "center": [
+      87.57146,
+      43.84427
+    ],
+    "stats": {
+      "lines": 1,
+      "stations": 21,
+      "lengthKm": 26.9
+    }
+  },
+  {
+    "id": "aomen",
+    "name": "澳门",
+    "province": "澳门特别行政区",
+    "center": [
+      113.55868,
+      22.15331
+    ],
+    "stats": {
+      "lines": 1,
+      "stations": 13,
+      "lengthKm": 11
+    }
+  },
+  {
+    "id": "qingyuan",
+    "name": "清远",
+    "province": "广东省",
+    "center": [
+      113.13591,
+      23.57286
+    ],
+    "stats": {
+      "lines": 1,
+      "stations": 3,
+      "lengthKm": 7.4
+    }
+  }
+]

@@ -34,6 +34,10 @@
   };
   // 其他地图（教程与新增城市）由各自的数据文件登记为 CM.MAP_LIST；未写的配置项沿用广州样本
   for (const m of CM.MAP_LIST || []) {
+    // 新增城市的底图单独放在 js/geo_<id>.js 里（由 tools/pipeline/fetch-geo.mjs 生成），
+    // 挂在 CM.MAP_GEO 上而不是塞进 data 文件 —— 一张底图动辄几百 KB，
+    // 混进 data_cities.js 会让那个文件大到无法阅读，也无法单独重抓某一城。
+    if (!m.geo && CM.MAP_GEO && CM.MAP_GEO[m.id]) m.geo = CM.MAP_GEO[m.id];
     const cfg = Object.assign({}, GZ_CFG);
     if (m.econ) Object.assign(cfg, CM.deriveChoice(m.econ.devOffset || 0, m.econ.money || 1));
     Object.assign(cfg, m.cfg);
@@ -50,12 +54,21 @@
   }
   CM.MAPS = MAPS;
   // 选择列表由易到难；同难度保留既有城市顺序，新地图按登记顺序接在同档末尾。
-  const mapOrder = ['tutorial', 'gz', 'hz', 'hk', 'tp', 'tk'];
-  for (const id of Object.keys(MAPS)) if (mapOrder.indexOf(id) < 0) mapOrder.push(id);
+  //
+  // 只列「教程 + 我们的 54 座城市」，不再列参考项目自带的五张年代地图：
+  //   gz 广州 1990 / hz 杭州 2000 / hk 香港 1970 / tp 台北 1990 / tk 东京 1950。
+  // 理由：本作统一在当前年代经营，选择页上同时出现「广州·1990」与「广州·2025」
+  // 会让玩家以为其中一张是残缺的；台北与东京也不在中国地铁线网的取材范围里。
+  // 这五张仍保留在 MAPS 中——广州是开局背景与默认地图（CM.mapId='gz'），
+  // 删掉会让 js/main.js 的开场预览与存档回退无图可用。
+  const HIDDEN_MAPS = ['gz', 'hz', 'hk', 'tp', 'tk'];
+  const mapOrder = ['tutorial'];
+  for (const id of Object.keys(MAPS)) if (mapOrder.indexOf(id) < 0 && HIDDEN_MAPS.indexOf(id) < 0) mapOrder.push(id);
   const mapRank = new Map(mapOrder.map(function (id, i) { return [id, i]; }));
   CM.MAP_ORDER = mapOrder.filter(function (id) { return MAPS[id]; }).sort(function (a, b) {
     return (MAPS[a].difficulty || 2) - (MAPS[b].difficulty || 2) || mapRank.get(a) - mapRank.get(b);
   });
+  CM.HIDDEN_MAPS = HIDDEN_MAPS;
   CM.mapId = 'gz';
   CM.useMap = function (id) {
     const m = MAPS[id] || MAPS.gz;

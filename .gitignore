@@ -22,3 +22,10 @@ node_modules/
 *.log
 *.tmp
 
+# 无头浏览器临时 profile（截图/探针脚本生成，每份上千个文件，绝不能进仓库）
+.edge-*/
+tools/.edge-*/
+tools/shots/
+tools/pipeline/.geo-cache/
+tools/_*.mjs
+
