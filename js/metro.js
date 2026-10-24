@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 // 地铁网络：数据结构、编辑操作、几何、线路形态、合法性检查与费用计算、编译为运营结构
 (function (CM) {
   const U = CM.U, CFG = CM.CFG, D = CM.DATA, LU = CM.LU;
@@ -518,7 +518,18 @@
   // ---------------- 草案差异、费用与冲突 ----------------
   function costIndex(year) { return U.priceIndex(year, CFG.cost.inflation, CFG.econBase || 1990); }
   M.costIndex = costIndex;
-  M.stationCost = function (type, size, year) { return CFG.cost.station[type][size] * costIndex(year); };
+  /*
+   * 建设成本难度倍率（本作独有）。
+   *
+   * 为什么用模块级状态而不是给 stationCost/trackCost 加参数：这两个函数在
+   * evaluate / draftEval / 建设预览 / 任务判定里被调二十多处，逐个传参会漏一处，
+   * 而漏掉的那一处就会让「预览价」与「实扣价」不一致 —— 玩家看到 8 亿点下去扣 10 亿，
+   * 这是最伤信任的一类 bug。难度是整局共享的环境事实，与 camera 的安全区同理。
+   */
+  let buildMult = 1;
+  M.setBuildMult = function (k) { buildMult = (typeof k === 'number' && k > 0) ? k : 1; };
+  M.buildMult = function () { return buildMult; };
+  M.stationCost = function (type, size, year) { return CFG.cost.station[type][size] * costIndex(year) * buildMult; };
   M.devFactor = function (city, c) {
     if (c < 0) return 0;
     const L = city.lu[c];
@@ -531,7 +542,7 @@
     let v = g.lenM / 1000 * C.trackPerKm[type] + g.waterM / 1000 * C.riverPerKm[type];
     if (type === 'underground') v += g.hillM / 1000 * C.hillPerKm + g.protM / 1000 * C.protectedPerKm;
     v += M.railCrossCost(g, type);
-    return v * ci;
+    return v * ci * buildMult;
   };
   // 跨越铁路的附加费用（基年价格）：地下线下穿地面铁路、高架线上跨地面或高架铁路，每处按等效长度计
   M.railCrossN = function (g, type) { return type === 'underground' ? (g.railS || 0) : (type === 'elevated' ? (g.railS || 0) + (g.railV || 0) : 0); };
@@ -550,7 +561,7 @@
       cost += CFG.cost.demolishPerCell * df * fr;
       cells.push({ c: c, frac: fr * 0.6 });
     });
-    return { cost: cost * costIndex(year), cells: cells };
+    return { cost: cost * costIndex(year) * buildMult, cells: cells };
   };
 
   M.evaluate = function (draft, off, city, year) {

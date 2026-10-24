@@ -17,9 +17,16 @@
   Economy.BUILD_KINDS = BUILD_KINDS;
   Economy.MONEY_EPS = MONEY_EPS;
 
-  function Economy(mode, y, m) {
+  function Economy(mode, y, m, difficulty) {
     this.mode = mode;
-    this.funds = mode === 'free' ? 0 : CFG.economy.startFunds;   // 一般资金（拨款、票款等；运营、利息与还本只能从这里支付）
+    /*
+     * 难度档位（本作独有）。由 Game.create / Economy.restore 传入；缺省 normal。
+     * 必须是构造参数而不是事后赋值 —— 起始资金在构造里就要按档位算，
+     * 事后改 difficulty 只会改倍率、不会补回已经少发的钱。
+     */
+    this.difficulty = CM.Difficulty ? CM.Difficulty.norm(difficulty) : 'normal';
+    const d = CM.Difficulty ? CM.Difficulty.get(this.difficulty) : { startFundsMult: 1 };
+    this.funds = mode === 'free' ? 0 : Math.round(CFG.economy.startFunds * d.startFundsMult);   // 一般资金（拨款、票款等；运营、利息与还本只能从这里支付）
     this.capex = 0;            // 建设专项资金：债券募集，只能用于地铁建设及改扩建
     this.bonds = [];           // 已发行的债券
     this.bondIssued = {};      // 每年已发行额 { 年份: { local, ct } }
@@ -95,13 +102,21 @@
     const ym = U.ymIndex(y, m);
     let f = 0.6 + 0.8 * this.sat / 100, mf = 1;
     for (const md of this.mods) if (md.kind === 'grant' && md.until >= ym) mf *= md.factor;
-    return this.grantQuota(y, m) * this.fiscalFactor() * f * Math.max(0.6, mf);
+    return this.grantQuota(y, m) * this.fiscalFactor() * f * Math.max(0.6, mf) * this.diffMult('grantMult');
+  };
+  // 难度倍率（本作独有）。没有 CM.Difficulty 时一律 1，保证基底行为不变。
+  Economy.prototype.diffMult = function (key) {
+    if (!CM.Difficulty) return 1;
+    const d = CM.Difficulty.get(this.difficulty);
+    return typeof d[key] === 'number' ? d[key] : 1;
   };
   Economy.prototype.grantFactors = function (y, m) {
     const ym = U.ymIndex(y, m);
     const list = [];
     if (this.fisc) list.push({ label: '财力系数（' + (this.fisc.y || y) + ' 年预算）', f: this.fiscalFactor(), kind: 'fisc' });
     list.push({ label: '满意度系数（' + Math.round(this.sat) + '）', f: 0.6 + 0.8 * this.sat / 100, kind: 'sat' });
+    const dm = this.diffMult('grantMult');
+    if (dm !== 1) list.push({ label: '难度系数（' + CM.Difficulty.get(this.difficulty).name + '）', f: dm, kind: 'diff' });
     for (const md of this.mods) if (md.kind === 'grant' && md.until >= ym) list.push({ label: md.reason + '（至 ' + Math.floor(md.until / 12) + '年' + (md.until % 12 + 1) + '月）', f: md.factor, kind: 'task' });
     return list;
   };
@@ -355,13 +370,13 @@
   };
 
   Economy.prototype.serialize = function () {
-    return { mode: this.mode, funds: this.funds, fare: this.fare, cur: this.cur, ledger: this.ledger, sat: this.sat, mods: this.mods, negMonths: this.negMonths, lowSatMonths: this.lowSatMonths, failed: this.failed, satFactors: this.satFactors, lastDay: this.lastDay,
+    return { mode: this.mode, difficulty: this.difficulty, funds: this.funds, fare: this.fare, cur: this.cur, ledger: this.ledger, sat: this.sat, mods: this.mods, negMonths: this.negMonths, lowSatMonths: this.lowSatMonths, failed: this.failed, satFactors: this.satFactors, lastDay: this.lastDay,
       capex: this.capex, bonds: this.bonds, bondIssued: this.bondIssued, overdue: this.overdue, overdueParts: this.overdueParts || null, overdueMonths: this.overdueMonths, flow: this.flow, bondSeq: this.bondSeq, svc: this._svc == null ? null : this._svc,
       fisc: this.fisc || null };
   };
   Economy.restore = function (s) {
-    const e = new Economy(s.mode, s.cur.y, s.cur.m);
-    Object.assign(e, { funds: s.funds, fare: Economy.normFare(s.fare), cur: s.cur, ledger: s.ledger || [], sat: s.sat, mods: s.mods || [], negMonths: s.negMonths || 0, lowSatMonths: s.lowSatMonths || 0, failed: s.failed || null, satFactors: s.satFactors || null, lastDay: s.lastDay || null,
+    const e = new Economy(s.mode, s.cur.y, s.cur.m, s.difficulty);
+    Object.assign(e, { difficulty: s.difficulty || e.difficulty, funds: s.funds, fare: Economy.normFare(s.fare), cur: s.cur, ledger: s.ledger || [], sat: s.sat, mods: s.mods || [], negMonths: s.negMonths || 0, lowSatMonths: s.lowSatMonths || 0, failed: s.failed || null, satFactors: s.satFactors || null, lastDay: s.lastDay || null,
       capex: s.capex || 0, bonds: s.bonds || [], bondIssued: s.bondIssued || {}, overdue: s.overdue || 0, overdueParts: s.overdueParts || null, overdueMonths: s.overdueMonths || 0, flow: s.flow || [], bondSeq: s.bondSeq || 1 });
     e._svc = s.svc == null ? null : s.svc;
     e.fisc = s.fisc && isFinite(s.fisc.f) ? { y: s.fisc.y, f: s.fisc.f } : null;   // 1.7 及更早的存档没有财力系数，按 1 处理

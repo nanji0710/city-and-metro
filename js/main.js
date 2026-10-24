@@ -144,6 +144,9 @@
     if (CM.Soundscape) CM.Soundscape.reset();
     ui.clearCelebrations();
     CM.game = null;
+    // 建设成本倍率是模块级状态，退出到开局页必须复位 —— 否则上一局的难度
+    // 会悄悄留在开局页背景地图上（背景广州的建设预览价会带着上一局的倍率）
+    if (CM.Metro && CM.Metro.setBuildMult) CM.Metro.setBuildMult(1);
     if (CM.Follow) CM.Follow.stop(true);
     if (CM.Tutorial) CM.Tutorial.detach();
     CM.useMap('gz');   // 开始界面背景是广州

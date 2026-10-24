@@ -471,11 +471,17 @@
     while (!g.next().done) { /* run */ }
   };
   // 每人每日的出行率（来回各一次计为一次往返）：通勤、上学、购物、医疗、休闲
+  //
+  // demandMult（本作独有，难度档位）：直接缩放「每人每日出行率」，
+  // 而不是事后乘到票款上 —— 后者会让满载率、拥堵、满意度全部失真，
+  // 玩家看到「车很挤但票款很少」会觉得模型坏了。缩在出行率上，
+  // 低难度就是「这座城市的人更爱坐地铁」，整条因果链都是自洽的。
   Model.prototype.tripRates = function (y) {
     const c = CFG.choice, ps = c.purposeShare;
     const wr = U.interp(c.workerRate, y), hr = U.interp(c.hoRate, y);
     const sc = U.interp(ps.sc, y), md = U.interp(ps.md, y), lz = U.interp(ps.lz, y), sh = Math.max(0.05, 1 - sc - md - lz);
-    return [wr, hr * sc, hr * sh, hr * md, hr * lz];
+    const k = this.demandMult > 0 ? this.demandMult : 1;
+    return [wr * k, hr * sc * k, hr * sh * k, hr * md * k, hr * lz * k];
   };
   // 周末各目的出行相对工作日的倍数：双休日制度下取 CFG.trips.weekend；周六仍上班、上课的年代（CFG.workWeek）
   // 周六的通勤约为工作日的 95%、上学约 90%，周日不变，周末两天平均
@@ -1010,11 +1016,27 @@
         let mx = 0;
         for (let q = 0; q < re.length; q++) if (P.load[re[q]] > mx) mx = P.load[re[q]];
         const need0 = U.clamp(Math.max(mx / (rt.cap * mc.targetLF), Model.serviceFloor(rt, p)), 1, mc.fMax);
+        /*
+         * 排班（本作独有）：玩家手动设过间隔的线路，按玩家的设置发车。
+         *
+         * 这里只改「目标发车频率」，不碰客流。车少了 → 满载率升高 → skim 里的 crowd 项
+         * 变大 → 乘客自己改走别的路 → 票款掉。这条因果链是引擎本来就有的，
+         * 玩家能从「车很挤」一路追到「票款少了」，而不是看到一个人为的折扣。
+         *
+         * 玩家设的间隔如果比运力需要更密，多开出来的车照样要烧电、要维保，
+         * 成本在 economy.js 里按 carKm 算 —— 所以「无脑拉满」不是免费的好事。
+         */
+        let needBase = need0;
+        if (CM.Ops) {
+          // rt.line 是 metro.js compile 时挂上的线路对象（net.lines[id]），ops 就存在它上面
+          const manual = CM.Ops.freqFor(rt, p, rt.line);
+          if (manual > 0) needBase = manual;
+        }
         // 突发事件（本作独有）：事故当天这条线开不出全部车次，运力打折。
         // 这里改的是「目标发车频率」而不是直接把客流扣掉 —— 让挤不上去的人自己改走别的路，
         // 票款自然掉，这才是玩家能看懂的那条因果链。
         const dis = (this.disrupt && this.disrupt[rt.id]) || 0;
-        const need = dis > 0 ? Math.max(1, need0 * (1 - dis)) : need0;
+        const need = dis > 0 ? Math.max(1, needBase * (1 - dis)) : needBase;
         const oldFreq = P.freq[r]; P.freq[r] = oldFreq * 0.55 + need * 0.45;
         if (oldFreq !== P.freq[r]) stable = false;
         for (let q = 0; q < re.length; q++) {

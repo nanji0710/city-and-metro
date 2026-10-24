@@ -1,4 +1,4 @@
-/**
+﻿/**
  * city-and-metro-vf 界面截图（Edge headless + CDP，零依赖）
  *
  * 用法：
@@ -38,6 +38,46 @@ const SCENES = {
       return 'OK:' + (go.textContent || '').trim().slice(0, 30);
     })()`],
     ['wait', 6000],
+  ],
+  // 排班面板（本作独有）：直接开广州，然后调 UI 打开 ops 页。
+  // 用 newGame 而不是点卡片 —— 点卡片只是选中，还要再点一次「开始」，多一步就多一个会漂的选择器。
+  ops: [
+    ['wait', 3000],
+    ['eval', `(() => {
+      if (!window.CM || !window.CM.newGame) return 'NO-CM';
+      window.CM.newGame({ map: 'guangzhou', mode: 'challenge', name: '排班试验局', difficulty: 'normal' });
+      return 'NEWGAME';
+    })()`],
+    ['wait', 9000],
+    ['eval', `(async () => {
+      const t0 = Date.now();
+      while (Date.now() - t0 < 30000) {
+        const g = window.CM && window.CM.game;
+        if (g && g.city && (g.city.roadGroups || []).length && !g.pending && !g.model.refreshing) break;
+        await new Promise(r => setTimeout(r, 400));
+      }
+      return 'READY';
+    })()`],
+    ['eval', `(() => {
+      const g = window.CM && window.CM.game;
+      if (!g) return 'NO-GAME';
+      try { window.CM.ui.closeScreen(); } catch (e) {}
+      try { window.CM.ui.closePanel(true); } catch (e) {}
+      window.CM.ui.openTop('ops');
+      return 'OPEN routes=' + ((g.compiled && g.compiled.routes) || []).length;
+    })()`],
+    ['wait', 1500],
+    // 接管第一条线的排班，验证滑块与策略真的写进 net.lines[].ops
+    ['eval', `(() => {
+      const g = window.CM && window.CM.game;
+      if (!g || !g.compiled || !g.compiled.routes.length) return 'NO-ROUTE';
+      const rt = g.compiled.routes[0];
+      const r = window.CM.Ops.set(g, rt.line.id, { peakHeadwaySec: 180, offHeadwaySec: 480, policy: 'peak_first' });
+      window.CM.ui.rerenderPage();
+      const o = window.CM.Ops.get(g.net.lines[rt.line.id]);
+      return 'TAKEOVER ' + (r.ok ? 'ok' : 'fail') + ' ' + o.peakHeadwaySec + '/' + o.offHeadwaySec + '/' + o.policy;
+    })()`],
+    ['wait', 1200],
   ],
   // 人员面板：进游戏后直接调 UI 打开（不依赖按钮文案，避免选择器漂移）
   staff: [
@@ -131,6 +171,27 @@ const SCENES = {
       return 'screenOpacity=' + getComputedStyle(s).opacity + ' cls=' + s.className;
     })()`],
     ['wait', 1200],
+  ],
+  // 难度档位（本作独有）：地图选择页右栏的开始区，四颗难度芯片
+  diff: [
+    ['wait', 3000],
+    ['eval', `(() => { try { window.CM.ui.showMapSelect(); return 'OPEN'; } catch (e) { return 'ERR:' + e.message; } })()`],
+    ['wait', 1000],
+    ['eval', `(() => {
+      const items = [...document.querySelectorAll('.msel-item')];
+      const t = items.find(e => (e.textContent || '').includes('广州'));
+      if (!t) return 'MISS';
+      t.click();
+      return 'PICK';
+    })()`],
+    ['wait', 900],
+    ['eval', `(() => {
+      const chips = [...document.querySelectorAll('.msel-diffchip')];
+      const hard = chips.find(e => (e.textContent || '').includes('硬核'));
+      if (hard) hard.click();
+      return 'DIFF chips=' + chips.length + ' on=' + ((document.querySelector('.msel-diffchip.on') || {}).textContent || '');
+    })()`],
+    ['wait', 900],
   ],
   market: [
     ['wait', 3000],

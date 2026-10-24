@@ -125,12 +125,31 @@
     // ---- 右侧：详情 ----
     const detail = h('div', { class: 'msel-detail' });
     const fmtDate = function (sl) { return sl.date[0] + '年' + sl.date[1] + '月'; };
+    // 难度档位（本作独有）：记住上次选择，跨地图复用 —— 玩家挑难度是「我这局想怎么玩」，
+    // 不是「这张图配哪个难度」，每换一张图就重置回标准会很烦。
+    const DIFF = CM.Difficulty || null;
+    const diffKey = function () { return DIFF ? DIFF.norm(self._diffKey) : null; };
+    const diffRow = function () {
+      if (!DIFF) return null;
+      const cur = diffKey();
+      const row = h('div', { class: 'msel-diff' },
+        h('div', { class: 'msel-diffh' }, h('b', null, '难度'), h('span', { class: 'tiny muted' }, DIFF.get(cur).desc)));
+      const chips = h('div', { class: 'msel-diffchips' });
+      for (const L of DIFF.LEVELS) {
+        chips.appendChild(h('button', {
+          class: 'msel-diffchip' + (L.key === cur ? ' on ' + L.color : ''),
+          onclick: function () { self._diffKey = L.key; snd('soft'); drawDetail(); },
+        }, h('b', null, L.name), h('span', { class: 'msel-diffstars' }, '★'.repeat(L.stars) + '☆'.repeat(4 - L.stars))));
+      }
+      row.appendChild(chips);
+      return row;
+    };
     const buildDetail = function () {
       const mp = CM.MAPS[sel], games = CM.Save.list(sel), latest = CM.Save.latest(sel), y0 = mp.cfg.START.y;
       const start = function (mode) {
         snd('build');
         if (mp.tutorial) CM.newGame({ map: sel, mode: 'free', tutorial: true, name: '新手教程 · ' + mp.data.city });
-        else CM.newGame({ map: sel, mode: mode, name: (mode === 'free' ? '自由建造' : '经营挑战') + ' · ' + mp.data.city + ' ' + y0 });
+        else CM.newGame({ map: sel, mode: mode, difficulty: diffKey(), name: (mode === 'free' ? '自由建造' : '经营挑战') + ' · ' + mp.data.city + ' ' + y0 });
       };
       const modeBtn = function (mode, icon, badge, title, desc, primary) {
         return h('button', { class: 'map-mode' + (primary ? ' primary' : ''), onclick: function () { start(mode); } },
@@ -157,9 +176,12 @@
         return h('div', { class: 'msel-ev' + (k === 0 ? ' start' : '') }, h('b', null, String(e[0])), h('i'), h('span', null, e[1]));
       }));
       const acts = h('div', { class: 'map-actions' });
+      const dr = diffRow();
+      if (dr && !mp.tutorial) acts.appendChild(dr);
       if (mp.tutorial) acts.appendChild(modeBtn('free', 'play', 'b-teal', '开始教程', '从头开始 12 个引导任务（不限资金）', true));
       else {
-        acts.appendChild(modeBtn('challenge', 'trophy', 'b-gold', '经营挑战', '新游戏 · 初始资金 ' + U.fmtMoney(mp.cfg.economy.startFunds, undefined, mp.cfg.money) + '，拨款随城市经济变化', true));
+        const dk = diffKey();
+        acts.appendChild(modeBtn('challenge', 'trophy', 'b-gold', '经营挑战', '新游戏 · 初始资金 ' + U.fmtMoney(DIFF ? DIFF.startFundsOf(dk) : mp.cfg.economy.startFunds, undefined, mp.cfg.money) + '（' + (DIFF ? DIFF.get(dk).name : '标准') + '），拨款随城市经济变化', true));
         acts.appendChild(modeBtn('free', 'sparkle', 'b-teal', '自由建造', '新游戏 · 资金不限，任务仅供参考', false));
       }
       acts.appendChild(h('button', { class: 'map-mode sub', disabled: latest ? null : true, 'data-tip': latest ? latest.name + ' · ' + fmtDate(latest) : null, onclick: function () { if (latest) self.loadSlot(latest.slotId); } },

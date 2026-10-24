@@ -91,6 +91,8 @@
       if (trains > 30) m *= 1 + Math.min(0.5, (trains - 30) * 0.02);
     }
     if (se && se.incidentMult) m *= se.incidentMult;
+    // 难度档位（本作独有）：硬核档事故更频繁，见习档更少
+    if (CM.Difficulty) m *= CM.Difficulty.of(g).incidentMult;
     return m;
   }
 

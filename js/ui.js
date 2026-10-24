@@ -84,6 +84,8 @@
     this.staffCnt = h('span', { class: 'cnt' }, '0');
     const staffBtn = hb('staff', 'people', '人员 · 雇佣与委派', function () { self.openTop('staff'); });
     staffBtn.appendChild(this.staffCnt);
+    // 排班（本作独有）：发车间隔与调度策略是玩家自己定的，入口必须常驻且好找
+    const opsBtn = hb('ops', 'clock', '排班 · 发车间隔与调度策略', function () { self.openTop('ops'); });
     this.top = h('header', { id: 'hudTop', class: 'hud hidden' },
       h('div', { class: 'cluster glass citybar' },
         h('div', { class: 'brand' }, h('img', { src: 'img/logo-white.png', alt: '城市与地铁' })),
@@ -98,6 +100,7 @@
         hb('search', 'search', '搜索车站、线路、道路、区域', function () { self.openSearch(); }, '/'),
         taskBtn,
         staffBtn,
+        opsBtn,
         hb('stats', 'chart', '城市统计', function () { self.openStats(); }, 'G'),
         hb('theme', 'moon', '深色模式', function () { self.toggleTheme(); }, 'N'),
         hb('settings', 'gear', '设置', function () { self.showSettings(); }),
@@ -1006,6 +1009,10 @@
       if (open && top.kind === 'staff') { this.closePanel(); return; }
       this.staffTab = this.staffTab || 'team';
       this.openPage('staff', this.staffTab, { root: true });
+    }
+    else if (key === 'ops') {
+      if (open && top.kind === 'ops') { this.closePanel(); return; }
+      this.openPage('ops', null, { root: true });
     }
     else if (key === 'save') this.openPage('saves', null, { toggle: true, root: true });
     else this.openPage('metric', key, { toggle: true, root: true });

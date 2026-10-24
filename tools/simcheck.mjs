@@ -15,7 +15,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ORDER = [
   'util', 'config', 'news', 'geo_gz', 'geo', 'data_gz', 'data_tutorial',
   'geo_hz', 'data_hz', 'geo_hk', 'data_hk', 'geo_tk', 'data_tk', 'geo_tp', 'data_tp',
-  'maps', 'facility', 'city', 'metro', 'sim', 'economy', 'staff', 'incidents',
+  'maps', 'facility', 'city', 'metro', 'sim', 'economy', 'difficulty', 'ops', 'staff', 'incidents',
   'macro', 'game', 'milestones', 'save',
 ];
 
@@ -240,6 +240,91 @@ if (CM.Incidents) {
   check('存档含 incidents', ser.incidents !== undefined);
   const st2 = CM.Staff.restore(ser.staff);
   check('人员存档往返无损', JSON.stringify(st2.serialize()) === JSON.stringify(ser.staff));
+
+  // ---------- 难度档位（本作独有） ----------
+  console.log('\n[难度档位]');
+  const mkDiff = function (key) {
+    // challenge 模式才会读难度算起始资金；free 模式资金无限，测不出差异
+    if (CM.useMap) CM.useMap('gz');
+    CM.mapId = 'gz';
+    return CM.Game.create({ mode: 'challenge', seed: 20261024, mapId: 'gz', difficulty: key });
+  };
+  const DK = CM.Difficulty.keys();
+  check('难度四档', DK.length === 4, DK.join('/'));
+  // 起始资金必须随档位单调递减：见习 > 标准 > 白手 > 硬核
+  const fundsOf = DK.map(function (k) { return CM.Difficulty.startFundsOf(k); });
+  let mono = true;
+  for (let i = 1; i < fundsOf.length; i++) if (!(fundsOf[i] < fundsOf[i - 1])) mono = false;
+  check('起始资金按档位递减', mono, fundsOf.join(' / '));
+  check('标准档 = 基底原值', fundsOf[1] === CM.CFG.economy.startFunds, String(fundsOf[1]));
+  // 客流倍率必须真的改到出行率上（而不是只改票款）
+  const dg = mkDiff('brutal');
+  const eg = mkDiff('easy');
+  const rHard = dg.model.tripRates(2025)[0], rEasy = eg.model.tripRates(2025)[0];
+  check('客流倍率进入出行率', rEasy > rHard, '易 ' + rEasy.toFixed(5) + ' > 难 ' + rHard.toFixed(5));
+  // 起始资金真的按难度扣到 econ 上
+  check('起始资金真的按档位', eg.econ.funds > dg.econ.funds, Math.round(eg.econ.funds) + ' > ' + Math.round(dg.econ.funds));
+  // 事故倍率
+  check('事故倍率随难度递增', CM.Incidents.incidentMultOf(dg, null) > CM.Incidents.incidentMultOf(eg, null),
+    CM.Incidents.incidentMultOf(eg, null).toFixed(2) + ' → ' + CM.Incidents.incidentMultOf(dg, null).toFixed(2));
+  // 建设成本倍率
+  CM.Metro.setBuildMult(CM.Difficulty.get('easy').buildMult);
+  const cEasy = CM.Metro.stationCost('underground', 'M', 2025);
+  CM.Metro.setBuildMult(CM.Difficulty.get('brutal').buildMult);
+  const cHard = CM.Metro.stationCost('underground', 'M', 2025);
+  CM.Metro.setBuildMult(1);
+  check('建设成本倍率生效', cHard > cEasy, '易 ' + cEasy.toFixed(0) + ' < 难 ' + cHard.toFixed(0));
+  // 存档往返：难度必须跟着 econ 一起回来
+  const serHard = dg.serialize();
+  check('存档带难度', serHard.econ && serHard.econ.difficulty === 'brutal', serHard.econ && serHard.econ.difficulty);
+  const eRestored = CM.Economy.restore(serHard.econ);
+  check('难度存档往返无损', eRestored.difficulty === 'brutal' && Math.round(eRestored.funds) === Math.round(dg.econ.funds),
+    eRestored.difficulty + ' / ' + Math.round(eRestored.funds));
+  // 未知难度必须落回 normal 而不是抛错（读档路径抛错 = 存档作废）
+  check('非法难度回落 normal', CM.Difficulty.norm('nonsense') === 'normal' && CM.Difficulty.norm(undefined) === 'normal');
+  // 现场复位：mkDiff 里调过 useMap 把全局底图切走了，这里切回广州并清掉模块级建设倍率。
+  // 不要重新赋值 g —— 上面的 365 天断言与下面的费用结构读的是同一个 g。
+  if (CM.useMap) CM.useMap('gz');
+  CM.mapId = 'gz';
+  CM.Metro.setBuildMult(1);
+
+  // ---------- 排班与运营策略（本作独有） ----------
+  console.log('\n[排班]');
+  {
+    const og = CM.Game.create({ mode: 'free', seed: 20261024, mapId: 'gz' });
+    const net = og.net;
+    const lid = CM.Metro.newLine(net, '测试线');
+    const a = CM.Metro.addStation(net, 20, 20, { size: 'M', type: 'underground' }, og.city);
+    const b = CM.Metro.addStation(net, 24, 20, { size: 'M', type: 'underground' }, og.city);
+    CM.Metro.addSegment(net, lid, net.stations[a].id, net.stations[b].id, [], 'underground');
+    // 新线默认交给引擎自动排班（老存档与新手期也是这条路，所以必须验）
+    check('默认不接管排班', CM.Ops.get(net.lines[lid]).manual === false, 'manual=false');
+    const set1 = CM.Ops.set(og, lid, { peakHeadwaySec: 180, offHeadwaySec: 600, policy: 'peak_first' });
+    check('排班写入成功', set1.ok, set1.ok ? 'ok' : String(set1.error));
+    const got = CM.Ops.get(og.net.lines[lid]);
+    check('排班往返一致', got.peakHeadwaySec === 180 && got.offHeadwaySec === 600 && got.policy === 'peak_first',
+      got.peakHeadwaySec + '/' + got.offHeadwaySec + '/' + got.policy);
+    // 间隔夹取：低于信号极限与高于半小时都要被夹住，而不是抛错或原样存进去
+    CM.Ops.set(og, lid, { peakHeadwaySec: 5, offHeadwaySec: 99999 });
+    const cl = CM.Ops.get(og.net.lines[lid]);
+    check('间隔被夹到物理边界', cl.peakHeadwaySec === CM.Ops.MIN_HEADWAY_SEC && cl.offHeadwaySec === CM.Ops.MAX_HEADWAY_SEC,
+      cl.peakHeadwaySec + '~' + cl.offHeadwaySec);
+    // 策略必须真的改变频率：保高峰在高峰更密、在平峰更疏
+    CM.Ops.set(og, lid, { peakHeadwaySec: 240, offHeadwaySec: 240, policy: 'peak_first' });
+    const fakeRt = { cycleSec: 3600, cap: 1440 };
+    const fPeak = CM.Ops.freqFor(fakeRt, 0, og.net.lines[lid]);
+    const fOff = CM.Ops.freqFor(fakeRt, 1, og.net.lines[lid]);
+    check('保高峰：高峰比平峰密', fPeak > fOff, fPeak.toFixed(2) + ' > ' + fOff.toFixed(2));
+    // 恢复自动排班
+    CM.Ops.auto(og, lid);
+    check('可恢复自动排班', CM.Ops.get(og.net.lines[lid]).manual === false);
+    check('恢复后 freqFor 返回 0', CM.Ops.freqFor(fakeRt, 0, og.net.lines[lid]) === 0);
+    // 存档：ops 存在 net.lines 上，随 net 一起存，不需要额外字段
+    CM.Ops.set(og, lid, { peakHeadwaySec: 200, offHeadwaySec: 500, policy: 'service' });
+    const serOps = og.serialize();
+    const savedOps = serOps.net && serOps.net.lines[lid] && serOps.net.lines[lid].ops;
+    check('排班随 net 进存档', !!savedOps && savedOps.peakHeadwaySec === 200, savedOps ? JSON.stringify(savedOps) : 'none');
+  }
 
   // 费用结构
   const ld = g.econ.lastDay;

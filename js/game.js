@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 // 游戏状态与流程：时钟、日/月结算、跳月/跳年、建设草案、预测与存档序列化
 (function (CM) {
   const U = CM.U, CFG = CM.CFG, D = CM.DATA, M = CM.Metro;
@@ -25,6 +25,10 @@
     g.mapId = CM.mapId || 'gz';   // 当前地图（CM.useMap 已切换好数据）
     g.name = opts.name || ((D.city || '广州') + ' ' + CFG.START.y);
     g.mode = opts.mode;
+    // 难度档位（本作独有）。free 模式（教程）不参与难度：它要展示所有玩法，
+    // 任何惩罚倍率都会让新手以为「点了按钮就掉钱」。存档里由 econ.difficulty 恢复。
+    g.difficulty = CM.Difficulty ? CM.Difficulty.norm(opts.difficulty || CM.Difficulty.DEFAULT_KEY) : null;
+    if (g.mode === 'free') g.difficulty = 'easy';
     g.seed = opts.seed || (CFG.START.y * 10000 + 101);
     if (opts.tutorial) g.tutorial = { step: 0, done: [], started: Date.now() };
     g.createdAt = Date.now();
@@ -34,12 +38,16 @@
     g.model = new CM.Model(g.city);
     g.model.setYear(g.clock.y);
     g.model.setDayType(CM.Model.dayType(g.clock.y, g.clock.m, g.clock.d));
+    // 难度：客流盘子。必须在 setNetwork 之前设，否则首帧日客流用的是旧缩放
+    if (CM.Difficulty) g.model.demandMult = CM.Difficulty.get(g.difficulty).demandMult;
+    // 建设成本倍率：必须早于任何 M.evaluate / 预览，否则首帧报价用的是 1.0
+    if (CM.Difficulty) M.setBuildMult(CM.Difficulty.get(g.difficulty).buildMult);
     g.traffic = { v: CFG.TRAFFIC_MODEL };
     g.net = M.empty();
     g.mapInit = buildInitialNetwork(g);   // 开局既有地铁（东京 1950 年等），只在新建时生成一次，随存档保存
     g.compiled = M.compile(g.net, g.city);
     g.model.setNetwork(g.compiled);
-    g.econ = new CM.Economy(g.mode, g.clock.y, g.clock.m);
+    g.econ = new CM.Economy(g.mode, g.clock.y, g.clock.m, g.difficulty);
     g.model.fare = g.econ.fare;
     g.tasks = new CM.Tasks();
     // 人员：开局给一个空队伍 + 一批候选人。开局就有市场，玩家第一眼就能看到「人是有价的」
@@ -566,7 +574,7 @@
   // ---------------- 存档 ----------------
   Game.prototype.serialize = function () {
     return {
-      meta: { gameId: this.id, name: this.name, mode: this.mode, seed: this.seed, createdAt: this.createdAt, gameVersion: CFG.GAME_VERSION, map: this.mapId || 'gz', mapVersion: (CM.MAPS[this.mapId || 'gz'] || {}).mapVersion || 1, scenario: (CM.MAPS[this.mapId || 'gz'] || {}).scenario || '', mapFp: (CM.MAPS[this.mapId || 'gz'] || {}).fp || '' },
+      meta: { gameId: this.id, name: this.name, mode: this.mode, difficulty: this.difficulty || null, seed: this.seed, createdAt: this.createdAt, gameVersion: CFG.GAME_VERSION, map: this.mapId || 'gz', mapVersion: (CM.MAPS[this.mapId || 'gz'] || {}).mapVersion || 1, scenario: (CM.MAPS[this.mapId || 'gz'] || {}).scenario || '', mapFp: (CM.MAPS[this.mapId || 'gz'] || {}).fp || '' },
       clock: Object.assign({}, this.clock),
       city: this.city.serialize(),
       net: this.net,
@@ -606,11 +614,20 @@
     g.model = new CM.Model(g.city);
     g.model.setYear(g.clock.y + (g.clock.m - 1) / 12);
     g.model.setDayType(CM.Model.dayType(g.clock.y, g.clock.m, g.clock.d));
+    // 难度：从存档里恢复（1.x 与 v2.1 之前的存档没有难度字段，按 normal 兜底）
+    g.difficulty = CM.Difficulty ? CM.Difficulty.norm((s.econ && s.econ.difficulty) || CM.Difficulty.DEFAULT_KEY) : null;
+    if (g.mode === 'free' && CM.Difficulty) g.difficulty = 'easy';
+    if (CM.Difficulty) g.model.demandMult = CM.Difficulty.get(g.difficulty).demandMult;
+    // 建设成本倍率：必须早于任何 M.evaluate / 预览，否则首帧报价用的是 1.0
+    if (CM.Difficulty) M.setBuildMult(CM.Difficulty.get(g.difficulty).buildMult);
     g.model.buildZones(); g.model.buildDemand();
     g.net = s.net;
     g.compiled = M.compile(g.net, g.city);
     g.model.setNetwork(g.compiled);
     g.econ = CM.Economy.restore(s.econ);
+    // 难度：econ.difficulty 是权威来源（Economy 构造时已按它算好起始资金），
+    // 这里把它回写到 game 上，供面板与突发事件概率读取。
+    if (CM.Difficulty) { g.difficulty = CM.Difficulty.norm(g.econ.difficulty || CM.Difficulty.DEFAULT_KEY); g.econ.difficulty = g.difficulty; }
     g.model.fare = g.econ.fare;
     g.tasks = CM.Tasks.restore(s.tasks);
     // 人员：1.x 存档没有这一层，按空队伍接入（不影响原有资金与进度）
