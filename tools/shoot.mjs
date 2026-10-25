@@ -290,6 +290,38 @@ const SCENES = {
     })()`],
     ['wait', 1600],
   ],
+  // 新手引导（本作扩展：基底 12 步 + 我们独有的雇人/排班/事故 3 步）
+  // 直接 newGame({tutorial:true}) 跳过点卡片的漂移，然后跳到「雇一个人帮你」那一步截图。
+  tutorial: [
+    ['wait', 3000],
+    ['eval', `(async () => {
+      if (!window.CM || !window.CM.newGame) return 'NO-CM';
+      window.CM.newGame({ map: 'tutorial', mode: 'free', tutorial: true, name: '教程截图' });
+      for (let i = 0; i < 150 && !window.CM.game; i++) await new Promise(r => setTimeout(r, 100));
+      const g = window.CM.game;
+      if (!g) return 'NO-GAME';
+      for (let i = 0; i < 100 && (!g.city.roadGroups || !g.city.roadGroups.length || g.pending); i++) await new Promise(r => setTimeout(r, 200));
+      try { window.CM.ui.closeScreen(); } catch (e) {}
+      return 'READY coach=' + !!document.getElementById('coach');
+    })()`],
+    ['wait', 900],
+    ['eval', `(() => {
+      const g = window.CM.game;
+      if (!g || !g.tutorial) return 'NO-TUT';
+      // 直接跳到新增的三步之一：前面的 12 步要靠真实操作才能通过，截图不值得走一遍
+      const coach = document.getElementById('coach');
+      const total = document.querySelectorAll('.co-step').length;
+      g.tutorial.step = 13;
+      if (window.CM.Tutorial && window.CM.Tutorial.active()) {
+        // 走内部 go() 才能刷新卡片与高亮：attach 一次相当于重建
+        window.CM.Tutorial.detach();
+        window.CM.Tutorial.attach(window.CM.ui, g);
+      }
+      const t = document.querySelector('.co-title');
+      return 'STEP ' + (t ? t.textContent.trim() : 'none') + ' total=' + total;
+    })()`],
+    ['wait', 1600],
+  ],
 }
 
 async function cdp(ws, method, params = {}) {

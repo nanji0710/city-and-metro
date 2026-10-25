@@ -178,7 +178,7 @@
       const acts = h('div', { class: 'map-actions' });
       const dr = diffRow();
       if (dr && !mp.tutorial) acts.appendChild(dr);
-      if (mp.tutorial) acts.appendChild(modeBtn('free', 'play', 'b-teal', '开始教程', '从头开始 12 个引导任务（不限资金）', true));
+      if (mp.tutorial) acts.appendChild(modeBtn('free', 'play', 'b-teal', '开始教程', '从头开始 15 个引导任务（约 20 分钟，不限资金）', true));
       else {
         const dk = diffKey();
         acts.appendChild(modeBtn('challenge', 'trophy', 'b-gold', '经营挑战', '新游戏 · 初始资金 ' + U.fmtMoney(DIFF ? DIFF.startFundsOf(dk) : mp.cfg.economy.startFunds, undefined, mp.cfg.money) + '（' + (DIFF ? DIFF.get(dk).name : '标准') + '），拨款随城市经济变化', true));

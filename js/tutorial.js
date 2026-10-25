@@ -18,7 +18,7 @@
   // 步骤：title 目标、body 说明、hint 小提示、target 闪烁的按钮、hl 地图高亮、check 完成条件、manual 需点击按钮继续
   const STEPS = [
     { id: 'intro', title: '欢迎来到青湾', manual: '开始教程',
-      body: '青湾是一座约 42 万人的小城，青江从城中穿过，城市还没有地铁。接下来用 12 个小任务带你学会规划地铁：每完成一步会自动进入下一步，也可以随时跳过。' },
+      body: '青湾是一座约 42 万人的小城，青江从城中穿过，城市还没有地铁。接下来用 15 个小任务带你学会规划地铁：每完成一步会自动进入下一步，也可以随时跳过。' },
     { id: 'move', title: '移动地图',
       body: '按住左键拖动地图平移，滚动滚轮缩放（也可以用 + − 键）。按 T 在 2D 平面与 2.5D 立体之间切换。',
       hint: '试着拖动地图，再缩放一下。',
@@ -91,12 +91,56 @@
       body: '按 K 或点击左侧的「线路示意图」：换乘站标志与地图一致，可以平滑缩放，也可以导出 PNG 图片。',
       target: function () { return CM.Follow && CM.Follow.active() ? null : ui.tbtns.netmap; },
       check: function () { return !!(CM.NetMap && CM.NetMap.isOpen()); } },
+    // ── 以下三步是本作独有的玩法（基底没有人员、排班、事故）────────────────
+    { id: 'staff', title: '雇一个人帮你',
+      body: '地铁可以无人运营，但事故只能你亲手处置。点顶栏的「人员」，在人才市场雇一名线长 —— 线长管着的那条线，出了事会自动处置，代价是更贵、更慢。',
+      hint: '人员按日结算工资：雇之前先想清楚这条线一天能挣多少。',
+      target: function () { return ui.hbtns && ui.hbtns.staff ? ui.hbtns.staff : null; },
+      check: function () { return !!(g.staff && g.staff.hired.length > 0); } },
+    { id: 'ops', title: '自己排一条线的班',
+      body: '点顶栏的「排班」：默认班次是引擎按客流自动配的，你可以接管任意一条线，自己定高峰/平峰的间隔与调度策略。间隔越密车越挤不上去的人越少，但车公里成本也越高 —— 没有「最优解」按钮，盈亏全看你怎么排。',
+      hint: '先按「交给你排班」，再拖一下高峰间隔的滑块。',
+      target: function () { return ui.hbtns && ui.hbtns.ops ? ui.hbtns.ops : null; },
+      check: function () { for (const lid in g.net.lines) if (g.net.lines[lid].ops) return true; return false; } },
+    { id: 'incident', title: '处置一起事故',
+      body: '线路开通后事故是常态。这一起是教程替你造的：顶栏「人员」上有红点，左下角有提示条。去「人员 → 最近的事故」点「处置」—— 不处置的话，第二天会按放弃结算，满意度与运力都要吃双倍损失。',
+      hint: '处置要花钱，但不处置赔得更多。',
+      enter: function () {
+        // 教程期强制造一起事故（文档里写明的教学期做法）：
+        // 事故是概率事件，不主动造的话 20 分钟的教程里大概率一次都遇不上，
+        // 而它恰恰是唯一「玩家必须亲手点」的玩法 —— 没教过就等于没做。
+        if (!CM.Incidents || !g.compiled || !g.compiled.routes.length) return;
+        // 已经有一条待处置的就不再造：玩家可能来回翻步骤，每翻一次加一起会变成刷钱刷满意度
+        if ((g.lastIncidents || []).some(function (r) { return !r.handled && String(r.id).indexOf('tut_') === 0; })) return;
+        const rt = g.compiled.routes[0];
+        const I = CM.Incidents;
+        const lv = I.LEVEL_BY_LV[2];
+        const cost = I.repairCostFor(lv, rt.stIdx.length, false);
+        g.lastIncidents = (g.lastIncidents || []).concat([{
+          id: 'tut_' + Date.now(), lv: lv.lv, key: lv.key,
+          title: 'L' + lv.lv + ' · ' + lv.name + '（' + rt.line.name + '）',
+          desc: lv.desc, routeId: rt.id, lineId: rt.lineId, lineName: rt.line.name,
+          minutes: lv.minutes[1], satHit: lv.satHit, capLoss: lv.capLoss,
+          cost: cost, auto: false, handled: false, day: g.clock.d,
+        }]);
+        g.syncDisruptions();
+        if (ui.updateTop) ui.updateTop();
+        if (ui.toast) ui.toast('L2 · 区间中断 · 待处置（' + U.fmtMoney(cost) + '）', 'bad',
+          { label: '去处置', fn: function () { ui.openTop('staff'); } });
+      },
+      target: function () { return ui.hbtns && ui.hbtns.staff ? ui.hbtns.staff : null; },
+      check: function () {
+        // 只认「玩家亲手处置过的」：不处置的话，第二天 sweep() 会把它按 ignore 结算并标成 handled，
+        // 若只判 !handled，玩家什么都不做也会莫名其妙通过这一步。
+        const list = g.lastIncidents || [];
+        return list.some(function (r) { return r.handled && r.mode === 'manual'; });
+      } },
     // 经济小知识（可跳过、可回看，不计入 12 个任务；青湾为自由建造，不实际发行债券）
     { id: 'money', title: '小知识：经营挑战的财政', info: true,
-      body: '正式城市的「经营挑战」要自己管钱：每月有政府拨款与票款，建设和运营都要花钱；资金紧张时可以发行地方债或城投债，借来的钱只能用于地铁建设，每年付息、到期还本。',
+      body: '正式城市的「经营挑战」要自己管钱：每月有政府拨款与票款，建设和运营都要花钱；资金紧张时可以发行地方债或城投债，借来的钱只能用于地铁建设，每年付息、到期还本。四档难度只调你控制不了的那部分（起始资金、拨款、客流、事故、造价），不会偷偷乘在你的运营成本上。',
       hint: '点「图文说明」查看详细介绍与操作方法；之后也可以在「菜单 → 操作说明」中回看。' },
     { id: 'done', title: '教程完成！', final: true,
-      body: '你已经学会了移动地图、读图层、建站绘线、确认建设、跨江与换乘、查看客流、跟随列车和线路示意图。可以继续在青湾自由建设，也可以去广州开始正式游戏：广州有经营挑战、历史任务和逐年开放的新区。' },
+      body: '你已经学会了移动地图、读图层、建站绘线、确认建设、跨江与换乘、查看客流、跟随列车、线路示意图，还试了本作独有的三件事：雇人、自己排班、处置事故。可以继续在青湾自由建设，也可以去正式城市开一局经营挑战 —— 那里有真实线网、四档难度、政府拨款与债券。' },
   ];
   const TASKS = STEPS.filter(function (s) { return !s.manual && !s.final && !s.info; }).length;   // 不含欢迎、小知识与完成
 
