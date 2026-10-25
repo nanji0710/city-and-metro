@@ -238,12 +238,16 @@
   };
 
   /* 分部每月上缴。由 game.js 的 monthGen 调用。
-   * 两处旧实现的错，都在这里修掉：
+   * 三处旧实现的错，都在这里修掉：
    * 1) 原来读 g.econ.cur 当「本月净利」，但 monthGen 里 openMonth 已经把 cur
    *    换成一张新的空账，此刻读到的只有刚发的拨款 —— 于是「上缴 35% 净利」
    *    实际变成了「上缴 35% 拨款」。改用 lastClosed()，即上一个真正结算完的月份。
    * 2) 原来从 econ.funds 扣掉之后没有任何账户收到（Company.treasury 只是各分部之和），
-   *    这 35% 是凭空销毁的。现在转入公司自有现金 pool，一分不少。 */
+   *    这 35% 是凭空销毁的。现在转入公司自有现金 pool，一分不少。
+   * 3) 上缴额直接从 econ.funds 上减，不经过 econ.spend()，于是本月账本里
+   *    「期末 − 期初」对不上任何科目 —— 财政页看不到这笔钱，玩家会以为账算错了。
+   *    现在走 spend('remit', ...)，账本有 remit 科目、流水有记录、恒等式成立。
+   *    同时净利里补上「本金偿还」：还本是真金白银的流出，不该算成可分配利润。 */
   Company.remit = function (g, y, m) {
     const c0 = Company.active();
     if (!c0 || !g || !g.company || g.company.id !== c0.id) return null;
@@ -259,16 +263,17 @@
     if (last) {
       net = (last.fare || 0) + (last.grant || 0) + (last.reward || 0)
         - (last.ops || 0) - (last.construction || 0) - (last.demolition || 0)
-        - (last.upgrade || 0) - (last.relocation || 0) - (last.interest || 0) - (last.penalty || 0);
+        - (last.upgrade || 0) - (last.relocation || 0) - (last.interest || 0)
+        - (last.principal || 0) - (last.penalty || 0);
     }
     let paid = 0;
     if (net > 0) {
       const want = net * REMIT_RATE;
       const can = Math.min(want, Math.max(0, g.econ.funds));
       if (can > 0.01) {
-        g.econ.funds -= can;
+        g.econ.spend('remit', can);           // 记账（本月 remit 科目 + 资金流水）
         paid = can;
-        c.pool = Company.poolOf(c) + paid;   // 收款方：公司自有现金
+        c.pool = Company.poolOf(c) + paid;    // 收款方：公司自有现金
         c.updatedAt = nowIso();
       }
     }

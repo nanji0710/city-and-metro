@@ -378,9 +378,16 @@ if (CM.Company) {
   // 此刻读 cur 只能读到本月刚发的拨款，所以引擎用 econ.lastClosed()。
   CO.updateBranch(co, 'gz', { funds: 400000 });
   const pool0 = CO.poolOf(CO.get(co.id));
+  // 公司层用到的 econ 桩：必须跟真 Economy 的方法面对齐。
+  // remit 现在走 spend('remit', …) 记账，桩里少一个 spend 就会 TypeError。
+  const econStub = (funds, last) => ({
+    isFree: () => false, funds: funds, spent: {}, last: last,
+    spend(k, v) { this.spent[k] = (this.spent[k] || 0) + v; this.funds -= v; },
+    lastClosed: () => last,
+  });
   const fakeG = {
     mapId: 'gz', company: { id: co.id, name: co.name }, clock: { y: 2025, m: 3 },
-    econ: { isFree: () => false, funds: 400000, lastClosed: () => ({ fare: 100000, ops: 40000 }) },
+    econ: econStub(400000, { fare: 100000, ops: 40000 }),
   };
   const rm = CO.remit(fakeG, 2025, 3);
   const expect = (100000 - 40000) * CO.REMIT_RATE;
@@ -388,9 +395,12 @@ if (CM.Company) {
   // 关键回归：上缴的钱必须落到公司自有资金上，不能凭空蒸发（旧实现就是扣完没人收）
   check('上缴的钱进入公司自有资金', Math.abs(CO.poolOf(CO.get(co.id)) - (pool0 + expect)) < 1,
     CO.poolOf(CO.get(co.id)).toFixed(1) + ' vs ' + (pool0 + expect).toFixed(1));
+  // 记账：上缴必须走 econ.spend('remit', …) 落进本月账本，否则「期末 − 期初」对不上任何科目
+  check('上缴走 spend 落账（remit 科目）', Math.abs((fakeG.econ.spent.remit || 0) - expect) < 1,
+    (fakeG.econ.spent.remit || 0).toFixed(1) + ' vs ' + expect.toFixed(1));
   const fakeG2 = {
     mapId: 'gz', company: { id: co.id, name: co.name }, clock: { y: 2025, m: 4 },
-    econ: { isFree: () => false, funds: 400000, lastClosed: () => ({ fare: 10000, ops: 90000 }) },
+    econ: econStub(400000, { fare: 10000, ops: 90000 }),
   };
   const rm2 = CO.remit(fakeG2, 2025, 4);
   check('亏损月不抽成', rm2 && rm2.paid === 0, rm2 ? String(rm2.paid) : 'null');
@@ -398,7 +408,7 @@ if (CM.Company) {
   // 公司自有资金必须真的能花出去，否则 pool 只是另一种死账
   const fakeG3 = {
     mapId: 'gz', company: { id: co.id, name: co.name }, clock: { y: 2025, m: 5 },
-    econ: { isFree: () => false, funds: 400000, lastClosed: () => ({ fare: 200000, ops: 0 }) },
+    econ: econStub(400000, { fare: 200000, ops: 0 }),
   };
   CO.remit(fakeG3, 2025, 5);                       // 再缴 70000，pool 累积到能付得起最低档接入费
   CO.updateBranch(co, 'gz', { funds: 0 });         // 分部账清空，只剩公司自有资金

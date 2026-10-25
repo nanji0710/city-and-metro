@@ -54,7 +54,7 @@
       target: function () { return ui.draftbar.querySelector('.btn.primary'); },
       check: function () { for (const lid in g.net.lines) if (lineStations(g.net, lid).length >= 4) return g.compiled.routes.length > 0; return false; } },
     { id: 'run', title: '让时间走起来',
-      body: '按空格或点击 ▶ 开始，再试试 3× 速度。列车数由系统按站数、站距与客流自动配置；早高峰（7–9 点）乘客最多。',
+      body: '按空格或点击 ▶ 开始，再试试 3× 速度。发车间隔先由系统按站距与客流自动排定，早高峰（7–9 点）乘客最多；想自己调可以在「运营」里接管。',
       hint: '让游戏时间走过 3 小时。',
       target: function () { return g.speed > 0 ? (g.speed === 1 ? ui.tbtns.s2 : null) : ui.tbtns.pause; },
       enter: function () { if (g.tutorial.runT0 == null) g.tutorial.runT0 = absMin(g.clock); ctx.t0 = g.tutorial.runT0; },   // 计时起点随进度保存，读档后不重新计时

@@ -8,9 +8,10 @@
   //   融资到账 bond（债券募集，进入建设专项资金，不算收入）
   //   建设支出 construction · demolition · upgrade · relocation（其中 capexUse 为专项资金支付的部分）
   //   运营成本 ops · 利息 interest · 本金偿还 principal · 逾期费用 penalty
+  //   分部上缴 remit（多城公司把分部净利的一部分转到公司自有现金，见 company.js）
   function blankMonth(y, m, funds, capex) {
     return { y: y, m: m, start: funds, grant: 0, fare: 0, construction: 0, demolition: 0, upgrade: 0, relocation: 0, ops: 0, reward: 0,
-      bond: 0, interest: 0, principal: 0, penalty: 0, capexUse: 0, capexStart: capex || 0, days: 0, wdDays: 0, weDays: 0, end: funds };
+      bond: 0, interest: 0, principal: 0, penalty: 0, remit: 0, capexUse: 0, capexStart: capex || 0, days: 0, wdDays: 0, weDays: 0, end: funds };
   }
   const BUILD_KINDS = ['construction', 'demolition', 'upgrade', 'relocation'];
   const MONEY_EPS = 1e-7;   // 内部单位是万元；只忽略浮点误差，不能把不足 0.5 万的真实债务清零
@@ -179,6 +180,9 @@
       const c = this.cur, when = { y: c.y, m: c.m, d: U.daysInMonth(c.y, c.m) };
       if (c.fare > 0.5) this.log('fare', c.fare, 'gen', '本月票款（' + c.days + ' 天' + (c.wdDays || c.weDays ? '：' + (c.wdDays || 0) + ' 个工作日、' + (c.weDays || 0) + ' 个周末日' : '') + '）', when);
       if (c.ops > 0.5) this.log('ops', -c.ops, 'gen', '本月运营成本（' + c.days + ' 天）', when);
+      // 分部上缴走流水：旧实现直接改 funds，钱出去了但账上一笔没有，
+      // 玩家在财政页看不到这 35% 去了哪里 —— 属于「钱凭空少了一块」的账目黑洞
+      if ((c.remit || 0) > 0.5) this.log('remit', -c.remit, 'gen', '本月分部上缴公司', when);
     }
     this.cur.closed = true;
     this.ledger.push(this.cur);

@@ -216,19 +216,30 @@
     const out = {
       incidentMult: 1, onTimeAdd: 0, satAdd: 0, repairMult: 1, maintMult: 1, revenueMult: 1,
       autoHandle: false, payroll: 0, headcount: 0, roles: {},
+      // 哪些线路有「专属线长」：事故自动处置按线判定（见 incidents.js 的 roll）
+      lineAuto: {},
     };
     if (!staff) return out;
     for (const p of staff.hired) {
-      if (p.lineId && lineId && p.lineId !== lineId) continue;      // 属于别的线
-      if (p.lineId && !lineId) continue;                            // 城市级汇总不含专人
       const role = ROLE_BY_KEY[p.role];
       if (!role) continue;
       const L = LEVELS[Math.max(0, Math.min(4, (p.level | 0) - 1))];
       const w = L.eff;
-      out.headcount++;
-      out.roles[p.role] = (out.roles[p.role] || 0) + 1;
-      // 工资：日结。万元/月 ÷ 30
-      out.payroll += (p.salary || 0) / 30;
+      /* 效果归属：未指派 = 全网；指派了线路 = 只作用于那条线。
+       *
+       * 旧实现把「指派了线路」的人整个 continue 掉，于是他们既不产生任何效果、
+       * 也不进 payroll —— 指派一个线长等于白雇一个免费且无效的人，这是本轮体检
+       * 抓出来的真 bug。现在工资与人数一律照发（钱不管组织架构），
+       * 效果则按归属计入；派到线路的人由 effectsCity() 按线路规模折算进全网。 */
+      const mine = !p.lineId || (lineId && p.lineId === lineId);
+      if (!lineId) {
+        // 工资只有城市级汇总算一次，否则逐线求和会重复发钱
+        out.headcount++;
+        out.roles[p.role] = (out.roles[p.role] || 0) + 1;
+        out.payroll += (p.salary || 0) / 30;   // 万元/月 ÷ 30 = 万元/天
+      }
+      if (p.role === 'line_manager' && p.lineId) out.lineAuto[p.lineId] = true;
+      if (!mine) continue;
       for (const t of p.traits || []) {
         if (t.key === 'incident') out.incidentMult *= t.value;
         if (t.key === 'onTime') out.onTimeAdd += t.value;
@@ -272,6 +283,59 @@
     return out;
   }
   Staff.effects = effects;
+
+  /* 全网效果：城市级人员 + 各线专属人员，按线路规模折算成一组系数。
+   *
+   * 为什么需要这一层：effects() 是「一个作用域」的汇总，而玩家可以把某个人
+   * 指派到一条线（面板上的「负责线路」下拉框）。指派的意义是「专责」：
+   * 他的人只盯这一条线，所以效果要按这条线的运营规模折算进全网，
+   * 而不是直接消失（旧实现就是直接消失，见 effects() 里的注释）。
+   *
+   * weights：{ lineId: 规模占比 }，由 Game.lineWeights() 按配属列车公里算出。
+   * 加权方式：
+   *   乘性系数（事故率/维保/维修/收入）按占比线性混合 ——
+   *     m = m_city × Σ share_i × (m_line_i / m_city)
+   *   加性系数（准点、满意度）按占比加权平均增量。
+   * 这样「把检修派到干线」比「派到支线」更值钱，下拉框才是个真决策。
+   */
+  function effectsCity(staff, year, weights) {
+    const out = effects(staff, year, { lineId: null });
+    if (!staff || !staff.hired.length) return out;
+    // 有哪些线挂了专属人员
+    const ids = [];
+    for (const p of staff.hired) if (p.lineId && ids.indexOf(p.lineId) < 0) ids.push(p.lineId);
+    if (!ids.length) return out;
+    const share = {}, res = {};
+    let tot = 0;
+    for (const id of ids) { const w = Math.max(0, (weights && weights[id]) || 0); share[id] = w; tot += w; }
+    if (tot <= 0) {
+      // 规模信息不可用（线路刚拆光/权重没传）：按平均分摊，避免「派了人却没效果」
+      for (const id of ids) share[id] = 1 / ids.length;
+    } else {
+      for (const id of ids) share[id] = share[id] / tot;
+    }
+    for (const id of ids) res[id] = effects(staff, year, { lineId: id });
+    const MUL = ['incidentMult', 'repairMult', 'maintMult', 'revenueMult'];
+    for (const k of MUL) {
+      const base = out[k] || 1;
+      let mix = 0;
+      for (const id of ids) mix += share[id] * ((res[id][k] || 1) / base);
+      out[k] = base * mix;
+    }
+    const ADD = ['onTimeAdd', 'satAdd'];
+    for (const k of ADD) {
+      let mix = 0;
+      for (const id of ids) mix += share[id] * ((res[id][k] || 0) - out[k]);
+      out[k] = out[k] + mix;
+    }
+    // 专属线长：把「哪些线能自动处置」交给 incidents 按线判断
+    // （逐线明细 res[] 已经按规模占比混进上面的乘性/加性系数，不再单独挂到 out 上）
+    for (const id of ids) {
+      if (res[id].autoHandle && res[id].lineAuto[id]) out.lineAuto[id] = true;
+    }
+    return out;
+  }
+  Staff.effectsCity = effectsCity;
 
   // 工资合计（万元/月），用于面板显示
   function payrollMonthly(staff) {

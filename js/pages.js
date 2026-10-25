@@ -1032,6 +1032,9 @@
     if (!free) group('融资到账（不计入收入）', [['债券募集 → 建设专项资金', '+ ' + M(c.bond)]], 'fin');
     group('建设支出', [['建设与拆迁', '− ' + M(buildOf(c))], !free ? ['其中由专项资金支付', M(c.capexUse)] : null], 'out');
     group('运营成本', [['列车运行与车站', '− ' + M(c.ops)]], 'out');
+    // 多城公司：分部按净利上缴的部分。以前这笔钱直接从 funds 上减、账本上不留痕，
+    // 财政页的「期初 + 收入 − 支出 ≠ 期末」就是这么来的。
+    if ((c.remit || 0) > 0) group('上缴公司', [['分部净利上缴', '− ' + M(c.remit)]], 'out');
     if (!free) group('偿债', [['利息', '− ' + M(c.interest)], ['本金偿还', '− ' + M(c.principal)], ['逾期费用', '− ' + M(c.penalty)]], 'debt');
     box.appendChild(h('div', { class: 'note', style: { marginTop: '6px' } }, '每日运营成本约 ' + U.fmtMoney(((g.model.daily && g.model.daily.carKm) || 0) * CFG.ops.carKmCost * oi + st) + '（列车运行 + ' + g.compiled.stations.length + ' 座车站），票款与运营成本逐日结算；利息与本金在每月初拨款之后支付。'));
     if (E.ledger.length) {

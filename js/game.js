@@ -173,14 +173,39 @@
 
   // ---------------- 人员（本作独有） ----------------
   // 每天把在编人员折算成一组系数交给结算。缓存一天，避免同一帧里多个面板重复算。
+  //
+  // 线路规模权重：指派到某条线的员工，效果按该线在全网运营规模中的占比折算
+  // （见 staff.js 的 effectsCity）。权重用「配属列车公里 = 里程 × 编组」当代理：
+  // 真正的车公里要等当天运行图算完才有，而系数必须先于结算拿到。
+  Game.prototype.lineWeights = function () {
+    const out = {};
+    const rt = (this.compiled && this.compiled.routes) || [];
+    for (const r of rt) {
+      const km = (r.lenM / 1000) * (r.cars || 1);
+      if (km > 0) out[r.lineId] = (out[r.lineId] || 0) + km;
+    }
+    return out;
+  };
   Game.prototype.staffEffects = function () {
     if (!this.staff || !CM.Staff) return null;
     const key = this.clock.y + ':' + this.clock.m + ':' + this.clock.d + ':' + this.staff.hired.length;
     if (this._seKey === key) return this._seCache;
-    const se = CM.Staff.effects(this.staff, this.clock.y);
+    const se = CM.Staff.effectsCity(this.staff, this.clock.y, this.lineWeights());
     this._seKey = key;
     this._seCache = se;
     return se;
+  };
+  // 单线视角：该线 + 城市级人员的效果（事故按线判定、面板按线解释用）
+  Game.prototype.lineEffects = function (lineId) {
+    if (!this.staff || !CM.Staff) return null;
+    return CM.Staff.effects(this.staff, this.clock.y, { lineId: lineId });
+  };
+  // 这条线的专属人员是否足以自动处置事故：全线长覆盖全网，专属线长只覆盖自己那条线
+  Game.prototype.lineAutoHandle = function (lineId) {
+    const se = this.staffEffects();
+    if (!se) return false;
+    if (se.autoHandle) return true;
+    return !!(se.lineAuto && lineId && se.lineAuto[lineId]);
   };
   // 改动队伍后必须让缓存失效，否则玩家刚雇的人当天不生效
   Game.prototype.invalidateStaff = function () { this._seKey = null; this._seCache = null; };

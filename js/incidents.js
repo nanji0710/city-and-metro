@@ -146,7 +146,9 @@
     // 期望次数高说明车队大，出事往往不是小毛病：把概率往重事件挪
     const lv = pickLevel(rng, expected > 0.8 ? 1 : 0);
     const rt = pickRoute(g, rng);
-    const auto = !!(se && se.autoHandle);
+    // 自动处置按「这条线有没有线长」判定：未指派的线长覆盖全网，
+    // 指派到某条线的线长只管自己那条线（人员的「负责线路」下拉框因此才有意义）
+    const auto = !!(g.lineAutoHandle ? g.lineAutoHandle(rt && rt.lineId) : (se && se.autoHandle));
     const nSt = rt ? rt.stIdx.length : 14;
     const mins = Math.round(lv.minutes[0] + (lv.minutes[1] - lv.minutes[0]) * rng());
     const dur = auto ? Math.round(mins * AUTO_MIN_MULT) : mins;

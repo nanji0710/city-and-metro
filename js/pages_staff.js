@@ -133,6 +133,7 @@
     }));
 
     const se = g.staffEffects() || S.effects(g.staff, g.clock.y);
+    const lineAutoN = se.lineAuto ? Object.keys(se.lineAuto).length : 0;
     const body = h('div', { class: 'page-enter' });
     el.appendChild(body);
 
@@ -141,7 +142,7 @@
     cards.append(
       this.stat('在编人数', String(se.headcount), se.headcount > 8 ? '超过 8 人效率开始稀释' : '人手充足', se.headcount > 8 ? 'warn' : 'muted', 'people'),
       this.stat('工资总额', money(se.payroll * 30), '每月 · 日结 ' + money(se.payroll), 'muted', 'wallet'),
-      this.stat('事故处置', se.autoHandle ? '自动' : '手动', se.autoHandle ? '线长在线，事故自动处置（更贵更慢）' : '没有线长，事故要你亲手点', se.autoHandle ? 'good' : 'bad', 'shield'));
+      this.stat('事故处置', se.autoHandle ? '自动' : (lineAutoN ? '按线自动' : '手动'), se.autoHandle ? '线长在线，全网事故自动处置（更贵更慢）' : (lineAutoN ? lineAutoN + ' 条线有专属线长，只有这些线自动处置' : '没有线长，事故要你亲手点'), (se.autoHandle || lineAutoN) ? 'good' : 'bad', 'shield'));
     body.appendChild(cards);
 
     // 效果汇总
