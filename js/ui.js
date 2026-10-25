@@ -310,7 +310,19 @@
     this.clearCelebrations();
     this.selection = null; this.stack = []; this.closePanel(true);
     this.layer = 'none'; this.R.layer = 'none'; this.renderDock();
-    g.on('toast', function (t) { self.toast(t.text, t.kind); });
+    // toast 可以带一个动作按钮（如突发事故的「去处置」）。
+    // 引擎侧不能直接传函数进事件（事件可能被存档/序列化路径复用），
+    // 所以约定两种写法：act.fn 是函数就直接调，act.open 是页面 key 就打开那一页。
+    g.on('toast', function (t) {
+      const act = t.act ? {
+        label: t.act.label,
+        fn: function () {
+          if (typeof t.act.fn === 'function') t.act.fn();
+          else if (t.act.open) self.openTop(t.act.open);
+        },
+      } : null;
+      self.toast(t.text, t.kind, act);
+    });
     g.on('draft', function () { self.lastDraftChange = performance.now(); self.tools.syncDraft(); self.syncSelection(); self.renderDraftbar(); self.renderToolOpts(); self.refreshObjectPage(); });
     g.on('draftLive', function () { self.lastDraftChange = performance.now(); });
     g.on('prediction', function () { self.refreshPrediction(); self.renderDraftbar(); });

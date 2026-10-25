@@ -200,7 +200,12 @@
       this.logEvent({ tag: '突发', title: r.title, desc: r.desc });
       // 线长在线就直接处置（贵、慢，但玩家不用管）
       if (r.auto) CM.Incidents.resolve(this, r, 'auto');
-      else this.emit('incident', r);
+      else {
+        this.emit('incident', r);
+        // 再补一条 toast：事故是唯一「玩家必须亲手点」的东西，
+        // 只写进日志等于让它躺在日报里等人翻 —— 而它当天不处置就按放弃结算。
+        this.emit('toast', { kind: 'bad', text: r.title + ' · 待处置（' + U.fmtMoney(r.cost) + '）', act: { label: '去处置', open: 'staff' } });
+      }
     }
     this.syncDisruptions();
   };

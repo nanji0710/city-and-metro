@@ -1,15 +1,34 @@
-// 批量冒烟：把 54 城里抽一批（大中小各档 + 边界情况）逐个开局，看是否都能起来。
+// 批量冒烟：把 54 城逐个开局，看是否都能起来。
 //
 // 为什么要批量：单城验证只能证明「这一城」没问题。54 城的格网、区域、片区名、
 // 中心点全是 build-data.mjs 现算的，任何一条推导规则在小城上退化都会让那一城开局就崩，
 // 而玩家点到的很可能正好是那一城。
+//
+// 用法：
+//   node tools/smoke-cities.mjs            → 全 54 城（约 6 分钟）
+//   node tools/smoke-cities.mjs --sample   → 抽 16 城（约 2 分钟，改完代码先跑这个）
+//   node tools/smoke-cities.mjs --city beijing
 import { spawn } from 'node:child_process'
-import { mkdirSync } from 'node:fs'
+import { mkdirSync, readFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const PORT = Number(process.env.PORT || 9461)
 const BASE = process.env.BASE || 'http://127.0.0.1:4180/'
-const OUT = process.argv[2] || 'tools/shots'
+const OUT = 'tools/shots'
 mkdirSync(OUT, { recursive: true })
+
+// 全量城市清单直接从 data_cities.js 里读，不手抄 ——
+// 手抄会漏城，而「漏掉的那一城」正是最可能没被验证过的那一城。
+function allCities() {
+  const src = readFileSync(join(ROOT, 'js', 'data_cities.js'), 'utf8')
+  const ids = []
+  const re = /^\s{4}id:\s*"([a-z]+)"/gm
+  let m
+  while ((m = re.exec(src)) !== null) ids.push(m[1])
+  return ids
+}
 
 // 抽样覆盖：超大（北京/上海）、大型（武汉/西安）、中型（洛阳/芜湖）、
 // 小型（资阳/清远/湘潭）、特别行政区（澳门/香港），以及格网最小的几城。
@@ -19,6 +38,12 @@ const SAMPLE = [
   'luoyang', 'wuhu', 'kunming', 'dongguan',
   'ziyang', 'qingyuan', 'xiangtan', 'aomen',
 ]
+
+const argv = process.argv.slice(2)
+const cityArg = argv.indexOf('--city')
+const TARGETS = cityArg >= 0 ? [argv[cityArg + 1]]
+  : argv.includes('--sample') ? SAMPLE
+    : allCities()
 
 const EDGE = [
   'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
@@ -80,7 +105,7 @@ async function main() {
   await send('Page.enable')
 
   const rows = []
-  for (const cityId of SAMPLE) {
+  for (const cityId of TARGETS) {
     errors.length = 0
     await send('Page.navigate', { url: BASE })
     await sleep(1600)
@@ -118,7 +143,7 @@ async function main() {
   }
 
   const bad = rows.filter((r) => !r.ok || r.errors.length)
-  console.log(`\n抽样 ${SAMPLE.length} 城：通过 ${SAMPLE.length - bad.length} / 失败或告警 ${bad.length}`)
+  console.log(`\n共 ${TARGETS.length} 城：通过 ${TARGETS.length - bad.length} / 失败或告警 ${bad.length}`)
   if (bad.length) console.log('问题城市：' + bad.map((r) => r.cityId).join(', '))
 
   ws.close()
