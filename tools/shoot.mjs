@@ -254,6 +254,42 @@ const SCENES = {
     })()`],
     ['wait', 1800],
   ],
+  // 突发事件（本作独有）：造一起待处置事故，截「人员面板 + 顶栏红点 + toast 动作」的完整现场。
+  // 直接 newGame 而不是点卡片 —— 事故要靠真实车队，教程局没车不会出。
+  incident: [
+    ['wait', 3000],
+    ['eval', `(async () => {
+      if (!window.CM || !window.CM.newGame) return 'NO-CM';
+      window.CM.newGame({ map: 'guangzhou', mode: 'challenge', difficulty: 'normal', name: '事故现场' });
+      for (let i = 0; i < 150 && !window.CM.game; i++) await new Promise(r => setTimeout(r, 100));
+      const g = window.CM.game;
+      if (!g) return 'NO-GAME';
+      for (let i = 0; i < 80 && (!g.city.roadGroups || !g.city.roadGroups.length || g.pending); i++) await new Promise(r => setTimeout(r, 200));
+      return 'READY routes=' + ((g.compiled && g.compiled.routes) || []).length;
+    })()`],
+    ['wait', 800],
+    ['eval', `(() => {
+      const g = window.CM.game;
+      if (!g || !g.compiled.routes.length) return 'NO-ROUTE';
+      try { window.CM.ui.closeScreen(); } catch (e) {}
+      try { window.CM.ui.closePanel(true); } catch (e) {}
+      const rt = g.compiled.routes[0];
+      const I = window.CM.Incidents;
+      const mk = function (lv, id) {
+        return { id: id, lv: lv.lv, key: lv.key, title: 'L' + lv.lv + ' · ' + lv.name + '（' + rt.line.name + '）',
+          desc: lv.desc, routeId: rt.id, lineId: rt.lineId, lineName: rt.line.name,
+          minutes: lv.minutes[1], satHit: lv.satHit, capLoss: lv.capLoss,
+          cost: I.repairCostFor(lv, rt.stIdx.length, false), auto: false, handled: false, day: g.clock.d };
+      };
+      g.lastIncidents = [mk(I.LEVEL_BY_LV[3], 'shot_1'), mk(I.LEVEL_BY_LV[2], 'shot_2')];
+      g.syncDisruptions();
+      window.CM.ui.updateTop();
+      window.CM.ui.openTop('staff');
+      g.emit('toast', { kind: 'bad', text: 'L4 · 枢纽瘫痪 · 待处置', act: { label: '去处置', open: 'staff' } });
+      return 'INC n=' + g.lastIncidents.length;
+    })()`],
+    ['wait', 1600],
+  ],
 }
 
 async function cdp(ws, method, params = {}) {
