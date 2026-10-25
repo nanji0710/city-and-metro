@@ -322,6 +322,20 @@ const SCENES = {
     })()`],
     ['wait', 1600],
   ],
+  // 更新公告：每次升版都要确认「版本号、标题、三条摘要」真的渲染出来了
+  // （NEWS 是手写数据，少一个字段不会报错，只会静默少一行）
+  news: [
+    ['wait', 3000],
+    ['eval', `(() => {
+      try { window.CM.ui.showNews(); } catch (e) { return 'ERR:' + e.message; }
+      const cur = document.querySelector('.news-v.cur');
+      const t = document.querySelector('.news .sec-h .news-t');
+      return 'NEWS v=' + (cur ? cur.textContent : 'none') + ' title=' + (t ? t.textContent : 'none')
+        + ' items=' + document.querySelectorAll('.news-b li').length
+        + ' ver=' + (window.CM.CFG ? window.CM.CFG.GAME_VERSION : '?');
+    })()`],
+    ['wait', 1500],
+  ],
 }
 
 async function cdp(ws, method, params = {}) {
