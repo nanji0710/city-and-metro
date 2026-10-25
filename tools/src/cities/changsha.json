@@ -1,1 +1,2489 @@
-{"id":"changsha","name":"长沙","province":"湖南省","center":[112.98113,28.17752],"stats":{"lines":8,"stations":179,"lengthKm":247.8},"lines":[{"id":"changsha.lMaglev","ref":"Maglev","name":"Maglev号线","color":"#F891A5","system":"monorail","lengthKm":18.62,"stationCount":3,"stations":[{"id":"changsha.磁浮高铁站","name":"磁浮高铁站","nameEn":"Changshanan Station","lon":113.061566,"lat":28.151836},{"id":"changsha.磁浮㮾梨","name":"磁浮㮾梨","nameEn":"Langli Maglev","lon":113.127413,"lat":28.163534},{"id":"changsha.磁浮机场站","name":"磁浮机场站","nameEn":"Changsha Huanghua International Airport","lon":113.213078,"lat":28.194815}],"track":[[113.06149,28.1526],[113.06162,28.15129],[113.0608,28.15867],[113.06141,28.15972],[113.06264,28.16022],[113.07475,28.16024],[113.08152,28.16135],[113.09184,28.16196],[113.12673,28.16252],[113.12729,28.16306],[113.12972,28.17372],[113.12942,28.18197],[113.1303,28.18275],[113.13811,28.18505],[113.14229,28.186],[113.15614,28.18668],[113.17254,28.18904],[113.18978,28.18955],[113.20765,28.18832],[113.20892,28.18896],[113.20982,28.19084],[113.21021,28.19408],[113.21321,28.19482]]},{"id":"changsha.lY1","ref":"Y1","name":"大王山云巴","color":"#008080","system":"monorail","lengthKm":8.06,"stationCount":9,"stations":[{"id":"changsha.山塘","name":"山塘","nameEn":"Shantang","lon":112.919531,"lat":28.101759},{"id":"changsha.欢乐雪域","name":"欢乐雪域","nameEn":"Happy Snow Park","lon":112.915035,"lat":28.090234},{"id":"changsha.欢乐城","name":"欢乐城","nameEn":"Happy City","lon":112.914347,"lat":28.085475},{"id":"changsha.华谊电影小镇","name":"华谊电影小镇","nameEn":"HB Town","lon":112.911056,"lat":28.083307},{"id":"changsha.大王山","name":"大王山","nameEn":"Dawangshan","lon":112.904914,"lat":28.084848},{"id":"changsha.桐溪公园","name":"桐溪公园","nameEn":"Tonxi Park","lon":112.89587,"lat":28.079068},{"id":"changsha.植物公园","name":"植物公园","nameEn":"Botanical Park","lon":112.893808,"lat":28.071299},{"id":"changsha.学士路","name":"学士路","nameEn":"Bachelor Road","lon":112.895624,"lat":28.063075},{"id":"changsha.观音港","name":"观音港","nameEn":"Guanyingang","lon":112.904914,"lat":28.060618}],"track":[[112.91953,28.10176],[112.91863,28.10001],[112.92108,28.09837],[112.91581,28.0923],[112.91445,28.08832],[112.91463,28.0861],[112.91354,28.0839],[112.91146,28.08322],[112.91001,28.08354],[112.90858,28.08476],[112.90531,28.0853],[112.90229,28.07925],[112.89951,28.07787],[112.89619,28.07929],[112.89494,28.0782],[112.89367,28.075],[112.89391,28.07186],[112.89264,28.06358],[112.89806,28.06286],[112.90376,28.06376],[112.90445,28.06315],[112.90491,28.06062]]},{"id":"changsha.l1","ref":"1","name":"1号线","color":"#E60012","system":"subway","lengthKm":33.35,"stationCount":25,"stations":[{"id":"changsha.金盆丘","name":"金盆丘","nameEn":"Jinpenqiu","lon":112.927731,"lat":28.342368},{"id":"changsha.金霞","name":"金霞","nameEn":"Jinxia","lon":112.940539,"lat":28.329061},{"id":"changsha.鹅羊山","name":"鹅羊山","nameEn":"Eyangshan","lon":112.95413,"lat":28.313741},{"id":"changsha.秀峰山","name":"秀峰山","nameEn":"Xiufengshan","lon":112.96317,"lat":28.298766},{"id":"changsha.宿龙桥","name":"宿龙桥","nameEn":"Sulongqiao","lon":112.972894,"lat":28.282135},{"id":"changsha.开福区政府","name":"开福区政府","nameEn":"Kaifu District Government","lon":112.97975,"lat":28.265299},{"id":"changsha.马厂","name":"马厂","nameEn":"Machang","lon":112.983153,"lat":28.254269},{"id":"changsha.北辰三角洲","name":"北辰三角洲","nameEn":"Beichen Delta","lon":112.978326,"lat":28.239657},{"id":"changsha.开福寺","name":"开福寺","nameEn":"Kaifu Temple","lon":112.973771,"lat":28.226086},{"id":"changsha.文昌阁","name":"文昌阁","nameEn":"Wenchangge","lon":112.972597,"lat":28.216432},{"id":"changsha.培元桥","name":"培元桥","nameEn":"Peiyuanqiao","lon":112.970813,"lat":28.209333},{"id":"changsha.五一广场","name":"五一广场","nameEn":"Wuyi Square","lon":112.970821,"lat":28.198747},{"id":"changsha.黄兴广场","name":"黄兴广场","nameEn":"Huangxing Square","lon":112.970762,"lat":28.192446},{"id":"changsha.南门口","name":"南门口","nameEn":"Nanmenkou","lon":112.970589,"lat":28.1865},{"id":"changsha.侯家塘","name":"侯家塘","nameEn":"Houjiatang","lon":112.976596,"lat":28.177284},{"id":"changsha.南湖路","name":"南湖路","nameEn":"Nanhu Road","lon":112.980027,"lat":28.169175},{"id":"changsha.黄土岭","name":"黄土岭","nameEn":"Huangtuling","lon":112.979973,"lat":28.16361},{"id":"changsha.涂家冲","name":"涂家冲","nameEn":"Tujiachong","lon":112.979272,"lat":28.156209},{"id":"changsha.铁道学院","name":"铁道学院","nameEn":"Railway Campus","lon":112.981723,"lat":28.139597},{"id":"changsha.友谊路","name":"友谊路","nameEn":"Youyi Road","lon":112.981178,"lat":28.127478},{"id":"changsha.省政府","name":"省政府","nameEn":"Provincial Government","lon":112.981936,"lat":28.114498},{"id":"changsha.桂花坪","name":"桂花坪","nameEn":"Guihuaping","lon":112.982689,"lat":28.102474},{"id":"changsha.大托","name":"大托","nameEn":"Datuo","lon":112.983496,"lat":28.085779},{"id":"changsha.中信广场","name":"中信广场","nameEn":"Zhongxin Square","lon":112.98396,"lat":28.077024},{"id":"changsha.尚双塘","name":"尚双塘","nameEn":"Shangshuangtang","lon":112.986728,"lat":28.065262}],"track":[[112.92773,28.34237],[112.95154,28.31761],[112.95349,28.31484],[112.97788,28.2736],[112.97848,28.26973],[112.98457,28.24904],[112.98454,28.24616],[112.98082,28.24338],[112.97606,28.23601],[112.97508,28.23334],[112.97378,28.22681],[112.97425,28.22275],[112.97003,28.20696],[112.97084,28.19672],[112.96995,28.18245],[112.97396,28.17865],[112.97833,28.17604],[112.98065,28.16722],[112.98038,28.16485],[112.97833,28.15928],[112.97963,28.15489],[112.97959,28.1522],[112.98172,28.1396],[112.98118,28.12748],[112.98418,28.07346],[112.98673,28.06526]]},{"id":"changsha.l2","ref":"2","name":"二号线","color":"#00AFEC","system":"subway","lengthKm":40.23,"stationCount":32,"stations":[{"id":"changsha.龙虎岭","name":"龙虎岭","nameEn":"Longhuling","lon":112.819449,"lat":28.242361},{"id":"changsha.华龙","name":"华龙","nameEn":"Hualong","lon":112.819139,"lat":28.234278},{"id":"changsha.真人桥","name":"真人桥","nameEn":"Zhenrenqiao","lon":112.81898,"lat":28.224127},{"id":"changsha.车田湾","name":"车田湾","nameEn":"Chetianwan","lon":112.823722,"lat":28.214832},{"id":"changsha.注田洲","name":"注田洲","nameEn":"Zhutianzhou","lon":112.823988,"lat":28.204999},{"id":"changsha.桥头铺","name":"桥头铺","nameEn":"Qiaotoupu","lon":112.824196,"lat":28.193034},{"id":"changsha.莫家洲","name":"莫家洲","nameEn":"Mojiazhou","lon":112.836471,"lat":28.187068},{"id":"changsha.漕龙桥","name":"漕龙桥","nameEn":"Caolongqiao","lon":112.847032,"lat":28.184563},{"id":"changsha.中塘","name":"中塘","nameEn":"Zhongtang","lon":112.856624,"lat":28.1846},{"id":"changsha.梅溪湖西","name":"梅溪湖西","nameEn":"West Meixi Lake","lon":112.876441,"lat":28.18926},{"id":"changsha.麓云路","name":"麓云路","nameEn":"Luyun Road","lon":112.886844,"lat":28.194282},{"id":"changsha.文化艺术中心","name":"文化艺术中心","nameEn":"Culture and Arts Center","lon":112.895121,"lat":28.200173},{"id":"changsha.梅溪湖东","name":"梅溪湖东","nameEn":"East Meixi Lake","lon":112.902789,"lat":28.204948},{"id":"changsha.望城坡","name":"望城坡","nameEn":"Wangchengpo","lon":112.908767,"lat":28.210926},{"id":"changsha.金星路","name":"金星路","nameEn":"Jinxing Road","lon":112.92318,"lat":28.209507},{"id":"changsha.西湖公园","name":"西湖公园","nameEn":"Xihu Park","lon":112.936073,"lat":28.205723},{"id":"changsha.溁湾镇","name":"溁湾镇","nameEn":"Yingwanzhen","lon":112.945663,"lat":28.201068},{"id":"changsha.橘子洲","name":"橘子洲","nameEn":"Juzizhou","lon":112.956875,"lat":28.198563},{"id":"changsha.湘江中路","name":"湘江中路","nameEn":"Xiangjiang Middle Road","lon":112.963928,"lat":28.198588},{"id":"changsha.五一广场","name":"五一广场","nameEn":"Wuyi Square","lon":112.970658,"lat":28.198613},{"id":"changsha.芙蓉广场","name":"芙蓉广场","nameEn":"Furong Square","lon":112.978462,"lat":28.198364},{"id":"changsha.迎宾路口","name":"迎宾路口","nameEn":"Yinbing Road","lon":112.985967,"lat":28.198127},{"id":"changsha.袁家岭","name":"袁家岭","nameEn":"Yuanjialing","lon":112.995546,"lat":28.197757},{"id":"changsha.长沙火车站","name":"长沙火车站","nameEn":"Railway Station","lon":113.005216,"lat":28.197029},{"id":"changsha.锦泰广场","name":"锦泰广场","nameEn":"Jintai Square","lon":113.01183,"lat":28.195095},{"id":"changsha.万家丽广场","name":"万家丽广场","nameEn":"Wanjiali Square","lon":113.024862,"lat":28.194753},{"id":"changsha.人民东路","name":"人民东路","nameEn":"Renmin East Road","lon":113.032887,"lat":28.187987},{"id":"changsha.长沙大道","name":"长沙大道","nameEn":"Changsha Avenue","lon":113.03859,"lat":28.171359},{"id":"changsha.沙湾公园","name":"沙湾公园","nameEn":"Shawan Park","lon":113.038725,"lat":28.160787},{"id":"changsha.杜花路","name":"杜花路","nameEn":"Duhua Road","lon":113.050566,"lat":28.149375},{"id":"changsha.长沙火车南站","name":"长沙火车南站","nameEn":"South Railway Station","lon":113.058136,"lat":28.149864},{"id":"changsha.光达","name":"光达","nameEn":"Guangda","lon":113.079182,"lat":28.15115}],"track":[[112.82055,28.26578],[112.81815,28.26046],[112.81753,28.25761],[112.81943,28.24713],[112.81898,28.22339],[112.8197,28.22161],[112.82349,28.21723],[112.82426,28.19015],[112.82638,28.18798],[112.83046,28.1872],[112.83817,28.18691],[112.84501,28.18462],[112.86448,28.18474],[112.8682,28.18383],[112.87262,28.18401],[112.87426,28.18492],[112.87683,28.18986],[112.87914,28.19193],[112.88724,28.19448],[112.89466,28.20001],[112.90251,28.20169],[112.90306,28.20322],[112.9024,28.20873],[112.90343,28.21007],[112.90957,28.21101],[112.91945,28.21115],[112.92249,28.20995],[112.92807,28.20639],[112.93727,28.2053],[112.94405,28.20244],[112.94867,28.19921],[112.96219,28.19828],[112.96571,28.19881],[112.99807,28.19766],[113.00522,28.19703],[113.01113,28.19512],[113.03196,28.19451],[113.03299,28.19304],[113.03273,28.17975],[113.03778,28.17613],[113.03843,28.17508],[113.03876,28.15754],[113.04024,28.15304],[113.04362,28.15093],[113.04913,28.1493],[113.07918,28.15115]]},{"id":"changsha.l3","ref":"3","name":"3号线","color":"#ABCD03","system":"subway","lengthKm":53.49,"stationCount":33,"stations":[{"id":"changsha.广生","name":"广生","nameEn":"","lon":113.129739,"lat":28.248218},{"id":"changsha.螺丝塘","name":"螺丝塘","nameEn":"","lon":113.117299,"lat":28.248662},{"id":"changsha.星沙文体中心","name":"星沙文体中心","nameEn":"","lon":113.1056,"lat":28.248673},{"id":"changsha.松雅湖(南)","name":"松雅湖(南)","nameEn":"","lon":113.097885,"lat":28.248669},{"id":"changsha.星沙","name":"星沙","nameEn":"","lon":113.080123,"lat":28.248843},{"id":"changsha.湘龙","name":"湘龙","nameEn":"","lon":113.055099,"lat":28.24896},{"id":"changsha.月湖公园北","name":"月湖公园北","nameEn":"","lon":113.035657,"lat":28.245459},{"id":"changsha.长沙大学","name":"长沙大学","nameEn":"","lon":113.024584,"lat":28.24419},{"id":"changsha.雅雀湖","name":"雅雀湖","nameEn":"","lon":113.008162,"lat":28.240757},{"id":"changsha.四方坪","name":"四方坪","nameEn":"","lon":113.00116,"lat":28.234025},{"id":"changsha.丝茅冲","name":"丝茅冲","nameEn":"","lon":113.001223,"lat":28.226975},{"id":"changsha.烈士公园东","name":"烈士公园东","nameEn":"","lon":113.003079,"lat":28.211322},{"id":"changsha.长沙火车站","name":"长沙火车站","nameEn":"Railway Station","lon":113.005402,"lat":28.197567},{"id":"changsha.朝阳村","name":"朝阳村","nameEn":"","lon":113.00503,"lat":28.189659},{"id":"changsha.阿弥岭","name":"阿弥岭","nameEn":"","lon":113.002405,"lat":28.178055},{"id":"changsha.桂花公园","name":"桂花公园","nameEn":"","lon":112.995845,"lat":28.17399},{"id":"changsha.东塘","name":"东塘","nameEn":"","lon":112.988077,"lat":28.172997},{"id":"changsha.侯家塘","name":"侯家塘","nameEn":"Houjiatang","lon":112.976657,"lat":28.177377},{"id":"changsha.灵官渡","name":"灵官渡","nameEn":"Lingguandu","lon":112.965069,"lat":28.182771},{"id":"changsha.阜埠河","name":"阜埠河","nameEn":"Fubuhe","lon":112.942325,"lat":28.169328},{"id":"changsha.中南大学","name":"中南大学","nameEn":"","lon":112.932207,"lat":28.157889},{"id":"changsha.阳光","name":"阳光","nameEn":"","lon":112.931536,"lat":28.145468},{"id":"changsha.洋湖新城","name":"洋湖新城","nameEn":"","lon":112.939572,"lat":28.131931},{"id":"changsha.洋湖湿地","name":"洋湖湿地","nameEn":"","lon":112.933374,"lat":28.118293},{"id":"changsha.山塘","name":"山塘","nameEn":"Shantang","lon":112.9203,"lat":28.102237},{"id":"changsha.大王山","name":"大王山","nameEn":"Dawangshan","lon":112.911499,"lat":28.092214},{"id":"changsha.桐溪","name":"桐溪","nameEn":"Tongxi","lon":112.902733,"lat":28.078984},{"id":"changsha.红桥","name":"红桥","nameEn":"Hongqiao","lon":112.904272,"lat":28.062704},{"id":"changsha.坪塘","name":"坪塘","nameEn":"Pingtang","lon":112.907264,"lat":28.046918},{"id":"changsha.双湖","name":"双湖","nameEn":"Shuanghu","lon":112.922508,"lat":28.029817},{"id":"changsha.黄家湾","name":"黄家湾","nameEn":"Huangjiawan","lon":112.941562,"lat":27.993669},{"id":"changsha.船形山","name":"船形山","nameEn":"Chuanxingshan","lon":112.943904,"lat":27.983108},{"id":"changsha.湘潭北站","name":"湘潭北站","nameEn":"Xiangtan North Railway Station","lon":112.937823,"lat":27.96682}],"track":[[113.13054,28.24822],[113.05091,28.24896],[113.04635,28.25032],[113.04043,28.24552],[113.0316,28.24546],[113.02223,28.24381],[113.01553,28.24466],[113.01468,28.24404],[113.01349,28.24085],[113.00227,28.24054],[113.00155,28.23926],[113.001,28.22851],[113.0022,28.21583],[113.0055,28.20016],[113.00419,28.17975],[112.99849,28.17428],[112.9938,28.17391],[112.98935,28.17276],[112.98339,28.1741],[112.97506,28.17815],[112.96934,28.18232],[112.96125,28.18291],[112.94533,28.1739],[112.94016,28.16553],[112.93344,28.16081],[112.93187,28.15556],[112.93141,28.1411],[112.93405,28.13737],[112.93658,28.13674],[112.93874,28.13515],[112.93952,28.13365],[112.93949,28.13065],[112.93552,28.12194],[112.93209,28.11646],[112.92901,28.11285],[112.92452,28.1106],[112.92237,28.10567],[112.91875,28.10001],[112.90699,28.08736],[112.90027,28.07339],[112.90073,28.07069],[112.90298,28.06687],[112.90411,28.06335],[112.90541,28.05537],[112.90848,28.04302],[112.91678,28.03269],[112.9185,28.03137],[112.92493,28.02884],[112.92678,28.02698],[112.92752,28.025],[112.92779,28.01953],[112.9372,28.00552],[112.94291,27.99012],[112.94393,27.9802],[112.94206,27.9775],[112.93798,27.97536],[112.93624,27.97347],[112.93587,27.9713],[112.93782,27.96682]]},{"id":"changsha.l4","ref":"4","name":"4号线","color":"#920783","system":"subway","lengthKm":29.8,"stationCount":25,"stations":[{"id":"changsha.杜家坪","name":"杜家坪","nameEn":"Dujiaping","lon":113.087843,"lat":28.145548},{"id":"changsha.光达","name":"光达","nameEn":"Guangda","lon":113.079113,"lat":28.151647},{"id":"changsha.长沙火车南站","name":"长沙火车南站","nameEn":"South Railway Station","lon":113.058125,"lat":28.150148},{"id":"changsha.平阳","name":"平阳","nameEn":"Pingyang","lon":113.05136,"lat":28.154967},{"id":"changsha.粟塘","name":"粟塘","nameEn":"Sutang","lon":113.046225,"lat":28.160933},{"id":"changsha.沙湾公园","name":"沙湾公园","nameEn":"Shawan Park","lon":113.038825,"lat":28.160944},{"id":"changsha.圭塘","name":"圭塘","nameEn":"Guitang","lon":113.025195,"lat":28.160859},{"id":"changsha.树木岭","name":"树木岭","nameEn":"Shumuling","lon":113.01505,"lat":28.159489},{"id":"changsha.赤岗岭","name":"赤岗岭","nameEn":"Chigangling","lon":113.000012,"lat":28.163027},{"id":"changsha.砂子塘","name":"砂子塘","nameEn":"Shazitang","lon":112.98761,"lat":28.166033},{"id":"changsha.黄土岭","name":"黄土岭","nameEn":"Huangtuling","lon":112.980137,"lat":28.163481},{"id":"changsha.碧沙湖","name":"碧沙湖","nameEn":"Bishahu","lon":112.962276,"lat":28.167828},{"id":"changsha.阜埠河","name":"阜埠河","nameEn":"Fubuhe","lon":112.942188,"lat":28.169718},{"id":"changsha.湖南大学","name":"湖南大学","nameEn":"Hunan University","lon":112.941392,"lat":28.183543},{"id":"changsha.湖南师大","name":"湖南师大","nameEn":"Hunan Normal University","lon":112.942774,"lat":28.1894},{"id":"changsha.溁湾镇","name":"溁湾镇","nameEn":"Yingwanzhen","lon":112.947179,"lat":28.201301},{"id":"changsha.望月湖","name":"望月湖","nameEn":"Wangyuehu","lon":112.950252,"lat":28.210103},{"id":"changsha.六沟垅","name":"六沟垅","nameEn":"Liugoulong","lon":112.949017,"lat":28.22408},{"id":"changsha.观沙岭","name":"观沙岭","nameEn":"Guanshaling","lon":112.947155,"lat":28.234072},{"id":"changsha.茶子山","name":"茶子山","nameEn":"Chazishan","lon":112.954021,"lat":28.245671},{"id":"changsha.福元大桥西","name":"福元大桥西","nameEn":"West Fuyuan Bridge","lon":112.953299,"lat":28.256791},{"id":"changsha.汉王陵公园","name":"汉王陵公园","nameEn":"Hanwangling Park","lon":112.942362,"lat":28.270909},{"id":"changsha.湘江新城","name":"湘江新城","nameEn":"Xiangjiang New Town","lon":112.928246,"lat":28.28524},{"id":"changsha.月亮岛西","name":"月亮岛西","nameEn":"West Yueliangdao","lon":112.924178,"lat":28.290681},{"id":"changsha.罐子岭","name":"罐子岭","nameEn":"Guanziling","lon":112.917904,"lat":28.298126}],"track":[[113.05579,28.15],[113.05813,28.15015],[113.05382,28.1499],[113.05223,28.15058],[113.05067,28.15927],[113.04862,28.1608],[113.02162,28.16077],[113.01197,28.15906],[113.00255,28.16063],[112.99609,28.16647],[112.98909,28.16641],[112.9835,28.16384],[112.97805,28.16351],[112.97509,28.16459],[112.97356,28.16733],[112.97168,28.16856],[112.96833,28.16872],[112.94887,28.16618],[112.94462,28.1676],[112.94012,28.17146],[112.93925,28.1737],[112.94097,28.17661],[112.94139,28.18501],[112.94279,28.18773],[112.94272,28.19122],[112.94668,28.19971],[112.94802,28.20417],[112.95026,28.20761],[112.95098,28.21709],[112.94757,28.23002],[112.94664,28.23864],[112.94788,28.24036],[112.95333,28.2423],[112.95398,28.24326],[112.95405,28.24947],[112.95273,28.26139],[112.95134,28.264],[112.94592,28.26715],[112.94048,28.27296],[112.93217,28.27973],[112.92939,28.28302],[112.92657,28.28818],[112.91987,28.2949],[112.9179,28.29813]]},{"id":"changsha.l5","ref":"5","name":"5号线","color":"#FFE200","system":"subway","lengthKm":16.42,"stationCount":18,"stations":[{"id":"changsha.月湖公园北","name":"月湖公园北","nameEn":"North Yuehu Park","lon":113.03512,"lat":28.245247},{"id":"changsha.白茅铺","name":"白茅铺","nameEn":"Baimaopu","lon":113.042956,"lat":28.253498},{"id":"changsha.土桥","name":"土桥","nameEn":"Tuqiao","lon":113.050277,"lat":28.266937},{"id":"changsha.水渡河","name":"水渡河","nameEn":"Shuiduhe","lon":113.058248,"lat":28.282863},{"id":"changsha.马栏山","name":"马栏山","nameEn":"Malanshan","lon":113.035098,"lat":28.235153},{"id":"changsha.鸭子铺","name":"鸭子铺","nameEn":"Yazipu","lon":113.030237,"lat":28.228212},{"id":"changsha.火炬村","name":"火炬村","nameEn":"Huojucun","lon":113.025541,"lat":28.211611},{"id":"changsha.马王堆","name":"马王堆","nameEn":"Mawangdui","lon":113.025239,"lat":28.203192},{"id":"changsha.万家丽广场","name":"万家丽广场","nameEn":"Wanjiali Square","lon":113.02496,"lat":28.194807},{"id":"changsha.芙蓉区政府","name":"芙蓉区政府","nameEn":"Furong District Government","lon":113.024821,"lat":28.188338},{"id":"changsha.高桥北","name":"高桥北","nameEn":"North Gaoqiao","lon":113.024536,"lat":28.17939},{"id":"changsha.高桥南","name":"高桥南","nameEn":"South Gaoqiao","lon":113.024129,"lat":28.17032},{"id":"changsha.圭塘","name":"圭塘","nameEn":"Guitang","lon":113.023683,"lat":28.160027},{"id":"changsha.木桥","name":"木桥","nameEn":"Muqiao","lon":113.025224,"lat":28.152036},{"id":"changsha.雨花区政府","name":"雨花区政府","nameEn":"Yuhua District Government","lon":113.029403,"lat":28.140795},{"id":"changsha.大塘","name":"大塘","nameEn":"Datang","lon":113.030599,"lat":28.132448},{"id":"changsha.板塘冲","name":"板塘冲","nameEn":"Bantangchong","lon":113.033494,"lat":28.119382},{"id":"changsha.毛竹塘","name":"毛竹塘","nameEn":"Maozhutang","lon":113.030863,"lat":28.098272}],"track":[[113.03511,28.24145],[113.03478,28.23325],[113.03357,28.23131],[113.02788,28.22602],[113.02672,28.22347],[113.02568,28.21571],[113.02353,28.16149],[113.02505,28.15254],[113.02893,28.14445],[113.0306,28.13245],[113.03499,28.11156],[113.03404,28.10665],[113.03086,28.09827]]},{"id":"changsha.l6","ref":"6","name":"6号线","color":"#005BAC","system":"subway","lengthKm":47.79,"stationCount":34,"stations":[{"id":"changsha.谢家桥","name":"谢家桥","nameEn":"Xiejiaqiao","lon":112.83035,"lat":28.176117},{"id":"changsha.象鼻窝","name":"象鼻窝","nameEn":"Xiangbiwo","lon":112.84781,"lat":28.176206},{"id":"changsha.中塘","name":"中塘","nameEn":"Zhongtang","lon":112.85818,"lat":28.184397},{"id":"changsha.一师范西校区","name":"一师范西校区","nameEn":"Hunan First Normal University (West Campus)","lon":112.859419,"lat":28.196394},{"id":"changsha.长庆","name":"长庆","nameEn":"Changqing","lon":112.857382,"lat":28.204706},{"id":"changsha.和馨园","name":"和馨园","nameEn":"Hexinyuan","lon":112.856044,"lat":28.218069},{"id":"changsha.长丰","name":"长丰","nameEn":"Changfeng","lon":112.866349,"lat":28.224403},{"id":"changsha.麓谷体育公园","name":"麓谷体育公园","nameEn":"Lugu Sports Park","lon":112.876948,"lat":28.223418},{"id":"changsha.麓谷公园","name":"麓谷公园","nameEn":"Lugu Park","lon":112.890375,"lat":28.221672},{"id":"changsha.涧塘","name":"涧塘","nameEn":"Jiantang","lon":112.905363,"lat":28.222073},{"id":"changsha.湖南工商大学","name":"湖南工商大学","nameEn":"Hunan University of Technology and Business","lon":112.916877,"lat":28.222789},{"id":"changsha.白鸽咀","name":"白鸽咀","nameEn":"Baigezui","lon":112.92854,"lat":28.221333},{"id":"changsha.湘雅三医院","name":"湘雅三医院","nameEn":"The Third Xiangya Hospital","lon":112.937643,"lat":28.221611},{"id":"changsha.六沟垅","name":"六沟垅","nameEn":"Liugoulong","lon":112.949289,"lat":28.223124},{"id":"changsha.文昌阁","name":"文昌阁","nameEn":"Wenchangge","lon":112.972934,"lat":28.217459},{"id":"changsha.湘雅医院","name":"湘雅医院","nameEn":"Xiangya Hospital","lon":112.982354,"lat":28.216893},{"id":"changsha.烈士公园南","name":"烈士公园南","nameEn":"South Martyrs Park","lon":112.985655,"lat":28.208212},{"id":"changsha.迎宾路口","name":"迎宾路口","nameEn":"Yingbin Road","lon":112.98636,"lat":28.198163},{"id":"changsha.窑岭湘雅二医院","name":"窑岭湘雅二医院","nameEn":"Yaoling & The Second Xiangya Hospital","lon":112.990707,"lat":28.189091},{"id":"changsha.朝阳村","name":"朝阳村","nameEn":"Chaoyangcun","lon":113.003985,"lat":28.188155},{"id":"changsha.芙蓉区政府","name":"芙蓉区政府","nameEn":"Furong District Government","lon":113.023614,"lat":28.187489},{"id":"changsha.人民东路","name":"人民东路","nameEn":"Renmin East Road","lon":113.032248,"lat":28.187361},{"id":"changsha.花桥","name":"花桥","nameEn":"Huaqiao","lon":113.042811,"lat":28.187845},{"id":"changsha.隆平水稻博物馆","name":"隆平水稻博物馆","nameEn":"Longping Rice Museum","lon":113.053504,"lat":28.193703},{"id":"changsha.农科院农大","name":"农科院农大","nameEn":"Acad. of Agri-Sciences & Agri-University","lon":113.07328,"lat":28.194448},{"id":"changsha.东湖","name":"东湖","nameEn":"Donghu","lon":113.08941,"lat":28.19655},{"id":"changsha.韶光","name":"韶光","nameEn":"Shaoguang","lon":113.100143,"lat":28.19893},{"id":"changsha.龙华","name":"龙华","nameEn":"Longhua","lon":113.122747,"lat":28.203688},{"id":"changsha.檀木桥","name":"檀木桥","nameEn":"Tanmuqiao","lon":113.145268,"lat":28.204708},{"id":"changsha.曹家坪","name":"曹家坪","nameEn":"Caojiaping","lon":113.16486,"lat":28.20692},{"id":"changsha.龙峰","name":"龙峰","nameEn":"Longfeng","lon":113.18086,"lat":28.205811},{"id":"changsha.大路村","name":"大路村","nameEn":"Dalucun","lon":113.200435,"lat":28.205881},{"id":"changsha.木马塅","name":"木马塅","nameEn":"Mumaduan","lon":113.20607,"lat":28.199931},{"id":"changsha.黄花机场T1T2","name":"黄花机场T1T2","nameEn":"Huanghua Airport T1 & T2","lon":113.213223,"lat":28.194138}],"track":[[112.82865,28.17679],[112.83573,28.17456],[112.84037,28.17438],[112.85326,28.17747],[112.85609,28.17884],[112.85786,28.1807],[112.85807,28.18943],[112.86145,28.19304],[112.85894,28.19753],[112.8562,28.21132],[112.85599,28.22242],[112.8566,28.22384],[112.85797,28.22432],[112.86969,28.22436],[112.88579,28.22199],[112.89581,28.22148],[112.91849,28.22286],[112.92591,28.22132],[112.93577,28.22145],[112.95599,28.22361],[112.96437,28.2182],[112.98544,28.21671],[112.98633,28.215],[112.98563,28.20914],[112.98599,28.19985],[112.98817,28.19013],[112.98966,28.18916],[113.00485,28.18811],[113.04031,28.18716],[113.04517,28.18883],[113.04899,28.19247],[113.05126,28.19356],[113.08089,28.19454],[113.09846,28.19869],[113.10789,28.19945],[113.11755,28.2026],[113.12407,28.20391],[113.16018,28.20525],[113.16713,28.20775],[113.17814,28.20597],[113.20506,28.2054],[113.20611,28.20408],[113.20589,28.19651],[113.20633,28.19536],[113.20803,28.19412],[113.21322,28.19414]]}]}
+{
+  "id": "changsha",
+  "name": "长沙",
+  "province": "湖南省",
+  "center": [
+    112.98113,
+    28.17752
+  ],
+  "stats": {
+    "lines": 8,
+    "stations": 179,
+    "lengthKm": 247.8
+  },
+  "lines": [
+    {
+      "id": "changsha.l1",
+      "ref": "Maglev",
+      "name": "磁浮快线",
+      "color": "#F891A5",
+      "system": "monorail",
+      "lengthKm": 18.62,
+      "stationCount": 3,
+      "stations": [
+        {
+          "id": "changsha.磁浮高铁站",
+          "name": "磁浮高铁站",
+          "nameEn": "Changshanan Station",
+          "lon": 113.061566,
+          "lat": 28.151836
+        },
+        {
+          "id": "changsha.磁浮㮾梨",
+          "name": "磁浮㮾梨",
+          "nameEn": "Langli Maglev",
+          "lon": 113.127413,
+          "lat": 28.163534
+        },
+        {
+          "id": "changsha.磁浮机场站",
+          "name": "磁浮机场站",
+          "nameEn": "Changsha Huanghua International Airport",
+          "lon": 113.213078,
+          "lat": 28.194815
+        }
+      ],
+      "track": [
+        [
+          113.06149,
+          28.1526
+        ],
+        [
+          113.06162,
+          28.15129
+        ],
+        [
+          113.0608,
+          28.15867
+        ],
+        [
+          113.06141,
+          28.15972
+        ],
+        [
+          113.06264,
+          28.16022
+        ],
+        [
+          113.07475,
+          28.16024
+        ],
+        [
+          113.08152,
+          28.16135
+        ],
+        [
+          113.09184,
+          28.16196
+        ],
+        [
+          113.12673,
+          28.16252
+        ],
+        [
+          113.12729,
+          28.16306
+        ],
+        [
+          113.12972,
+          28.17372
+        ],
+        [
+          113.12942,
+          28.18197
+        ],
+        [
+          113.1303,
+          28.18275
+        ],
+        [
+          113.13811,
+          28.18505
+        ],
+        [
+          113.14229,
+          28.186
+        ],
+        [
+          113.15614,
+          28.18668
+        ],
+        [
+          113.17254,
+          28.18904
+        ],
+        [
+          113.18978,
+          28.18955
+        ],
+        [
+          113.20765,
+          28.18832
+        ],
+        [
+          113.20892,
+          28.18896
+        ],
+        [
+          113.20982,
+          28.19084
+        ],
+        [
+          113.21021,
+          28.19408
+        ],
+        [
+          113.21321,
+          28.19482
+        ]
+      ]
+    },
+    {
+      "id": "changsha.l2",
+      "ref": "Y1",
+      "name": "大王山云巴",
+      "color": "#008080",
+      "system": "monorail",
+      "lengthKm": 8.06,
+      "stationCount": 9,
+      "stations": [
+        {
+          "id": "changsha.山塘",
+          "name": "山塘",
+          "nameEn": "Shantang",
+          "lon": 112.919531,
+          "lat": 28.101759
+        },
+        {
+          "id": "changsha.欢乐雪域",
+          "name": "欢乐雪域",
+          "nameEn": "Happy Snow Park",
+          "lon": 112.915035,
+          "lat": 28.090234
+        },
+        {
+          "id": "changsha.欢乐城",
+          "name": "欢乐城",
+          "nameEn": "Happy City",
+          "lon": 112.914347,
+          "lat": 28.085475
+        },
+        {
+          "id": "changsha.华谊电影小镇",
+          "name": "华谊电影小镇",
+          "nameEn": "HB Town",
+          "lon": 112.911056,
+          "lat": 28.083307
+        },
+        {
+          "id": "changsha.大王山",
+          "name": "大王山",
+          "nameEn": "Dawangshan",
+          "lon": 112.904914,
+          "lat": 28.084848
+        },
+        {
+          "id": "changsha.桐溪公园",
+          "name": "桐溪公园",
+          "nameEn": "Tonxi Park",
+          "lon": 112.89587,
+          "lat": 28.079068
+        },
+        {
+          "id": "changsha.植物公园",
+          "name": "植物公园",
+          "nameEn": "Botanical Park",
+          "lon": 112.893808,
+          "lat": 28.071299
+        },
+        {
+          "id": "changsha.学士路",
+          "name": "学士路",
+          "nameEn": "Bachelor Road",
+          "lon": 112.895624,
+          "lat": 28.063075
+        },
+        {
+          "id": "changsha.观音港",
+          "name": "观音港",
+          "nameEn": "Guanyingang",
+          "lon": 112.904914,
+          "lat": 28.060618
+        }
+      ],
+      "track": [
+        [
+          112.91953,
+          28.10176
+        ],
+        [
+          112.91863,
+          28.10001
+        ],
+        [
+          112.92108,
+          28.09837
+        ],
+        [
+          112.91581,
+          28.0923
+        ],
+        [
+          112.91445,
+          28.08832
+        ],
+        [
+          112.91463,
+          28.0861
+        ],
+        [
+          112.91354,
+          28.0839
+        ],
+        [
+          112.91146,
+          28.08322
+        ],
+        [
+          112.91001,
+          28.08354
+        ],
+        [
+          112.90858,
+          28.08476
+        ],
+        [
+          112.90531,
+          28.0853
+        ],
+        [
+          112.90229,
+          28.07925
+        ],
+        [
+          112.89951,
+          28.07787
+        ],
+        [
+          112.89619,
+          28.07929
+        ],
+        [
+          112.89494,
+          28.0782
+        ],
+        [
+          112.89367,
+          28.075
+        ],
+        [
+          112.89391,
+          28.07186
+        ],
+        [
+          112.89264,
+          28.06358
+        ],
+        [
+          112.89806,
+          28.06286
+        ],
+        [
+          112.90376,
+          28.06376
+        ],
+        [
+          112.90445,
+          28.06315
+        ],
+        [
+          112.90491,
+          28.06062
+        ]
+      ]
+    },
+    {
+      "id": "changsha.l3",
+      "ref": "1",
+      "name": "1号线",
+      "color": "#E60012",
+      "system": "subway",
+      "lengthKm": 33.35,
+      "stationCount": 25,
+      "stations": [
+        {
+          "id": "changsha.金盆丘",
+          "name": "金盆丘",
+          "nameEn": "Jinpenqiu",
+          "lon": 112.927731,
+          "lat": 28.342368
+        },
+        {
+          "id": "changsha.金霞",
+          "name": "金霞",
+          "nameEn": "Jinxia",
+          "lon": 112.940539,
+          "lat": 28.329061
+        },
+        {
+          "id": "changsha.鹅羊山",
+          "name": "鹅羊山",
+          "nameEn": "Eyangshan",
+          "lon": 112.95413,
+          "lat": 28.313741
+        },
+        {
+          "id": "changsha.秀峰山",
+          "name": "秀峰山",
+          "nameEn": "Xiufengshan",
+          "lon": 112.96317,
+          "lat": 28.298766
+        },
+        {
+          "id": "changsha.宿龙桥",
+          "name": "宿龙桥",
+          "nameEn": "Sulongqiao",
+          "lon": 112.972894,
+          "lat": 28.282135
+        },
+        {
+          "id": "changsha.开福区政府",
+          "name": "开福区政府",
+          "nameEn": "Kaifu District Government",
+          "lon": 112.97975,
+          "lat": 28.265299
+        },
+        {
+          "id": "changsha.马厂",
+          "name": "马厂",
+          "nameEn": "Machang",
+          "lon": 112.983153,
+          "lat": 28.254269
+        },
+        {
+          "id": "changsha.北辰三角洲",
+          "name": "北辰三角洲",
+          "nameEn": "Beichen Delta",
+          "lon": 112.978326,
+          "lat": 28.239657
+        },
+        {
+          "id": "changsha.开福寺",
+          "name": "开福寺",
+          "nameEn": "Kaifu Temple",
+          "lon": 112.973771,
+          "lat": 28.226086
+        },
+        {
+          "id": "changsha.文昌阁",
+          "name": "文昌阁",
+          "nameEn": "Wenchangge",
+          "lon": 112.972597,
+          "lat": 28.216432
+        },
+        {
+          "id": "changsha.培元桥",
+          "name": "培元桥",
+          "nameEn": "Peiyuanqiao",
+          "lon": 112.970813,
+          "lat": 28.209333
+        },
+        {
+          "id": "changsha.五一广场",
+          "name": "五一广场",
+          "nameEn": "Wuyi Square",
+          "lon": 112.970821,
+          "lat": 28.198747
+        },
+        {
+          "id": "changsha.黄兴广场",
+          "name": "黄兴广场",
+          "nameEn": "Huangxing Square",
+          "lon": 112.970762,
+          "lat": 28.192446
+        },
+        {
+          "id": "changsha.南门口",
+          "name": "南门口",
+          "nameEn": "Nanmenkou",
+          "lon": 112.970589,
+          "lat": 28.1865
+        },
+        {
+          "id": "changsha.侯家塘",
+          "name": "侯家塘",
+          "nameEn": "Houjiatang",
+          "lon": 112.976596,
+          "lat": 28.177284
+        },
+        {
+          "id": "changsha.南湖路",
+          "name": "南湖路",
+          "nameEn": "Nanhu Road",
+          "lon": 112.980027,
+          "lat": 28.169175
+        },
+        {
+          "id": "changsha.黄土岭",
+          "name": "黄土岭",
+          "nameEn": "Huangtuling",
+          "lon": 112.979973,
+          "lat": 28.16361
+        },
+        {
+          "id": "changsha.涂家冲",
+          "name": "涂家冲",
+          "nameEn": "Tujiachong",
+          "lon": 112.979272,
+          "lat": 28.156209
+        },
+        {
+          "id": "changsha.铁道学院",
+          "name": "铁道学院",
+          "nameEn": "Railway Campus",
+          "lon": 112.981723,
+          "lat": 28.139597
+        },
+        {
+          "id": "changsha.友谊路",
+          "name": "友谊路",
+          "nameEn": "Youyi Road",
+          "lon": 112.981178,
+          "lat": 28.127478
+        },
+        {
+          "id": "changsha.省政府",
+          "name": "省政府",
+          "nameEn": "Provincial Government",
+          "lon": 112.981936,
+          "lat": 28.114498
+        },
+        {
+          "id": "changsha.桂花坪",
+          "name": "桂花坪",
+          "nameEn": "Guihuaping",
+          "lon": 112.982689,
+          "lat": 28.102474
+        },
+        {
+          "id": "changsha.大托",
+          "name": "大托",
+          "nameEn": "Datuo",
+          "lon": 112.983496,
+          "lat": 28.085779
+        },
+        {
+          "id": "changsha.中信广场",
+          "name": "中信广场",
+          "nameEn": "Zhongxin Square",
+          "lon": 112.98396,
+          "lat": 28.077024
+        },
+        {
+          "id": "changsha.尚双塘",
+          "name": "尚双塘",
+          "nameEn": "Shangshuangtang",
+          "lon": 112.986728,
+          "lat": 28.065262
+        }
+      ],
+      "track": [
+        [
+          112.92773,
+          28.34237
+        ],
+        [
+          112.95154,
+          28.31761
+        ],
+        [
+          112.95349,
+          28.31484
+        ],
+        [
+          112.97788,
+          28.2736
+        ],
+        [
+          112.97848,
+          28.26973
+        ],
+        [
+          112.98457,
+          28.24904
+        ],
+        [
+          112.98454,
+          28.24616
+        ],
+        [
+          112.98082,
+          28.24338
+        ],
+        [
+          112.97606,
+          28.23601
+        ],
+        [
+          112.97508,
+          28.23334
+        ],
+        [
+          112.97378,
+          28.22681
+        ],
+        [
+          112.97425,
+          28.22275
+        ],
+        [
+          112.97003,
+          28.20696
+        ],
+        [
+          112.97084,
+          28.19672
+        ],
+        [
+          112.96995,
+          28.18245
+        ],
+        [
+          112.97396,
+          28.17865
+        ],
+        [
+          112.97833,
+          28.17604
+        ],
+        [
+          112.98065,
+          28.16722
+        ],
+        [
+          112.98038,
+          28.16485
+        ],
+        [
+          112.97833,
+          28.15928
+        ],
+        [
+          112.97963,
+          28.15489
+        ],
+        [
+          112.97959,
+          28.1522
+        ],
+        [
+          112.98172,
+          28.1396
+        ],
+        [
+          112.98118,
+          28.12748
+        ],
+        [
+          112.98418,
+          28.07346
+        ],
+        [
+          112.98673,
+          28.06526
+        ]
+      ]
+    },
+    {
+      "id": "changsha.l4",
+      "ref": "2",
+      "name": "2号线",
+      "color": "#00AFEC",
+      "system": "subway",
+      "lengthKm": 40.23,
+      "stationCount": 32,
+      "stations": [
+        {
+          "id": "changsha.龙虎岭",
+          "name": "龙虎岭",
+          "nameEn": "Longhuling",
+          "lon": 112.819449,
+          "lat": 28.242361
+        },
+        {
+          "id": "changsha.华龙",
+          "name": "华龙",
+          "nameEn": "Hualong",
+          "lon": 112.819139,
+          "lat": 28.234278
+        },
+        {
+          "id": "changsha.真人桥",
+          "name": "真人桥",
+          "nameEn": "Zhenrenqiao",
+          "lon": 112.81898,
+          "lat": 28.224127
+        },
+        {
+          "id": "changsha.车田湾",
+          "name": "车田湾",
+          "nameEn": "Chetianwan",
+          "lon": 112.823722,
+          "lat": 28.214832
+        },
+        {
+          "id": "changsha.注田洲",
+          "name": "注田洲",
+          "nameEn": "Zhutianzhou",
+          "lon": 112.823988,
+          "lat": 28.204999
+        },
+        {
+          "id": "changsha.桥头铺",
+          "name": "桥头铺",
+          "nameEn": "Qiaotoupu",
+          "lon": 112.824196,
+          "lat": 28.193034
+        },
+        {
+          "id": "changsha.莫家洲",
+          "name": "莫家洲",
+          "nameEn": "Mojiazhou",
+          "lon": 112.836471,
+          "lat": 28.187068
+        },
+        {
+          "id": "changsha.漕龙桥",
+          "name": "漕龙桥",
+          "nameEn": "Caolongqiao",
+          "lon": 112.847032,
+          "lat": 28.184563
+        },
+        {
+          "id": "changsha.中塘",
+          "name": "中塘",
+          "nameEn": "Zhongtang",
+          "lon": 112.856624,
+          "lat": 28.1846
+        },
+        {
+          "id": "changsha.梅溪湖西",
+          "name": "梅溪湖西",
+          "nameEn": "West Meixi Lake",
+          "lon": 112.876441,
+          "lat": 28.18926
+        },
+        {
+          "id": "changsha.麓云路",
+          "name": "麓云路",
+          "nameEn": "Luyun Road",
+          "lon": 112.886844,
+          "lat": 28.194282
+        },
+        {
+          "id": "changsha.文化艺术中心",
+          "name": "文化艺术中心",
+          "nameEn": "Culture and Arts Center",
+          "lon": 112.895121,
+          "lat": 28.200173
+        },
+        {
+          "id": "changsha.梅溪湖东",
+          "name": "梅溪湖东",
+          "nameEn": "East Meixi Lake",
+          "lon": 112.902789,
+          "lat": 28.204948
+        },
+        {
+          "id": "changsha.望城坡",
+          "name": "望城坡",
+          "nameEn": "Wangchengpo",
+          "lon": 112.908767,
+          "lat": 28.210926
+        },
+        {
+          "id": "changsha.金星路",
+          "name": "金星路",
+          "nameEn": "Jinxing Road",
+          "lon": 112.92318,
+          "lat": 28.209507
+        },
+        {
+          "id": "changsha.西湖公园",
+          "name": "西湖公园",
+          "nameEn": "Xihu Park",
+          "lon": 112.936073,
+          "lat": 28.205723
+        },
+        {
+          "id": "changsha.溁湾镇",
+          "name": "溁湾镇",
+          "nameEn": "Yingwanzhen",
+          "lon": 112.945663,
+          "lat": 28.201068
+        },
+        {
+          "id": "changsha.橘子洲",
+          "name": "橘子洲",
+          "nameEn": "Juzizhou",
+          "lon": 112.956875,
+          "lat": 28.198563
+        },
+        {
+          "id": "changsha.湘江中路",
+          "name": "湘江中路",
+          "nameEn": "Xiangjiang Middle Road",
+          "lon": 112.963928,
+          "lat": 28.198588
+        },
+        {
+          "id": "changsha.五一广场",
+          "name": "五一广场",
+          "nameEn": "Wuyi Square",
+          "lon": 112.970658,
+          "lat": 28.198613
+        },
+        {
+          "id": "changsha.芙蓉广场",
+          "name": "芙蓉广场",
+          "nameEn": "Furong Square",
+          "lon": 112.978462,
+          "lat": 28.198364
+        },
+        {
+          "id": "changsha.迎宾路口",
+          "name": "迎宾路口",
+          "nameEn": "Yinbing Road",
+          "lon": 112.985967,
+          "lat": 28.198127
+        },
+        {
+          "id": "changsha.袁家岭",
+          "name": "袁家岭",
+          "nameEn": "Yuanjialing",
+          "lon": 112.995546,
+          "lat": 28.197757
+        },
+        {
+          "id": "changsha.长沙火车站",
+          "name": "长沙火车站",
+          "nameEn": "Railway Station",
+          "lon": 113.005216,
+          "lat": 28.197029
+        },
+        {
+          "id": "changsha.锦泰广场",
+          "name": "锦泰广场",
+          "nameEn": "Jintai Square",
+          "lon": 113.01183,
+          "lat": 28.195095
+        },
+        {
+          "id": "changsha.万家丽广场",
+          "name": "万家丽广场",
+          "nameEn": "Wanjiali Square",
+          "lon": 113.024862,
+          "lat": 28.194753
+        },
+        {
+          "id": "changsha.人民东路",
+          "name": "人民东路",
+          "nameEn": "Renmin East Road",
+          "lon": 113.032887,
+          "lat": 28.187987
+        },
+        {
+          "id": "changsha.长沙大道",
+          "name": "长沙大道",
+          "nameEn": "Changsha Avenue",
+          "lon": 113.03859,
+          "lat": 28.171359
+        },
+        {
+          "id": "changsha.沙湾公园",
+          "name": "沙湾公园",
+          "nameEn": "Shawan Park",
+          "lon": 113.038725,
+          "lat": 28.160787
+        },
+        {
+          "id": "changsha.杜花路",
+          "name": "杜花路",
+          "nameEn": "Duhua Road",
+          "lon": 113.050566,
+          "lat": 28.149375
+        },
+        {
+          "id": "changsha.长沙火车南站",
+          "name": "长沙火车南站",
+          "nameEn": "South Railway Station",
+          "lon": 113.058136,
+          "lat": 28.149864
+        },
+        {
+          "id": "changsha.光达",
+          "name": "光达",
+          "nameEn": "Guangda",
+          "lon": 113.079182,
+          "lat": 28.15115
+        }
+      ],
+      "track": [
+        [
+          112.82055,
+          28.26578
+        ],
+        [
+          112.81815,
+          28.26046
+        ],
+        [
+          112.81753,
+          28.25761
+        ],
+        [
+          112.81943,
+          28.24713
+        ],
+        [
+          112.81898,
+          28.22339
+        ],
+        [
+          112.8197,
+          28.22161
+        ],
+        [
+          112.82349,
+          28.21723
+        ],
+        [
+          112.82426,
+          28.19015
+        ],
+        [
+          112.82638,
+          28.18798
+        ],
+        [
+          112.83046,
+          28.1872
+        ],
+        [
+          112.83817,
+          28.18691
+        ],
+        [
+          112.84501,
+          28.18462
+        ],
+        [
+          112.86448,
+          28.18474
+        ],
+        [
+          112.8682,
+          28.18383
+        ],
+        [
+          112.87262,
+          28.18401
+        ],
+        [
+          112.87426,
+          28.18492
+        ],
+        [
+          112.87683,
+          28.18986
+        ],
+        [
+          112.87914,
+          28.19193
+        ],
+        [
+          112.88724,
+          28.19448
+        ],
+        [
+          112.89466,
+          28.20001
+        ],
+        [
+          112.90251,
+          28.20169
+        ],
+        [
+          112.90306,
+          28.20322
+        ],
+        [
+          112.9024,
+          28.20873
+        ],
+        [
+          112.90343,
+          28.21007
+        ],
+        [
+          112.90957,
+          28.21101
+        ],
+        [
+          112.91945,
+          28.21115
+        ],
+        [
+          112.92249,
+          28.20995
+        ],
+        [
+          112.92807,
+          28.20639
+        ],
+        [
+          112.93727,
+          28.2053
+        ],
+        [
+          112.94405,
+          28.20244
+        ],
+        [
+          112.94867,
+          28.19921
+        ],
+        [
+          112.96219,
+          28.19828
+        ],
+        [
+          112.96571,
+          28.19881
+        ],
+        [
+          112.99807,
+          28.19766
+        ],
+        [
+          113.00522,
+          28.19703
+        ],
+        [
+          113.01113,
+          28.19512
+        ],
+        [
+          113.03196,
+          28.19451
+        ],
+        [
+          113.03299,
+          28.19304
+        ],
+        [
+          113.03273,
+          28.17975
+        ],
+        [
+          113.03778,
+          28.17613
+        ],
+        [
+          113.03843,
+          28.17508
+        ],
+        [
+          113.03876,
+          28.15754
+        ],
+        [
+          113.04024,
+          28.15304
+        ],
+        [
+          113.04362,
+          28.15093
+        ],
+        [
+          113.04913,
+          28.1493
+        ],
+        [
+          113.07918,
+          28.15115
+        ]
+      ]
+    },
+    {
+      "id": "changsha.l5",
+      "ref": "3",
+      "name": "3号线",
+      "color": "#ABCD03",
+      "system": "subway",
+      "lengthKm": 53.49,
+      "stationCount": 33,
+      "stations": [
+        {
+          "id": "changsha.广生",
+          "name": "广生",
+          "nameEn": "",
+          "lon": 113.129739,
+          "lat": 28.248218
+        },
+        {
+          "id": "changsha.螺丝塘",
+          "name": "螺丝塘",
+          "nameEn": "",
+          "lon": 113.117299,
+          "lat": 28.248662
+        },
+        {
+          "id": "changsha.星沙文体中心",
+          "name": "星沙文体中心",
+          "nameEn": "",
+          "lon": 113.1056,
+          "lat": 28.248673
+        },
+        {
+          "id": "changsha.松雅湖(南)",
+          "name": "松雅湖(南)",
+          "nameEn": "",
+          "lon": 113.097885,
+          "lat": 28.248669
+        },
+        {
+          "id": "changsha.星沙",
+          "name": "星沙",
+          "nameEn": "",
+          "lon": 113.080123,
+          "lat": 28.248843
+        },
+        {
+          "id": "changsha.湘龙",
+          "name": "湘龙",
+          "nameEn": "",
+          "lon": 113.055099,
+          "lat": 28.24896
+        },
+        {
+          "id": "changsha.月湖公园北",
+          "name": "月湖公园北",
+          "nameEn": "",
+          "lon": 113.035657,
+          "lat": 28.245459
+        },
+        {
+          "id": "changsha.长沙大学",
+          "name": "长沙大学",
+          "nameEn": "",
+          "lon": 113.024584,
+          "lat": 28.24419
+        },
+        {
+          "id": "changsha.雅雀湖",
+          "name": "雅雀湖",
+          "nameEn": "",
+          "lon": 113.008162,
+          "lat": 28.240757
+        },
+        {
+          "id": "changsha.四方坪",
+          "name": "四方坪",
+          "nameEn": "",
+          "lon": 113.00116,
+          "lat": 28.234025
+        },
+        {
+          "id": "changsha.丝茅冲",
+          "name": "丝茅冲",
+          "nameEn": "",
+          "lon": 113.001223,
+          "lat": 28.226975
+        },
+        {
+          "id": "changsha.烈士公园东",
+          "name": "烈士公园东",
+          "nameEn": "",
+          "lon": 113.003079,
+          "lat": 28.211322
+        },
+        {
+          "id": "changsha.长沙火车站",
+          "name": "长沙火车站",
+          "nameEn": "Railway Station",
+          "lon": 113.005402,
+          "lat": 28.197567
+        },
+        {
+          "id": "changsha.朝阳村",
+          "name": "朝阳村",
+          "nameEn": "",
+          "lon": 113.00503,
+          "lat": 28.189659
+        },
+        {
+          "id": "changsha.阿弥岭",
+          "name": "阿弥岭",
+          "nameEn": "",
+          "lon": 113.002405,
+          "lat": 28.178055
+        },
+        {
+          "id": "changsha.桂花公园",
+          "name": "桂花公园",
+          "nameEn": "",
+          "lon": 112.995845,
+          "lat": 28.17399
+        },
+        {
+          "id": "changsha.东塘",
+          "name": "东塘",
+          "nameEn": "",
+          "lon": 112.988077,
+          "lat": 28.172997
+        },
+        {
+          "id": "changsha.侯家塘",
+          "name": "侯家塘",
+          "nameEn": "Houjiatang",
+          "lon": 112.976657,
+          "lat": 28.177377
+        },
+        {
+          "id": "changsha.灵官渡",
+          "name": "灵官渡",
+          "nameEn": "Lingguandu",
+          "lon": 112.965069,
+          "lat": 28.182771
+        },
+        {
+          "id": "changsha.阜埠河",
+          "name": "阜埠河",
+          "nameEn": "Fubuhe",
+          "lon": 112.942325,
+          "lat": 28.169328
+        },
+        {
+          "id": "changsha.中南大学",
+          "name": "中南大学",
+          "nameEn": "",
+          "lon": 112.932207,
+          "lat": 28.157889
+        },
+        {
+          "id": "changsha.阳光",
+          "name": "阳光",
+          "nameEn": "",
+          "lon": 112.931536,
+          "lat": 28.145468
+        },
+        {
+          "id": "changsha.洋湖新城",
+          "name": "洋湖新城",
+          "nameEn": "",
+          "lon": 112.939572,
+          "lat": 28.131931
+        },
+        {
+          "id": "changsha.洋湖湿地",
+          "name": "洋湖湿地",
+          "nameEn": "",
+          "lon": 112.933374,
+          "lat": 28.118293
+        },
+        {
+          "id": "changsha.山塘",
+          "name": "山塘",
+          "nameEn": "Shantang",
+          "lon": 112.9203,
+          "lat": 28.102237
+        },
+        {
+          "id": "changsha.大王山",
+          "name": "大王山",
+          "nameEn": "Dawangshan",
+          "lon": 112.911499,
+          "lat": 28.092214
+        },
+        {
+          "id": "changsha.桐溪",
+          "name": "桐溪",
+          "nameEn": "Tongxi",
+          "lon": 112.902733,
+          "lat": 28.078984
+        },
+        {
+          "id": "changsha.红桥",
+          "name": "红桥",
+          "nameEn": "Hongqiao",
+          "lon": 112.904272,
+          "lat": 28.062704
+        },
+        {
+          "id": "changsha.坪塘",
+          "name": "坪塘",
+          "nameEn": "Pingtang",
+          "lon": 112.907264,
+          "lat": 28.046918
+        },
+        {
+          "id": "changsha.双湖",
+          "name": "双湖",
+          "nameEn": "Shuanghu",
+          "lon": 112.922508,
+          "lat": 28.029817
+        },
+        {
+          "id": "changsha.黄家湾",
+          "name": "黄家湾",
+          "nameEn": "Huangjiawan",
+          "lon": 112.941562,
+          "lat": 27.993669
+        },
+        {
+          "id": "changsha.船形山",
+          "name": "船形山",
+          "nameEn": "Chuanxingshan",
+          "lon": 112.943904,
+          "lat": 27.983108
+        },
+        {
+          "id": "changsha.湘潭北站",
+          "name": "湘潭北站",
+          "nameEn": "Xiangtan North Railway Station",
+          "lon": 112.937823,
+          "lat": 27.96682
+        }
+      ],
+      "track": [
+        [
+          113.13054,
+          28.24822
+        ],
+        [
+          113.05091,
+          28.24896
+        ],
+        [
+          113.04635,
+          28.25032
+        ],
+        [
+          113.04043,
+          28.24552
+        ],
+        [
+          113.0316,
+          28.24546
+        ],
+        [
+          113.02223,
+          28.24381
+        ],
+        [
+          113.01553,
+          28.24466
+        ],
+        [
+          113.01468,
+          28.24404
+        ],
+        [
+          113.01349,
+          28.24085
+        ],
+        [
+          113.00227,
+          28.24054
+        ],
+        [
+          113.00155,
+          28.23926
+        ],
+        [
+          113.001,
+          28.22851
+        ],
+        [
+          113.0022,
+          28.21583
+        ],
+        [
+          113.0055,
+          28.20016
+        ],
+        [
+          113.00419,
+          28.17975
+        ],
+        [
+          112.99849,
+          28.17428
+        ],
+        [
+          112.9938,
+          28.17391
+        ],
+        [
+          112.98935,
+          28.17276
+        ],
+        [
+          112.98339,
+          28.1741
+        ],
+        [
+          112.97506,
+          28.17815
+        ],
+        [
+          112.96934,
+          28.18232
+        ],
+        [
+          112.96125,
+          28.18291
+        ],
+        [
+          112.94533,
+          28.1739
+        ],
+        [
+          112.94016,
+          28.16553
+        ],
+        [
+          112.93344,
+          28.16081
+        ],
+        [
+          112.93187,
+          28.15556
+        ],
+        [
+          112.93141,
+          28.1411
+        ],
+        [
+          112.93405,
+          28.13737
+        ],
+        [
+          112.93658,
+          28.13674
+        ],
+        [
+          112.93874,
+          28.13515
+        ],
+        [
+          112.93952,
+          28.13365
+        ],
+        [
+          112.93949,
+          28.13065
+        ],
+        [
+          112.93552,
+          28.12194
+        ],
+        [
+          112.93209,
+          28.11646
+        ],
+        [
+          112.92901,
+          28.11285
+        ],
+        [
+          112.92452,
+          28.1106
+        ],
+        [
+          112.92237,
+          28.10567
+        ],
+        [
+          112.91875,
+          28.10001
+        ],
+        [
+          112.90699,
+          28.08736
+        ],
+        [
+          112.90027,
+          28.07339
+        ],
+        [
+          112.90073,
+          28.07069
+        ],
+        [
+          112.90298,
+          28.06687
+        ],
+        [
+          112.90411,
+          28.06335
+        ],
+        [
+          112.90541,
+          28.05537
+        ],
+        [
+          112.90848,
+          28.04302
+        ],
+        [
+          112.91678,
+          28.03269
+        ],
+        [
+          112.9185,
+          28.03137
+        ],
+        [
+          112.92493,
+          28.02884
+        ],
+        [
+          112.92678,
+          28.02698
+        ],
+        [
+          112.92752,
+          28.025
+        ],
+        [
+          112.92779,
+          28.01953
+        ],
+        [
+          112.9372,
+          28.00552
+        ],
+        [
+          112.94291,
+          27.99012
+        ],
+        [
+          112.94393,
+          27.9802
+        ],
+        [
+          112.94206,
+          27.9775
+        ],
+        [
+          112.93798,
+          27.97536
+        ],
+        [
+          112.93624,
+          27.97347
+        ],
+        [
+          112.93587,
+          27.9713
+        ],
+        [
+          112.93782,
+          27.96682
+        ]
+      ]
+    },
+    {
+      "id": "changsha.l6",
+      "ref": "4",
+      "name": "4号线",
+      "color": "#920783",
+      "system": "subway",
+      "lengthKm": 29.8,
+      "stationCount": 25,
+      "stations": [
+        {
+          "id": "changsha.杜家坪",
+          "name": "杜家坪",
+          "nameEn": "Dujiaping",
+          "lon": 113.087843,
+          "lat": 28.145548
+        },
+        {
+          "id": "changsha.光达",
+          "name": "光达",
+          "nameEn": "Guangda",
+          "lon": 113.079113,
+          "lat": 28.151647
+        },
+        {
+          "id": "changsha.长沙火车南站",
+          "name": "长沙火车南站",
+          "nameEn": "South Railway Station",
+          "lon": 113.058125,
+          "lat": 28.150148
+        },
+        {
+          "id": "changsha.平阳",
+          "name": "平阳",
+          "nameEn": "Pingyang",
+          "lon": 113.05136,
+          "lat": 28.154967
+        },
+        {
+          "id": "changsha.粟塘",
+          "name": "粟塘",
+          "nameEn": "Sutang",
+          "lon": 113.046225,
+          "lat": 28.160933
+        },
+        {
+          "id": "changsha.沙湾公园",
+          "name": "沙湾公园",
+          "nameEn": "Shawan Park",
+          "lon": 113.038825,
+          "lat": 28.160944
+        },
+        {
+          "id": "changsha.圭塘",
+          "name": "圭塘",
+          "nameEn": "Guitang",
+          "lon": 113.025195,
+          "lat": 28.160859
+        },
+        {
+          "id": "changsha.树木岭",
+          "name": "树木岭",
+          "nameEn": "Shumuling",
+          "lon": 113.01505,
+          "lat": 28.159489
+        },
+        {
+          "id": "changsha.赤岗岭",
+          "name": "赤岗岭",
+          "nameEn": "Chigangling",
+          "lon": 113.000012,
+          "lat": 28.163027
+        },
+        {
+          "id": "changsha.砂子塘",
+          "name": "砂子塘",
+          "nameEn": "Shazitang",
+          "lon": 112.98761,
+          "lat": 28.166033
+        },
+        {
+          "id": "changsha.黄土岭",
+          "name": "黄土岭",
+          "nameEn": "Huangtuling",
+          "lon": 112.980137,
+          "lat": 28.163481
+        },
+        {
+          "id": "changsha.碧沙湖",
+          "name": "碧沙湖",
+          "nameEn": "Bishahu",
+          "lon": 112.962276,
+          "lat": 28.167828
+        },
+        {
+          "id": "changsha.阜埠河",
+          "name": "阜埠河",
+          "nameEn": "Fubuhe",
+          "lon": 112.942188,
+          "lat": 28.169718
+        },
+        {
+          "id": "changsha.湖南大学",
+          "name": "湖南大学",
+          "nameEn": "Hunan University",
+          "lon": 112.941392,
+          "lat": 28.183543
+        },
+        {
+          "id": "changsha.湖南师大",
+          "name": "湖南师大",
+          "nameEn": "Hunan Normal University",
+          "lon": 112.942774,
+          "lat": 28.1894
+        },
+        {
+          "id": "changsha.溁湾镇",
+          "name": "溁湾镇",
+          "nameEn": "Yingwanzhen",
+          "lon": 112.947179,
+          "lat": 28.201301
+        },
+        {
+          "id": "changsha.望月湖",
+          "name": "望月湖",
+          "nameEn": "Wangyuehu",
+          "lon": 112.950252,
+          "lat": 28.210103
+        },
+        {
+          "id": "changsha.六沟垅",
+          "name": "六沟垅",
+          "nameEn": "Liugoulong",
+          "lon": 112.949017,
+          "lat": 28.22408
+        },
+        {
+          "id": "changsha.观沙岭",
+          "name": "观沙岭",
+          "nameEn": "Guanshaling",
+          "lon": 112.947155,
+          "lat": 28.234072
+        },
+        {
+          "id": "changsha.茶子山",
+          "name": "茶子山",
+          "nameEn": "Chazishan",
+          "lon": 112.954021,
+          "lat": 28.245671
+        },
+        {
+          "id": "changsha.福元大桥西",
+          "name": "福元大桥西",
+          "nameEn": "West Fuyuan Bridge",
+          "lon": 112.953299,
+          "lat": 28.256791
+        },
+        {
+          "id": "changsha.汉王陵公园",
+          "name": "汉王陵公园",
+          "nameEn": "Hanwangling Park",
+          "lon": 112.942362,
+          "lat": 28.270909
+        },
+        {
+          "id": "changsha.湘江新城",
+          "name": "湘江新城",
+          "nameEn": "Xiangjiang New Town",
+          "lon": 112.928246,
+          "lat": 28.28524
+        },
+        {
+          "id": "changsha.月亮岛西",
+          "name": "月亮岛西",
+          "nameEn": "West Yueliangdao",
+          "lon": 112.924178,
+          "lat": 28.290681
+        },
+        {
+          "id": "changsha.罐子岭",
+          "name": "罐子岭",
+          "nameEn": "Guanziling",
+          "lon": 112.917904,
+          "lat": 28.298126
+        }
+      ],
+      "track": [
+        [
+          113.05579,
+          28.15
+        ],
+        [
+          113.05813,
+          28.15015
+        ],
+        [
+          113.05382,
+          28.1499
+        ],
+        [
+          113.05223,
+          28.15058
+        ],
+        [
+          113.05067,
+          28.15927
+        ],
+        [
+          113.04862,
+          28.1608
+        ],
+        [
+          113.02162,
+          28.16077
+        ],
+        [
+          113.01197,
+          28.15906
+        ],
+        [
+          113.00255,
+          28.16063
+        ],
+        [
+          112.99609,
+          28.16647
+        ],
+        [
+          112.98909,
+          28.16641
+        ],
+        [
+          112.9835,
+          28.16384
+        ],
+        [
+          112.97805,
+          28.16351
+        ],
+        [
+          112.97509,
+          28.16459
+        ],
+        [
+          112.97356,
+          28.16733
+        ],
+        [
+          112.97168,
+          28.16856
+        ],
+        [
+          112.96833,
+          28.16872
+        ],
+        [
+          112.94887,
+          28.16618
+        ],
+        [
+          112.94462,
+          28.1676
+        ],
+        [
+          112.94012,
+          28.17146
+        ],
+        [
+          112.93925,
+          28.1737
+        ],
+        [
+          112.94097,
+          28.17661
+        ],
+        [
+          112.94139,
+          28.18501
+        ],
+        [
+          112.94279,
+          28.18773
+        ],
+        [
+          112.94272,
+          28.19122
+        ],
+        [
+          112.94668,
+          28.19971
+        ],
+        [
+          112.94802,
+          28.20417
+        ],
+        [
+          112.95026,
+          28.20761
+        ],
+        [
+          112.95098,
+          28.21709
+        ],
+        [
+          112.94757,
+          28.23002
+        ],
+        [
+          112.94664,
+          28.23864
+        ],
+        [
+          112.94788,
+          28.24036
+        ],
+        [
+          112.95333,
+          28.2423
+        ],
+        [
+          112.95398,
+          28.24326
+        ],
+        [
+          112.95405,
+          28.24947
+        ],
+        [
+          112.95273,
+          28.26139
+        ],
+        [
+          112.95134,
+          28.264
+        ],
+        [
+          112.94592,
+          28.26715
+        ],
+        [
+          112.94048,
+          28.27296
+        ],
+        [
+          112.93217,
+          28.27973
+        ],
+        [
+          112.92939,
+          28.28302
+        ],
+        [
+          112.92657,
+          28.28818
+        ],
+        [
+          112.91987,
+          28.2949
+        ],
+        [
+          112.9179,
+          28.29813
+        ]
+      ]
+    },
+    {
+      "id": "changsha.l7",
+      "ref": "5",
+      "name": "5号线",
+      "color": "#FFE200",
+      "system": "subway",
+      "lengthKm": 16.42,
+      "stationCount": 18,
+      "stations": [
+        {
+          "id": "changsha.月湖公园北",
+          "name": "月湖公园北",
+          "nameEn": "North Yuehu Park",
+          "lon": 113.03512,
+          "lat": 28.245247
+        },
+        {
+          "id": "changsha.白茅铺",
+          "name": "白茅铺",
+          "nameEn": "Baimaopu",
+          "lon": 113.042956,
+          "lat": 28.253498
+        },
+        {
+          "id": "changsha.土桥",
+          "name": "土桥",
+          "nameEn": "Tuqiao",
+          "lon": 113.050277,
+          "lat": 28.266937
+        },
+        {
+          "id": "changsha.水渡河",
+          "name": "水渡河",
+          "nameEn": "Shuiduhe",
+          "lon": 113.058248,
+          "lat": 28.282863
+        },
+        {
+          "id": "changsha.马栏山",
+          "name": "马栏山",
+          "nameEn": "Malanshan",
+          "lon": 113.035098,
+          "lat": 28.235153
+        },
+        {
+          "id": "changsha.鸭子铺",
+          "name": "鸭子铺",
+          "nameEn": "Yazipu",
+          "lon": 113.030237,
+          "lat": 28.228212
+        },
+        {
+          "id": "changsha.火炬村",
+          "name": "火炬村",
+          "nameEn": "Huojucun",
+          "lon": 113.025541,
+          "lat": 28.211611
+        },
+        {
+          "id": "changsha.马王堆",
+          "name": "马王堆",
+          "nameEn": "Mawangdui",
+          "lon": 113.025239,
+          "lat": 28.203192
+        },
+        {
+          "id": "changsha.万家丽广场",
+          "name": "万家丽广场",
+          "nameEn": "Wanjiali Square",
+          "lon": 113.02496,
+          "lat": 28.194807
+        },
+        {
+          "id": "changsha.芙蓉区政府",
+          "name": "芙蓉区政府",
+          "nameEn": "Furong District Government",
+          "lon": 113.024821,
+          "lat": 28.188338
+        },
+        {
+          "id": "changsha.高桥北",
+          "name": "高桥北",
+          "nameEn": "North Gaoqiao",
+          "lon": 113.024536,
+          "lat": 28.17939
+        },
+        {
+          "id": "changsha.高桥南",
+          "name": "高桥南",
+          "nameEn": "South Gaoqiao",
+          "lon": 113.024129,
+          "lat": 28.17032
+        },
+        {
+          "id": "changsha.圭塘",
+          "name": "圭塘",
+          "nameEn": "Guitang",
+          "lon": 113.023683,
+          "lat": 28.160027
+        },
+        {
+          "id": "changsha.木桥",
+          "name": "木桥",
+          "nameEn": "Muqiao",
+          "lon": 113.025224,
+          "lat": 28.152036
+        },
+        {
+          "id": "changsha.雨花区政府",
+          "name": "雨花区政府",
+          "nameEn": "Yuhua District Government",
+          "lon": 113.029403,
+          "lat": 28.140795
+        },
+        {
+          "id": "changsha.大塘",
+          "name": "大塘",
+          "nameEn": "Datang",
+          "lon": 113.030599,
+          "lat": 28.132448
+        },
+        {
+          "id": "changsha.板塘冲",
+          "name": "板塘冲",
+          "nameEn": "Bantangchong",
+          "lon": 113.033494,
+          "lat": 28.119382
+        },
+        {
+          "id": "changsha.毛竹塘",
+          "name": "毛竹塘",
+          "nameEn": "Maozhutang",
+          "lon": 113.030863,
+          "lat": 28.098272
+        }
+      ],
+      "track": [
+        [
+          113.03511,
+          28.24145
+        ],
+        [
+          113.03478,
+          28.23325
+        ],
+        [
+          113.03357,
+          28.23131
+        ],
+        [
+          113.02788,
+          28.22602
+        ],
+        [
+          113.02672,
+          28.22347
+        ],
+        [
+          113.02568,
+          28.21571
+        ],
+        [
+          113.02353,
+          28.16149
+        ],
+        [
+          113.02505,
+          28.15254
+        ],
+        [
+          113.02893,
+          28.14445
+        ],
+        [
+          113.0306,
+          28.13245
+        ],
+        [
+          113.03499,
+          28.11156
+        ],
+        [
+          113.03404,
+          28.10665
+        ],
+        [
+          113.03086,
+          28.09827
+        ]
+      ]
+    },
+    {
+      "id": "changsha.l8",
+      "ref": "6",
+      "name": "6号线",
+      "color": "#005BAC",
+      "system": "subway",
+      "lengthKm": 47.79,
+      "stationCount": 34,
+      "stations": [
+        {
+          "id": "changsha.谢家桥",
+          "name": "谢家桥",
+          "nameEn": "Xiejiaqiao",
+          "lon": 112.83035,
+          "lat": 28.176117
+        },
+        {
+          "id": "changsha.象鼻窝",
+          "name": "象鼻窝",
+          "nameEn": "Xiangbiwo",
+          "lon": 112.84781,
+          "lat": 28.176206
+        },
+        {
+          "id": "changsha.中塘",
+          "name": "中塘",
+          "nameEn": "Zhongtang",
+          "lon": 112.85818,
+          "lat": 28.184397
+        },
+        {
+          "id": "changsha.一师范西校区",
+          "name": "一师范西校区",
+          "nameEn": "Hunan First Normal University (West Campus)",
+          "lon": 112.859419,
+          "lat": 28.196394
+        },
+        {
+          "id": "changsha.长庆",
+          "name": "长庆",
+          "nameEn": "Changqing",
+          "lon": 112.857382,
+          "lat": 28.204706
+        },
+        {
+          "id": "changsha.和馨园",
+          "name": "和馨园",
+          "nameEn": "Hexinyuan",
+          "lon": 112.856044,
+          "lat": 28.218069
+        },
+        {
+          "id": "changsha.长丰",
+          "name": "长丰",
+          "nameEn": "Changfeng",
+          "lon": 112.866349,
+          "lat": 28.224403
+        },
+        {
+          "id": "changsha.麓谷体育公园",
+          "name": "麓谷体育公园",
+          "nameEn": "Lugu Sports Park",
+          "lon": 112.876948,
+          "lat": 28.223418
+        },
+        {
+          "id": "changsha.麓谷公园",
+          "name": "麓谷公园",
+          "nameEn": "Lugu Park",
+          "lon": 112.890375,
+          "lat": 28.221672
+        },
+        {
+          "id": "changsha.涧塘",
+          "name": "涧塘",
+          "nameEn": "Jiantang",
+          "lon": 112.905363,
+          "lat": 28.222073
+        },
+        {
+          "id": "changsha.湖南工商大学",
+          "name": "湖南工商大学",
+          "nameEn": "Hunan University of Technology and Business",
+          "lon": 112.916877,
+          "lat": 28.222789
+        },
+        {
+          "id": "changsha.白鸽咀",
+          "name": "白鸽咀",
+          "nameEn": "Baigezui",
+          "lon": 112.92854,
+          "lat": 28.221333
+        },
+        {
+          "id": "changsha.湘雅三医院",
+          "name": "湘雅三医院",
+          "nameEn": "The Third Xiangya Hospital",
+          "lon": 112.937643,
+          "lat": 28.221611
+        },
+        {
+          "id": "changsha.六沟垅",
+          "name": "六沟垅",
+          "nameEn": "Liugoulong",
+          "lon": 112.949289,
+          "lat": 28.223124
+        },
+        {
+          "id": "changsha.文昌阁",
+          "name": "文昌阁",
+          "nameEn": "Wenchangge",
+          "lon": 112.972934,
+          "lat": 28.217459
+        },
+        {
+          "id": "changsha.湘雅医院",
+          "name": "湘雅医院",
+          "nameEn": "Xiangya Hospital",
+          "lon": 112.982354,
+          "lat": 28.216893
+        },
+        {
+          "id": "changsha.烈士公园南",
+          "name": "烈士公园南",
+          "nameEn": "South Martyrs Park",
+          "lon": 112.985655,
+          "lat": 28.208212
+        },
+        {
+          "id": "changsha.迎宾路口",
+          "name": "迎宾路口",
+          "nameEn": "Yingbin Road",
+          "lon": 112.98636,
+          "lat": 28.198163
+        },
+        {
+          "id": "changsha.窑岭湘雅二医院",
+          "name": "窑岭湘雅二医院",
+          "nameEn": "Yaoling & The Second Xiangya Hospital",
+          "lon": 112.990707,
+          "lat": 28.189091
+        },
+        {
+          "id": "changsha.朝阳村",
+          "name": "朝阳村",
+          "nameEn": "Chaoyangcun",
+          "lon": 113.003985,
+          "lat": 28.188155
+        },
+        {
+          "id": "changsha.芙蓉区政府",
+          "name": "芙蓉区政府",
+          "nameEn": "Furong District Government",
+          "lon": 113.023614,
+          "lat": 28.187489
+        },
+        {
+          "id": "changsha.人民东路",
+          "name": "人民东路",
+          "nameEn": "Renmin East Road",
+          "lon": 113.032248,
+          "lat": 28.187361
+        },
+        {
+          "id": "changsha.花桥",
+          "name": "花桥",
+          "nameEn": "Huaqiao",
+          "lon": 113.042811,
+          "lat": 28.187845
+        },
+        {
+          "id": "changsha.隆平水稻博物馆",
+          "name": "隆平水稻博物馆",
+          "nameEn": "Longping Rice Museum",
+          "lon": 113.053504,
+          "lat": 28.193703
+        },
+        {
+          "id": "changsha.农科院农大",
+          "name": "农科院农大",
+          "nameEn": "Acad. of Agri-Sciences & Agri-University",
+          "lon": 113.07328,
+          "lat": 28.194448
+        },
+        {
+          "id": "changsha.东湖",
+          "name": "东湖",
+          "nameEn": "Donghu",
+          "lon": 113.08941,
+          "lat": 28.19655
+        },
+        {
+          "id": "changsha.韶光",
+          "name": "韶光",
+          "nameEn": "Shaoguang",
+          "lon": 113.100143,
+          "lat": 28.19893
+        },
+        {
+          "id": "changsha.龙华",
+          "name": "龙华",
+          "nameEn": "Longhua",
+          "lon": 113.122747,
+          "lat": 28.203688
+        },
+        {
+          "id": "changsha.檀木桥",
+          "name": "檀木桥",
+          "nameEn": "Tanmuqiao",
+          "lon": 113.145268,
+          "lat": 28.204708
+        },
+        {
+          "id": "changsha.曹家坪",
+          "name": "曹家坪",
+          "nameEn": "Caojiaping",
+          "lon": 113.16486,
+          "lat": 28.20692
+        },
+        {
+          "id": "changsha.龙峰",
+          "name": "龙峰",
+          "nameEn": "Longfeng",
+          "lon": 113.18086,
+          "lat": 28.205811
+        },
+        {
+          "id": "changsha.大路村",
+          "name": "大路村",
+          "nameEn": "Dalucun",
+          "lon": 113.200435,
+          "lat": 28.205881
+        },
+        {
+          "id": "changsha.木马塅",
+          "name": "木马塅",
+          "nameEn": "Mumaduan",
+          "lon": 113.20607,
+          "lat": 28.199931
+        },
+        {
+          "id": "changsha.黄花机场T1T2",
+          "name": "黄花机场T1T2",
+          "nameEn": "Huanghua Airport T1 & T2",
+          "lon": 113.213223,
+          "lat": 28.194138
+        }
+      ],
+      "track": [
+        [
+          112.82865,
+          28.17679
+        ],
+        [
+          112.83573,
+          28.17456
+        ],
+        [
+          112.84037,
+          28.17438
+        ],
+        [
+          112.85326,
+          28.17747
+        ],
+        [
+          112.85609,
+          28.17884
+        ],
+        [
+          112.85786,
+          28.1807
+        ],
+        [
+          112.85807,
+          28.18943
+        ],
+        [
+          112.86145,
+          28.19304
+        ],
+        [
+          112.85894,
+          28.19753
+        ],
+        [
+          112.8562,
+          28.21132
+        ],
+        [
+          112.85599,
+          28.22242
+        ],
+        [
+          112.8566,
+          28.22384
+        ],
+        [
+          112.85797,
+          28.22432
+        ],
+        [
+          112.86969,
+          28.22436
+        ],
+        [
+          112.88579,
+          28.22199
+        ],
+        [
+          112.89581,
+          28.22148
+        ],
+        [
+          112.91849,
+          28.22286
+        ],
+        [
+          112.92591,
+          28.22132
+        ],
+        [
+          112.93577,
+          28.22145
+        ],
+        [
+          112.95599,
+          28.22361
+        ],
+        [
+          112.96437,
+          28.2182
+        ],
+        [
+          112.98544,
+          28.21671
+        ],
+        [
+          112.98633,
+          28.215
+        ],
+        [
+          112.98563,
+          28.20914
+        ],
+        [
+          112.98599,
+          28.19985
+        ],
+        [
+          112.98817,
+          28.19013
+        ],
+        [
+          112.98966,
+          28.18916
+        ],
+        [
+          113.00485,
+          28.18811
+        ],
+        [
+          113.04031,
+          28.18716
+        ],
+        [
+          113.04517,
+          28.18883
+        ],
+        [
+          113.04899,
+          28.19247
+        ],
+        [
+          113.05126,
+          28.19356
+        ],
+        [
+          113.08089,
+          28.19454
+        ],
+        [
+          113.09846,
+          28.19869
+        ],
+        [
+          113.10789,
+          28.19945
+        ],
+        [
+          113.11755,
+          28.2026
+        ],
+        [
+          113.12407,
+          28.20391
+        ],
+        [
+          113.16018,
+          28.20525
+        ],
+        [
+          113.16713,
+          28.20775
+        ],
+        [
+          113.17814,
+          28.20597
+        ],
+        [
+          113.20506,
+          28.2054
+        ],
+        [
+          113.20611,
+          28.20408
+        ],
+        [
+          113.20589,
+          28.19651
+        ],
+        [
+          113.20633,
+          28.19536
+        ],
+        [
+          113.20803,
+          28.19412
+        ],
+        [
+          113.21322,
+          28.19414
+        ]
+      ]
+    }
+  ]
+}

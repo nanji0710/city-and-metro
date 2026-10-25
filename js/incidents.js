@@ -150,9 +150,17 @@
     // 指派到某条线的线长只管自己那条线（人员的「负责线路」下拉框因此才有意义）
     const auto = !!(g.lineAutoHandle ? g.lineAutoHandle(rt && rt.lineId) : (se && se.autoHandle));
     const nSt = rt ? rt.stIdx.length : 14;
-    const mins = Math.round(lv.minutes[0] + (lv.minutes[1] - lv.minutes[0]) * rng());
+    const rawMin = lv.minutes[0] + (lv.minutes[1] - lv.minutes[0]) * rng();
+    // onTimeAdd（司机与调度带来的准点加成）折算成事故影响时长的缩短。
+    // 为什么落在时长上：引擎里没有一个独立的「准点率」指标，玩家实际感受到的准点
+    // 就是「这次事故耽误了多久」，所以加值只能也必须落到分钟数上，否则这个效果
+    // 就只是面板上的一行字。上限 35%，避免堆满司机后事故变得无关痛痒。
+    const onTime = se && se.onTimeAdd > 0 ? Math.min(0.35, se.onTimeAdd) : 0;
+    const mins = Math.max(1, Math.round(rawMin * (1 - onTime)));
     const dur = auto ? Math.round(mins * AUTO_MIN_MULT) : mins;
-    const cost = repairCostFor(lv, nSt, auto);
+    // repairMult（车辆检修带来的维修费折扣）落在维修费上，与面板显示的乘数一致。
+    const costMult = se && se.repairMult > 0 ? se.repairMult : 1;
+    const cost = Math.round(repairCostFor(lv, nSt, auto) * costMult * 100) / 100;
 
     const lineName = rt ? (rt.line.name || (rt.label || '线路')) : '全网';
     seq++;

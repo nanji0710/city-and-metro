@@ -1,1 +1,2341 @@
-{"id":"shenyang","name":"沈阳","province":"辽宁省","center":[123.42723,41.77775],"stats":{"lines":8,"stations":164,"lengthKm":271.5},"lines":[{"id":"shenyang.l1","ref":"1","name":"1号线","color":"#B63F1F","system":"subway","lengthKm":43.77,"stationCount":32,"stations":[{"id":"shenyang.双马","name":"双马","nameEn":"Shuangma","lon":123.653168,"lat":41.852999},{"id":"shenyang.植物园","name":"植物园","nameEn":"Zhiwuyuan","lon":123.633718,"lat":41.851562},{"id":"shenyang.伯官北大街","name":"伯官北大街","nameEn":"Boguanbeidajie","lon":123.620462,"lat":41.852831},{"id":"shenyang.水泉","name":"水泉","nameEn":"Shuiquan","lon":123.609784,"lat":41.843469},{"id":"shenyang.东陵公园","name":"东陵公园","nameEn":"Donglinggongyuan","lon":123.589682,"lat":41.82752},{"id":"shenyang.前陵","name":"前陵","nameEn":"Qianling","lon":123.573744,"lat":41.820492},{"id":"shenyang.农业大学","name":"农业大学","nameEn":"Nongyedaxue","lon":123.558678,"lat":41.819571},{"id":"shenyang.东大营街","name":"东大营街","nameEn":"Dongdayingjie","lon":123.539312,"lat":41.816237},{"id":"shenyang.新宁街","name":"新宁街","nameEn":"Xinningjie","lon":123.525738,"lat":41.811216},{"id":"shenyang.新惠街","name":"新惠街","nameEn":"Xinhuijie","lon":123.515936,"lat":41.804316},{"id":"shenyang.黎明广场","name":"黎明广场","nameEn":"Liming Square","lon":123.498363,"lat":41.805918},{"id":"shenyang.滂江街","name":"滂江街","nameEn":"Pangjiangjie","lon":123.48272,"lat":41.806548},{"id":"shenyang.东中街","name":"东中街","nameEn":"Dongzhongjie","lon":123.465197,"lat":41.800481},{"id":"shenyang.中街","name":"中街","nameEn":"Zhongjie","lon":123.454382,"lat":41.799015},{"id":"shenyang.怀远门","name":"怀远门","nameEn":"Huaiyuanmen","lon":123.441184,"lat":41.79467},{"id":"shenyang.青年大街","name":"青年大街","nameEn":"Qingniandajie","lon":123.427122,"lat":41.789945},{"id":"shenyang.南市场","name":"南市场","nameEn":"Nanshichang","lon":123.413813,"lat":41.787051},{"id":"shenyang.太原街","name":"太原街","nameEn":"Taiyuanjie","lon":123.400418,"lat":41.787131},{"id":"shenyang.沈阳站","name":"沈阳站","nameEn":"Shenyangzhan","lon":123.39,"lat":41.791568},{"id":"shenyang.云峰北街","name":"云峰北街","nameEn":"Yunfengbeijie","lon":123.374348,"lat":41.794178},{"id":"shenyang.铁西广场","name":"铁西广场","nameEn":"Tiexiguangchang","lon":123.364503,"lat":41.791733},{"id":"shenyang.保工街","name":"保工街","nameEn":"Baogongjie","lon":123.349998,"lat":41.798142},{"id":"shenyang.启工街","name":"启工街","nameEn":"Qigongjie","lon":123.337382,"lat":41.801429},{"id":"shenyang.重工街","name":"重工街","nameEn":"Zhonggongjie","lon":123.326118,"lat":41.802736},{"id":"shenyang.迎宾路","name":"迎宾路","nameEn":"Yingbinlu","lon":123.303638,"lat":41.799357},{"id":"shenyang.于洪广场","name":"于洪广场","nameEn":"Yuhongguangchang","lon":123.299793,"lat":41.791982},{"id":"shenyang.开发大道","name":"开发大道","nameEn":"Kaifadadao","lon":123.299391,"lat":41.778674},{"id":"shenyang.张士","name":"张士","nameEn":"Zhangshi","lon":123.287764,"lat":41.769268},{"id":"shenyang.四号街","name":"四号街","nameEn":"Sihaojie","lon":123.271513,"lat":41.763787},{"id":"shenyang.七号街","name":"七号街","nameEn":"Qihaojie","lon":123.253601,"lat":41.763046},{"id":"shenyang.中央大街","name":"中央大街","nameEn":"Zhongyangdajie","lon":123.236891,"lat":41.763089},{"id":"shenyang.十三号街","name":"十三号街","nameEn":"Shisanhao Jie","lon":123.223176,"lat":41.763121}],"track":[[123.65317,41.853],[123.64985,41.8543],[123.64703,41.85431],[123.64246,41.8522],[123.63651,41.85107],[123.63237,41.85193],[123.62626,41.85456],[123.61728,41.85174],[123.60744,41.85025],[123.60626,41.84906],[123.60622,41.84799],[123.61116,41.84151],[123.61183,41.84001],[123.6113,41.83889],[123.59647,41.83349],[123.59176,41.82827],[123.58477,41.82617],[123.57621,41.8214],[123.56988,41.81939],[123.56391,41.81875],[123.55524,41.81983],[123.54647,41.81882],[123.52326,41.81025],[123.52303,41.80676],[123.52213,41.80552],[123.51994,41.80434],[123.48821,41.80685],[123.47952,41.8061],[123.47532,41.80518],[123.46713,41.80092],[123.45863,41.79907],[123.44778,41.7989],[123.44202,41.79498],[123.43198,41.7914],[123.40547,41.78524],[123.37797,41.7966],[123.37591,41.79612],[123.3712,41.79005],[123.36977,41.78973],[123.34817,41.79886],[123.33186,41.80271],[123.32144,41.80271],[123.31349,41.79966],[123.30364,41.79936],[123.30035,41.7981],[123.29971,41.79646],[123.29978,41.78099],[123.29922,41.77768],[123.28292,41.766],[123.26752,41.76305],[123.22318,41.76312]]},{"id":"shenyang.l2","ref":"2","name":"2号线","color":"#E5703A","system":"subway","lengthKm":45.93,"stationCount":33,"stations":[{"id":"shenyang.蒲田路","name":"蒲田路","nameEn":"Pu Tian Road","lon":123.399444,"lat":41.953748},{"id":"shenyang.蒲河路","name":"蒲河路","nameEn":"Pu He Road","lon":123.402485,"lat":41.944278},{"id":"shenyang.人杰湖公园","name":"人杰湖公园","nameEn":"Ren Jie Hu Park","lon":123.392376,"lat":41.934152},{"id":"shenyang.辽宁大学","name":"辽宁大学","nameEn":"Liaoning University","lon":123.387613,"lat":41.927324},{"id":"shenyang.航空航天大学","name":"航空航天大学","nameEn":"Shenyang Aerospace University","lon":123.397062,"lat":41.915256},{"id":"shenyang.师范大学","name":"师范大学","nameEn":"Shenyang Normal University","lon":123.403375,"lat":41.904328},{"id":"shenyang.医学院","name":"医学院","nameEn":"Shenyang Medical College","lon":123.409332,"lat":41.883964},{"id":"shenyang.三台子","name":"三台子","nameEn":"San Tai Zi","lon":123.410936,"lat":41.865618},{"id":"shenyang.陵西","name":"陵西","nameEn":"Bei Ling Park West","lon":123.412009,"lat":41.853512},{"id":"shenyang.新乐遗址","name":"新乐遗址","nameEn":"Xinle Ancient Ruins Museum","lon":123.412635,"lat":41.845348},{"id":"shenyang.北陵公园","name":"北陵公园","nameEn":"Beiling Park","lon":123.417744,"lat":41.836464},{"id":"shenyang.中医药大学","name":"中医药大学","nameEn":"Zhongyiyaodaxue;Liaoning University of Traditional Chinese Medicine","lon":123.422886,"lat":41.830884},{"id":"shenyang.岐山路","name":"岐山路","nameEn":"Qi Shan Road","lon":123.422878,"lat":41.820031},{"id":"shenyang.沈阳北站","name":"沈阳北站","nameEn":"Shenyang North Railway Station","lon":123.430029,"lat":41.814802},{"id":"shenyang.金融中心","name":"金融中心","nameEn":"Financial Center","lon":123.43247,"lat":41.809588},{"id":"shenyang.人民广场","name":"人民广场","nameEn":"City Hall Square","lon":123.42804,"lat":41.802595},{"id":"shenyang.青年大街","name":"青年大街","nameEn":"Qing Nian Avenue","lon":123.426455,"lat":41.789959},{"id":"shenyang.青年公园","name":"青年公园","nameEn":"Qing Nian Park","lon":123.429636,"lat":41.782419},{"id":"shenyang.工业展览馆","name":"工业展览馆","nameEn":"Industrial Exhibition Hall","lon":123.429239,"lat":41.770879},{"id":"shenyang.市图书馆","name":"市图书馆","nameEn":"Shenyang Library","lon":123.429244,"lat":41.757577},{"id":"shenyang.五里河","name":"五里河","nameEn":"Wu Li He","lon":123.434349,"lat":41.750764},{"id":"shenyang.奥体中心","name":"奥体中心","nameEn":"Aotizhongxin","lon":123.447424,"lat":41.740508},{"id":"shenyang.营盘街","name":"营盘街","nameEn":"Ying Pan Street","lon":123.450469,"lat":41.728297},{"id":"shenyang.世纪大厦","name":"世纪大厦","nameEn":"Century Mansion","lon":123.455919,"lat":41.717231},{"id":"shenyang.白塔河路","name":"白塔河路","nameEn":"Bai Ta He Road","lon":123.465637,"lat":41.706865},{"id":"shenyang.全运路","name":"全运路","nameEn":"Quan Yun Road","lon":123.476547,"lat":41.70513},{"id":"shenyang.沈本大街","name":"沈本大街","nameEn":"Shenben Dajie","lon":123.473283,"lat":41.691062},{"id":"shenyang.沈中大街","name":"沈中大街","nameEn":"Shenzhen Dajie","lon":123.45841,"lat":41.685852},{"id":"shenyang.省博物馆","name":"省博物馆","nameEn":"","lon":123.452037,"lat":41.67655},{"id":"shenyang.中央公园","name":"中央公园","nameEn":"","lon":123.451863,"lat":41.66417},{"id":"shenyang.创新一路","name":"创新一路","nameEn":"","lon":123.451721,"lat":41.648772},{"id":"shenyang.综合保税区","name":"综合保税区","nameEn":"Zonghe Baoshuiqu","lon":123.451682,"lat":41.6378},{"id":"shenyang.桃仙机场","name":"桃仙机场","nameEn":"Taoxian Airport","lon":123.488593,"lat":41.631361}],"track":[[123.39944,41.95375],[123.40317,41.94214],[123.40298,41.94053],[123.39717,41.93644],[123.38917,41.93264],[123.38738,41.93141],[123.38664,41.92966],[123.3906,41.92218],[123.39706,41.91526],[123.39921,41.91202],[123.40534,41.90076],[123.40865,41.89134],[123.41323,41.83786],[123.41497,41.83654],[123.42222,41.83615],[123.42381,41.8242],[123.42289,41.82061],[123.4232,41.81842],[123.42448,41.81692],[123.4314,41.81429],[123.43348,41.81213],[123.43323,41.81062],[123.43007,41.80674],[123.42521,41.79725],[123.42606,41.79105],[123.42976,41.78215],[123.42879,41.75864],[123.43284,41.75183],[123.44859,41.73956],[123.44985,41.7368],[123.45089,41.72704],[123.45495,41.71867],[123.46186,41.70939],[123.46694,41.70627],[123.47306,41.70606],[123.47655,41.70513],[123.48471,41.70152],[123.48759,41.69932],[123.48628,41.6969],[123.48134,41.69372],[123.47401,41.69143],[123.46443,41.68657],[123.46125,41.68587],[123.45221,41.68559],[123.45179,41.63498],[123.45331,41.63242],[123.4624,41.62513],[123.47878,41.62517],[123.48859,41.63136]]},{"id":"shenyang.l3","ref":"3","name":"3号线","color":"#FF007F","system":"subway","lengthKm":35.79,"stationCount":27,"stations":[{"id":"shenyang.李达","name":"李达","nameEn":"Lida","lon":123.135657,"lat":41.665561},{"id":"shenyang.铁西汽车工厂","name":"铁西汽车工厂","nameEn":"Tiexiqichegongchang","lon":123.146203,"lat":41.679476},{"id":"shenyang.马贝","name":"马贝","nameEn":"Mabei","lon":123.166393,"lat":41.693174},{"id":"shenyang.中德大街","name":"中德大街","nameEn":"Zhongdedajie","lon":123.184699,"lat":41.697775},{"id":"shenyang.细河悠谷","name":"细河悠谷","nameEn":"Xiheyougu","lon":123.212658,"lat":41.709068},{"id":"shenyang.翟家","name":"翟家","nameEn":"Zhaijia","lon":123.231617,"lat":41.718297},{"id":"shenyang.工业大学","name":"工业大学","nameEn":"Gongyedaxue","lon":123.25671,"lat":41.727889},{"id":"shenyang.宁官","name":"宁官","nameEn":"Ningguan","lon":123.268525,"lat":41.736085},{"id":"shenyang.余良","name":"余良","nameEn":"Yuliang","lon":123.27763,"lat":41.737635},{"id":"shenyang.甘官","name":"甘官","nameEn":"Ganguan","lon":123.301228,"lat":41.743962},{"id":"shenyang.千岛湖街","name":"千岛湖街","nameEn":"Qiandaohujie","lon":123.317566,"lat":41.741085},{"id":"shenyang.南阳湖街","name":"南阳湖街","nameEn":"Nanyanghujie","lon":123.327558,"lat":41.746209},{"id":"shenyang.大通湖街","name":"大通湖街","nameEn":"Datonghujie","lon":123.342105,"lat":41.749981},{"id":"shenyang.南李官","name":"南李官","nameEn":"Nanliguan","lon":123.356362,"lat":41.755634},{"id":"shenyang.凌空","name":"凌空","nameEn":"Lingkong","lon":123.370303,"lat":41.766818},{"id":"shenyang.砂阳","name":"砂阳","nameEn":"Shayang","lon":123.385615,"lat":41.765566},{"id":"shenyang.南八马路","name":"南八马路","nameEn":"Nanbamalu","lon":123.395161,"lat":41.7718},{"id":"shenyang.嘉兴街","name":"嘉兴街","nameEn":"Jiaxingjie","lon":123.404596,"lat":41.774636},{"id":"shenyang.方型广场","name":"方型广场","nameEn":"Fangxingguangchang","lon":123.410077,"lat":41.772282},{"id":"shenyang.三好街","name":"三好街","nameEn":"Sanhaojie","lon":123.422177,"lat":41.769019},{"id":"shenyang.工业展览馆","name":"工业展览馆","nameEn":"Industrial Exhibition Hall","lon":123.430578,"lat":41.769132},{"id":"shenyang.中科院金属所","name":"中科院金属所","nameEn":"Zhongkeyuanjinshusuo","lon":123.437953,"lat":41.768623},{"id":"shenyang.南塔","name":"南塔","nameEn":"Nanta","lon":123.4467,"lat":41.768417},{"id":"shenyang.文富路","name":"文富路","nameEn":"Wenfulu","lon":123.457367,"lat":41.766776},{"id":"shenyang.富民街","name":"富民街","nameEn":"Fuminjie","lon":123.46836,"lat":41.766512},{"id":"shenyang.江东街","name":"江东街","nameEn":"Jiangdongjie","lon":123.480233,"lat":41.767087},{"id":"shenyang.方家栏","name":"方家栏","nameEn":"Fangjialan","lon":123.489295,"lat":41.775249}],"track":[[123.13566,41.66556],[123.1513,41.68619],[123.15687,41.69039],[123.18677,41.69827],[123.1964,41.70303],[123.21841,41.71125],[123.227,41.71541],[123.24241,41.72592],[123.2526,41.72676],[123.25976,41.72846],[123.26164,41.73021],[123.2618,41.73328],[123.26396,41.7352],[123.28681,41.73952],[123.29437,41.74139],[123.30503,41.74507],[123.30955,41.74002],[123.31084,41.73934],[123.31506,41.73982],[123.33175,41.74804],[123.34092,41.74954],[123.35901,41.75676],[123.361,41.75861],[123.36337,41.76436],[123.36713,41.76728],[123.38043,41.7646],[123.39083,41.76676],[123.39268,41.7678],[123.39776,41.77507],[123.40086,41.77598],[123.41764,41.76923],[123.45135,41.76827],[123.45497,41.76687],[123.47712,41.76585],[123.47947,41.76651],[123.48203,41.76853],[123.48303,41.77211],[123.48404,41.77324],[123.48929,41.77525]]},{"id":"shenyang.l4","ref":"4","name":"line 4","color":"#4B0082","system":"subway","lengthKm":32.08,"stationCount":23,"stations":[{"id":"shenyang.创新路","name":"创新路","nameEn":"Chuangxin Lu","lon":123.407277,"lat":41.652923},{"id":"shenyang.沈阳南站","name":"沈阳南站","nameEn":"Shenyang South Railway Station","lon":123.403504,"lat":41.665887},{"id":"shenyang.城建学院","name":"城建学院","nameEn":"Chengjian Xueyuan","lon":123.409728,"lat":41.679094},{"id":"shenyang.红椿路","name":"红椿路","nameEn":"Hongchun Lu","lon":123.396803,"lat":41.687815},{"id":"shenyang.云杉路","name":"云杉路","nameEn":"Yunshan Lu","lon":123.393,"lat":41.695732},{"id":"shenyang.金仓路","name":"金仓路","nameEn":"Jincang Lu","lon":123.400002,"lat":41.707951},{"id":"shenyang.长白南","name":"长白南","nameEn":"Changbainan","lon":123.4032,"lat":41.725025},{"id":"shenyang.长白岛","name":"长白岛","nameEn":"Changbaidao","lon":123.397166,"lat":41.73884},{"id":"shenyang.南京桥","name":"南京桥","nameEn":"Nanjingqiao","lon":123.393038,"lat":41.749226},{"id":"shenyang.砂阳","name":"砂阳","nameEn":"Shayang","lon":123.385769,"lat":41.764596},{"id":"shenyang.南五马路","name":"南五马路","nameEn":"Nanwu Malu","lon":123.394032,"lat":41.780803},{"id":"shenyang.太原街","name":"太原街","nameEn":"Taiyuanjie","lon":123.399554,"lat":41.787893},{"id":"shenyang.市府大路","name":"市府大路","nameEn":"Shifu Dalu","lon":123.409917,"lat":41.801589},{"id":"shenyang.皇寺路","name":"皇寺路","nameEn":"Huangsi Lu","lon":123.414291,"lat":41.808817},{"id":"shenyang.沈阳北站","name":"沈阳北站","nameEn":"Shenyang North Railway Station","lon":123.432236,"lat":41.81489},{"id":"shenyang.沈阳大学","name":"沈阳大学","nameEn":"Shenyang University","lon":123.45101,"lat":41.816321},{"id":"shenyang.洮昌街","name":"洮昌街","nameEn":"Taochangjie","lon":123.461163,"lat":41.819752},{"id":"shenyang.合作街","name":"合作街","nameEn":"Hezuojie","lon":123.468364,"lat":41.826448},{"id":"shenyang.北大营","name":"北大营","nameEn":"Beidaying","lon":123.471851,"lat":41.836736},{"id":"shenyang.观泉路","name":"观泉路","nameEn":"Guanquan Lu","lon":123.476591,"lat":41.845887},{"id":"shenyang.望花","name":"望花","nameEn":"Wanghua","lon":123.485179,"lat":41.862103},{"id":"shenyang.文官街","name":"文官街","nameEn":"Wenguan Jie","lon":123.480557,"lat":41.868669},{"id":"shenyang.正新路","name":"正新路","nameEn":"Zhengxinlu","lon":123.47429,"lat":41.880342}],"track":[[123.40728,41.65292],[123.40717,41.65661],[123.40382,41.66155],[123.40363,41.66765],[123.40432,41.66924],[123.40734,41.67097],[123.4086,41.67255],[123.40987,41.68239],[123.40369,41.68529],[123.3918,41.68945],[123.39065,41.69059],[123.40471,41.71707],[123.40469,41.7212],[123.39149,41.75354],[123.38631,41.76307],[123.38462,41.76823],[123.40992,41.80159],[123.41561,41.81093],[123.42059,41.81201],[123.42501,41.81178],[123.43334,41.81541],[123.43558,41.81583],[123.44082,41.81498],[123.44701,41.81501],[123.46394,41.82078],[123.4672,41.82388],[123.47019,41.83356],[123.48281,41.85665],[123.48492,41.86126],[123.48649,41.86692],[123.48571,41.86796],[123.47404,41.86962],[123.47334,41.87394],[123.47429,41.88034]]},{"id":"shenyang.l5","ref":"5","name":"5号线","color":"#5B3256","system":"tram","lengthKm":26.43,"stationCount":23,"stations":[{"id":"shenyang.奥体中心","name":"奥体中心","nameEn":"Aotizhongxin","lon":123.450425,"lat":41.742011},{"id":"shenyang.沈阳海关","name":"沈阳海关","nameEn":"","lon":123.453605,"lat":41.74298},{"id":"shenyang.金水花城","name":"金水花城","nameEn":"","lon":123.463958,"lat":41.743024},{"id":"shenyang.奥体游泳馆","name":"奥体游泳馆","nameEn":"","lon":123.466732,"lat":41.736498},{"id":"shenyang.行政服务中心","name":"行政服务中心","nameEn":"","lon":123.474955,"lat":41.738093},{"id":"shenyang.浑南图书馆","name":"浑南图书馆","nameEn":"","lon":123.480567,"lat":41.739166},{"id":"shenyang.陆军总院","name":"陆军总院","nameEn":"","lon":123.488871,"lat":41.740755},{"id":"shenyang.浑南实验学校","name":"浑南实验学校","nameEn":"","lon":123.495195,"lat":41.741935},{"id":"shenyang.万科新里程","name":"万科新里程","nameEn":"","lon":123.501277,"lat":41.743122},{"id":"shenyang.建筑大学","name":"建筑大学","nameEn":"","lon":123.50649,"lat":41.744105},{"id":"shenyang.金地滨河国际","name":"金地滨河国际","nameEn":"","lon":123.518797,"lat":41.748998},{"id":"shenyang.综合保税区","name":"综合保税区","nameEn":"","lon":123.524377,"lat":41.753148},{"id":"shenyang.万科新城","name":"万科新城","nameEn":"","lon":123.537565,"lat":41.763031},{"id":"shenyang.东湖学校","name":"东湖学校","nameEn":"","lon":123.5436,"lat":41.767471},{"id":"shenyang.温馨港湾","name":"温馨港湾","nameEn":"","lon":123.559375,"lat":41.778418},{"id":"shenyang.金地艺境","name":"金地艺境","nameEn":"","lon":123.56363,"lat":41.781347},{"id":"shenyang.东北冷鲜港","name":"东北冷鲜港","nameEn":"","lon":123.582565,"lat":41.791546},{"id":"shenyang.天洁华尔街","name":"天洁华尔街","nameEn":"","lon":123.609292,"lat":41.798083},{"id":"shenyang.汪家馨城","name":"汪家馨城","nameEn":"","lon":123.621125,"lat":41.800692},{"id":"shenyang.通航大厦","name":"通航大厦","nameEn":"","lon":123.628408,"lat":41.802296},{"id":"shenyang.伯官","name":"伯官","nameEn":"","lon":123.636605,"lat":41.804073},{"id":"shenyang.上伯官","name":"上伯官","nameEn":"","lon":123.657561,"lat":41.80868},{"id":"shenyang.玄菟郡遗址公园","name":"玄菟郡遗址公园","nameEn":"","lon":123.664966,"lat":41.810298}],"track":[[123.45043,41.74253],[123.45042,41.74201],[123.45091,41.74288],[123.46522,41.74299],[123.46523,41.7367],[123.46586,41.73634],[123.51071,41.74519],[123.5188,41.749],[123.5419,41.76629],[123.56904,41.78505],[123.58062,41.79083],[123.5917,41.79423],[123.69195,41.81626],[123.70118,41.81955],[123.72306,41.83048]]},{"id":"shenyang.l9","ref":"9","name":"9号线","color":"#017CBF","system":"subway","lengthKm":28.29,"stationCount":23,"stations":[{"id":"shenyang.怒江公园","name":"怒江公园","nameEn":"Nujianggongyuan","lon":123.382923,"lat":41.840294},{"id":"shenyang.淮河街沈医二院","name":"淮河街沈医二院","nameEn":"Huaihejieshenyieryuan","lon":123.384507,"lat":41.827998},{"id":"shenyang.皇姑屯站","name":"皇姑屯站","nameEn":"Huanggutunzhan","lon":123.380542,"lat":41.818755},{"id":"shenyang.重型文化广场","name":"重型文化广场","nameEn":"Zhongxingwenhuaguangchang","lon":123.37765,"lat":41.810499},{"id":"shenyang.北二路","name":"北二路","nameEn":"Beierlu","lon":123.372955,"lat":41.802717},{"id":"shenyang.铁西广场","name":"铁西广场","nameEn":"Tiexiguangchang","lon":123.364671,"lat":41.791804},{"id":"shenyang.兴华公园","name":"兴华公园","nameEn":"Xinghuagongyuan","lon":123.35953,"lat":41.78492},{"id":"shenyang.沈辽路","name":"沈辽路","nameEn":"Shenliaolu","lon":123.355944,"lat":41.780173},{"id":"shenyang.滑翔","name":"滑翔","nameEn":"Huaxiang","lon":123.352641,"lat":41.769882},{"id":"shenyang.吉力湖街","name":"吉力湖街","nameEn":"Jilihujie","lon":123.33981,"lat":41.758836},{"id":"shenyang.大通湖街","name":"大通湖街","nameEn":"Datonghujie","lon":123.341083,"lat":41.748986},{"id":"shenyang.曹仲","name":"曹仲","nameEn":"Caozhong","lon":123.354818,"lat":41.729995},{"id":"shenyang.浑河站","name":"浑河站","nameEn":"Hunhezhan","lon":123.362218,"lat":41.72607},{"id":"shenyang.胜利南街","name":"胜利南街","nameEn":"Shenglinanjie","lon":123.392559,"lat":41.722324},{"id":"shenyang.长白南","name":"长白南","nameEn":"Changbainan","lon":123.404333,"lat":41.724961},{"id":"shenyang.榆树台","name":"榆树台","nameEn":"Yushutai","lon":123.415286,"lat":41.727225},{"id":"shenyang.金阳大街","name":"金阳大街","nameEn":"Jinyangdajie","lon":123.423653,"lat":41.729051},{"id":"shenyang.彩霞街","name":"彩霞街","nameEn":"Caixiajie","lon":123.435212,"lat":41.731649},{"id":"shenyang.奥体中心","name":"奥体中心","nameEn":"Aotizhongxin","lon":123.447405,"lat":41.740545},{"id":"shenyang.天成街","name":"天成街","nameEn":"Tianchengjie","lon":123.462011,"lat":41.741176},{"id":"shenyang.朗日街","name":"朗日街","nameEn":"Langrijie","lon":123.478758,"lat":41.738743},{"id":"shenyang.长青南街","name":"长青南街","nameEn":"Changqingnanjie","lon":123.495612,"lat":41.741983},{"id":"shenyang.建筑大学","name":"建筑大学","nameEn":"Jianzhudaxue","lon":123.510054,"lat":41.744911}],"track":[[123.38292,41.84029],[123.38431,41.83528],[123.38451,41.828],[123.37795,41.8128],[123.37743,41.80874],[123.35394,41.77752],[123.35445,41.77297],[123.35384,41.77101],[123.34819,41.76556],[123.34509,41.76069],[123.33881,41.75856],[123.33543,41.75649],[123.33548,41.75528],[123.34448,41.74443],[123.34932,41.73648],[123.3497,41.73338],[123.35049,41.7323],[123.36782,41.72375],[123.38726,41.72146],[123.44239,41.73329],[123.44479,41.7355],[123.4448,41.73924],[123.44911,41.74109],[123.46538,41.74109],[123.46683,41.74053],[123.46874,41.73824],[123.47147,41.73763],[123.51005,41.74491]]},{"id":"shenyang.l10","ref":"10","name":"10号线","color":"#62AA3C","system":"subway","lengthKm":27.07,"stationCount":21,"stations":[{"id":"shenyang.丁香湖","name":"丁香湖","nameEn":"Dingxianghu","lon":123.341849,"lat":41.861489},{"id":"shenyang.元江街","name":"元江街","nameEn":"Yuanjiangjie","lon":123.350012,"lat":41.848655},{"id":"shenyang.向工街","name":"向工街","nameEn":"Xianggongjie","lon":123.357681,"lat":41.833343},{"id":"shenyang.塔湾街","name":"塔湾街","nameEn":"Tawanjie","lon":123.368285,"lat":41.827138},{"id":"shenyang.淮河街沈医二院","name":"淮河街沈医二院","nameEn":"Huaihejieshenyieryuan","lon":123.38413,"lat":41.828074},{"id":"shenyang.百鸟公园","name":"百鸟公园","nameEn":"Bainiaogongyuan","lon":123.39503,"lat":41.828444},{"id":"shenyang.长江街","name":"长江街","nameEn":"Changjiangjie","lon":123.407382,"lat":41.829089},{"id":"shenyang.中医药大学","name":"中医药大学","nameEn":"Zhongyiyaodaxue","lon":123.422598,"lat":41.82977},{"id":"shenyang.陵东街","name":"陵东街","nameEn":"Lingdongjie","lon":123.438354,"lat":41.830529},{"id":"shenyang.北塔","name":"北塔","nameEn":"Beita","lon":123.44933,"lat":41.830986},{"id":"shenyang.合作街","name":"合作街","nameEn":"Hezuojie","lon":123.467786,"lat":41.826754},{"id":"shenyang.东北大马路","name":"东北大马路","nameEn":"Dongbeidamalu","lon":123.47573,"lat":41.817773},{"id":"shenyang.滂江街","name":"滂江街","nameEn":"Pangjiangjie","lon":123.482366,"lat":41.806523},{"id":"shenyang.长安路","name":"长安路","nameEn":"Chang'anlu","lon":123.480128,"lat":41.797021},{"id":"shenyang.万莲","name":"万莲","nameEn":"Wanlian","lon":123.477408,"lat":41.787999},{"id":"shenyang.泉园","name":"泉园","nameEn":"Quanyuan","lon":123.472341,"lat":41.775243},{"id":"shenyang.江东街","name":"江东街","nameEn":"Jiangdongjie","lon":123.482047,"lat":41.767129},{"id":"shenyang.长青桥","name":"长青桥","nameEn":"Changqingqiao","lon":123.490296,"lat":41.758388},{"id":"shenyang.长青南街","name":"长青南街","nameEn":"Changqingnanjie","lon":123.495631,"lat":41.742273},{"id":"shenyang.理工大学","name":"理工大学","nameEn":"Ligongdaxue","lon":123.499207,"lat":41.731209},{"id":"shenyang.张沙布","name":"张沙布","nameEn":"Zhangshabu","lon":123.507801,"lat":41.718033}],"track":[[123.34185,41.86149],[123.34234,41.85779],[123.34337,41.85588],[123.3538,41.84429],[123.35847,41.8374],[123.35821,41.83462],[123.35629,41.83023],[123.35683,41.82927],[123.36678,41.82706],[123.45205,41.83104],[123.4696,41.82607],[123.47736,41.81515],[123.48237,41.80652],[123.48313,41.80355],[123.48086,41.79971],[123.47705,41.7873],[123.47477,41.78491],[123.46882,41.7809],[123.46829,41.77927],[123.48738,41.76242],[123.48994,41.7591],[123.49144,41.75591],[123.50056,41.72713],[123.5078,41.71803]]},{"id":"shenyang.l8","ref":"8","name":"Line 4","color":"#4B0082","system":"subway","lengthKm":32.09,"stationCount":23,"stations":[{"id":"shenyang.正新路","name":"正新路","nameEn":"Zhengxinlu","lon":123.47418,"lat":41.880342},{"id":"shenyang.文官街","name":"文官街","nameEn":"Wenguan Jie","lon":123.480544,"lat":41.868621},{"id":"shenyang.望花","name":"望花","nameEn":"Wanghua","lon":123.485084,"lat":41.862119},{"id":"shenyang.观泉路","name":"观泉路","nameEn":"Guanquan Lu","lon":123.476503,"lat":41.845918},{"id":"shenyang.北大营","name":"北大营","nameEn":"Beidaying","lon":123.471769,"lat":41.836752},{"id":"shenyang.合作街","name":"合作街","nameEn":"Hezuojie","lon":123.46826,"lat":41.826469},{"id":"shenyang.洮昌街","name":"洮昌街","nameEn":"Taochangjie","lon":123.461109,"lat":41.819831},{"id":"shenyang.沈阳大学","name":"沈阳大学","nameEn":"Shenyang University","lon":123.450942,"lat":41.8164},{"id":"shenyang.沈阳北站","name":"沈阳北站","nameEn":"Shenyang North Railway Station","lon":123.432141,"lat":41.814989},{"id":"shenyang.皇寺路","name":"皇寺路","nameEn":"Huangsi Lu","lon":123.414141,"lat":41.80885},{"id":"shenyang.市府大路","name":"市府大路","nameEn":"Shifu Dalu","lon":123.4097,"lat":41.801607},{"id":"shenyang.太原街","name":"太原街","nameEn":"Taiyuanjie","lon":123.399446,"lat":41.787954},{"id":"shenyang.南五马路","name":"南五马路","nameEn":"Nanwu Malu","lon":123.393913,"lat":41.780846},{"id":"shenyang.砂阳","name":"砂阳","nameEn":"Shayang","lon":123.38561,"lat":41.764571},{"id":"shenyang.南京桥","name":"南京桥","nameEn":"Nanjingqiao","lon":123.392882,"lat":41.749204},{"id":"shenyang.长白岛","name":"长白岛","nameEn":"Changbaidao","lon":123.397011,"lat":41.738812},{"id":"shenyang.长白南","name":"长白南","nameEn":"Changbainan","lon":123.40307,"lat":41.725004},{"id":"shenyang.金仓路","name":"金仓路","nameEn":"Jincang Lu","lon":123.399883,"lat":41.707984},{"id":"shenyang.云杉路","name":"云杉路","nameEn":"Yunshan Lu","lon":123.392855,"lat":41.695772},{"id":"shenyang.红椿路","name":"红椿路","nameEn":"Hongchun Lu","lon":123.396743,"lat":41.687718},{"id":"shenyang.城建学院","name":"城建学院","nameEn":"Chengjian Xueyuan","lon":123.409534,"lat":41.679113},{"id":"shenyang.沈阳南站","name":"沈阳南站","nameEn":"Shenyang South Railway Station","lon":123.403343,"lat":41.665884},{"id":"shenyang.创新路","name":"创新路","nameEn":"Chuangxin Lu","lon":123.407051,"lat":41.652927}],"track":[[123.47418,41.88034],[123.47324,41.87397],[123.47396,41.8696],[123.48563,41.8679],[123.48639,41.86692],[123.48362,41.85854],[123.47013,41.83362],[123.4671,41.82392],[123.46388,41.82088],[123.44701,41.81513],[123.44082,41.81513],[123.43555,41.81598],[123.42499,41.8119],[123.42039,41.81214],[123.41557,41.81109],[123.4097,41.80161],[123.38449,41.76826],[123.38618,41.76308],[123.39132,41.75339],[123.40472,41.72031],[123.40477,41.7177],[123.40372,41.71523],[123.39202,41.69424],[123.39053,41.69049],[123.39175,41.68936],[123.40978,41.68237],[123.40841,41.67257],[123.4073,41.67111],[123.40416,41.66929],[123.40343,41.66765],[123.40364,41.66152],[123.40696,41.6567],[123.40705,41.65293]]}]}
+{
+  "id": "shenyang",
+  "name": "沈阳",
+  "province": "辽宁省",
+  "center": [
+    123.42723,
+    41.77775
+  ],
+  "stats": {
+    "lines": 8,
+    "stations": 164,
+    "lengthKm": 271.5
+  },
+  "lines": [
+    {
+      "id": "shenyang.l1",
+      "ref": "1",
+      "name": "1号线",
+      "color": "#B63F1F",
+      "system": "subway",
+      "lengthKm": 43.77,
+      "stationCount": 32,
+      "stations": [
+        {
+          "id": "shenyang.双马",
+          "name": "双马",
+          "nameEn": "Shuangma",
+          "lon": 123.653168,
+          "lat": 41.852999
+        },
+        {
+          "id": "shenyang.植物园",
+          "name": "植物园",
+          "nameEn": "Zhiwuyuan",
+          "lon": 123.633718,
+          "lat": 41.851562
+        },
+        {
+          "id": "shenyang.伯官北大街",
+          "name": "伯官北大街",
+          "nameEn": "Boguanbeidajie",
+          "lon": 123.620462,
+          "lat": 41.852831
+        },
+        {
+          "id": "shenyang.水泉",
+          "name": "水泉",
+          "nameEn": "Shuiquan",
+          "lon": 123.609784,
+          "lat": 41.843469
+        },
+        {
+          "id": "shenyang.东陵公园",
+          "name": "东陵公园",
+          "nameEn": "Donglinggongyuan",
+          "lon": 123.589682,
+          "lat": 41.82752
+        },
+        {
+          "id": "shenyang.前陵",
+          "name": "前陵",
+          "nameEn": "Qianling",
+          "lon": 123.573744,
+          "lat": 41.820492
+        },
+        {
+          "id": "shenyang.农业大学",
+          "name": "农业大学",
+          "nameEn": "Nongyedaxue",
+          "lon": 123.558678,
+          "lat": 41.819571
+        },
+        {
+          "id": "shenyang.东大营街",
+          "name": "东大营街",
+          "nameEn": "Dongdayingjie",
+          "lon": 123.539312,
+          "lat": 41.816237
+        },
+        {
+          "id": "shenyang.新宁街",
+          "name": "新宁街",
+          "nameEn": "Xinningjie",
+          "lon": 123.525738,
+          "lat": 41.811216
+        },
+        {
+          "id": "shenyang.新惠街",
+          "name": "新惠街",
+          "nameEn": "Xinhuijie",
+          "lon": 123.515936,
+          "lat": 41.804316
+        },
+        {
+          "id": "shenyang.黎明广场",
+          "name": "黎明广场",
+          "nameEn": "Liming Square",
+          "lon": 123.498363,
+          "lat": 41.805918
+        },
+        {
+          "id": "shenyang.滂江街",
+          "name": "滂江街",
+          "nameEn": "Pangjiangjie",
+          "lon": 123.48272,
+          "lat": 41.806548
+        },
+        {
+          "id": "shenyang.东中街",
+          "name": "东中街",
+          "nameEn": "Dongzhongjie",
+          "lon": 123.465197,
+          "lat": 41.800481
+        },
+        {
+          "id": "shenyang.中街",
+          "name": "中街",
+          "nameEn": "Zhongjie",
+          "lon": 123.454382,
+          "lat": 41.799015
+        },
+        {
+          "id": "shenyang.怀远门",
+          "name": "怀远门",
+          "nameEn": "Huaiyuanmen",
+          "lon": 123.441184,
+          "lat": 41.79467
+        },
+        {
+          "id": "shenyang.青年大街",
+          "name": "青年大街",
+          "nameEn": "Qingniandajie",
+          "lon": 123.427122,
+          "lat": 41.789945
+        },
+        {
+          "id": "shenyang.南市场",
+          "name": "南市场",
+          "nameEn": "Nanshichang",
+          "lon": 123.413813,
+          "lat": 41.787051
+        },
+        {
+          "id": "shenyang.太原街",
+          "name": "太原街",
+          "nameEn": "Taiyuanjie",
+          "lon": 123.400418,
+          "lat": 41.787131
+        },
+        {
+          "id": "shenyang.沈阳站",
+          "name": "沈阳站",
+          "nameEn": "Shenyangzhan",
+          "lon": 123.39,
+          "lat": 41.791568
+        },
+        {
+          "id": "shenyang.云峰北街",
+          "name": "云峰北街",
+          "nameEn": "Yunfengbeijie",
+          "lon": 123.374348,
+          "lat": 41.794178
+        },
+        {
+          "id": "shenyang.铁西广场",
+          "name": "铁西广场",
+          "nameEn": "Tiexiguangchang",
+          "lon": 123.364503,
+          "lat": 41.791733
+        },
+        {
+          "id": "shenyang.保工街",
+          "name": "保工街",
+          "nameEn": "Baogongjie",
+          "lon": 123.349998,
+          "lat": 41.798142
+        },
+        {
+          "id": "shenyang.启工街",
+          "name": "启工街",
+          "nameEn": "Qigongjie",
+          "lon": 123.337382,
+          "lat": 41.801429
+        },
+        {
+          "id": "shenyang.重工街",
+          "name": "重工街",
+          "nameEn": "Zhonggongjie",
+          "lon": 123.326118,
+          "lat": 41.802736
+        },
+        {
+          "id": "shenyang.迎宾路",
+          "name": "迎宾路",
+          "nameEn": "Yingbinlu",
+          "lon": 123.303638,
+          "lat": 41.799357
+        },
+        {
+          "id": "shenyang.于洪广场",
+          "name": "于洪广场",
+          "nameEn": "Yuhongguangchang",
+          "lon": 123.299793,
+          "lat": 41.791982
+        },
+        {
+          "id": "shenyang.开发大道",
+          "name": "开发大道",
+          "nameEn": "Kaifadadao",
+          "lon": 123.299391,
+          "lat": 41.778674
+        },
+        {
+          "id": "shenyang.张士",
+          "name": "张士",
+          "nameEn": "Zhangshi",
+          "lon": 123.287764,
+          "lat": 41.769268
+        },
+        {
+          "id": "shenyang.四号街",
+          "name": "四号街",
+          "nameEn": "Sihaojie",
+          "lon": 123.271513,
+          "lat": 41.763787
+        },
+        {
+          "id": "shenyang.七号街",
+          "name": "七号街",
+          "nameEn": "Qihaojie",
+          "lon": 123.253601,
+          "lat": 41.763046
+        },
+        {
+          "id": "shenyang.中央大街",
+          "name": "中央大街",
+          "nameEn": "Zhongyangdajie",
+          "lon": 123.236891,
+          "lat": 41.763089
+        },
+        {
+          "id": "shenyang.十三号街",
+          "name": "十三号街",
+          "nameEn": "Shisanhao Jie",
+          "lon": 123.223176,
+          "lat": 41.763121
+        }
+      ],
+      "track": [
+        [
+          123.65317,
+          41.853
+        ],
+        [
+          123.64985,
+          41.8543
+        ],
+        [
+          123.64703,
+          41.85431
+        ],
+        [
+          123.64246,
+          41.8522
+        ],
+        [
+          123.63651,
+          41.85107
+        ],
+        [
+          123.63237,
+          41.85193
+        ],
+        [
+          123.62626,
+          41.85456
+        ],
+        [
+          123.61728,
+          41.85174
+        ],
+        [
+          123.60744,
+          41.85025
+        ],
+        [
+          123.60626,
+          41.84906
+        ],
+        [
+          123.60622,
+          41.84799
+        ],
+        [
+          123.61116,
+          41.84151
+        ],
+        [
+          123.61183,
+          41.84001
+        ],
+        [
+          123.6113,
+          41.83889
+        ],
+        [
+          123.59647,
+          41.83349
+        ],
+        [
+          123.59176,
+          41.82827
+        ],
+        [
+          123.58477,
+          41.82617
+        ],
+        [
+          123.57621,
+          41.8214
+        ],
+        [
+          123.56988,
+          41.81939
+        ],
+        [
+          123.56391,
+          41.81875
+        ],
+        [
+          123.55524,
+          41.81983
+        ],
+        [
+          123.54647,
+          41.81882
+        ],
+        [
+          123.52326,
+          41.81025
+        ],
+        [
+          123.52303,
+          41.80676
+        ],
+        [
+          123.52213,
+          41.80552
+        ],
+        [
+          123.51994,
+          41.80434
+        ],
+        [
+          123.48821,
+          41.80685
+        ],
+        [
+          123.47952,
+          41.8061
+        ],
+        [
+          123.47532,
+          41.80518
+        ],
+        [
+          123.46713,
+          41.80092
+        ],
+        [
+          123.45863,
+          41.79907
+        ],
+        [
+          123.44778,
+          41.7989
+        ],
+        [
+          123.44202,
+          41.79498
+        ],
+        [
+          123.43198,
+          41.7914
+        ],
+        [
+          123.40547,
+          41.78524
+        ],
+        [
+          123.37797,
+          41.7966
+        ],
+        [
+          123.37591,
+          41.79612
+        ],
+        [
+          123.3712,
+          41.79005
+        ],
+        [
+          123.36977,
+          41.78973
+        ],
+        [
+          123.34817,
+          41.79886
+        ],
+        [
+          123.33186,
+          41.80271
+        ],
+        [
+          123.32144,
+          41.80271
+        ],
+        [
+          123.31349,
+          41.79966
+        ],
+        [
+          123.30364,
+          41.79936
+        ],
+        [
+          123.30035,
+          41.7981
+        ],
+        [
+          123.29971,
+          41.79646
+        ],
+        [
+          123.29978,
+          41.78099
+        ],
+        [
+          123.29922,
+          41.77768
+        ],
+        [
+          123.28292,
+          41.766
+        ],
+        [
+          123.26752,
+          41.76305
+        ],
+        [
+          123.22318,
+          41.76312
+        ]
+      ]
+    },
+    {
+      "id": "shenyang.l2",
+      "ref": "2",
+      "name": "2号线",
+      "color": "#E5703A",
+      "system": "subway",
+      "lengthKm": 45.93,
+      "stationCount": 33,
+      "stations": [
+        {
+          "id": "shenyang.蒲田路",
+          "name": "蒲田路",
+          "nameEn": "Pu Tian Road",
+          "lon": 123.399444,
+          "lat": 41.953748
+        },
+        {
+          "id": "shenyang.蒲河路",
+          "name": "蒲河路",
+          "nameEn": "Pu He Road",
+          "lon": 123.402485,
+          "lat": 41.944278
+        },
+        {
+          "id": "shenyang.人杰湖公园",
+          "name": "人杰湖公园",
+          "nameEn": "Ren Jie Hu Park",
+          "lon": 123.392376,
+          "lat": 41.934152
+        },
+        {
+          "id": "shenyang.辽宁大学",
+          "name": "辽宁大学",
+          "nameEn": "Liaoning University",
+          "lon": 123.387613,
+          "lat": 41.927324
+        },
+        {
+          "id": "shenyang.航空航天大学",
+          "name": "航空航天大学",
+          "nameEn": "Shenyang Aerospace University",
+          "lon": 123.397062,
+          "lat": 41.915256
+        },
+        {
+          "id": "shenyang.师范大学",
+          "name": "师范大学",
+          "nameEn": "Shenyang Normal University",
+          "lon": 123.403375,
+          "lat": 41.904328
+        },
+        {
+          "id": "shenyang.医学院",
+          "name": "医学院",
+          "nameEn": "Shenyang Medical College",
+          "lon": 123.409332,
+          "lat": 41.883964
+        },
+        {
+          "id": "shenyang.三台子",
+          "name": "三台子",
+          "nameEn": "San Tai Zi",
+          "lon": 123.410936,
+          "lat": 41.865618
+        },
+        {
+          "id": "shenyang.陵西",
+          "name": "陵西",
+          "nameEn": "Bei Ling Park West",
+          "lon": 123.412009,
+          "lat": 41.853512
+        },
+        {
+          "id": "shenyang.新乐遗址",
+          "name": "新乐遗址",
+          "nameEn": "Xinle Ancient Ruins Museum",
+          "lon": 123.412635,
+          "lat": 41.845348
+        },
+        {
+          "id": "shenyang.北陵公园",
+          "name": "北陵公园",
+          "nameEn": "Beiling Park",
+          "lon": 123.417744,
+          "lat": 41.836464
+        },
+        {
+          "id": "shenyang.中医药大学",
+          "name": "中医药大学",
+          "nameEn": "Zhongyiyaodaxue;Liaoning University of Traditional Chinese Medicine",
+          "lon": 123.422886,
+          "lat": 41.830884
+        },
+        {
+          "id": "shenyang.岐山路",
+          "name": "岐山路",
+          "nameEn": "Qi Shan Road",
+          "lon": 123.422878,
+          "lat": 41.820031
+        },
+        {
+          "id": "shenyang.沈阳北站",
+          "name": "沈阳北站",
+          "nameEn": "Shenyang North Railway Station",
+          "lon": 123.430029,
+          "lat": 41.814802
+        },
+        {
+          "id": "shenyang.金融中心",
+          "name": "金融中心",
+          "nameEn": "Financial Center",
+          "lon": 123.43247,
+          "lat": 41.809588
+        },
+        {
+          "id": "shenyang.人民广场",
+          "name": "人民广场",
+          "nameEn": "City Hall Square",
+          "lon": 123.42804,
+          "lat": 41.802595
+        },
+        {
+          "id": "shenyang.青年大街",
+          "name": "青年大街",
+          "nameEn": "Qing Nian Avenue",
+          "lon": 123.426455,
+          "lat": 41.789959
+        },
+        {
+          "id": "shenyang.青年公园",
+          "name": "青年公园",
+          "nameEn": "Qing Nian Park",
+          "lon": 123.429636,
+          "lat": 41.782419
+        },
+        {
+          "id": "shenyang.工业展览馆",
+          "name": "工业展览馆",
+          "nameEn": "Industrial Exhibition Hall",
+          "lon": 123.429239,
+          "lat": 41.770879
+        },
+        {
+          "id": "shenyang.市图书馆",
+          "name": "市图书馆",
+          "nameEn": "Shenyang Library",
+          "lon": 123.429244,
+          "lat": 41.757577
+        },
+        {
+          "id": "shenyang.五里河",
+          "name": "五里河",
+          "nameEn": "Wu Li He",
+          "lon": 123.434349,
+          "lat": 41.750764
+        },
+        {
+          "id": "shenyang.奥体中心",
+          "name": "奥体中心",
+          "nameEn": "Aotizhongxin",
+          "lon": 123.447424,
+          "lat": 41.740508
+        },
+        {
+          "id": "shenyang.营盘街",
+          "name": "营盘街",
+          "nameEn": "Ying Pan Street",
+          "lon": 123.450469,
+          "lat": 41.728297
+        },
+        {
+          "id": "shenyang.世纪大厦",
+          "name": "世纪大厦",
+          "nameEn": "Century Mansion",
+          "lon": 123.455919,
+          "lat": 41.717231
+        },
+        {
+          "id": "shenyang.白塔河路",
+          "name": "白塔河路",
+          "nameEn": "Bai Ta He Road",
+          "lon": 123.465637,
+          "lat": 41.706865
+        },
+        {
+          "id": "shenyang.全运路",
+          "name": "全运路",
+          "nameEn": "Quan Yun Road",
+          "lon": 123.476547,
+          "lat": 41.70513
+        },
+        {
+          "id": "shenyang.沈本大街",
+          "name": "沈本大街",
+          "nameEn": "Shenben Dajie",
+          "lon": 123.473283,
+          "lat": 41.691062
+        },
+        {
+          "id": "shenyang.沈中大街",
+          "name": "沈中大街",
+          "nameEn": "Shenzhen Dajie",
+          "lon": 123.45841,
+          "lat": 41.685852
+        },
+        {
+          "id": "shenyang.省博物馆",
+          "name": "省博物馆",
+          "nameEn": "",
+          "lon": 123.452037,
+          "lat": 41.67655
+        },
+        {
+          "id": "shenyang.中央公园",
+          "name": "中央公园",
+          "nameEn": "",
+          "lon": 123.451863,
+          "lat": 41.66417
+        },
+        {
+          "id": "shenyang.创新一路",
+          "name": "创新一路",
+          "nameEn": "",
+          "lon": 123.451721,
+          "lat": 41.648772
+        },
+        {
+          "id": "shenyang.综合保税区",
+          "name": "综合保税区",
+          "nameEn": "Zonghe Baoshuiqu",
+          "lon": 123.451682,
+          "lat": 41.6378
+        },
+        {
+          "id": "shenyang.桃仙机场",
+          "name": "桃仙机场",
+          "nameEn": "Taoxian Airport",
+          "lon": 123.488593,
+          "lat": 41.631361
+        }
+      ],
+      "track": [
+        [
+          123.39944,
+          41.95375
+        ],
+        [
+          123.40317,
+          41.94214
+        ],
+        [
+          123.40298,
+          41.94053
+        ],
+        [
+          123.39717,
+          41.93644
+        ],
+        [
+          123.38917,
+          41.93264
+        ],
+        [
+          123.38738,
+          41.93141
+        ],
+        [
+          123.38664,
+          41.92966
+        ],
+        [
+          123.3906,
+          41.92218
+        ],
+        [
+          123.39706,
+          41.91526
+        ],
+        [
+          123.39921,
+          41.91202
+        ],
+        [
+          123.40534,
+          41.90076
+        ],
+        [
+          123.40865,
+          41.89134
+        ],
+        [
+          123.41323,
+          41.83786
+        ],
+        [
+          123.41497,
+          41.83654
+        ],
+        [
+          123.42222,
+          41.83615
+        ],
+        [
+          123.42381,
+          41.8242
+        ],
+        [
+          123.42289,
+          41.82061
+        ],
+        [
+          123.4232,
+          41.81842
+        ],
+        [
+          123.42448,
+          41.81692
+        ],
+        [
+          123.4314,
+          41.81429
+        ],
+        [
+          123.43348,
+          41.81213
+        ],
+        [
+          123.43323,
+          41.81062
+        ],
+        [
+          123.43007,
+          41.80674
+        ],
+        [
+          123.42521,
+          41.79725
+        ],
+        [
+          123.42606,
+          41.79105
+        ],
+        [
+          123.42976,
+          41.78215
+        ],
+        [
+          123.42879,
+          41.75864
+        ],
+        [
+          123.43284,
+          41.75183
+        ],
+        [
+          123.44859,
+          41.73956
+        ],
+        [
+          123.44985,
+          41.7368
+        ],
+        [
+          123.45089,
+          41.72704
+        ],
+        [
+          123.45495,
+          41.71867
+        ],
+        [
+          123.46186,
+          41.70939
+        ],
+        [
+          123.46694,
+          41.70627
+        ],
+        [
+          123.47306,
+          41.70606
+        ],
+        [
+          123.47655,
+          41.70513
+        ],
+        [
+          123.48471,
+          41.70152
+        ],
+        [
+          123.48759,
+          41.69932
+        ],
+        [
+          123.48628,
+          41.6969
+        ],
+        [
+          123.48134,
+          41.69372
+        ],
+        [
+          123.47401,
+          41.69143
+        ],
+        [
+          123.46443,
+          41.68657
+        ],
+        [
+          123.46125,
+          41.68587
+        ],
+        [
+          123.45221,
+          41.68559
+        ],
+        [
+          123.45179,
+          41.63498
+        ],
+        [
+          123.45331,
+          41.63242
+        ],
+        [
+          123.4624,
+          41.62513
+        ],
+        [
+          123.47878,
+          41.62517
+        ],
+        [
+          123.48859,
+          41.63136
+        ]
+      ]
+    },
+    {
+      "id": "shenyang.l3",
+      "ref": "3",
+      "name": "3号线",
+      "color": "#FF007F",
+      "system": "subway",
+      "lengthKm": 35.79,
+      "stationCount": 27,
+      "stations": [
+        {
+          "id": "shenyang.李达",
+          "name": "李达",
+          "nameEn": "Lida",
+          "lon": 123.135657,
+          "lat": 41.665561
+        },
+        {
+          "id": "shenyang.铁西汽车工厂",
+          "name": "铁西汽车工厂",
+          "nameEn": "Tiexiqichegongchang",
+          "lon": 123.146203,
+          "lat": 41.679476
+        },
+        {
+          "id": "shenyang.马贝",
+          "name": "马贝",
+          "nameEn": "Mabei",
+          "lon": 123.166393,
+          "lat": 41.693174
+        },
+        {
+          "id": "shenyang.中德大街",
+          "name": "中德大街",
+          "nameEn": "Zhongdedajie",
+          "lon": 123.184699,
+          "lat": 41.697775
+        },
+        {
+          "id": "shenyang.细河悠谷",
+          "name": "细河悠谷",
+          "nameEn": "Xiheyougu",
+          "lon": 123.212658,
+          "lat": 41.709068
+        },
+        {
+          "id": "shenyang.翟家",
+          "name": "翟家",
+          "nameEn": "Zhaijia",
+          "lon": 123.231617,
+          "lat": 41.718297
+        },
+        {
+          "id": "shenyang.工业大学",
+          "name": "工业大学",
+          "nameEn": "Gongyedaxue",
+          "lon": 123.25671,
+          "lat": 41.727889
+        },
+        {
+          "id": "shenyang.宁官",
+          "name": "宁官",
+          "nameEn": "Ningguan",
+          "lon": 123.268525,
+          "lat": 41.736085
+        },
+        {
+          "id": "shenyang.余良",
+          "name": "余良",
+          "nameEn": "Yuliang",
+          "lon": 123.27763,
+          "lat": 41.737635
+        },
+        {
+          "id": "shenyang.甘官",
+          "name": "甘官",
+          "nameEn": "Ganguan",
+          "lon": 123.301228,
+          "lat": 41.743962
+        },
+        {
+          "id": "shenyang.千岛湖街",
+          "name": "千岛湖街",
+          "nameEn": "Qiandaohujie",
+          "lon": 123.317566,
+          "lat": 41.741085
+        },
+        {
+          "id": "shenyang.南阳湖街",
+          "name": "南阳湖街",
+          "nameEn": "Nanyanghujie",
+          "lon": 123.327558,
+          "lat": 41.746209
+        },
+        {
+          "id": "shenyang.大通湖街",
+          "name": "大通湖街",
+          "nameEn": "Datonghujie",
+          "lon": 123.342105,
+          "lat": 41.749981
+        },
+        {
+          "id": "shenyang.南李官",
+          "name": "南李官",
+          "nameEn": "Nanliguan",
+          "lon": 123.356362,
+          "lat": 41.755634
+        },
+        {
+          "id": "shenyang.凌空",
+          "name": "凌空",
+          "nameEn": "Lingkong",
+          "lon": 123.370303,
+          "lat": 41.766818
+        },
+        {
+          "id": "shenyang.砂阳",
+          "name": "砂阳",
+          "nameEn": "Shayang",
+          "lon": 123.385615,
+          "lat": 41.765566
+        },
+        {
+          "id": "shenyang.南八马路",
+          "name": "南八马路",
+          "nameEn": "Nanbamalu",
+          "lon": 123.395161,
+          "lat": 41.7718
+        },
+        {
+          "id": "shenyang.嘉兴街",
+          "name": "嘉兴街",
+          "nameEn": "Jiaxingjie",
+          "lon": 123.404596,
+          "lat": 41.774636
+        },
+        {
+          "id": "shenyang.方型广场",
+          "name": "方型广场",
+          "nameEn": "Fangxingguangchang",
+          "lon": 123.410077,
+          "lat": 41.772282
+        },
+        {
+          "id": "shenyang.三好街",
+          "name": "三好街",
+          "nameEn": "Sanhaojie",
+          "lon": 123.422177,
+          "lat": 41.769019
+        },
+        {
+          "id": "shenyang.工业展览馆",
+          "name": "工业展览馆",
+          "nameEn": "Industrial Exhibition Hall",
+          "lon": 123.430578,
+          "lat": 41.769132
+        },
+        {
+          "id": "shenyang.中科院金属所",
+          "name": "中科院金属所",
+          "nameEn": "Zhongkeyuanjinshusuo",
+          "lon": 123.437953,
+          "lat": 41.768623
+        },
+        {
+          "id": "shenyang.南塔",
+          "name": "南塔",
+          "nameEn": "Nanta",
+          "lon": 123.4467,
+          "lat": 41.768417
+        },
+        {
+          "id": "shenyang.文富路",
+          "name": "文富路",
+          "nameEn": "Wenfulu",
+          "lon": 123.457367,
+          "lat": 41.766776
+        },
+        {
+          "id": "shenyang.富民街",
+          "name": "富民街",
+          "nameEn": "Fuminjie",
+          "lon": 123.46836,
+          "lat": 41.766512
+        },
+        {
+          "id": "shenyang.江东街",
+          "name": "江东街",
+          "nameEn": "Jiangdongjie",
+          "lon": 123.480233,
+          "lat": 41.767087
+        },
+        {
+          "id": "shenyang.方家栏",
+          "name": "方家栏",
+          "nameEn": "Fangjialan",
+          "lon": 123.489295,
+          "lat": 41.775249
+        }
+      ],
+      "track": [
+        [
+          123.13566,
+          41.66556
+        ],
+        [
+          123.1513,
+          41.68619
+        ],
+        [
+          123.15687,
+          41.69039
+        ],
+        [
+          123.18677,
+          41.69827
+        ],
+        [
+          123.1964,
+          41.70303
+        ],
+        [
+          123.21841,
+          41.71125
+        ],
+        [
+          123.227,
+          41.71541
+        ],
+        [
+          123.24241,
+          41.72592
+        ],
+        [
+          123.2526,
+          41.72676
+        ],
+        [
+          123.25976,
+          41.72846
+        ],
+        [
+          123.26164,
+          41.73021
+        ],
+        [
+          123.2618,
+          41.73328
+        ],
+        [
+          123.26396,
+          41.7352
+        ],
+        [
+          123.28681,
+          41.73952
+        ],
+        [
+          123.29437,
+          41.74139
+        ],
+        [
+          123.30503,
+          41.74507
+        ],
+        [
+          123.30955,
+          41.74002
+        ],
+        [
+          123.31084,
+          41.73934
+        ],
+        [
+          123.31506,
+          41.73982
+        ],
+        [
+          123.33175,
+          41.74804
+        ],
+        [
+          123.34092,
+          41.74954
+        ],
+        [
+          123.35901,
+          41.75676
+        ],
+        [
+          123.361,
+          41.75861
+        ],
+        [
+          123.36337,
+          41.76436
+        ],
+        [
+          123.36713,
+          41.76728
+        ],
+        [
+          123.38043,
+          41.7646
+        ],
+        [
+          123.39083,
+          41.76676
+        ],
+        [
+          123.39268,
+          41.7678
+        ],
+        [
+          123.39776,
+          41.77507
+        ],
+        [
+          123.40086,
+          41.77598
+        ],
+        [
+          123.41764,
+          41.76923
+        ],
+        [
+          123.45135,
+          41.76827
+        ],
+        [
+          123.45497,
+          41.76687
+        ],
+        [
+          123.47712,
+          41.76585
+        ],
+        [
+          123.47947,
+          41.76651
+        ],
+        [
+          123.48203,
+          41.76853
+        ],
+        [
+          123.48303,
+          41.77211
+        ],
+        [
+          123.48404,
+          41.77324
+        ],
+        [
+          123.48929,
+          41.77525
+        ]
+      ]
+    },
+    {
+      "id": "shenyang.l4",
+      "ref": "4",
+      "name": "4号线",
+      "color": "#4B0082",
+      "system": "subway",
+      "lengthKm": 32.08,
+      "stationCount": 23,
+      "stations": [
+        {
+          "id": "shenyang.创新路",
+          "name": "创新路",
+          "nameEn": "Chuangxin Lu",
+          "lon": 123.407277,
+          "lat": 41.652923
+        },
+        {
+          "id": "shenyang.沈阳南站",
+          "name": "沈阳南站",
+          "nameEn": "Shenyang South Railway Station",
+          "lon": 123.403504,
+          "lat": 41.665887
+        },
+        {
+          "id": "shenyang.城建学院",
+          "name": "城建学院",
+          "nameEn": "Chengjian Xueyuan",
+          "lon": 123.409728,
+          "lat": 41.679094
+        },
+        {
+          "id": "shenyang.红椿路",
+          "name": "红椿路",
+          "nameEn": "Hongchun Lu",
+          "lon": 123.396803,
+          "lat": 41.687815
+        },
+        {
+          "id": "shenyang.云杉路",
+          "name": "云杉路",
+          "nameEn": "Yunshan Lu",
+          "lon": 123.393,
+          "lat": 41.695732
+        },
+        {
+          "id": "shenyang.金仓路",
+          "name": "金仓路",
+          "nameEn": "Jincang Lu",
+          "lon": 123.400002,
+          "lat": 41.707951
+        },
+        {
+          "id": "shenyang.长白南",
+          "name": "长白南",
+          "nameEn": "Changbainan",
+          "lon": 123.4032,
+          "lat": 41.725025
+        },
+        {
+          "id": "shenyang.长白岛",
+          "name": "长白岛",
+          "nameEn": "Changbaidao",
+          "lon": 123.397166,
+          "lat": 41.73884
+        },
+        {
+          "id": "shenyang.南京桥",
+          "name": "南京桥",
+          "nameEn": "Nanjingqiao",
+          "lon": 123.393038,
+          "lat": 41.749226
+        },
+        {
+          "id": "shenyang.砂阳",
+          "name": "砂阳",
+          "nameEn": "Shayang",
+          "lon": 123.385769,
+          "lat": 41.764596
+        },
+        {
+          "id": "shenyang.南五马路",
+          "name": "南五马路",
+          "nameEn": "Nanwu Malu",
+          "lon": 123.394032,
+          "lat": 41.780803
+        },
+        {
+          "id": "shenyang.太原街",
+          "name": "太原街",
+          "nameEn": "Taiyuanjie",
+          "lon": 123.399554,
+          "lat": 41.787893
+        },
+        {
+          "id": "shenyang.市府大路",
+          "name": "市府大路",
+          "nameEn": "Shifu Dalu",
+          "lon": 123.409917,
+          "lat": 41.801589
+        },
+        {
+          "id": "shenyang.皇寺路",
+          "name": "皇寺路",
+          "nameEn": "Huangsi Lu",
+          "lon": 123.414291,
+          "lat": 41.808817
+        },
+        {
+          "id": "shenyang.沈阳北站",
+          "name": "沈阳北站",
+          "nameEn": "Shenyang North Railway Station",
+          "lon": 123.432236,
+          "lat": 41.81489
+        },
+        {
+          "id": "shenyang.沈阳大学",
+          "name": "沈阳大学",
+          "nameEn": "Shenyang University",
+          "lon": 123.45101,
+          "lat": 41.816321
+        },
+        {
+          "id": "shenyang.洮昌街",
+          "name": "洮昌街",
+          "nameEn": "Taochangjie",
+          "lon": 123.461163,
+          "lat": 41.819752
+        },
+        {
+          "id": "shenyang.合作街",
+          "name": "合作街",
+          "nameEn": "Hezuojie",
+          "lon": 123.468364,
+          "lat": 41.826448
+        },
+        {
+          "id": "shenyang.北大营",
+          "name": "北大营",
+          "nameEn": "Beidaying",
+          "lon": 123.471851,
+          "lat": 41.836736
+        },
+        {
+          "id": "shenyang.观泉路",
+          "name": "观泉路",
+          "nameEn": "Guanquan Lu",
+          "lon": 123.476591,
+          "lat": 41.845887
+        },
+        {
+          "id": "shenyang.望花",
+          "name": "望花",
+          "nameEn": "Wanghua",
+          "lon": 123.485179,
+          "lat": 41.862103
+        },
+        {
+          "id": "shenyang.文官街",
+          "name": "文官街",
+          "nameEn": "Wenguan Jie",
+          "lon": 123.480557,
+          "lat": 41.868669
+        },
+        {
+          "id": "shenyang.正新路",
+          "name": "正新路",
+          "nameEn": "Zhengxinlu",
+          "lon": 123.47429,
+          "lat": 41.880342
+        }
+      ],
+      "track": [
+        [
+          123.40728,
+          41.65292
+        ],
+        [
+          123.40717,
+          41.65661
+        ],
+        [
+          123.40382,
+          41.66155
+        ],
+        [
+          123.40363,
+          41.66765
+        ],
+        [
+          123.40432,
+          41.66924
+        ],
+        [
+          123.40734,
+          41.67097
+        ],
+        [
+          123.4086,
+          41.67255
+        ],
+        [
+          123.40987,
+          41.68239
+        ],
+        [
+          123.40369,
+          41.68529
+        ],
+        [
+          123.3918,
+          41.68945
+        ],
+        [
+          123.39065,
+          41.69059
+        ],
+        [
+          123.40471,
+          41.71707
+        ],
+        [
+          123.40469,
+          41.7212
+        ],
+        [
+          123.39149,
+          41.75354
+        ],
+        [
+          123.38631,
+          41.76307
+        ],
+        [
+          123.38462,
+          41.76823
+        ],
+        [
+          123.40992,
+          41.80159
+        ],
+        [
+          123.41561,
+          41.81093
+        ],
+        [
+          123.42059,
+          41.81201
+        ],
+        [
+          123.42501,
+          41.81178
+        ],
+        [
+          123.43334,
+          41.81541
+        ],
+        [
+          123.43558,
+          41.81583
+        ],
+        [
+          123.44082,
+          41.81498
+        ],
+        [
+          123.44701,
+          41.81501
+        ],
+        [
+          123.46394,
+          41.82078
+        ],
+        [
+          123.4672,
+          41.82388
+        ],
+        [
+          123.47019,
+          41.83356
+        ],
+        [
+          123.48281,
+          41.85665
+        ],
+        [
+          123.48492,
+          41.86126
+        ],
+        [
+          123.48649,
+          41.86692
+        ],
+        [
+          123.48571,
+          41.86796
+        ],
+        [
+          123.47404,
+          41.86962
+        ],
+        [
+          123.47334,
+          41.87394
+        ],
+        [
+          123.47429,
+          41.88034
+        ]
+      ]
+    },
+    {
+      "id": "shenyang.l5",
+      "ref": "5",
+      "name": "5号线",
+      "color": "#5B3256",
+      "system": "tram",
+      "lengthKm": 26.43,
+      "stationCount": 23,
+      "stations": [
+        {
+          "id": "shenyang.奥体中心",
+          "name": "奥体中心",
+          "nameEn": "Aotizhongxin",
+          "lon": 123.450425,
+          "lat": 41.742011
+        },
+        {
+          "id": "shenyang.沈阳海关",
+          "name": "沈阳海关",
+          "nameEn": "",
+          "lon": 123.453605,
+          "lat": 41.74298
+        },
+        {
+          "id": "shenyang.金水花城",
+          "name": "金水花城",
+          "nameEn": "",
+          "lon": 123.463958,
+          "lat": 41.743024
+        },
+        {
+          "id": "shenyang.奥体游泳馆",
+          "name": "奥体游泳馆",
+          "nameEn": "",
+          "lon": 123.466732,
+          "lat": 41.736498
+        },
+        {
+          "id": "shenyang.行政服务中心",
+          "name": "行政服务中心",
+          "nameEn": "",
+          "lon": 123.474955,
+          "lat": 41.738093
+        },
+        {
+          "id": "shenyang.浑南图书馆",
+          "name": "浑南图书馆",
+          "nameEn": "",
+          "lon": 123.480567,
+          "lat": 41.739166
+        },
+        {
+          "id": "shenyang.陆军总院",
+          "name": "陆军总院",
+          "nameEn": "",
+          "lon": 123.488871,
+          "lat": 41.740755
+        },
+        {
+          "id": "shenyang.浑南实验学校",
+          "name": "浑南实验学校",
+          "nameEn": "",
+          "lon": 123.495195,
+          "lat": 41.741935
+        },
+        {
+          "id": "shenyang.万科新里程",
+          "name": "万科新里程",
+          "nameEn": "",
+          "lon": 123.501277,
+          "lat": 41.743122
+        },
+        {
+          "id": "shenyang.建筑大学",
+          "name": "建筑大学",
+          "nameEn": "",
+          "lon": 123.50649,
+          "lat": 41.744105
+        },
+        {
+          "id": "shenyang.金地滨河国际",
+          "name": "金地滨河国际",
+          "nameEn": "",
+          "lon": 123.518797,
+          "lat": 41.748998
+        },
+        {
+          "id": "shenyang.综合保税区",
+          "name": "综合保税区",
+          "nameEn": "",
+          "lon": 123.524377,
+          "lat": 41.753148
+        },
+        {
+          "id": "shenyang.万科新城",
+          "name": "万科新城",
+          "nameEn": "",
+          "lon": 123.537565,
+          "lat": 41.763031
+        },
+        {
+          "id": "shenyang.东湖学校",
+          "name": "东湖学校",
+          "nameEn": "",
+          "lon": 123.5436,
+          "lat": 41.767471
+        },
+        {
+          "id": "shenyang.温馨港湾",
+          "name": "温馨港湾",
+          "nameEn": "",
+          "lon": 123.559375,
+          "lat": 41.778418
+        },
+        {
+          "id": "shenyang.金地艺境",
+          "name": "金地艺境",
+          "nameEn": "",
+          "lon": 123.56363,
+          "lat": 41.781347
+        },
+        {
+          "id": "shenyang.东北冷鲜港",
+          "name": "东北冷鲜港",
+          "nameEn": "",
+          "lon": 123.582565,
+          "lat": 41.791546
+        },
+        {
+          "id": "shenyang.天洁华尔街",
+          "name": "天洁华尔街",
+          "nameEn": "",
+          "lon": 123.609292,
+          "lat": 41.798083
+        },
+        {
+          "id": "shenyang.汪家馨城",
+          "name": "汪家馨城",
+          "nameEn": "",
+          "lon": 123.621125,
+          "lat": 41.800692
+        },
+        {
+          "id": "shenyang.通航大厦",
+          "name": "通航大厦",
+          "nameEn": "",
+          "lon": 123.628408,
+          "lat": 41.802296
+        },
+        {
+          "id": "shenyang.伯官",
+          "name": "伯官",
+          "nameEn": "",
+          "lon": 123.636605,
+          "lat": 41.804073
+        },
+        {
+          "id": "shenyang.上伯官",
+          "name": "上伯官",
+          "nameEn": "",
+          "lon": 123.657561,
+          "lat": 41.80868
+        },
+        {
+          "id": "shenyang.玄菟郡遗址公园",
+          "name": "玄菟郡遗址公园",
+          "nameEn": "",
+          "lon": 123.664966,
+          "lat": 41.810298
+        }
+      ],
+      "track": [
+        [
+          123.45043,
+          41.74253
+        ],
+        [
+          123.45042,
+          41.74201
+        ],
+        [
+          123.45091,
+          41.74288
+        ],
+        [
+          123.46522,
+          41.74299
+        ],
+        [
+          123.46523,
+          41.7367
+        ],
+        [
+          123.46586,
+          41.73634
+        ],
+        [
+          123.51071,
+          41.74519
+        ],
+        [
+          123.5188,
+          41.749
+        ],
+        [
+          123.5419,
+          41.76629
+        ],
+        [
+          123.56904,
+          41.78505
+        ],
+        [
+          123.58062,
+          41.79083
+        ],
+        [
+          123.5917,
+          41.79423
+        ],
+        [
+          123.69195,
+          41.81626
+        ],
+        [
+          123.70118,
+          41.81955
+        ],
+        [
+          123.72306,
+          41.83048
+        ]
+      ]
+    },
+    {
+      "id": "shenyang.l6",
+      "ref": "9",
+      "name": "9号线",
+      "color": "#017CBF",
+      "system": "subway",
+      "lengthKm": 28.29,
+      "stationCount": 23,
+      "stations": [
+        {
+          "id": "shenyang.怒江公园",
+          "name": "怒江公园",
+          "nameEn": "Nujianggongyuan",
+          "lon": 123.382923,
+          "lat": 41.840294
+        },
+        {
+          "id": "shenyang.淮河街沈医二院",
+          "name": "淮河街沈医二院",
+          "nameEn": "Huaihejieshenyieryuan",
+          "lon": 123.384507,
+          "lat": 41.827998
+        },
+        {
+          "id": "shenyang.皇姑屯站",
+          "name": "皇姑屯站",
+          "nameEn": "Huanggutunzhan",
+          "lon": 123.380542,
+          "lat": 41.818755
+        },
+        {
+          "id": "shenyang.重型文化广场",
+          "name": "重型文化广场",
+          "nameEn": "Zhongxingwenhuaguangchang",
+          "lon": 123.37765,
+          "lat": 41.810499
+        },
+        {
+          "id": "shenyang.北二路",
+          "name": "北二路",
+          "nameEn": "Beierlu",
+          "lon": 123.372955,
+          "lat": 41.802717
+        },
+        {
+          "id": "shenyang.铁西广场",
+          "name": "铁西广场",
+          "nameEn": "Tiexiguangchang",
+          "lon": 123.364671,
+          "lat": 41.791804
+        },
+        {
+          "id": "shenyang.兴华公园",
+          "name": "兴华公园",
+          "nameEn": "Xinghuagongyuan",
+          "lon": 123.35953,
+          "lat": 41.78492
+        },
+        {
+          "id": "shenyang.沈辽路",
+          "name": "沈辽路",
+          "nameEn": "Shenliaolu",
+          "lon": 123.355944,
+          "lat": 41.780173
+        },
+        {
+          "id": "shenyang.滑翔",
+          "name": "滑翔",
+          "nameEn": "Huaxiang",
+          "lon": 123.352641,
+          "lat": 41.769882
+        },
+        {
+          "id": "shenyang.吉力湖街",
+          "name": "吉力湖街",
+          "nameEn": "Jilihujie",
+          "lon": 123.33981,
+          "lat": 41.758836
+        },
+        {
+          "id": "shenyang.大通湖街",
+          "name": "大通湖街",
+          "nameEn": "Datonghujie",
+          "lon": 123.341083,
+          "lat": 41.748986
+        },
+        {
+          "id": "shenyang.曹仲",
+          "name": "曹仲",
+          "nameEn": "Caozhong",
+          "lon": 123.354818,
+          "lat": 41.729995
+        },
+        {
+          "id": "shenyang.浑河站",
+          "name": "浑河站",
+          "nameEn": "Hunhezhan",
+          "lon": 123.362218,
+          "lat": 41.72607
+        },
+        {
+          "id": "shenyang.胜利南街",
+          "name": "胜利南街",
+          "nameEn": "Shenglinanjie",
+          "lon": 123.392559,
+          "lat": 41.722324
+        },
+        {
+          "id": "shenyang.长白南",
+          "name": "长白南",
+          "nameEn": "Changbainan",
+          "lon": 123.404333,
+          "lat": 41.724961
+        },
+        {
+          "id": "shenyang.榆树台",
+          "name": "榆树台",
+          "nameEn": "Yushutai",
+          "lon": 123.415286,
+          "lat": 41.727225
+        },
+        {
+          "id": "shenyang.金阳大街",
+          "name": "金阳大街",
+          "nameEn": "Jinyangdajie",
+          "lon": 123.423653,
+          "lat": 41.729051
+        },
+        {
+          "id": "shenyang.彩霞街",
+          "name": "彩霞街",
+          "nameEn": "Caixiajie",
+          "lon": 123.435212,
+          "lat": 41.731649
+        },
+        {
+          "id": "shenyang.奥体中心",
+          "name": "奥体中心",
+          "nameEn": "Aotizhongxin",
+          "lon": 123.447405,
+          "lat": 41.740545
+        },
+        {
+          "id": "shenyang.天成街",
+          "name": "天成街",
+          "nameEn": "Tianchengjie",
+          "lon": 123.462011,
+          "lat": 41.741176
+        },
+        {
+          "id": "shenyang.朗日街",
+          "name": "朗日街",
+          "nameEn": "Langrijie",
+          "lon": 123.478758,
+          "lat": 41.738743
+        },
+        {
+          "id": "shenyang.长青南街",
+          "name": "长青南街",
+          "nameEn": "Changqingnanjie",
+          "lon": 123.495612,
+          "lat": 41.741983
+        },
+        {
+          "id": "shenyang.建筑大学",
+          "name": "建筑大学",
+          "nameEn": "Jianzhudaxue",
+          "lon": 123.510054,
+          "lat": 41.744911
+        }
+      ],
+      "track": [
+        [
+          123.38292,
+          41.84029
+        ],
+        [
+          123.38431,
+          41.83528
+        ],
+        [
+          123.38451,
+          41.828
+        ],
+        [
+          123.37795,
+          41.8128
+        ],
+        [
+          123.37743,
+          41.80874
+        ],
+        [
+          123.35394,
+          41.77752
+        ],
+        [
+          123.35445,
+          41.77297
+        ],
+        [
+          123.35384,
+          41.77101
+        ],
+        [
+          123.34819,
+          41.76556
+        ],
+        [
+          123.34509,
+          41.76069
+        ],
+        [
+          123.33881,
+          41.75856
+        ],
+        [
+          123.33543,
+          41.75649
+        ],
+        [
+          123.33548,
+          41.75528
+        ],
+        [
+          123.34448,
+          41.74443
+        ],
+        [
+          123.34932,
+          41.73648
+        ],
+        [
+          123.3497,
+          41.73338
+        ],
+        [
+          123.35049,
+          41.7323
+        ],
+        [
+          123.36782,
+          41.72375
+        ],
+        [
+          123.38726,
+          41.72146
+        ],
+        [
+          123.44239,
+          41.73329
+        ],
+        [
+          123.44479,
+          41.7355
+        ],
+        [
+          123.4448,
+          41.73924
+        ],
+        [
+          123.44911,
+          41.74109
+        ],
+        [
+          123.46538,
+          41.74109
+        ],
+        [
+          123.46683,
+          41.74053
+        ],
+        [
+          123.46874,
+          41.73824
+        ],
+        [
+          123.47147,
+          41.73763
+        ],
+        [
+          123.51005,
+          41.74491
+        ]
+      ]
+    },
+    {
+      "id": "shenyang.l7",
+      "ref": "10",
+      "name": "10号线",
+      "color": "#62AA3C",
+      "system": "subway",
+      "lengthKm": 27.07,
+      "stationCount": 21,
+      "stations": [
+        {
+          "id": "shenyang.丁香湖",
+          "name": "丁香湖",
+          "nameEn": "Dingxianghu",
+          "lon": 123.341849,
+          "lat": 41.861489
+        },
+        {
+          "id": "shenyang.元江街",
+          "name": "元江街",
+          "nameEn": "Yuanjiangjie",
+          "lon": 123.350012,
+          "lat": 41.848655
+        },
+        {
+          "id": "shenyang.向工街",
+          "name": "向工街",
+          "nameEn": "Xianggongjie",
+          "lon": 123.357681,
+          "lat": 41.833343
+        },
+        {
+          "id": "shenyang.塔湾街",
+          "name": "塔湾街",
+          "nameEn": "Tawanjie",
+          "lon": 123.368285,
+          "lat": 41.827138
+        },
+        {
+          "id": "shenyang.淮河街沈医二院",
+          "name": "淮河街沈医二院",
+          "nameEn": "Huaihejieshenyieryuan",
+          "lon": 123.38413,
+          "lat": 41.828074
+        },
+        {
+          "id": "shenyang.百鸟公园",
+          "name": "百鸟公园",
+          "nameEn": "Bainiaogongyuan",
+          "lon": 123.39503,
+          "lat": 41.828444
+        },
+        {
+          "id": "shenyang.长江街",
+          "name": "长江街",
+          "nameEn": "Changjiangjie",
+          "lon": 123.407382,
+          "lat": 41.829089
+        },
+        {
+          "id": "shenyang.中医药大学",
+          "name": "中医药大学",
+          "nameEn": "Zhongyiyaodaxue",
+          "lon": 123.422598,
+          "lat": 41.82977
+        },
+        {
+          "id": "shenyang.陵东街",
+          "name": "陵东街",
+          "nameEn": "Lingdongjie",
+          "lon": 123.438354,
+          "lat": 41.830529
+        },
+        {
+          "id": "shenyang.北塔",
+          "name": "北塔",
+          "nameEn": "Beita",
+          "lon": 123.44933,
+          "lat": 41.830986
+        },
+        {
+          "id": "shenyang.合作街",
+          "name": "合作街",
+          "nameEn": "Hezuojie",
+          "lon": 123.467786,
+          "lat": 41.826754
+        },
+        {
+          "id": "shenyang.东北大马路",
+          "name": "东北大马路",
+          "nameEn": "Dongbeidamalu",
+          "lon": 123.47573,
+          "lat": 41.817773
+        },
+        {
+          "id": "shenyang.滂江街",
+          "name": "滂江街",
+          "nameEn": "Pangjiangjie",
+          "lon": 123.482366,
+          "lat": 41.806523
+        },
+        {
+          "id": "shenyang.长安路",
+          "name": "长安路",
+          "nameEn": "Chang'anlu",
+          "lon": 123.480128,
+          "lat": 41.797021
+        },
+        {
+          "id": "shenyang.万莲",
+          "name": "万莲",
+          "nameEn": "Wanlian",
+          "lon": 123.477408,
+          "lat": 41.787999
+        },
+        {
+          "id": "shenyang.泉园",
+          "name": "泉园",
+          "nameEn": "Quanyuan",
+          "lon": 123.472341,
+          "lat": 41.775243
+        },
+        {
+          "id": "shenyang.江东街",
+          "name": "江东街",
+          "nameEn": "Jiangdongjie",
+          "lon": 123.482047,
+          "lat": 41.767129
+        },
+        {
+          "id": "shenyang.长青桥",
+          "name": "长青桥",
+          "nameEn": "Changqingqiao",
+          "lon": 123.490296,
+          "lat": 41.758388
+        },
+        {
+          "id": "shenyang.长青南街",
+          "name": "长青南街",
+          "nameEn": "Changqingnanjie",
+          "lon": 123.495631,
+          "lat": 41.742273
+        },
+        {
+          "id": "shenyang.理工大学",
+          "name": "理工大学",
+          "nameEn": "Ligongdaxue",
+          "lon": 123.499207,
+          "lat": 41.731209
+        },
+        {
+          "id": "shenyang.张沙布",
+          "name": "张沙布",
+          "nameEn": "Zhangshabu",
+          "lon": 123.507801,
+          "lat": 41.718033
+        }
+      ],
+      "track": [
+        [
+          123.34185,
+          41.86149
+        ],
+        [
+          123.34234,
+          41.85779
+        ],
+        [
+          123.34337,
+          41.85588
+        ],
+        [
+          123.3538,
+          41.84429
+        ],
+        [
+          123.35847,
+          41.8374
+        ],
+        [
+          123.35821,
+          41.83462
+        ],
+        [
+          123.35629,
+          41.83023
+        ],
+        [
+          123.35683,
+          41.82927
+        ],
+        [
+          123.36678,
+          41.82706
+        ],
+        [
+          123.45205,
+          41.83104
+        ],
+        [
+          123.4696,
+          41.82607
+        ],
+        [
+          123.47736,
+          41.81515
+        ],
+        [
+          123.48237,
+          41.80652
+        ],
+        [
+          123.48313,
+          41.80355
+        ],
+        [
+          123.48086,
+          41.79971
+        ],
+        [
+          123.47705,
+          41.7873
+        ],
+        [
+          123.47477,
+          41.78491
+        ],
+        [
+          123.46882,
+          41.7809
+        ],
+        [
+          123.46829,
+          41.77927
+        ],
+        [
+          123.48738,
+          41.76242
+        ],
+        [
+          123.48994,
+          41.7591
+        ],
+        [
+          123.49144,
+          41.75591
+        ],
+        [
+          123.50056,
+          41.72713
+        ],
+        [
+          123.5078,
+          41.71803
+        ]
+      ]
+    }
+  ]
+}

@@ -116,40 +116,45 @@ const SCENES = {
     ['wait', 1500],
   ],
   // 人员面板：进游戏后直接调 UI 打开（不依赖按钮文案，避免选择器漂移）
+  // 人员面板（本作独有）：开一局真实城市而不是教程局 —— 教程局会盖上引导卡，
+  // 截出来的图分不清哪块是面板。先用 newGame 直接开城，再雇三个人、把一个线长
+  // 指派到 1 号线，最后才截「我的团队」，这样图里同时有线长在岗与待办提示。
   staff: [
     ['wait', 3000],
     ['eval', `(() => {
-      const cards = [...document.querySelectorAll('[data-map], .map-card, .mcard, .card, button')];
-      const pick = cards.find(e => (e.textContent || '').includes('青湾'))
-        || cards.find(e => (e.textContent || '').includes('广州'));
-      if (!pick) return 'MISS-CARD';
-      pick.click(); return 'CARD:' + (pick.textContent || '').trim().slice(0, 20);
+      if (!window.CM || !window.CM.newGame) return 'NO-CM';
+      if (!window.CM.MAPS.guangzhou) return 'NO-MAP';
+      window.CM.newGame({ map: 'guangzhou', mode: 'challenge', name: '人员试验局', difficulty: 'normal' });
+      return 'NEWGAME';
     })()`],
-    ['wait', 2000],
-    ['eval', `(() => {
-      // 地图卡片只是「选中」；真正开始是面板里的「开始」按钮或直接按 Enter
-      const btns = [...document.querySelectorAll('button, [role=button], .btn')];
-      const go = btns.find(e => /^(开始|进入|开局|新局)/.test((e.textContent || '').trim()));
-      if (go) { go.click(); return 'BTN:' + (go.textContent || '').trim().slice(0, 20); }
-      return 'NO-BTN';
+    ['wait', 9000],
+    ['eval', `(async () => {
+      // 城市是分帧生成的，等它真正落地再动人员，否则 g.net 还没有线可指派。
+      const t0 = Date.now();
+      while (Date.now() - t0 < 30000) {
+        const g = window.CM && window.CM.game;
+        if (g && g.city && (g.city.roadGroups || []).length && !g.pending && !g.model.refreshing) break;
+        await new Promise(r => setTimeout(r, 400));
+      }
+      return 'READY';
     })()`],
-    ['wait', 600],
-    ['eval', `(() => {
-      if (window.CM && window.CM.game) return 'ALREADY';
-      // 兜底：面板里没有按钮时用 Enter（help 里写明「↑↓ 切换 · Enter 开始」）
-      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', bubbles: true }));
-      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', bubbles: true }));
-      return 'ENTER';
-    })()`],
-    ['wait', 7000],
     ['eval', `(() => {
       if (!window.CM || !window.CM.ui) return 'NO-UI';
       if (!window.CM.game) return 'NO-GAME';
-      window.CM.ui.openTop('staff');
       const g = window.CM.game;
-      return 'OPENED staff=' + !!g.staff + ' market=' + (g.staff ? g.staff.market.length : 'x') + ' hired=' + (g.staff ? g.staff.hired.length : 'x');
+      if (!g.staff) return 'NO-STAFF';
+      // 雇三人：第一个线长挂到第一条线，其余留作城级加成。
+      const lines = Object.keys(g.net.lines);
+      const lineId = lines[0] || null;
+      let n = 0;
+      for (const c of g.staff.market.slice(0, 3)) {
+        const r = g.staff.hire(c.id, n === 0 ? lineId : null, g.econ);
+        if (r && r.ok) n++;
+      }
+      window.CM.ui.openTop('staff');
+      return 'HIRED ' + n + ' / market=' + g.staff.market.length + ' hired=' + g.staff.hired.length + ' line=' + lineId;
     })()`],
-    ['wait', 1800],
+    ['wait', 2200],
   ],
   // 地图选择页（54 城列表 + 地区筛选，年代筛选已移除）
   msel: [

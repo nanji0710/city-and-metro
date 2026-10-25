@@ -1,1 +1,3467 @@
-{"id":"zhengzhou","name":"郑州","province":"河南省","center":[113.70231,34.68421],"stats":{"lines":12,"stations":277,"lengthKm":439},"lines":[{"id":"zhengzhou.lZhengxu","ref":"Zhengxu","name":"Zhengxu号线","color":"#0B4355","system":"subway","lengthKm":66.74,"stationCount":26,"stations":[{"id":"zhengzhou.许昌东站","name":"许昌东站","nameEn":"Xuchangdong","lon":113.879769,"lat":34.049583},{"id":"zhengzhou.鹿鸣湖","name":"鹿鸣湖","nameEn":"Luminghu","lon":113.871166,"lat":34.067773},{"id":"zhengzhou.芙蓉湖","name":"芙蓉湖","nameEn":"Furonghu","lon":113.856821,"lat":34.08974},{"id":"zhengzhou.电气谷","name":"电气谷","nameEn":"Dianqigu","lon":113.84552,"lat":34.1088},{"id":"zhengzhou.体育中心","name":"体育中心","nameEn":"Xuchang Sports Center","lon":113.834434,"lat":34.124213},{"id":"zhengzhou.农大路","name":"农大路","nameEn":"Nongda Lu","lon":113.826213,"lat":34.142785},{"id":"zhengzhou.永和路","name":"永和路","nameEn":"Yonghe Lu","lon":113.8198,"lat":34.173534},{"id":"zhengzhou.葛天源","name":"葛天源","nameEn":"Getianyuan","lon":113.815259,"lat":34.200082},{"id":"zhengzhou.颍川路","name":"颍川路","nameEn":"Yingchuan Lu","lon":113.812952,"lat":34.232164},{"id":"zhengzhou.大周","name":"大周","nameEn":"Dazhou","lon":113.839524,"lat":34.277307},{"id":"zhengzhou.双庙李","name":"双庙李","nameEn":"Shuangmiaoli","lon":113.839374,"lat":34.303977},{"id":"zhengzhou.八千","name":"八千","nameEn":"Baqian","lon":113.841964,"lat":34.381798},{"id":"zhengzhou.双鹤湖南","name":"双鹤湖南","nameEn":"Shuanghehu Nan","lon":113.841924,"lat":34.393883},{"id":"zhengzhou.双鹤湖","name":"双鹤湖","nameEn":"Shuanghehu","lon":113.841905,"lat":34.404409},{"id":"zhengzhou.双鹤湖北","name":"双鹤湖北","nameEn":"Shuanghehu Bei","lon":113.841903,"lat":34.413803},{"id":"zhengzhou.龙王南","name":"龙王南","nameEn":"Longwang Nan","lon":113.841867,"lat":34.424678},{"id":"zhengzhou.龙王","name":"龙王","nameEn":"Longwang","lon":113.833815,"lat":34.443515},{"id":"zhengzhou.洵美路","name":"洵美路","nameEn":"Xunmei Lu","lon":113.828823,"lat":34.460482},{"id":"zhengzhou.苑陵故城西","name":"苑陵故城西","nameEn":"Yuanlinggucheng Xi","lon":113.828788,"lat":34.468584},{"id":"zhengzhou.遵大路","name":"遵大路","nameEn":"Zunda Lu","lon":113.83294,"lat":34.487042},{"id":"zhengzhou.新郑机场","name":"新郑机场","nameEn":"XINZHENG INTERNATIONAL AIRPORT","lon":113.842723,"lat":34.527289},{"id":"zhengzhou.翱翔路","name":"翱翔路","nameEn":"Aoxiang Lu","lon":113.822855,"lat":34.540828},{"id":"zhengzhou.枣园","name":"枣园","nameEn":"Zaoyuan","lon":113.827486,"lat":34.557316},{"id":"zhengzhou.文体中心","name":"文体中心","nameEn":"","lon":113.830199,"lat":34.569901},{"id":"zhengzhou.港区北","name":"港区北","nameEn":"Gangqu North","lon":113.830567,"lat":34.586683},{"id":"zhengzhou.长安路北","name":"长安路北","nameEn":"Chang'an Lu Bei","lon":113.840639,"lat":34.597845}],"track":[[113.87977,34.04958],[113.87854,34.06167],[113.87741,34.06444],[113.87378,34.06761],[113.8684,34.06776],[113.86711,34.0683],[113.86556,34.07263],[113.85897,34.08594],[113.84715,34.10656],[113.82831,34.13324],[113.81587,34.19184],[113.81311,34.22782],[113.81259,34.24658],[113.81309,34.24834],[113.83699,34.27083],[113.8389,34.27338],[113.83948,34.27562],[113.8398,34.34827],[113.84198,34.37357],[113.84184,34.43124],[113.84148,34.43206],[113.83501,34.43423],[113.83482,34.43931],[113.83382,34.44352],[113.82903,34.45116],[113.82867,34.48483],[113.82964,34.48669],[113.8352,34.48712],[113.83696,34.48849],[113.8414,34.50385],[113.84424,34.52303],[113.84355,34.52595],[113.84162,34.52845],[113.82376,34.53483],[113.82262,34.5356],[113.82206,34.53705],[113.83,34.56746],[113.83056,34.59466],[113.83336,34.59742],[113.84064,34.59784]]},{"id":"zhengzhou.l3","ref":"3","name":"3号线","color":"#F39939","system":"subway","lengthKm":31.22,"stationCount":25,"stations":[{"id":"zhengzhou.省体育中心","name":"省体育中心","nameEn":"Henan Sports Center","lon":113.619852,"lat":34.834838},{"id":"zhengzhou.王砦","name":"王砦","nameEn":"Wangzhai","lon":113.619838,"lat":34.821088},{"id":"zhengzhou.兴隆铺","name":"兴隆铺","nameEn":"Xinglongpu","lon":113.621984,"lat":34.807923},{"id":"zhengzhou.同乐","name":"同乐","nameEn":"Tongle","lon":113.629725,"lat":34.796251},{"id":"zhengzhou.南阳新村","name":"南阳新村","nameEn":"Nanyangxincun","lon":113.636296,"lat":34.786625},{"id":"zhengzhou.海滩寺","name":"海滩寺","nameEn":"Haitansi","lon":113.64334,"lat":34.775601},{"id":"zhengzhou.大石桥","name":"大石桥","nameEn":"Dashiqiao","lon":113.649702,"lat":34.766426},{"id":"zhengzhou.人民公园","name":"人民公园","nameEn":"People's Park","lon":113.653841,"lat":34.759346},{"id":"zhengzhou.二七广场","name":"二七广场","nameEn":"Erqi Square","lon":113.658258,"lat":34.75372},{"id":"zhengzhou.西大街","name":"西大街","nameEn":"Xidajie","lon":113.671334,"lat":34.751122},{"id":"zhengzhou.东大街","name":"东大街","nameEn":"Dongdajie","lon":113.677439,"lat":34.749718},{"id":"zhengzhou.郑州文庙","name":"郑州文庙","nameEn":"Zhengzhouwenmiao","lon":113.685343,"lat":34.747996},{"id":"zhengzhou.博览中心","name":"博览中心","nameEn":"Bolanzhongxin","lon":113.698084,"lat":34.747937},{"id":"zhengzhou.凤凰台","name":"凤凰台","nameEn":"Fenghuangtai","lon":113.707607,"lat":34.747874},{"id":"zhengzhou.东十里铺","name":"东十里铺","nameEn":"Dongshilipu","lon":113.719663,"lat":34.747896},{"id":"zhengzhou.通泰路","name":"通泰路","nameEn":"Tongtailu","lon":113.72793,"lat":34.748985},{"id":"zhengzhou.西周","name":"西周","nameEn":"Xizhou","lon":113.74089,"lat":34.748822},{"id":"zhengzhou.东周","name":"东周","nameEn":"Dongzhou","lon":113.752523,"lat":34.747478},{"id":"zhengzhou.省骨科医院","name":"省骨科医院","nameEn":"Henan Orthopaedics Hospital","lon":113.768082,"lat":34.745379},{"id":"zhengzhou.圃田西","name":"圃田西","nameEn":"Putianxi","lon":113.787395,"lat":34.742869},{"id":"zhengzhou.营岗","name":"营岗","nameEn":"Yinggang","lon":113.796103,"lat":34.721596},{"id":"zhengzhou.潮河","name":"潮河","nameEn":"Chaohe","lon":113.788946,"lat":34.696687},{"id":"zhengzhou.滨河新城","name":"滨河新城","nameEn":"BINHE XINCHENG","lon":113.788947,"lat":34.688986},{"id":"zhengzhou.司赵","name":"司赵","nameEn":"Sizhao","lon":113.788976,"lat":34.678066},{"id":"zhengzhou.滨河新城南","name":"滨河新城南","nameEn":"Binhe Xincheng Nan","lon":113.788978,"lat":34.669104}],"track":[[113.61985,34.83484],[113.61988,34.81875],[113.61922,34.812],[113.64157,34.77943],[113.64597,34.76993],[113.65348,34.76194],[113.65397,34.75622],[113.65502,34.7545],[113.68534,34.748],[113.71966,34.7479],[113.73397,34.74972],[113.7921,34.74234],[113.7949,34.74142],[113.79553,34.74015],[113.79607,34.72952],[113.79609,34.70843],[113.78962,34.70494],[113.7889,34.70341],[113.78898,34.6691]]},{"id":"zhengzhou.l1","ref":"1","name":"1号线","color":"#E60012","system":"subway","lengthKm":40.18,"stationCount":30,"stations":[{"id":"zhengzhou.河南工业大学","name":"河南工业大学","nameEn":"Henan University of Technology","lon":113.536088,"lat":34.828382},{"id":"zhengzhou.郑大科技园","name":"郑大科技园","nameEn":"Zhengzhou University Sci-Tech Park","lon":113.535657,"lat":34.818143},{"id":"zhengzhou.郑州大学","name":"郑州大学","nameEn":"Zhengzhou University","lon":113.535266,"lat":34.808817},{"id":"zhengzhou.梧桐街","name":"梧桐街","nameEn":"Wutongjie","lon":113.534794,"lat":34.795402},{"id":"zhengzhou.兰寨","name":"兰寨","nameEn":"Lanzhai","lon":113.534818,"lat":34.784909},{"id":"zhengzhou.铁炉","name":"铁炉","nameEn":"Tielu","lon":113.53478,"lat":34.76896},{"id":"zhengzhou.市民中心","name":"市民中心","nameEn":"Civic Center","lon":113.547985,"lat":34.763645},{"id":"zhengzhou.西流湖","name":"西流湖","nameEn":"Xiliuhu","lon":113.564108,"lat":34.762281},{"id":"zhengzhou.西三环","name":"西三环","nameEn":"Xisanhuan","lon":113.582175,"lat":34.761495},{"id":"zhengzhou.秦岭路","name":"秦岭路","nameEn":"Qinling Road","lon":113.597351,"lat":34.757897},{"id":"zhengzhou.五一公园","name":"五一公园","nameEn":"WUYI GONGYUAN","lon":113.607568,"lat":34.757012},{"id":"zhengzhou.碧沙岗","name":"碧沙岗","nameEn":"Bishagang","lon":113.618275,"lat":34.756347},{"id":"zhengzhou.绿城广场","name":"绿城广场","nameEn":"LUCHENG GUANGCHANG","lon":113.62704,"lat":34.748666},{"id":"zhengzhou.医学院","name":"医学院","nameEn":"Yixueyuan","lon":113.636912,"lat":34.748692},{"id":"zhengzhou.郑州火车站","name":"郑州火车站","nameEn":"Zhengzhou Railway Station","lon":113.650067,"lat":34.747394},{"id":"zhengzhou.二七广场","name":"二七广场","nameEn":"Erqi Square","lon":113.659781,"lat":34.753604},{"id":"zhengzhou.人民路","name":"人民路","nameEn":"RENMIN LU","lon":113.66725,"lat":34.758229},{"id":"zhengzhou.紫荆山","name":"紫荆山","nameEn":"Zijingshan","lon":113.677437,"lat":34.763002},{"id":"zhengzhou.燕庄","name":"燕庄","nameEn":"Yanzhuang","lon":113.696827,"lat":34.764608},{"id":"zhengzhou.民航路","name":"民航路","nameEn":"Minhang Road","lon":113.707572,"lat":34.764036},{"id":"zhengzhou.会展中心","name":"会展中心","nameEn":"Convention and Exhibition Center","lon":113.719377,"lat":34.767453},{"id":"zhengzhou.黄河南路","name":"黄河南路","nameEn":"South Huanghe Road","lon":113.738277,"lat":34.76377},{"id":"zhengzhou.农业南路","name":"农业南路","nameEn":"NONGYE NANLU","lon":113.748928,"lat":34.766417},{"id":"zhengzhou.东风南路","name":"东风南路","nameEn":"DONGFENG NANLU","lon":113.760311,"lat":34.765646},{"id":"zhengzhou.郑州东站","name":"郑州东站","nameEn":"Zhengzhoudong Station","lon":113.770791,"lat":34.760106},{"id":"zhengzhou.博学路","name":"博学路","nameEn":"Boxue Road","lon":113.787027,"lat":34.760868},{"id":"zhengzhou.市体育中心","name":"市体育中心","nameEn":"ZHENGZHOU SPORTS CENTER","lon":113.804346,"lat":34.77449},{"id":"zhengzhou.龙子湖","name":"龙子湖","nameEn":"Longzihu","lon":113.804251,"lat":34.793854},{"id":"zhengzhou.文苑北路","name":"文苑北路","nameEn":"Wenyuanbeilu","lon":113.805842,"lat":34.809047},{"id":"zhengzhou.河南大学新区","name":"河南大学新区","nameEn":"New Campus of Henan University","lon":113.806606,"lat":34.819928}],"track":[[113.53609,34.82838],[113.53476,34.80257],[113.53479,34.7669],[113.53656,34.76456],[113.53978,34.76364],[113.54798,34.76364],[113.56411,34.76228],[113.5762,34.76291],[113.59735,34.7579],[113.62163,34.75596],[113.62283,34.75467],[113.62417,34.74937],[113.6251,34.74876],[113.64051,34.74866],[113.64754,34.7469],[113.6551,34.74921],[113.65713,34.7527],[113.66183,34.75422],[113.67288,34.76229],[113.6756,34.76309],[113.68079,34.76286],[113.68452,34.76443],[113.69683,34.76461],[113.70642,34.76374],[113.71547,34.76744],[113.72067,34.76755],[113.7224,34.76691],[113.72676,34.7624],[113.73009,34.76169],[113.75621,34.76796],[113.75956,34.76696],[113.76224,34.76188],[113.76385,34.76063],[113.76594,34.76005],[113.79616,34.76127],[113.79854,34.76181],[113.80067,34.76402],[113.80279,34.76799],[113.80425,34.77301],[113.80406,34.79896],[113.80648,34.81296],[113.80661,34.81993]]},{"id":"zhengzhou.l2","ref":"2","name":"2号线","color":"#FFF100","system":"subway","lengthKm":31.85,"stationCount":22,"stations":[{"id":"zhengzhou.南四环","name":"南四环","nameEn":"Nansihuan","lon":113.675742,"lat":34.66405},{"id":"zhengzhou.站马屯","name":"站马屯","nameEn":"Zhanmatun","lon":113.676093,"lat":34.684819},{"id":"zhengzhou.南三环","name":"南三环","nameEn":"Nansanhuan","lon":113.676247,"lat":34.699645},{"id":"zhengzhou.花寨","name":"花寨","nameEn":"Huazhai","lon":113.676164,"lat":34.707311},{"id":"zhengzhou.南五里堡","name":"南五里堡","nameEn":"Nanwulibao","lon":113.675872,"lat":34.721412},{"id":"zhengzhou.二里岗","name":"二里岗","nameEn":"Erligang","lon":113.675774,"lat":34.730212},{"id":"zhengzhou.陇海东路","name":"陇海东路","nameEn":"Longhaidonglu","lon":113.676019,"lat":34.740353},{"id":"zhengzhou.东大街","name":"东大街","nameEn":"Dongdajie","lon":113.675974,"lat":34.749753},{"id":"zhengzhou.紫荆山","name":"紫荆山","nameEn":"Zijingshan","lon":113.675969,"lat":34.763065},{"id":"zhengzhou.黄河路","name":"黄河路","nameEn":"Huanghelu","lon":113.676126,"lat":34.775469},{"id":"zhengzhou.关虎屯","name":"关虎屯","nameEn":"Guanhutun","lon":113.675732,"lat":34.790089},{"id":"zhengzhou.东风路","name":"东风路","nameEn":"DONGFENG LU","lon":113.67573,"lat":34.796864},{"id":"zhengzhou.北三环","name":"北三环","nameEn":"Beisanhuan","lon":113.675629,"lat":34.807149},{"id":"zhengzhou.沙门","name":"沙门","nameEn":"Shamen","lon":113.675683,"lat":34.821172},{"id":"zhengzhou.柳林","name":"柳林","nameEn":"Liulin","lon":113.67505,"lat":34.83005},{"id":"zhengzhou.刘庄","name":"刘庄","nameEn":"Liuzhuang","lon":113.672954,"lat":34.845085},{"id":"zhengzhou.金达路","name":"金达路","nameEn":"JINDA LU","lon":113.672753,"lat":34.863366},{"id":"zhengzhou.金洼","name":"金洼","nameEn":"Jinwa","lon":113.656551,"lat":34.867756},{"id":"zhengzhou.黄河迎宾馆","name":"黄河迎宾馆","nameEn":"Huangheyingbinguan","lon":113.638559,"lat":34.868419},{"id":"zhengzhou.毛庄","name":"毛庄","nameEn":"Maozhuang","lon":113.620097,"lat":34.867838},{"id":"zhengzhou.惠济区政府","name":"惠济区政府","nameEn":"HUIJI QU ZHENGFU","lon":113.606701,"lat":34.867185},{"id":"zhengzhou.贾河","name":"贾河","nameEn":"Jiahe","lon":113.587068,"lat":34.868188}],"track":[[113.67574,34.66405],[113.67625,34.69965],[113.67551,34.72748],[113.67614,34.78061],[113.67541,34.81689],[113.67619,34.82651],[113.67221,34.83834],[113.67441,34.85963],[113.67168,34.86631],[113.67062,34.86743],[113.6689,34.86785],[113.65473,34.86773],[113.62746,34.86885],[113.6145,34.86669],[113.58338,34.86836],[113.58107,34.86915],[113.57506,34.87494]]},{"id":"zhengzhou.l4","ref":"4","name":"4号线","color":"#00A0E9","system":"subway","lengthKm":29.03,"stationCount":26,"stations":[{"id":"zhengzhou.老鸦陈","name":"老鸦陈","nameEn":"Laoyachen","lon":113.610684,"lat":34.833856},{"id":"zhengzhou.省体育中心","name":"省体育中心","nameEn":"Henan Sports Center","lon":113.620851,"lat":34.833456},{"id":"zhengzhou.北二十里铺","name":"北二十里铺","nameEn":"Beiershilipu","lon":113.634767,"lat":34.831902},{"id":"zhengzhou.丰庆路","name":"丰庆路","nameEn":"Fengqinglu","lon":113.648025,"lat":34.830869},{"id":"zhengzhou.张家村","name":"张家村","nameEn":"Zhangjiacun","lon":113.655215,"lat":34.825403},{"id":"zhengzhou.陈寨东","name":"陈寨东","nameEn":"Chenzhaidong","lon":113.663707,"lat":34.820547},{"id":"zhengzhou.沙门","name":"沙门","nameEn":"Shamen","lon":113.677212,"lat":34.82038},{"id":"zhengzhou.杨君刘","name":"杨君刘","nameEn":"Yangjunliu","lon":113.692175,"lat":34.820515},{"id":"zhengzhou.森林公园北","name":"森林公园北","nameEn":"Senlingongyuanbei","lon":113.697614,"lat":34.827297},{"id":"zhengzhou.清华附中","name":"清华附中","nameEn":"Qinghuafuzhong","lon":113.707628,"lat":34.830553},{"id":"zhengzhou.龙湖中环北","name":"龙湖中环北","nameEn":"Longhuzhonghuanbei","lon":113.719914,"lat":34.83047},{"id":"zhengzhou.龙湖北","name":"龙湖北","nameEn":"Longhubei","lon":113.728633,"lat":34.825238},{"id":"zhengzhou.金融岛南","name":"金融岛南","nameEn":"Jinrongdao Nan","lon":113.730946,"lat":34.810296},{"id":"zhengzhou.龙湖南","name":"龙湖南","nameEn":"Longhunan","lon":113.732492,"lat":34.803129},{"id":"zhengzhou.龙湖中环南","name":"龙湖中环南","nameEn":"Longhuzhonghuannan","lon":113.732466,"lat":34.791908},{"id":"zhengzhou.农业东路","name":"农业东路","nameEn":"Nongyedonglu","lon":113.729032,"lat":34.784985},{"id":"zhengzhou.中央商务区","name":"中央商务区","nameEn":"Central Business District","lon":113.723243,"lat":34.779097},{"id":"zhengzhou.会展中心","name":"会展中心","nameEn":"Convention and Exhibition Center","lon":113.719258,"lat":34.768055},{"id":"zhengzhou.商鼎路","name":"商鼎路","nameEn":"Shangdinglu","lon":113.719953,"lat":34.755948},{"id":"zhengzhou.东十里铺","name":"东十里铺","nameEn":"Dongshilipu","lon":113.719504,"lat":34.748524},{"id":"zhengzhou.货站街","name":"货站街","nameEn":"Huozhanjie","lon":113.719477,"lat":34.741972},{"id":"zhengzhou.七里河","name":"七里河","nameEn":"Qilihe","lon":113.715867,"lat":34.722402},{"id":"zhengzhou.果树所","name":"果树所","nameEn":"Guoshusuo","lon":113.715928,"lat":34.712805},{"id":"zhengzhou.金岱","name":"金岱","nameEn":"Jindai","lon":113.72067,"lat":34.701435},{"id":"zhengzhou.姚庄","name":"姚庄","nameEn":"Yaozhuang","lon":113.727682,"lat":34.691592},{"id":"zhengzhou.郎庄","name":"郎庄","nameEn":"Langzhuang","lon":113.732549,"lat":34.68628}],"track":[[113.61068,34.83386],[113.61701,34.83392],[113.65224,34.83056],[113.65305,34.83013],[113.65762,34.82104],[113.65996,34.82044],[113.68617,34.82002],[113.69469,34.82072],[113.69675,34.82208],[113.69677,34.82588],[113.69824,34.82825],[113.70099,34.82981],[113.7038,34.83044],[113.72456,34.8304],[113.72673,34.82998],[113.72788,34.82903],[113.72866,34.82632],[113.72913,34.81621],[113.73019,34.81146],[113.73205,34.80744],[113.73268,34.79302],[113.73157,34.7889],[113.72809,34.78365],[113.72381,34.7805],[113.71912,34.76988],[113.72,34.75951],[113.71934,34.73332],[113.71598,34.72381],[113.71559,34.70913],[113.71723,34.70475],[113.7233,34.69888],[113.72797,34.69115],[113.73255,34.68628]]},{"id":"zhengzhou.l5","ref":"5","name":"5号线","color":"#5C2D91","system":"subway","lengthKm":40.34,"stationCount":32,"stations":[{"id":"zhengzhou.姚砦","name":"姚砦","nameEn":"Yaozhai","lon":113.702477,"lat":34.775376},{"id":"zhengzhou.众意西路","name":"众意西路","nameEn":"Zhongyixilu","lon":113.712289,"lat":34.777398},{"id":"zhengzhou.中央商务区","name":"中央商务区","nameEn":"Central Business District","lon":113.725544,"lat":34.779078},{"id":"zhengzhou.儿童医院","name":"儿童医院","nameEn":"Children's Hospital","lon":113.74481,"lat":34.777629},{"id":"zhengzhou.祭城","name":"祭城","nameEn":"Zhacheng","lon":113.761015,"lat":34.777518},{"id":"zhengzhou.金水东路","name":"金水东路","nameEn":"Jinshuidonglu","lon":113.764806,"lat":34.770013},{"id":"zhengzhou.郑州东站","name":"郑州东站","nameEn":"Zhengzhou East Railway Station","lon":113.769591,"lat":34.759994},{"id":"zhengzhou.康宁街","name":"康宁街","nameEn":"Kangningjie","lon":113.767638,"lat":34.751735},{"id":"zhengzhou.省骨科医院","name":"省骨科医院","nameEn":"Henan Orthopaedics Hospital","lon":113.767687,"lat":34.74647},{"id":"zhengzhou.经北二路","name":"经北二路","nameEn":"Jingbeierlu","lon":113.767453,"lat":34.72773},{"id":"zhengzhou.经开中心广场","name":"经开中心广场","nameEn":"Jingkaizhongxinguangchang","lon":113.758272,"lat":34.722086},{"id":"zhengzhou.福塔东","name":"福塔东","nameEn":"Futa Dong","lon":113.741009,"lat":34.72194},{"id":"zhengzhou.中原福塔","name":"中原福塔","nameEn":"Zhongyuan Tower","lon":113.726407,"lat":34.721995},{"id":"zhengzhou.七里河","name":"七里河","nameEn":"Qilihe","lon":113.716358,"lat":34.72199},{"id":"zhengzhou.航海广场","name":"航海广场","nameEn":"Hanghaiguangchang","lon":113.700243,"lat":34.721988},{"id":"zhengzhou.城东南路","name":"城东南路","nameEn":"Chengdongnanlu","lon":113.683426,"lat":34.721952},{"id":"zhengzhou.南五里堡","name":"南五里堡","nameEn":"Nanwulibao","lon":113.676125,"lat":34.72166},{"id":"zhengzhou.冯庄","name":"冯庄","nameEn":"Fengzhuang","lon":113.661273,"lat":34.721615},{"id":"zhengzhou.京广南路","name":"京广南路","nameEn":"Jingguangnanlu","lon":113.650668,"lat":34.721571},{"id":"zhengzhou.市第二人民医院","name":"市第二人民医院","nameEn":"Zhengzhou No.2 People's Hospital","lon":113.637388,"lat":34.721544},{"id":"zhengzhou.齐礼阎","name":"齐礼阎","nameEn":"Qiliyan","lon":113.621908,"lat":34.721869},{"id":"zhengzhou.后河芦","name":"后河芦","nameEn":"Houhelu","lon":113.612605,"lat":34.721246},{"id":"zhengzhou.桐淮","name":"桐淮","nameEn":"Tonghuai","lon":113.607559,"lat":34.730292},{"id":"zhengzhou.陇海西路","name":"陇海西路","nameEn":"LONGHAI XILU","lon":113.607539,"lat":34.738064},{"id":"zhengzhou.市中心医院","name":"市中心医院","nameEn":"Zhengzhou Central Hospital","lon":113.607534,"lat":34.747717},{"id":"zhengzhou.五一公园","name":"五一公园","nameEn":"WUYI GONGYUAN","lon":113.607525,"lat":34.756963},{"id":"zhengzhou.月季公园","name":"月季公园","nameEn":"YUEJI GONGYUAN","lon":113.615762,"lat":34.766633},{"id":"zhengzhou.沙口路","name":"沙口路","nameEn":"Shakoulu","lon":113.633996,"lat":34.771431},{"id":"zhengzhou.海滩寺","name":"海滩寺","nameEn":"Haitansi","lon":113.644648,"lat":34.775454},{"id":"zhengzhou.郑州人民医院","name":"郑州人民医院","nameEn":"Zhengzhou People's Hospital","lon":113.660953,"lat":34.775719},{"id":"zhengzhou.黄河路","name":"黄河路","nameEn":"Huanghelu","lon":113.67595,"lat":34.775709},{"id":"zhengzhou.省人民医院","name":"省人民医院","nameEn":"Henan People's Hospital","lon":113.686654,"lat":34.775692}],"track":[[113.69206,34.77571],[113.70852,34.77505],[113.71059,34.77571],[113.71563,34.78002],[113.7185,34.78078],[113.7238,34.77975],[113.73291,34.77643],[113.73528,34.7764],[113.74136,34.77813],[113.74797,34.77684],[113.75656,34.77809],[113.76356,34.77658],[113.76453,34.77488],[113.76527,34.7679],[113.76952,34.76137],[113.76965,34.7575],[113.76806,34.75529],[113.76768,34.75315],[113.7672,34.72406],[113.76507,34.72257],[113.76256,34.72207],[113.61983,34.72188],[113.61076,34.72108],[113.60791,34.72219],[113.60754,34.76164],[113.60926,34.76507],[113.6147,34.76673],[113.61929,34.76603],[113.62192,34.76638],[113.64556,34.77565],[113.69206,34.77571]]},{"id":"zhengzhou.l6","ref":"6","name":"6号线","color":"#920783","system":"subway","lengthKm":43.25,"stationCount":28,"stations":[{"id":"zhengzhou.贾峪","name":"贾峪","nameEn":"Jiayu","lon":113.447474,"lat":34.67426},{"id":"zhengzhou.洞林湖","name":"洞林湖","nameEn":"Donglinhu","lon":113.476138,"lat":34.669653},{"id":"zhengzhou.洞林寺","name":"洞林寺","nameEn":"Donglinsi","lon":113.493336,"lat":34.674445},{"id":"zhengzhou.安宁路","name":"安宁路","nameEn":"Anning Road","lon":113.510479,"lat":34.693827},{"id":"zhengzhou.马寨","name":"马寨","nameEn":"Mazhai","lon":113.510436,"lat":34.70461},{"id":"zhengzhou.河南建院","name":"河南建院","nameEn":"Henan Jianyuan","lon":113.51136,"lat":34.715516},{"id":"zhengzhou.金桢路","name":"金桢路","nameEn":"Jinzhen Road","lon":113.506493,"lat":34.73544},{"id":"zhengzhou.奥体中心西","name":"奥体中心西","nameEn":"Olympics Center West","lon":113.514719,"lat":34.740971},{"id":"zhengzhou.奥体中心","name":"奥体中心","nameEn":"Olympic Sports Center","lon":113.534875,"lat":34.739691},{"id":"zhengzhou.常庄","name":"常庄","nameEn":"Changzhuang","lon":113.548618,"lat":34.739818},{"id":"zhengzhou.冯湾","name":"冯湾","nameEn":"Fengwan","lon":113.567541,"lat":34.728383},{"id":"zhengzhou.李江沟","name":"李江沟","nameEn":"Lijianggou","lon":113.585603,"lat":34.73006},{"id":"zhengzhou.卧龙岗","name":"卧龙岗","nameEn":"Wolonggang","lon":113.597866,"lat":34.730106},{"id":"zhengzhou.桐淮","name":"桐淮","nameEn":"Tonghuai","lon":113.60645,"lat":34.730019},{"id":"zhengzhou.嵩淮","name":"嵩淮","nameEn":"Songhuai","lon":113.622882,"lat":34.73008},{"id":"zhengzhou.大学中路","name":"大学中路","nameEn":"Daxue Zhonglu","lon":113.638548,"lat":34.730001},{"id":"zhengzhou.火车头体育场","name":"火车头体育场","nameEn":"Huochetou Tiyuchang","lon":113.649001,"lat":34.730119},{"id":"zhengzhou.陇秀公园","name":"陇秀公园","nameEn":"Longxiu Gongyuan","lon":113.669145,"lat":34.730298},{"id":"zhengzhou.二里岗","name":"二里岗","nameEn":"Erligang","lon":113.676826,"lat":34.730061},{"id":"zhengzhou.二里岗东","name":"二里岗东","nameEn":"Erligang Dong","lon":113.685659,"lat":34.728716},{"id":"zhengzhou.凤凰台南","name":"凤凰台南","nameEn":"Fenghuangtai Nan","lon":113.697972,"lat":34.73922},{"id":"zhengzhou.博览中心","name":"博览中心","nameEn":"Bolanzhongxin","lon":113.697954,"lat":34.748966},{"id":"zhengzhou.燕庄","name":"燕庄","nameEn":"Yanzhuang","lon":113.698365,"lat":34.76564},{"id":"zhengzhou.姚砦","name":"姚砦","nameEn":"Yaozhai","lon":113.701858,"lat":34.774478},{"id":"zhengzhou.金汇桥","name":"金汇桥","nameEn":"Jinhuiqiao","lon":113.71015,"lat":34.78715},{"id":"zhengzhou.小营","name":"小营","nameEn":"Xiaoying","lon":113.711674,"lat":34.796115},{"id":"zhengzhou.金融岛西","name":"金融岛西","nameEn":"Jinrongdao Xi","lon":113.719589,"lat":34.813015},{"id":"zhengzhou.清华附中","name":"清华附中","nameEn":"Qinghuafuzhong","lon":113.707613,"lat":34.831182}],"track":[[113.44747,34.67426],[113.45955,34.67382],[113.46559,34.67097],[113.47943,34.6693],[113.48336,34.66949],[113.48768,34.67089],[113.50877,34.68419],[113.51047,34.69011],[113.51043,34.70821],[113.51127,34.7105],[113.51138,34.71653],[113.50651,34.72593],[113.5065,34.73745],[113.50719,34.7395],[113.51059,34.74089],[113.53534,34.73966],[113.55674,34.73998],[113.56,34.73807],[113.56397,34.72945],[113.56561,34.72861],[113.56838,34.72833],[113.5767,34.72848],[113.58241,34.73003],[113.58533,34.73006],[113.67042,34.7303],[113.68009,34.72993],[113.6838,34.72872],[113.69748,34.72922],[113.69814,34.73672],[113.69812,34.76477],[113.70251,34.77583],[113.70774,34.77969],[113.70904,34.78193],[113.71115,34.7924],[113.71287,34.80576],[113.71748,34.80831],[113.71966,34.81088],[113.71907,34.81587],[113.71567,34.81943],[113.70842,34.82433],[113.7077,34.82551],[113.70761,34.83118]]},{"id":"zhengzhou.l7","ref":"7","name":"7号线","color":"#D6A053","system":"subway","lengthKm":26.66,"stationCount":20,"stations":[{"id":"zhengzhou.东赵","name":"东赵","nameEn":"Dongzhao","lon":113.636894,"lat":34.881559},{"id":"zhengzhou.黄河迎宾馆","name":"黄河迎宾馆","nameEn":"Huangheyingbinguan","lon":113.638459,"lat":34.868609},{"id":"zhengzhou.北大学城","name":"北大学城","nameEn":"BEI DAXUECHENG","lon":113.640171,"lat":34.860788},{"id":"zhengzhou.琉璃寺","name":"琉璃寺","nameEn":"Liulisi","lon":113.646902,"lat":34.845028},{"id":"zhengzhou.张家村","name":"张家村","nameEn":"Zhangjiacun","lon":113.655015,"lat":34.825348},{"id":"zhengzhou.陈砦站","name":"陈砦站","nameEn":"CHENZHAI","lon":113.658159,"lat":34.813842},{"id":"zhengzhou.白庙","name":"白庙","nameEn":"Baimiao","lon":113.659847,"lat":34.799757},{"id":"zhengzhou.农业大学","name":"农业大学","nameEn":"Nongye Daxue","lon":113.660443,"lat":34.787846},{"id":"zhengzhou.郑州人民医院","name":"郑州人民医院","nameEn":"Zhengzhou People's Hospital","lon":113.660687,"lat":34.775914},{"id":"zhengzhou.大石桥","name":"大石桥","nameEn":"Dashiqiao","lon":113.650631,"lat":34.76708},{"id":"zhengzhou.郑大一附院","name":"郑大一附院","nameEn":"Zhengda Yifuyuan","lon":113.638959,"lat":34.75686},{"id":"zhengzhou.医学院","name":"医学院","nameEn":"Yixueyuan","lon":113.637508,"lat":34.746566},{"id":"zhengzhou.市骨科医院","name":"市骨科医院","nameEn":"Shi Guke Yiyuan","lon":113.637815,"lat":34.735743},{"id":"zhengzhou.大学中路","name":"大学中路","nameEn":"Daxue Zhonglu","lon":113.637764,"lat":34.729504},{"id":"zhengzhou.市第二人民医院","name":"市第二人民医院","nameEn":"Zhengzhou No.2 People's Hospital","lon":113.637702,"lat":34.721306},{"id":"zhengzhou.王胡砦","name":"王胡砦","nameEn":"Wanghuzhai","lon":113.637924,"lat":34.706895},{"id":"zhengzhou.漓江路","name":"漓江路","nameEn":"Lijiang Lu","lon":113.638097,"lat":34.69551},{"id":"zhengzhou.荆胡","name":"荆胡","nameEn":"Jinghu","lon":113.638144,"lat":34.68197},{"id":"zhengzhou.南环公园","name":"南环公园","nameEn":"Nanhuan Gongyuan","lon":113.637861,"lat":34.67195},{"id":"zhengzhou.南岗刘","name":"南岗刘","nameEn":"Nangangliu","lon":113.637794,"lat":34.656854}],"track":[[113.63689,34.88156],[113.63923,34.86331],[113.65779,34.81881],[113.66017,34.79659],[113.66082,34.76895],[113.65964,34.76795],[113.65221,34.76791],[113.6438,34.76413],[113.64078,34.76217],[113.63953,34.76034],[113.63751,34.74761],[113.63824,34.6942],[113.63779,34.65685]]},{"id":"zhengzhou.l8","ref":"8","name":"8号线","color":"#E5E289","system":"subway","lengthKm":51.77,"stationCount":28,"stations":[{"id":"zhengzhou.鲁庙","name":"鲁庙","nameEn":"Lumiao","lon":113.941892,"lat":34.764163},{"id":"zhengzhou.绿博园","name":"绿博园","nameEn":"Luboyuan","lon":113.923655,"lat":34.762046},{"id":"zhengzhou.龙王庙","name":"龙王庙","nameEn":"Longwangmiao","lon":113.896677,"lat":34.759348},{"id":"zhengzhou.李湖桥","name":"李湖桥","nameEn":"Lihuqiao","lon":113.876596,"lat":34.75983},{"id":"zhengzhou.福泽路","name":"福泽路","nameEn":"Fuze Lu","lon":113.863583,"lat":34.759801},{"id":"zhengzhou.省社科院","name":"省社科院","nameEn":"Sheng Shekeyuan","lon":113.842868,"lat":34.759242},{"id":"zhengzhou.圃田","name":"圃田","nameEn":"Putian","lon":113.814776,"lat":34.744343},{"id":"zhengzhou.圃田西","name":"圃田西","nameEn":"Putianxi","lon":113.78743,"lat":34.743147},{"id":"zhengzhou.郑州东站","name":"郑州东站","nameEn":"Zhengzhou East Railway Station","lon":113.769837,"lat":34.760008},{"id":"zhengzhou.畅和街","name":"畅和街","nameEn":"Changhe Jie","lon":113.769803,"lat":34.780008},{"id":"zhengzhou.高铁公园","name":"高铁公园","nameEn":"Gaotie Gongyuan","lon":113.768817,"lat":34.793079},{"id":"zhengzhou.郑大一附院东区","name":"郑大一附院东区","nameEn":"Zhengda Yifuyuan Dongqu","lon":113.756663,"lat":34.79632},{"id":"zhengzhou.龙湖中环南","name":"龙湖中环南","nameEn":"Longhuzhonghuannan","lon":113.732398,"lat":34.792977},{"id":"zhengzhou.小营","name":"小营","nameEn":"Xiaoying","lon":113.712013,"lat":34.796054},{"id":"zhengzhou.枣庄","name":"枣庄","nameEn":"Zaozhuang","lon":113.68851,"lat":34.795884},{"id":"zhengzhou.东风路","name":"东风路","nameEn":"Dongfenglu","lon":113.673215,"lat":34.798926},{"id":"zhengzhou.白庙","name":"白庙","nameEn":"Baimiao","lon":113.660254,"lat":34.800324},{"id":"zhengzhou.省中医院","name":"省中医院","nameEn":"Sheng Zhongyiyuan","lon":113.642087,"lat":34.800798},{"id":"zhengzhou.同乐","name":"同乐","nameEn":"Tongle","lon":113.629611,"lat":34.796719},{"id":"zhengzhou.五龙口","name":"五龙口","nameEn":"Wulongkou","lon":113.60738,"lat":34.790661},{"id":"zhengzhou.大学科技园","name":"大学科技园","nameEn":"Daxue Kejiyuan","lon":113.598504,"lat":34.792071},{"id":"zhengzhou.南流","name":"南流","nameEn":"Nanliu","lon":113.57253,"lat":34.792986},{"id":"zhengzhou.冬青街","name":"冬青街","nameEn":"Dongqing Jie","lon":113.562403,"lat":34.802266},{"id":"zhengzhou.银屏路","name":"银屏路","nameEn":"Yinping Lu","lon":113.550493,"lat":34.809244},{"id":"zhengzhou.郑州大学","name":"郑州大学","nameEn":"Zhengzhou University","lon":113.534696,"lat":34.808951},{"id":"zhengzhou.祥营","name":"祥营","nameEn":"Xiangying","lon":113.517745,"lat":34.809179},{"id":"zhengzhou.轻工业大学","name":"轻工业大学","nameEn":"Qinggongye Daxue","lon":113.499305,"lat":34.809067},{"id":"zhengzhou.天健湖","name":"天健湖","nameEn":"Tianjianhu","lon":113.472397,"lat":34.809007}],"track":[[113.94189,34.76416],[113.93194,34.76396],[113.92066,34.76144],[113.89777,34.75935],[113.86143,34.75981],[113.82264,34.75877],[113.81976,34.75765],[113.8164,34.75298],[113.81422,34.74082],[113.81186,34.74008],[113.77827,34.74431],[113.7759,34.74524],[113.7718,34.74863],[113.76961,34.76244],[113.76979,34.78233],[113.7685,34.79048],[113.76885,34.79577],[113.76606,34.79763],[113.76054,34.7979],[113.75784,34.79709],[113.75014,34.79288],[113.74036,34.79196],[113.71473,34.79533],[113.70782,34.7969],[113.70403,34.79683],[113.69618,34.79447],[113.6723,34.79908],[113.65584,34.80087],[113.63931,34.80075],[113.62046,34.79257],[113.61154,34.79012],[113.59178,34.79293],[113.57747,34.79146],[113.56614,34.79528],[113.56273,34.79863],[113.56241,34.80772],[113.56153,34.80882],[113.56003,34.80917],[113.4724,34.80901]]},{"id":"zhengzhou.l9","ref":"9","name":"城郊线","color":"#A2AE73","system":"subway","lengthKm":40.62,"stationCount":17,"stations":[{"id":"zhengzhou.南四环","name":"南四环","nameEn":"Nansihuan","lon":113.675742,"lat":34.66405},{"id":"zhengzhou.十八里河","name":"十八里河","nameEn":"Shibalihe","lon":113.677545,"lat":34.648984},{"id":"zhengzhou.沙窝李","name":"沙窝李","nameEn":"Shawoli","lon":113.675534,"lat":34.627839},{"id":"zhengzhou.后胡","name":"后胡","nameEn":"Shuanghudadao","lon":113.67697,"lat":34.612786},{"id":"zhengzhou.小乔","name":"小乔","nameEn":"Xiaoqiao","lon":113.689656,"lat":34.601653},{"id":"zhengzhou.华南城西","name":"华南城西","nameEn":"Huanancheng West","lon":113.719828,"lat":34.595106},{"id":"zhengzhou.华南城","name":"华南城","nameEn":"Hunancheng","lon":113.743063,"lat":34.595154},{"id":"zhengzhou.华南城东","name":"华南城东","nameEn":"Huanancheng East","lon":113.767849,"lat":34.595222},{"id":"zhengzhou.孟庄","name":"孟庄","nameEn":"Mengzhuang","lon":113.812335,"lat":34.586847},{"id":"zhengzhou.港区北","name":"港区北","nameEn":"Gangqu North","lon":113.832136,"lat":34.585933},{"id":"zhengzhou.康平湖","name":"康平湖","nameEn":"Kangpinghu","lon":113.847036,"lat":34.586},{"id":"zhengzhou.兰河公园","name":"兰河公园","nameEn":"Lanhegongyuan","lon":113.853215,"lat":34.577974},{"id":"zhengzhou.恩平湖","name":"恩平湖","nameEn":"Enpinghu","lon":113.854116,"lat":34.569921},{"id":"zhengzhou.综合保税区","name":"综合保税区","nameEn":"ZONGHE BAOSHUIQU","lon":113.851512,"lat":34.552081},{"id":"zhengzhou.新郑机场","name":"新郑机场","nameEn":"Xinzheng International Airport","lon":113.847314,"lat":34.527035},{"id":"zhengzhou.机场东","name":"机场东","nameEn":"Jichangdong","lon":113.89517,"lat":34.511194},{"id":"zhengzhou.港区会展","name":"港区会展","nameEn":"Gangquhuizhan","lon":113.917788,"lat":34.498634}],"track":[[113.67674,34.64629],[113.67494,34.63278],[113.67764,34.60461],[113.67889,34.60247],[113.6806,34.60162],[113.69357,34.60175],[113.70016,34.59745],[113.7053,34.59494],[113.70829,34.59433],[113.71756,34.5951],[113.77096,34.59519],[113.77454,34.59446],[113.79472,34.58725],[113.83214,34.58593],[113.84824,34.58602],[113.85183,34.58517],[113.85321,34.58304],[113.85322,34.57625],[113.8541,34.5707],[113.85368,34.56143],[113.84953,34.54574],[113.84896,34.54495],[113.84727,34.54461],[113.83638,34.54814],[113.83383,34.54854],[113.83183,34.5481],[113.82935,34.54531],[113.82755,34.53882],[113.82765,34.5367],[113.82878,34.53447],[113.8317,34.53225],[113.91481,34.50433],[113.91708,34.50252],[113.91772,34.50093],[113.91787,34.49125],[113.9185,34.49002],[113.92129,34.48854],[113.93084,34.48861]]},{"id":"zhengzhou.l10","ref":"10","name":"10号线","color":"#BE6254","system":"subway","lengthKm":20.97,"stationCount":12,"stations":[{"id":"zhengzhou.郑州西站","name":"郑州西站","nameEn":"ZHENGZHOUXI RAILWAY STATION","lon":113.421304,"lat":34.750797},{"id":"zhengzhou.李商隐公园","name":"李商隐公园","nameEn":"LISHANGYIN GONGYUAN","lon":113.44058,"lat":34.750493},{"id":"zhengzhou.庙王","name":"庙王","nameEn":"MIAOWANG","lon":113.476161,"lat":34.750228},{"id":"zhengzhou.柳湖","name":"柳湖","nameEn":"Liuhu","lon":113.500417,"lat":34.749038},{"id":"zhengzhou.市委党校","name":"市委党校","nameEn":"Shiwei Dangxiao","lon":113.535369,"lat":34.749007},{"id":"zhengzhou.郑州一中","name":"郑州一中","nameEn":"ZHENGZHOU YIZHONG","lon":113.550553,"lat":34.749097},{"id":"zhengzhou.西流湖公园南","name":"西流湖公园南","nameEn":"XILIUHU GONGYUAN NAN","lon":113.576441,"lat":34.748632},{"id":"zhengzhou.二砂","name":"二砂","nameEn":"ERSHA","lon":113.592301,"lat":34.748646},{"id":"zhengzhou.市中心医院","name":"市中心医院","nameEn":"Zhengzhou Central Hospital","lon":113.608985,"lat":34.748644},{"id":"zhengzhou.绿城广场","name":"绿城广场","nameEn":"LUCHENG GUANGCHANG","lon":113.623646,"lat":34.74827},{"id":"zhengzhou.医学院","name":"医学院","nameEn":"Yixueyuan","lon":113.639476,"lat":34.74588},{"id":"zhengzhou.郑州火车站","name":"郑州火车站","nameEn":"Zhengzhou Railway Station","lon":113.64898,"lat":34.747943}],"track":[[113.4213,34.7508],[113.4772,34.75024],[113.50896,34.74871],[113.55484,34.74912],[113.56411,34.74864],[113.63353,34.7485],[113.63674,34.74615],[113.63828,34.74588],[113.64308,34.74607],[113.64898,34.74794]]},{"id":"zhengzhou.l12","ref":"12","name":"12号线","color":"#1A60A5","system":"subway","lengthKm":16.41,"stationCount":11,"stations":[{"id":"zhengzhou.龙子湖东","name":"龙子湖东","nameEn":"Longzihu Dong","lon":113.820571,"lat":34.795742},{"id":"zhengzhou.龙子湖","name":"龙子湖","nameEn":"Longzihu","lon":113.804114,"lat":34.793871},{"id":"zhengzhou.龙子湖西","name":"龙子湖西","nameEn":"Longzihu Xi","lon":113.787825,"lat":34.794225},{"id":"zhengzhou.高铁公园","name":"高铁公园","nameEn":"Gaotie Gongyuan","lon":113.767849,"lat":34.793917},{"id":"zhengzhou.东风东路","name":"东风东路","nameEn":"Dongfengdong Lu","lon":113.754575,"lat":34.782861},{"id":"zhengzhou.儿童医院","name":"儿童医院","nameEn":"Children's Hospital","lon":113.743857,"lat":34.776168},{"id":"zhengzhou.黄河南路","name":"黄河南路","nameEn":"South Huanghe Road","lon":113.738183,"lat":34.763108},{"id":"zhengzhou.西周","name":"西周","nameEn":"Xizhou","lon":113.74051,"lat":34.749978},{"id":"zhengzhou.经北五路","name":"经北五路","nameEn":"Jingbeiwu Lu","lon":113.740678,"lat":34.731468},{"id":"zhengzhou.福塔东","name":"福塔东","nameEn":"Futa Dong","lon":113.740684,"lat":34.72131},{"id":"zhengzhou.梁湖","name":"梁湖","nameEn":"Lianghu","lon":113.737409,"lat":34.703752}],"track":[[113.82057,34.79574],[113.80515,34.79387],[113.77533,34.79457],[113.76785,34.79392],[113.76499,34.79229],[113.75103,34.78006],[113.73615,34.77268],[113.73609,34.77154],[113.73809,34.76805],[113.73832,34.75492],[113.74043,34.75079],[113.74065,34.74835],[113.74072,34.7172],[113.73767,34.70895],[113.73741,34.70375]]}]}
+{
+  "id": "zhengzhou",
+  "name": "郑州",
+  "province": "河南省",
+  "center": [
+    113.70231,
+    34.68421
+  ],
+  "stats": {
+    "lines": 12,
+    "stations": 277,
+    "lengthKm": 439
+  },
+  "lines": [
+    {
+      "id": "zhengzhou.lZhengxu",
+      "ref": "郑许",
+      "name": "郑许线",
+      "color": "#0B4355",
+      "system": "subway",
+      "lengthKm": 66.74,
+      "stationCount": 26,
+      "stations": [
+        {
+          "id": "zhengzhou.许昌东站",
+          "name": "许昌东站",
+          "nameEn": "Xuchangdong",
+          "lon": 113.879769,
+          "lat": 34.049583
+        },
+        {
+          "id": "zhengzhou.鹿鸣湖",
+          "name": "鹿鸣湖",
+          "nameEn": "Luminghu",
+          "lon": 113.871166,
+          "lat": 34.067773
+        },
+        {
+          "id": "zhengzhou.芙蓉湖",
+          "name": "芙蓉湖",
+          "nameEn": "Furonghu",
+          "lon": 113.856821,
+          "lat": 34.08974
+        },
+        {
+          "id": "zhengzhou.电气谷",
+          "name": "电气谷",
+          "nameEn": "Dianqigu",
+          "lon": 113.84552,
+          "lat": 34.1088
+        },
+        {
+          "id": "zhengzhou.体育中心",
+          "name": "体育中心",
+          "nameEn": "Xuchang Sports Center",
+          "lon": 113.834434,
+          "lat": 34.124213
+        },
+        {
+          "id": "zhengzhou.农大路",
+          "name": "农大路",
+          "nameEn": "Nongda Lu",
+          "lon": 113.826213,
+          "lat": 34.142785
+        },
+        {
+          "id": "zhengzhou.永和路",
+          "name": "永和路",
+          "nameEn": "Yonghe Lu",
+          "lon": 113.8198,
+          "lat": 34.173534
+        },
+        {
+          "id": "zhengzhou.葛天源",
+          "name": "葛天源",
+          "nameEn": "Getianyuan",
+          "lon": 113.815259,
+          "lat": 34.200082
+        },
+        {
+          "id": "zhengzhou.颍川路",
+          "name": "颍川路",
+          "nameEn": "Yingchuan Lu",
+          "lon": 113.812952,
+          "lat": 34.232164
+        },
+        {
+          "id": "zhengzhou.大周",
+          "name": "大周",
+          "nameEn": "Dazhou",
+          "lon": 113.839524,
+          "lat": 34.277307
+        },
+        {
+          "id": "zhengzhou.双庙李",
+          "name": "双庙李",
+          "nameEn": "Shuangmiaoli",
+          "lon": 113.839374,
+          "lat": 34.303977
+        },
+        {
+          "id": "zhengzhou.八千",
+          "name": "八千",
+          "nameEn": "Baqian",
+          "lon": 113.841964,
+          "lat": 34.381798
+        },
+        {
+          "id": "zhengzhou.双鹤湖南",
+          "name": "双鹤湖南",
+          "nameEn": "Shuanghehu Nan",
+          "lon": 113.841924,
+          "lat": 34.393883
+        },
+        {
+          "id": "zhengzhou.双鹤湖",
+          "name": "双鹤湖",
+          "nameEn": "Shuanghehu",
+          "lon": 113.841905,
+          "lat": 34.404409
+        },
+        {
+          "id": "zhengzhou.双鹤湖北",
+          "name": "双鹤湖北",
+          "nameEn": "Shuanghehu Bei",
+          "lon": 113.841903,
+          "lat": 34.413803
+        },
+        {
+          "id": "zhengzhou.龙王南",
+          "name": "龙王南",
+          "nameEn": "Longwang Nan",
+          "lon": 113.841867,
+          "lat": 34.424678
+        },
+        {
+          "id": "zhengzhou.龙王",
+          "name": "龙王",
+          "nameEn": "Longwang",
+          "lon": 113.833815,
+          "lat": 34.443515
+        },
+        {
+          "id": "zhengzhou.洵美路",
+          "name": "洵美路",
+          "nameEn": "Xunmei Lu",
+          "lon": 113.828823,
+          "lat": 34.460482
+        },
+        {
+          "id": "zhengzhou.苑陵故城西",
+          "name": "苑陵故城西",
+          "nameEn": "Yuanlinggucheng Xi",
+          "lon": 113.828788,
+          "lat": 34.468584
+        },
+        {
+          "id": "zhengzhou.遵大路",
+          "name": "遵大路",
+          "nameEn": "Zunda Lu",
+          "lon": 113.83294,
+          "lat": 34.487042
+        },
+        {
+          "id": "zhengzhou.新郑机场",
+          "name": "新郑机场",
+          "nameEn": "XINZHENG INTERNATIONAL AIRPORT",
+          "lon": 113.842723,
+          "lat": 34.527289
+        },
+        {
+          "id": "zhengzhou.翱翔路",
+          "name": "翱翔路",
+          "nameEn": "Aoxiang Lu",
+          "lon": 113.822855,
+          "lat": 34.540828
+        },
+        {
+          "id": "zhengzhou.枣园",
+          "name": "枣园",
+          "nameEn": "Zaoyuan",
+          "lon": 113.827486,
+          "lat": 34.557316
+        },
+        {
+          "id": "zhengzhou.文体中心",
+          "name": "文体中心",
+          "nameEn": "",
+          "lon": 113.830199,
+          "lat": 34.569901
+        },
+        {
+          "id": "zhengzhou.港区北",
+          "name": "港区北",
+          "nameEn": "Gangqu North",
+          "lon": 113.830567,
+          "lat": 34.586683
+        },
+        {
+          "id": "zhengzhou.长安路北",
+          "name": "长安路北",
+          "nameEn": "Chang'an Lu Bei",
+          "lon": 113.840639,
+          "lat": 34.597845
+        }
+      ],
+      "track": [
+        [
+          113.87977,
+          34.04958
+        ],
+        [
+          113.87854,
+          34.06167
+        ],
+        [
+          113.87741,
+          34.06444
+        ],
+        [
+          113.87378,
+          34.06761
+        ],
+        [
+          113.8684,
+          34.06776
+        ],
+        [
+          113.86711,
+          34.0683
+        ],
+        [
+          113.86556,
+          34.07263
+        ],
+        [
+          113.85897,
+          34.08594
+        ],
+        [
+          113.84715,
+          34.10656
+        ],
+        [
+          113.82831,
+          34.13324
+        ],
+        [
+          113.81587,
+          34.19184
+        ],
+        [
+          113.81311,
+          34.22782
+        ],
+        [
+          113.81259,
+          34.24658
+        ],
+        [
+          113.81309,
+          34.24834
+        ],
+        [
+          113.83699,
+          34.27083
+        ],
+        [
+          113.8389,
+          34.27338
+        ],
+        [
+          113.83948,
+          34.27562
+        ],
+        [
+          113.8398,
+          34.34827
+        ],
+        [
+          113.84198,
+          34.37357
+        ],
+        [
+          113.84184,
+          34.43124
+        ],
+        [
+          113.84148,
+          34.43206
+        ],
+        [
+          113.83501,
+          34.43423
+        ],
+        [
+          113.83482,
+          34.43931
+        ],
+        [
+          113.83382,
+          34.44352
+        ],
+        [
+          113.82903,
+          34.45116
+        ],
+        [
+          113.82867,
+          34.48483
+        ],
+        [
+          113.82964,
+          34.48669
+        ],
+        [
+          113.8352,
+          34.48712
+        ],
+        [
+          113.83696,
+          34.48849
+        ],
+        [
+          113.8414,
+          34.50385
+        ],
+        [
+          113.84424,
+          34.52303
+        ],
+        [
+          113.84355,
+          34.52595
+        ],
+        [
+          113.84162,
+          34.52845
+        ],
+        [
+          113.82376,
+          34.53483
+        ],
+        [
+          113.82262,
+          34.5356
+        ],
+        [
+          113.82206,
+          34.53705
+        ],
+        [
+          113.83,
+          34.56746
+        ],
+        [
+          113.83056,
+          34.59466
+        ],
+        [
+          113.83336,
+          34.59742
+        ],
+        [
+          113.84064,
+          34.59784
+        ]
+      ]
+    },
+    {
+      "id": "zhengzhou.l3",
+      "ref": "3",
+      "name": "3号线",
+      "color": "#F39939",
+      "system": "subway",
+      "lengthKm": 31.22,
+      "stationCount": 25,
+      "stations": [
+        {
+          "id": "zhengzhou.省体育中心",
+          "name": "省体育中心",
+          "nameEn": "Henan Sports Center",
+          "lon": 113.619852,
+          "lat": 34.834838
+        },
+        {
+          "id": "zhengzhou.王砦",
+          "name": "王砦",
+          "nameEn": "Wangzhai",
+          "lon": 113.619838,
+          "lat": 34.821088
+        },
+        {
+          "id": "zhengzhou.兴隆铺",
+          "name": "兴隆铺",
+          "nameEn": "Xinglongpu",
+          "lon": 113.621984,
+          "lat": 34.807923
+        },
+        {
+          "id": "zhengzhou.同乐",
+          "name": "同乐",
+          "nameEn": "Tongle",
+          "lon": 113.629725,
+          "lat": 34.796251
+        },
+        {
+          "id": "zhengzhou.南阳新村",
+          "name": "南阳新村",
+          "nameEn": "Nanyangxincun",
+          "lon": 113.636296,
+          "lat": 34.786625
+        },
+        {
+          "id": "zhengzhou.海滩寺",
+          "name": "海滩寺",
+          "nameEn": "Haitansi",
+          "lon": 113.64334,
+          "lat": 34.775601
+        },
+        {
+          "id": "zhengzhou.大石桥",
+          "name": "大石桥",
+          "nameEn": "Dashiqiao",
+          "lon": 113.649702,
+          "lat": 34.766426
+        },
+        {
+          "id": "zhengzhou.人民公园",
+          "name": "人民公园",
+          "nameEn": "People's Park",
+          "lon": 113.653841,
+          "lat": 34.759346
+        },
+        {
+          "id": "zhengzhou.二七广场",
+          "name": "二七广场",
+          "nameEn": "Erqi Square",
+          "lon": 113.658258,
+          "lat": 34.75372
+        },
+        {
+          "id": "zhengzhou.西大街",
+          "name": "西大街",
+          "nameEn": "Xidajie",
+          "lon": 113.671334,
+          "lat": 34.751122
+        },
+        {
+          "id": "zhengzhou.东大街",
+          "name": "东大街",
+          "nameEn": "Dongdajie",
+          "lon": 113.677439,
+          "lat": 34.749718
+        },
+        {
+          "id": "zhengzhou.郑州文庙",
+          "name": "郑州文庙",
+          "nameEn": "Zhengzhouwenmiao",
+          "lon": 113.685343,
+          "lat": 34.747996
+        },
+        {
+          "id": "zhengzhou.博览中心",
+          "name": "博览中心",
+          "nameEn": "Bolanzhongxin",
+          "lon": 113.698084,
+          "lat": 34.747937
+        },
+        {
+          "id": "zhengzhou.凤凰台",
+          "name": "凤凰台",
+          "nameEn": "Fenghuangtai",
+          "lon": 113.707607,
+          "lat": 34.747874
+        },
+        {
+          "id": "zhengzhou.东十里铺",
+          "name": "东十里铺",
+          "nameEn": "Dongshilipu",
+          "lon": 113.719663,
+          "lat": 34.747896
+        },
+        {
+          "id": "zhengzhou.通泰路",
+          "name": "通泰路",
+          "nameEn": "Tongtailu",
+          "lon": 113.72793,
+          "lat": 34.748985
+        },
+        {
+          "id": "zhengzhou.西周",
+          "name": "西周",
+          "nameEn": "Xizhou",
+          "lon": 113.74089,
+          "lat": 34.748822
+        },
+        {
+          "id": "zhengzhou.东周",
+          "name": "东周",
+          "nameEn": "Dongzhou",
+          "lon": 113.752523,
+          "lat": 34.747478
+        },
+        {
+          "id": "zhengzhou.省骨科医院",
+          "name": "省骨科医院",
+          "nameEn": "Henan Orthopaedics Hospital",
+          "lon": 113.768082,
+          "lat": 34.745379
+        },
+        {
+          "id": "zhengzhou.圃田西",
+          "name": "圃田西",
+          "nameEn": "Putianxi",
+          "lon": 113.787395,
+          "lat": 34.742869
+        },
+        {
+          "id": "zhengzhou.营岗",
+          "name": "营岗",
+          "nameEn": "Yinggang",
+          "lon": 113.796103,
+          "lat": 34.721596
+        },
+        {
+          "id": "zhengzhou.潮河",
+          "name": "潮河",
+          "nameEn": "Chaohe",
+          "lon": 113.788946,
+          "lat": 34.696687
+        },
+        {
+          "id": "zhengzhou.滨河新城",
+          "name": "滨河新城",
+          "nameEn": "BINHE XINCHENG",
+          "lon": 113.788947,
+          "lat": 34.688986
+        },
+        {
+          "id": "zhengzhou.司赵",
+          "name": "司赵",
+          "nameEn": "Sizhao",
+          "lon": 113.788976,
+          "lat": 34.678066
+        },
+        {
+          "id": "zhengzhou.滨河新城南",
+          "name": "滨河新城南",
+          "nameEn": "Binhe Xincheng Nan",
+          "lon": 113.788978,
+          "lat": 34.669104
+        }
+      ],
+      "track": [
+        [
+          113.61985,
+          34.83484
+        ],
+        [
+          113.61988,
+          34.81875
+        ],
+        [
+          113.61922,
+          34.812
+        ],
+        [
+          113.64157,
+          34.77943
+        ],
+        [
+          113.64597,
+          34.76993
+        ],
+        [
+          113.65348,
+          34.76194
+        ],
+        [
+          113.65397,
+          34.75622
+        ],
+        [
+          113.65502,
+          34.7545
+        ],
+        [
+          113.68534,
+          34.748
+        ],
+        [
+          113.71966,
+          34.7479
+        ],
+        [
+          113.73397,
+          34.74972
+        ],
+        [
+          113.7921,
+          34.74234
+        ],
+        [
+          113.7949,
+          34.74142
+        ],
+        [
+          113.79553,
+          34.74015
+        ],
+        [
+          113.79607,
+          34.72952
+        ],
+        [
+          113.79609,
+          34.70843
+        ],
+        [
+          113.78962,
+          34.70494
+        ],
+        [
+          113.7889,
+          34.70341
+        ],
+        [
+          113.78898,
+          34.6691
+        ]
+      ]
+    },
+    {
+      "id": "zhengzhou.l1",
+      "ref": "1",
+      "name": "1号线",
+      "color": "#E60012",
+      "system": "subway",
+      "lengthKm": 40.18,
+      "stationCount": 30,
+      "stations": [
+        {
+          "id": "zhengzhou.河南工业大学",
+          "name": "河南工业大学",
+          "nameEn": "Henan University of Technology",
+          "lon": 113.536088,
+          "lat": 34.828382
+        },
+        {
+          "id": "zhengzhou.郑大科技园",
+          "name": "郑大科技园",
+          "nameEn": "Zhengzhou University Sci-Tech Park",
+          "lon": 113.535657,
+          "lat": 34.818143
+        },
+        {
+          "id": "zhengzhou.郑州大学",
+          "name": "郑州大学",
+          "nameEn": "Zhengzhou University",
+          "lon": 113.535266,
+          "lat": 34.808817
+        },
+        {
+          "id": "zhengzhou.梧桐街",
+          "name": "梧桐街",
+          "nameEn": "Wutongjie",
+          "lon": 113.534794,
+          "lat": 34.795402
+        },
+        {
+          "id": "zhengzhou.兰寨",
+          "name": "兰寨",
+          "nameEn": "Lanzhai",
+          "lon": 113.534818,
+          "lat": 34.784909
+        },
+        {
+          "id": "zhengzhou.铁炉",
+          "name": "铁炉",
+          "nameEn": "Tielu",
+          "lon": 113.53478,
+          "lat": 34.76896
+        },
+        {
+          "id": "zhengzhou.市民中心",
+          "name": "市民中心",
+          "nameEn": "Civic Center",
+          "lon": 113.547985,
+          "lat": 34.763645
+        },
+        {
+          "id": "zhengzhou.西流湖",
+          "name": "西流湖",
+          "nameEn": "Xiliuhu",
+          "lon": 113.564108,
+          "lat": 34.762281
+        },
+        {
+          "id": "zhengzhou.西三环",
+          "name": "西三环",
+          "nameEn": "Xisanhuan",
+          "lon": 113.582175,
+          "lat": 34.761495
+        },
+        {
+          "id": "zhengzhou.秦岭路",
+          "name": "秦岭路",
+          "nameEn": "Qinling Road",
+          "lon": 113.597351,
+          "lat": 34.757897
+        },
+        {
+          "id": "zhengzhou.五一公园",
+          "name": "五一公园",
+          "nameEn": "WUYI GONGYUAN",
+          "lon": 113.607568,
+          "lat": 34.757012
+        },
+        {
+          "id": "zhengzhou.碧沙岗",
+          "name": "碧沙岗",
+          "nameEn": "Bishagang",
+          "lon": 113.618275,
+          "lat": 34.756347
+        },
+        {
+          "id": "zhengzhou.绿城广场",
+          "name": "绿城广场",
+          "nameEn": "LUCHENG GUANGCHANG",
+          "lon": 113.62704,
+          "lat": 34.748666
+        },
+        {
+          "id": "zhengzhou.医学院",
+          "name": "医学院",
+          "nameEn": "Yixueyuan",
+          "lon": 113.636912,
+          "lat": 34.748692
+        },
+        {
+          "id": "zhengzhou.郑州火车站",
+          "name": "郑州火车站",
+          "nameEn": "Zhengzhou Railway Station",
+          "lon": 113.650067,
+          "lat": 34.747394
+        },
+        {
+          "id": "zhengzhou.二七广场",
+          "name": "二七广场",
+          "nameEn": "Erqi Square",
+          "lon": 113.659781,
+          "lat": 34.753604
+        },
+        {
+          "id": "zhengzhou.人民路",
+          "name": "人民路",
+          "nameEn": "RENMIN LU",
+          "lon": 113.66725,
+          "lat": 34.758229
+        },
+        {
+          "id": "zhengzhou.紫荆山",
+          "name": "紫荆山",
+          "nameEn": "Zijingshan",
+          "lon": 113.677437,
+          "lat": 34.763002
+        },
+        {
+          "id": "zhengzhou.燕庄",
+          "name": "燕庄",
+          "nameEn": "Yanzhuang",
+          "lon": 113.696827,
+          "lat": 34.764608
+        },
+        {
+          "id": "zhengzhou.民航路",
+          "name": "民航路",
+          "nameEn": "Minhang Road",
+          "lon": 113.707572,
+          "lat": 34.764036
+        },
+        {
+          "id": "zhengzhou.会展中心",
+          "name": "会展中心",
+          "nameEn": "Convention and Exhibition Center",
+          "lon": 113.719377,
+          "lat": 34.767453
+        },
+        {
+          "id": "zhengzhou.黄河南路",
+          "name": "黄河南路",
+          "nameEn": "South Huanghe Road",
+          "lon": 113.738277,
+          "lat": 34.76377
+        },
+        {
+          "id": "zhengzhou.农业南路",
+          "name": "农业南路",
+          "nameEn": "NONGYE NANLU",
+          "lon": 113.748928,
+          "lat": 34.766417
+        },
+        {
+          "id": "zhengzhou.东风南路",
+          "name": "东风南路",
+          "nameEn": "DONGFENG NANLU",
+          "lon": 113.760311,
+          "lat": 34.765646
+        },
+        {
+          "id": "zhengzhou.郑州东站",
+          "name": "郑州东站",
+          "nameEn": "Zhengzhoudong Station",
+          "lon": 113.770791,
+          "lat": 34.760106
+        },
+        {
+          "id": "zhengzhou.博学路",
+          "name": "博学路",
+          "nameEn": "Boxue Road",
+          "lon": 113.787027,
+          "lat": 34.760868
+        },
+        {
+          "id": "zhengzhou.市体育中心",
+          "name": "市体育中心",
+          "nameEn": "ZHENGZHOU SPORTS CENTER",
+          "lon": 113.804346,
+          "lat": 34.77449
+        },
+        {
+          "id": "zhengzhou.龙子湖",
+          "name": "龙子湖",
+          "nameEn": "Longzihu",
+          "lon": 113.804251,
+          "lat": 34.793854
+        },
+        {
+          "id": "zhengzhou.文苑北路",
+          "name": "文苑北路",
+          "nameEn": "Wenyuanbeilu",
+          "lon": 113.805842,
+          "lat": 34.809047
+        },
+        {
+          "id": "zhengzhou.河南大学新区",
+          "name": "河南大学新区",
+          "nameEn": "New Campus of Henan University",
+          "lon": 113.806606,
+          "lat": 34.819928
+        }
+      ],
+      "track": [
+        [
+          113.53609,
+          34.82838
+        ],
+        [
+          113.53476,
+          34.80257
+        ],
+        [
+          113.53479,
+          34.7669
+        ],
+        [
+          113.53656,
+          34.76456
+        ],
+        [
+          113.53978,
+          34.76364
+        ],
+        [
+          113.54798,
+          34.76364
+        ],
+        [
+          113.56411,
+          34.76228
+        ],
+        [
+          113.5762,
+          34.76291
+        ],
+        [
+          113.59735,
+          34.7579
+        ],
+        [
+          113.62163,
+          34.75596
+        ],
+        [
+          113.62283,
+          34.75467
+        ],
+        [
+          113.62417,
+          34.74937
+        ],
+        [
+          113.6251,
+          34.74876
+        ],
+        [
+          113.64051,
+          34.74866
+        ],
+        [
+          113.64754,
+          34.7469
+        ],
+        [
+          113.6551,
+          34.74921
+        ],
+        [
+          113.65713,
+          34.7527
+        ],
+        [
+          113.66183,
+          34.75422
+        ],
+        [
+          113.67288,
+          34.76229
+        ],
+        [
+          113.6756,
+          34.76309
+        ],
+        [
+          113.68079,
+          34.76286
+        ],
+        [
+          113.68452,
+          34.76443
+        ],
+        [
+          113.69683,
+          34.76461
+        ],
+        [
+          113.70642,
+          34.76374
+        ],
+        [
+          113.71547,
+          34.76744
+        ],
+        [
+          113.72067,
+          34.76755
+        ],
+        [
+          113.7224,
+          34.76691
+        ],
+        [
+          113.72676,
+          34.7624
+        ],
+        [
+          113.73009,
+          34.76169
+        ],
+        [
+          113.75621,
+          34.76796
+        ],
+        [
+          113.75956,
+          34.76696
+        ],
+        [
+          113.76224,
+          34.76188
+        ],
+        [
+          113.76385,
+          34.76063
+        ],
+        [
+          113.76594,
+          34.76005
+        ],
+        [
+          113.79616,
+          34.76127
+        ],
+        [
+          113.79854,
+          34.76181
+        ],
+        [
+          113.80067,
+          34.76402
+        ],
+        [
+          113.80279,
+          34.76799
+        ],
+        [
+          113.80425,
+          34.77301
+        ],
+        [
+          113.80406,
+          34.79896
+        ],
+        [
+          113.80648,
+          34.81296
+        ],
+        [
+          113.80661,
+          34.81993
+        ]
+      ]
+    },
+    {
+      "id": "zhengzhou.l2",
+      "ref": "2",
+      "name": "2号线",
+      "color": "#FFF100",
+      "system": "subway",
+      "lengthKm": 31.85,
+      "stationCount": 22,
+      "stations": [
+        {
+          "id": "zhengzhou.南四环",
+          "name": "南四环",
+          "nameEn": "Nansihuan",
+          "lon": 113.675742,
+          "lat": 34.66405
+        },
+        {
+          "id": "zhengzhou.站马屯",
+          "name": "站马屯",
+          "nameEn": "Zhanmatun",
+          "lon": 113.676093,
+          "lat": 34.684819
+        },
+        {
+          "id": "zhengzhou.南三环",
+          "name": "南三环",
+          "nameEn": "Nansanhuan",
+          "lon": 113.676247,
+          "lat": 34.699645
+        },
+        {
+          "id": "zhengzhou.花寨",
+          "name": "花寨",
+          "nameEn": "Huazhai",
+          "lon": 113.676164,
+          "lat": 34.707311
+        },
+        {
+          "id": "zhengzhou.南五里堡",
+          "name": "南五里堡",
+          "nameEn": "Nanwulibao",
+          "lon": 113.675872,
+          "lat": 34.721412
+        },
+        {
+          "id": "zhengzhou.二里岗",
+          "name": "二里岗",
+          "nameEn": "Erligang",
+          "lon": 113.675774,
+          "lat": 34.730212
+        },
+        {
+          "id": "zhengzhou.陇海东路",
+          "name": "陇海东路",
+          "nameEn": "Longhaidonglu",
+          "lon": 113.676019,
+          "lat": 34.740353
+        },
+        {
+          "id": "zhengzhou.东大街",
+          "name": "东大街",
+          "nameEn": "Dongdajie",
+          "lon": 113.675974,
+          "lat": 34.749753
+        },
+        {
+          "id": "zhengzhou.紫荆山",
+          "name": "紫荆山",
+          "nameEn": "Zijingshan",
+          "lon": 113.675969,
+          "lat": 34.763065
+        },
+        {
+          "id": "zhengzhou.黄河路",
+          "name": "黄河路",
+          "nameEn": "Huanghelu",
+          "lon": 113.676126,
+          "lat": 34.775469
+        },
+        {
+          "id": "zhengzhou.关虎屯",
+          "name": "关虎屯",
+          "nameEn": "Guanhutun",
+          "lon": 113.675732,
+          "lat": 34.790089
+        },
+        {
+          "id": "zhengzhou.东风路",
+          "name": "东风路",
+          "nameEn": "DONGFENG LU",
+          "lon": 113.67573,
+          "lat": 34.796864
+        },
+        {
+          "id": "zhengzhou.北三环",
+          "name": "北三环",
+          "nameEn": "Beisanhuan",
+          "lon": 113.675629,
+          "lat": 34.807149
+        },
+        {
+          "id": "zhengzhou.沙门",
+          "name": "沙门",
+          "nameEn": "Shamen",
+          "lon": 113.675683,
+          "lat": 34.821172
+        },
+        {
+          "id": "zhengzhou.柳林",
+          "name": "柳林",
+          "nameEn": "Liulin",
+          "lon": 113.67505,
+          "lat": 34.83005
+        },
+        {
+          "id": "zhengzhou.刘庄",
+          "name": "刘庄",
+          "nameEn": "Liuzhuang",
+          "lon": 113.672954,
+          "lat": 34.845085
+        },
+        {
+          "id": "zhengzhou.金达路",
+          "name": "金达路",
+          "nameEn": "JINDA LU",
+          "lon": 113.672753,
+          "lat": 34.863366
+        },
+        {
+          "id": "zhengzhou.金洼",
+          "name": "金洼",
+          "nameEn": "Jinwa",
+          "lon": 113.656551,
+          "lat": 34.867756
+        },
+        {
+          "id": "zhengzhou.黄河迎宾馆",
+          "name": "黄河迎宾馆",
+          "nameEn": "Huangheyingbinguan",
+          "lon": 113.638559,
+          "lat": 34.868419
+        },
+        {
+          "id": "zhengzhou.毛庄",
+          "name": "毛庄",
+          "nameEn": "Maozhuang",
+          "lon": 113.620097,
+          "lat": 34.867838
+        },
+        {
+          "id": "zhengzhou.惠济区政府",
+          "name": "惠济区政府",
+          "nameEn": "HUIJI QU ZHENGFU",
+          "lon": 113.606701,
+          "lat": 34.867185
+        },
+        {
+          "id": "zhengzhou.贾河",
+          "name": "贾河",
+          "nameEn": "Jiahe",
+          "lon": 113.587068,
+          "lat": 34.868188
+        }
+      ],
+      "track": [
+        [
+          113.67574,
+          34.66405
+        ],
+        [
+          113.67625,
+          34.69965
+        ],
+        [
+          113.67551,
+          34.72748
+        ],
+        [
+          113.67614,
+          34.78061
+        ],
+        [
+          113.67541,
+          34.81689
+        ],
+        [
+          113.67619,
+          34.82651
+        ],
+        [
+          113.67221,
+          34.83834
+        ],
+        [
+          113.67441,
+          34.85963
+        ],
+        [
+          113.67168,
+          34.86631
+        ],
+        [
+          113.67062,
+          34.86743
+        ],
+        [
+          113.6689,
+          34.86785
+        ],
+        [
+          113.65473,
+          34.86773
+        ],
+        [
+          113.62746,
+          34.86885
+        ],
+        [
+          113.6145,
+          34.86669
+        ],
+        [
+          113.58338,
+          34.86836
+        ],
+        [
+          113.58107,
+          34.86915
+        ],
+        [
+          113.57506,
+          34.87494
+        ]
+      ]
+    },
+    {
+      "id": "zhengzhou.l4",
+      "ref": "4",
+      "name": "4号线",
+      "color": "#00A0E9",
+      "system": "subway",
+      "lengthKm": 29.03,
+      "stationCount": 26,
+      "stations": [
+        {
+          "id": "zhengzhou.老鸦陈",
+          "name": "老鸦陈",
+          "nameEn": "Laoyachen",
+          "lon": 113.610684,
+          "lat": 34.833856
+        },
+        {
+          "id": "zhengzhou.省体育中心",
+          "name": "省体育中心",
+          "nameEn": "Henan Sports Center",
+          "lon": 113.620851,
+          "lat": 34.833456
+        },
+        {
+          "id": "zhengzhou.北二十里铺",
+          "name": "北二十里铺",
+          "nameEn": "Beiershilipu",
+          "lon": 113.634767,
+          "lat": 34.831902
+        },
+        {
+          "id": "zhengzhou.丰庆路",
+          "name": "丰庆路",
+          "nameEn": "Fengqinglu",
+          "lon": 113.648025,
+          "lat": 34.830869
+        },
+        {
+          "id": "zhengzhou.张家村",
+          "name": "张家村",
+          "nameEn": "Zhangjiacun",
+          "lon": 113.655215,
+          "lat": 34.825403
+        },
+        {
+          "id": "zhengzhou.陈寨东",
+          "name": "陈寨东",
+          "nameEn": "Chenzhaidong",
+          "lon": 113.663707,
+          "lat": 34.820547
+        },
+        {
+          "id": "zhengzhou.沙门",
+          "name": "沙门",
+          "nameEn": "Shamen",
+          "lon": 113.677212,
+          "lat": 34.82038
+        },
+        {
+          "id": "zhengzhou.杨君刘",
+          "name": "杨君刘",
+          "nameEn": "Yangjunliu",
+          "lon": 113.692175,
+          "lat": 34.820515
+        },
+        {
+          "id": "zhengzhou.森林公园北",
+          "name": "森林公园北",
+          "nameEn": "Senlingongyuanbei",
+          "lon": 113.697614,
+          "lat": 34.827297
+        },
+        {
+          "id": "zhengzhou.清华附中",
+          "name": "清华附中",
+          "nameEn": "Qinghuafuzhong",
+          "lon": 113.707628,
+          "lat": 34.830553
+        },
+        {
+          "id": "zhengzhou.龙湖中环北",
+          "name": "龙湖中环北",
+          "nameEn": "Longhuzhonghuanbei",
+          "lon": 113.719914,
+          "lat": 34.83047
+        },
+        {
+          "id": "zhengzhou.龙湖北",
+          "name": "龙湖北",
+          "nameEn": "Longhubei",
+          "lon": 113.728633,
+          "lat": 34.825238
+        },
+        {
+          "id": "zhengzhou.金融岛南",
+          "name": "金融岛南",
+          "nameEn": "Jinrongdao Nan",
+          "lon": 113.730946,
+          "lat": 34.810296
+        },
+        {
+          "id": "zhengzhou.龙湖南",
+          "name": "龙湖南",
+          "nameEn": "Longhunan",
+          "lon": 113.732492,
+          "lat": 34.803129
+        },
+        {
+          "id": "zhengzhou.龙湖中环南",
+          "name": "龙湖中环南",
+          "nameEn": "Longhuzhonghuannan",
+          "lon": 113.732466,
+          "lat": 34.791908
+        },
+        {
+          "id": "zhengzhou.农业东路",
+          "name": "农业东路",
+          "nameEn": "Nongyedonglu",
+          "lon": 113.729032,
+          "lat": 34.784985
+        },
+        {
+          "id": "zhengzhou.中央商务区",
+          "name": "中央商务区",
+          "nameEn": "Central Business District",
+          "lon": 113.723243,
+          "lat": 34.779097
+        },
+        {
+          "id": "zhengzhou.会展中心",
+          "name": "会展中心",
+          "nameEn": "Convention and Exhibition Center",
+          "lon": 113.719258,
+          "lat": 34.768055
+        },
+        {
+          "id": "zhengzhou.商鼎路",
+          "name": "商鼎路",
+          "nameEn": "Shangdinglu",
+          "lon": 113.719953,
+          "lat": 34.755948
+        },
+        {
+          "id": "zhengzhou.东十里铺",
+          "name": "东十里铺",
+          "nameEn": "Dongshilipu",
+          "lon": 113.719504,
+          "lat": 34.748524
+        },
+        {
+          "id": "zhengzhou.货站街",
+          "name": "货站街",
+          "nameEn": "Huozhanjie",
+          "lon": 113.719477,
+          "lat": 34.741972
+        },
+        {
+          "id": "zhengzhou.七里河",
+          "name": "七里河",
+          "nameEn": "Qilihe",
+          "lon": 113.715867,
+          "lat": 34.722402
+        },
+        {
+          "id": "zhengzhou.果树所",
+          "name": "果树所",
+          "nameEn": "Guoshusuo",
+          "lon": 113.715928,
+          "lat": 34.712805
+        },
+        {
+          "id": "zhengzhou.金岱",
+          "name": "金岱",
+          "nameEn": "Jindai",
+          "lon": 113.72067,
+          "lat": 34.701435
+        },
+        {
+          "id": "zhengzhou.姚庄",
+          "name": "姚庄",
+          "nameEn": "Yaozhuang",
+          "lon": 113.727682,
+          "lat": 34.691592
+        },
+        {
+          "id": "zhengzhou.郎庄",
+          "name": "郎庄",
+          "nameEn": "Langzhuang",
+          "lon": 113.732549,
+          "lat": 34.68628
+        }
+      ],
+      "track": [
+        [
+          113.61068,
+          34.83386
+        ],
+        [
+          113.61701,
+          34.83392
+        ],
+        [
+          113.65224,
+          34.83056
+        ],
+        [
+          113.65305,
+          34.83013
+        ],
+        [
+          113.65762,
+          34.82104
+        ],
+        [
+          113.65996,
+          34.82044
+        ],
+        [
+          113.68617,
+          34.82002
+        ],
+        [
+          113.69469,
+          34.82072
+        ],
+        [
+          113.69675,
+          34.82208
+        ],
+        [
+          113.69677,
+          34.82588
+        ],
+        [
+          113.69824,
+          34.82825
+        ],
+        [
+          113.70099,
+          34.82981
+        ],
+        [
+          113.7038,
+          34.83044
+        ],
+        [
+          113.72456,
+          34.8304
+        ],
+        [
+          113.72673,
+          34.82998
+        ],
+        [
+          113.72788,
+          34.82903
+        ],
+        [
+          113.72866,
+          34.82632
+        ],
+        [
+          113.72913,
+          34.81621
+        ],
+        [
+          113.73019,
+          34.81146
+        ],
+        [
+          113.73205,
+          34.80744
+        ],
+        [
+          113.73268,
+          34.79302
+        ],
+        [
+          113.73157,
+          34.7889
+        ],
+        [
+          113.72809,
+          34.78365
+        ],
+        [
+          113.72381,
+          34.7805
+        ],
+        [
+          113.71912,
+          34.76988
+        ],
+        [
+          113.72,
+          34.75951
+        ],
+        [
+          113.71934,
+          34.73332
+        ],
+        [
+          113.71598,
+          34.72381
+        ],
+        [
+          113.71559,
+          34.70913
+        ],
+        [
+          113.71723,
+          34.70475
+        ],
+        [
+          113.7233,
+          34.69888
+        ],
+        [
+          113.72797,
+          34.69115
+        ],
+        [
+          113.73255,
+          34.68628
+        ]
+      ]
+    },
+    {
+      "id": "zhengzhou.l5",
+      "ref": "5",
+      "name": "5号线",
+      "color": "#5C2D91",
+      "system": "subway",
+      "lengthKm": 40.34,
+      "stationCount": 32,
+      "stations": [
+        {
+          "id": "zhengzhou.姚砦",
+          "name": "姚砦",
+          "nameEn": "Yaozhai",
+          "lon": 113.702477,
+          "lat": 34.775376
+        },
+        {
+          "id": "zhengzhou.众意西路",
+          "name": "众意西路",
+          "nameEn": "Zhongyixilu",
+          "lon": 113.712289,
+          "lat": 34.777398
+        },
+        {
+          "id": "zhengzhou.中央商务区",
+          "name": "中央商务区",
+          "nameEn": "Central Business District",
+          "lon": 113.725544,
+          "lat": 34.779078
+        },
+        {
+          "id": "zhengzhou.儿童医院",
+          "name": "儿童医院",
+          "nameEn": "Children's Hospital",
+          "lon": 113.74481,
+          "lat": 34.777629
+        },
+        {
+          "id": "zhengzhou.祭城",
+          "name": "祭城",
+          "nameEn": "Zhacheng",
+          "lon": 113.761015,
+          "lat": 34.777518
+        },
+        {
+          "id": "zhengzhou.金水东路",
+          "name": "金水东路",
+          "nameEn": "Jinshuidonglu",
+          "lon": 113.764806,
+          "lat": 34.770013
+        },
+        {
+          "id": "zhengzhou.郑州东站",
+          "name": "郑州东站",
+          "nameEn": "Zhengzhou East Railway Station",
+          "lon": 113.769591,
+          "lat": 34.759994
+        },
+        {
+          "id": "zhengzhou.康宁街",
+          "name": "康宁街",
+          "nameEn": "Kangningjie",
+          "lon": 113.767638,
+          "lat": 34.751735
+        },
+        {
+          "id": "zhengzhou.省骨科医院",
+          "name": "省骨科医院",
+          "nameEn": "Henan Orthopaedics Hospital",
+          "lon": 113.767687,
+          "lat": 34.74647
+        },
+        {
+          "id": "zhengzhou.经北二路",
+          "name": "经北二路",
+          "nameEn": "Jingbeierlu",
+          "lon": 113.767453,
+          "lat": 34.72773
+        },
+        {
+          "id": "zhengzhou.经开中心广场",
+          "name": "经开中心广场",
+          "nameEn": "Jingkaizhongxinguangchang",
+          "lon": 113.758272,
+          "lat": 34.722086
+        },
+        {
+          "id": "zhengzhou.福塔东",
+          "name": "福塔东",
+          "nameEn": "Futa Dong",
+          "lon": 113.741009,
+          "lat": 34.72194
+        },
+        {
+          "id": "zhengzhou.中原福塔",
+          "name": "中原福塔",
+          "nameEn": "Zhongyuan Tower",
+          "lon": 113.726407,
+          "lat": 34.721995
+        },
+        {
+          "id": "zhengzhou.七里河",
+          "name": "七里河",
+          "nameEn": "Qilihe",
+          "lon": 113.716358,
+          "lat": 34.72199
+        },
+        {
+          "id": "zhengzhou.航海广场",
+          "name": "航海广场",
+          "nameEn": "Hanghaiguangchang",
+          "lon": 113.700243,
+          "lat": 34.721988
+        },
+        {
+          "id": "zhengzhou.城东南路",
+          "name": "城东南路",
+          "nameEn": "Chengdongnanlu",
+          "lon": 113.683426,
+          "lat": 34.721952
+        },
+        {
+          "id": "zhengzhou.南五里堡",
+          "name": "南五里堡",
+          "nameEn": "Nanwulibao",
+          "lon": 113.676125,
+          "lat": 34.72166
+        },
+        {
+          "id": "zhengzhou.冯庄",
+          "name": "冯庄",
+          "nameEn": "Fengzhuang",
+          "lon": 113.661273,
+          "lat": 34.721615
+        },
+        {
+          "id": "zhengzhou.京广南路",
+          "name": "京广南路",
+          "nameEn": "Jingguangnanlu",
+          "lon": 113.650668,
+          "lat": 34.721571
+        },
+        {
+          "id": "zhengzhou.市第二人民医院",
+          "name": "市第二人民医院",
+          "nameEn": "Zhengzhou No.2 People's Hospital",
+          "lon": 113.637388,
+          "lat": 34.721544
+        },
+        {
+          "id": "zhengzhou.齐礼阎",
+          "name": "齐礼阎",
+          "nameEn": "Qiliyan",
+          "lon": 113.621908,
+          "lat": 34.721869
+        },
+        {
+          "id": "zhengzhou.后河芦",
+          "name": "后河芦",
+          "nameEn": "Houhelu",
+          "lon": 113.612605,
+          "lat": 34.721246
+        },
+        {
+          "id": "zhengzhou.桐淮",
+          "name": "桐淮",
+          "nameEn": "Tonghuai",
+          "lon": 113.607559,
+          "lat": 34.730292
+        },
+        {
+          "id": "zhengzhou.陇海西路",
+          "name": "陇海西路",
+          "nameEn": "LONGHAI XILU",
+          "lon": 113.607539,
+          "lat": 34.738064
+        },
+        {
+          "id": "zhengzhou.市中心医院",
+          "name": "市中心医院",
+          "nameEn": "Zhengzhou Central Hospital",
+          "lon": 113.607534,
+          "lat": 34.747717
+        },
+        {
+          "id": "zhengzhou.五一公园",
+          "name": "五一公园",
+          "nameEn": "WUYI GONGYUAN",
+          "lon": 113.607525,
+          "lat": 34.756963
+        },
+        {
+          "id": "zhengzhou.月季公园",
+          "name": "月季公园",
+          "nameEn": "YUEJI GONGYUAN",
+          "lon": 113.615762,
+          "lat": 34.766633
+        },
+        {
+          "id": "zhengzhou.沙口路",
+          "name": "沙口路",
+          "nameEn": "Shakoulu",
+          "lon": 113.633996,
+          "lat": 34.771431
+        },
+        {
+          "id": "zhengzhou.海滩寺",
+          "name": "海滩寺",
+          "nameEn": "Haitansi",
+          "lon": 113.644648,
+          "lat": 34.775454
+        },
+        {
+          "id": "zhengzhou.郑州人民医院",
+          "name": "郑州人民医院",
+          "nameEn": "Zhengzhou People's Hospital",
+          "lon": 113.660953,
+          "lat": 34.775719
+        },
+        {
+          "id": "zhengzhou.黄河路",
+          "name": "黄河路",
+          "nameEn": "Huanghelu",
+          "lon": 113.67595,
+          "lat": 34.775709
+        },
+        {
+          "id": "zhengzhou.省人民医院",
+          "name": "省人民医院",
+          "nameEn": "Henan People's Hospital",
+          "lon": 113.686654,
+          "lat": 34.775692
+        }
+      ],
+      "track": [
+        [
+          113.69206,
+          34.77571
+        ],
+        [
+          113.70852,
+          34.77505
+        ],
+        [
+          113.71059,
+          34.77571
+        ],
+        [
+          113.71563,
+          34.78002
+        ],
+        [
+          113.7185,
+          34.78078
+        ],
+        [
+          113.7238,
+          34.77975
+        ],
+        [
+          113.73291,
+          34.77643
+        ],
+        [
+          113.73528,
+          34.7764
+        ],
+        [
+          113.74136,
+          34.77813
+        ],
+        [
+          113.74797,
+          34.77684
+        ],
+        [
+          113.75656,
+          34.77809
+        ],
+        [
+          113.76356,
+          34.77658
+        ],
+        [
+          113.76453,
+          34.77488
+        ],
+        [
+          113.76527,
+          34.7679
+        ],
+        [
+          113.76952,
+          34.76137
+        ],
+        [
+          113.76965,
+          34.7575
+        ],
+        [
+          113.76806,
+          34.75529
+        ],
+        [
+          113.76768,
+          34.75315
+        ],
+        [
+          113.7672,
+          34.72406
+        ],
+        [
+          113.76507,
+          34.72257
+        ],
+        [
+          113.76256,
+          34.72207
+        ],
+        [
+          113.61983,
+          34.72188
+        ],
+        [
+          113.61076,
+          34.72108
+        ],
+        [
+          113.60791,
+          34.72219
+        ],
+        [
+          113.60754,
+          34.76164
+        ],
+        [
+          113.60926,
+          34.76507
+        ],
+        [
+          113.6147,
+          34.76673
+        ],
+        [
+          113.61929,
+          34.76603
+        ],
+        [
+          113.62192,
+          34.76638
+        ],
+        [
+          113.64556,
+          34.77565
+        ],
+        [
+          113.69206,
+          34.77571
+        ]
+      ]
+    },
+    {
+      "id": "zhengzhou.l6",
+      "ref": "6",
+      "name": "6号线",
+      "color": "#920783",
+      "system": "subway",
+      "lengthKm": 43.25,
+      "stationCount": 28,
+      "stations": [
+        {
+          "id": "zhengzhou.贾峪",
+          "name": "贾峪",
+          "nameEn": "Jiayu",
+          "lon": 113.447474,
+          "lat": 34.67426
+        },
+        {
+          "id": "zhengzhou.洞林湖",
+          "name": "洞林湖",
+          "nameEn": "Donglinhu",
+          "lon": 113.476138,
+          "lat": 34.669653
+        },
+        {
+          "id": "zhengzhou.洞林寺",
+          "name": "洞林寺",
+          "nameEn": "Donglinsi",
+          "lon": 113.493336,
+          "lat": 34.674445
+        },
+        {
+          "id": "zhengzhou.安宁路",
+          "name": "安宁路",
+          "nameEn": "Anning Road",
+          "lon": 113.510479,
+          "lat": 34.693827
+        },
+        {
+          "id": "zhengzhou.马寨",
+          "name": "马寨",
+          "nameEn": "Mazhai",
+          "lon": 113.510436,
+          "lat": 34.70461
+        },
+        {
+          "id": "zhengzhou.河南建院",
+          "name": "河南建院",
+          "nameEn": "Henan Jianyuan",
+          "lon": 113.51136,
+          "lat": 34.715516
+        },
+        {
+          "id": "zhengzhou.金桢路",
+          "name": "金桢路",
+          "nameEn": "Jinzhen Road",
+          "lon": 113.506493,
+          "lat": 34.73544
+        },
+        {
+          "id": "zhengzhou.奥体中心西",
+          "name": "奥体中心西",
+          "nameEn": "Olympics Center West",
+          "lon": 113.514719,
+          "lat": 34.740971
+        },
+        {
+          "id": "zhengzhou.奥体中心",
+          "name": "奥体中心",
+          "nameEn": "Olympic Sports Center",
+          "lon": 113.534875,
+          "lat": 34.739691
+        },
+        {
+          "id": "zhengzhou.常庄",
+          "name": "常庄",
+          "nameEn": "Changzhuang",
+          "lon": 113.548618,
+          "lat": 34.739818
+        },
+        {
+          "id": "zhengzhou.冯湾",
+          "name": "冯湾",
+          "nameEn": "Fengwan",
+          "lon": 113.567541,
+          "lat": 34.728383
+        },
+        {
+          "id": "zhengzhou.李江沟",
+          "name": "李江沟",
+          "nameEn": "Lijianggou",
+          "lon": 113.585603,
+          "lat": 34.73006
+        },
+        {
+          "id": "zhengzhou.卧龙岗",
+          "name": "卧龙岗",
+          "nameEn": "Wolonggang",
+          "lon": 113.597866,
+          "lat": 34.730106
+        },
+        {
+          "id": "zhengzhou.桐淮",
+          "name": "桐淮",
+          "nameEn": "Tonghuai",
+          "lon": 113.60645,
+          "lat": 34.730019
+        },
+        {
+          "id": "zhengzhou.嵩淮",
+          "name": "嵩淮",
+          "nameEn": "Songhuai",
+          "lon": 113.622882,
+          "lat": 34.73008
+        },
+        {
+          "id": "zhengzhou.大学中路",
+          "name": "大学中路",
+          "nameEn": "Daxue Zhonglu",
+          "lon": 113.638548,
+          "lat": 34.730001
+        },
+        {
+          "id": "zhengzhou.火车头体育场",
+          "name": "火车头体育场",
+          "nameEn": "Huochetou Tiyuchang",
+          "lon": 113.649001,
+          "lat": 34.730119
+        },
+        {
+          "id": "zhengzhou.陇秀公园",
+          "name": "陇秀公园",
+          "nameEn": "Longxiu Gongyuan",
+          "lon": 113.669145,
+          "lat": 34.730298
+        },
+        {
+          "id": "zhengzhou.二里岗",
+          "name": "二里岗",
+          "nameEn": "Erligang",
+          "lon": 113.676826,
+          "lat": 34.730061
+        },
+        {
+          "id": "zhengzhou.二里岗东",
+          "name": "二里岗东",
+          "nameEn": "Erligang Dong",
+          "lon": 113.685659,
+          "lat": 34.728716
+        },
+        {
+          "id": "zhengzhou.凤凰台南",
+          "name": "凤凰台南",
+          "nameEn": "Fenghuangtai Nan",
+          "lon": 113.697972,
+          "lat": 34.73922
+        },
+        {
+          "id": "zhengzhou.博览中心",
+          "name": "博览中心",
+          "nameEn": "Bolanzhongxin",
+          "lon": 113.697954,
+          "lat": 34.748966
+        },
+        {
+          "id": "zhengzhou.燕庄",
+          "name": "燕庄",
+          "nameEn": "Yanzhuang",
+          "lon": 113.698365,
+          "lat": 34.76564
+        },
+        {
+          "id": "zhengzhou.姚砦",
+          "name": "姚砦",
+          "nameEn": "Yaozhai",
+          "lon": 113.701858,
+          "lat": 34.774478
+        },
+        {
+          "id": "zhengzhou.金汇桥",
+          "name": "金汇桥",
+          "nameEn": "Jinhuiqiao",
+          "lon": 113.71015,
+          "lat": 34.78715
+        },
+        {
+          "id": "zhengzhou.小营",
+          "name": "小营",
+          "nameEn": "Xiaoying",
+          "lon": 113.711674,
+          "lat": 34.796115
+        },
+        {
+          "id": "zhengzhou.金融岛西",
+          "name": "金融岛西",
+          "nameEn": "Jinrongdao Xi",
+          "lon": 113.719589,
+          "lat": 34.813015
+        },
+        {
+          "id": "zhengzhou.清华附中",
+          "name": "清华附中",
+          "nameEn": "Qinghuafuzhong",
+          "lon": 113.707613,
+          "lat": 34.831182
+        }
+      ],
+      "track": [
+        [
+          113.44747,
+          34.67426
+        ],
+        [
+          113.45955,
+          34.67382
+        ],
+        [
+          113.46559,
+          34.67097
+        ],
+        [
+          113.47943,
+          34.6693
+        ],
+        [
+          113.48336,
+          34.66949
+        ],
+        [
+          113.48768,
+          34.67089
+        ],
+        [
+          113.50877,
+          34.68419
+        ],
+        [
+          113.51047,
+          34.69011
+        ],
+        [
+          113.51043,
+          34.70821
+        ],
+        [
+          113.51127,
+          34.7105
+        ],
+        [
+          113.51138,
+          34.71653
+        ],
+        [
+          113.50651,
+          34.72593
+        ],
+        [
+          113.5065,
+          34.73745
+        ],
+        [
+          113.50719,
+          34.7395
+        ],
+        [
+          113.51059,
+          34.74089
+        ],
+        [
+          113.53534,
+          34.73966
+        ],
+        [
+          113.55674,
+          34.73998
+        ],
+        [
+          113.56,
+          34.73807
+        ],
+        [
+          113.56397,
+          34.72945
+        ],
+        [
+          113.56561,
+          34.72861
+        ],
+        [
+          113.56838,
+          34.72833
+        ],
+        [
+          113.5767,
+          34.72848
+        ],
+        [
+          113.58241,
+          34.73003
+        ],
+        [
+          113.58533,
+          34.73006
+        ],
+        [
+          113.67042,
+          34.7303
+        ],
+        [
+          113.68009,
+          34.72993
+        ],
+        [
+          113.6838,
+          34.72872
+        ],
+        [
+          113.69748,
+          34.72922
+        ],
+        [
+          113.69814,
+          34.73672
+        ],
+        [
+          113.69812,
+          34.76477
+        ],
+        [
+          113.70251,
+          34.77583
+        ],
+        [
+          113.70774,
+          34.77969
+        ],
+        [
+          113.70904,
+          34.78193
+        ],
+        [
+          113.71115,
+          34.7924
+        ],
+        [
+          113.71287,
+          34.80576
+        ],
+        [
+          113.71748,
+          34.80831
+        ],
+        [
+          113.71966,
+          34.81088
+        ],
+        [
+          113.71907,
+          34.81587
+        ],
+        [
+          113.71567,
+          34.81943
+        ],
+        [
+          113.70842,
+          34.82433
+        ],
+        [
+          113.7077,
+          34.82551
+        ],
+        [
+          113.70761,
+          34.83118
+        ]
+      ]
+    },
+    {
+      "id": "zhengzhou.l7",
+      "ref": "7",
+      "name": "7号线",
+      "color": "#D6A053",
+      "system": "subway",
+      "lengthKm": 26.66,
+      "stationCount": 20,
+      "stations": [
+        {
+          "id": "zhengzhou.东赵",
+          "name": "东赵",
+          "nameEn": "Dongzhao",
+          "lon": 113.636894,
+          "lat": 34.881559
+        },
+        {
+          "id": "zhengzhou.黄河迎宾馆",
+          "name": "黄河迎宾馆",
+          "nameEn": "Huangheyingbinguan",
+          "lon": 113.638459,
+          "lat": 34.868609
+        },
+        {
+          "id": "zhengzhou.北大学城",
+          "name": "北大学城",
+          "nameEn": "BEI DAXUECHENG",
+          "lon": 113.640171,
+          "lat": 34.860788
+        },
+        {
+          "id": "zhengzhou.琉璃寺",
+          "name": "琉璃寺",
+          "nameEn": "Liulisi",
+          "lon": 113.646902,
+          "lat": 34.845028
+        },
+        {
+          "id": "zhengzhou.张家村",
+          "name": "张家村",
+          "nameEn": "Zhangjiacun",
+          "lon": 113.655015,
+          "lat": 34.825348
+        },
+        {
+          "id": "zhengzhou.陈砦站",
+          "name": "陈砦站",
+          "nameEn": "CHENZHAI",
+          "lon": 113.658159,
+          "lat": 34.813842
+        },
+        {
+          "id": "zhengzhou.白庙",
+          "name": "白庙",
+          "nameEn": "Baimiao",
+          "lon": 113.659847,
+          "lat": 34.799757
+        },
+        {
+          "id": "zhengzhou.农业大学",
+          "name": "农业大学",
+          "nameEn": "Nongye Daxue",
+          "lon": 113.660443,
+          "lat": 34.787846
+        },
+        {
+          "id": "zhengzhou.郑州人民医院",
+          "name": "郑州人民医院",
+          "nameEn": "Zhengzhou People's Hospital",
+          "lon": 113.660687,
+          "lat": 34.775914
+        },
+        {
+          "id": "zhengzhou.大石桥",
+          "name": "大石桥",
+          "nameEn": "Dashiqiao",
+          "lon": 113.650631,
+          "lat": 34.76708
+        },
+        {
+          "id": "zhengzhou.郑大一附院",
+          "name": "郑大一附院",
+          "nameEn": "Zhengda Yifuyuan",
+          "lon": 113.638959,
+          "lat": 34.75686
+        },
+        {
+          "id": "zhengzhou.医学院",
+          "name": "医学院",
+          "nameEn": "Yixueyuan",
+          "lon": 113.637508,
+          "lat": 34.746566
+        },
+        {
+          "id": "zhengzhou.市骨科医院",
+          "name": "市骨科医院",
+          "nameEn": "Shi Guke Yiyuan",
+          "lon": 113.637815,
+          "lat": 34.735743
+        },
+        {
+          "id": "zhengzhou.大学中路",
+          "name": "大学中路",
+          "nameEn": "Daxue Zhonglu",
+          "lon": 113.637764,
+          "lat": 34.729504
+        },
+        {
+          "id": "zhengzhou.市第二人民医院",
+          "name": "市第二人民医院",
+          "nameEn": "Zhengzhou No.2 People's Hospital",
+          "lon": 113.637702,
+          "lat": 34.721306
+        },
+        {
+          "id": "zhengzhou.王胡砦",
+          "name": "王胡砦",
+          "nameEn": "Wanghuzhai",
+          "lon": 113.637924,
+          "lat": 34.706895
+        },
+        {
+          "id": "zhengzhou.漓江路",
+          "name": "漓江路",
+          "nameEn": "Lijiang Lu",
+          "lon": 113.638097,
+          "lat": 34.69551
+        },
+        {
+          "id": "zhengzhou.荆胡",
+          "name": "荆胡",
+          "nameEn": "Jinghu",
+          "lon": 113.638144,
+          "lat": 34.68197
+        },
+        {
+          "id": "zhengzhou.南环公园",
+          "name": "南环公园",
+          "nameEn": "Nanhuan Gongyuan",
+          "lon": 113.637861,
+          "lat": 34.67195
+        },
+        {
+          "id": "zhengzhou.南岗刘",
+          "name": "南岗刘",
+          "nameEn": "Nangangliu",
+          "lon": 113.637794,
+          "lat": 34.656854
+        }
+      ],
+      "track": [
+        [
+          113.63689,
+          34.88156
+        ],
+        [
+          113.63923,
+          34.86331
+        ],
+        [
+          113.65779,
+          34.81881
+        ],
+        [
+          113.66017,
+          34.79659
+        ],
+        [
+          113.66082,
+          34.76895
+        ],
+        [
+          113.65964,
+          34.76795
+        ],
+        [
+          113.65221,
+          34.76791
+        ],
+        [
+          113.6438,
+          34.76413
+        ],
+        [
+          113.64078,
+          34.76217
+        ],
+        [
+          113.63953,
+          34.76034
+        ],
+        [
+          113.63751,
+          34.74761
+        ],
+        [
+          113.63824,
+          34.6942
+        ],
+        [
+          113.63779,
+          34.65685
+        ]
+      ]
+    },
+    {
+      "id": "zhengzhou.l8",
+      "ref": "8",
+      "name": "8号线",
+      "color": "#E5E289",
+      "system": "subway",
+      "lengthKm": 51.77,
+      "stationCount": 28,
+      "stations": [
+        {
+          "id": "zhengzhou.鲁庙",
+          "name": "鲁庙",
+          "nameEn": "Lumiao",
+          "lon": 113.941892,
+          "lat": 34.764163
+        },
+        {
+          "id": "zhengzhou.绿博园",
+          "name": "绿博园",
+          "nameEn": "Luboyuan",
+          "lon": 113.923655,
+          "lat": 34.762046
+        },
+        {
+          "id": "zhengzhou.龙王庙",
+          "name": "龙王庙",
+          "nameEn": "Longwangmiao",
+          "lon": 113.896677,
+          "lat": 34.759348
+        },
+        {
+          "id": "zhengzhou.李湖桥",
+          "name": "李湖桥",
+          "nameEn": "Lihuqiao",
+          "lon": 113.876596,
+          "lat": 34.75983
+        },
+        {
+          "id": "zhengzhou.福泽路",
+          "name": "福泽路",
+          "nameEn": "Fuze Lu",
+          "lon": 113.863583,
+          "lat": 34.759801
+        },
+        {
+          "id": "zhengzhou.省社科院",
+          "name": "省社科院",
+          "nameEn": "Sheng Shekeyuan",
+          "lon": 113.842868,
+          "lat": 34.759242
+        },
+        {
+          "id": "zhengzhou.圃田",
+          "name": "圃田",
+          "nameEn": "Putian",
+          "lon": 113.814776,
+          "lat": 34.744343
+        },
+        {
+          "id": "zhengzhou.圃田西",
+          "name": "圃田西",
+          "nameEn": "Putianxi",
+          "lon": 113.78743,
+          "lat": 34.743147
+        },
+        {
+          "id": "zhengzhou.郑州东站",
+          "name": "郑州东站",
+          "nameEn": "Zhengzhou East Railway Station",
+          "lon": 113.769837,
+          "lat": 34.760008
+        },
+        {
+          "id": "zhengzhou.畅和街",
+          "name": "畅和街",
+          "nameEn": "Changhe Jie",
+          "lon": 113.769803,
+          "lat": 34.780008
+        },
+        {
+          "id": "zhengzhou.高铁公园",
+          "name": "高铁公园",
+          "nameEn": "Gaotie Gongyuan",
+          "lon": 113.768817,
+          "lat": 34.793079
+        },
+        {
+          "id": "zhengzhou.郑大一附院东区",
+          "name": "郑大一附院东区",
+          "nameEn": "Zhengda Yifuyuan Dongqu",
+          "lon": 113.756663,
+          "lat": 34.79632
+        },
+        {
+          "id": "zhengzhou.龙湖中环南",
+          "name": "龙湖中环南",
+          "nameEn": "Longhuzhonghuannan",
+          "lon": 113.732398,
+          "lat": 34.792977
+        },
+        {
+          "id": "zhengzhou.小营",
+          "name": "小营",
+          "nameEn": "Xiaoying",
+          "lon": 113.712013,
+          "lat": 34.796054
+        },
+        {
+          "id": "zhengzhou.枣庄",
+          "name": "枣庄",
+          "nameEn": "Zaozhuang",
+          "lon": 113.68851,
+          "lat": 34.795884
+        },
+        {
+          "id": "zhengzhou.东风路",
+          "name": "东风路",
+          "nameEn": "Dongfenglu",
+          "lon": 113.673215,
+          "lat": 34.798926
+        },
+        {
+          "id": "zhengzhou.白庙",
+          "name": "白庙",
+          "nameEn": "Baimiao",
+          "lon": 113.660254,
+          "lat": 34.800324
+        },
+        {
+          "id": "zhengzhou.省中医院",
+          "name": "省中医院",
+          "nameEn": "Sheng Zhongyiyuan",
+          "lon": 113.642087,
+          "lat": 34.800798
+        },
+        {
+          "id": "zhengzhou.同乐",
+          "name": "同乐",
+          "nameEn": "Tongle",
+          "lon": 113.629611,
+          "lat": 34.796719
+        },
+        {
+          "id": "zhengzhou.五龙口",
+          "name": "五龙口",
+          "nameEn": "Wulongkou",
+          "lon": 113.60738,
+          "lat": 34.790661
+        },
+        {
+          "id": "zhengzhou.大学科技园",
+          "name": "大学科技园",
+          "nameEn": "Daxue Kejiyuan",
+          "lon": 113.598504,
+          "lat": 34.792071
+        },
+        {
+          "id": "zhengzhou.南流",
+          "name": "南流",
+          "nameEn": "Nanliu",
+          "lon": 113.57253,
+          "lat": 34.792986
+        },
+        {
+          "id": "zhengzhou.冬青街",
+          "name": "冬青街",
+          "nameEn": "Dongqing Jie",
+          "lon": 113.562403,
+          "lat": 34.802266
+        },
+        {
+          "id": "zhengzhou.银屏路",
+          "name": "银屏路",
+          "nameEn": "Yinping Lu",
+          "lon": 113.550493,
+          "lat": 34.809244
+        },
+        {
+          "id": "zhengzhou.郑州大学",
+          "name": "郑州大学",
+          "nameEn": "Zhengzhou University",
+          "lon": 113.534696,
+          "lat": 34.808951
+        },
+        {
+          "id": "zhengzhou.祥营",
+          "name": "祥营",
+          "nameEn": "Xiangying",
+          "lon": 113.517745,
+          "lat": 34.809179
+        },
+        {
+          "id": "zhengzhou.轻工业大学",
+          "name": "轻工业大学",
+          "nameEn": "Qinggongye Daxue",
+          "lon": 113.499305,
+          "lat": 34.809067
+        },
+        {
+          "id": "zhengzhou.天健湖",
+          "name": "天健湖",
+          "nameEn": "Tianjianhu",
+          "lon": 113.472397,
+          "lat": 34.809007
+        }
+      ],
+      "track": [
+        [
+          113.94189,
+          34.76416
+        ],
+        [
+          113.93194,
+          34.76396
+        ],
+        [
+          113.92066,
+          34.76144
+        ],
+        [
+          113.89777,
+          34.75935
+        ],
+        [
+          113.86143,
+          34.75981
+        ],
+        [
+          113.82264,
+          34.75877
+        ],
+        [
+          113.81976,
+          34.75765
+        ],
+        [
+          113.8164,
+          34.75298
+        ],
+        [
+          113.81422,
+          34.74082
+        ],
+        [
+          113.81186,
+          34.74008
+        ],
+        [
+          113.77827,
+          34.74431
+        ],
+        [
+          113.7759,
+          34.74524
+        ],
+        [
+          113.7718,
+          34.74863
+        ],
+        [
+          113.76961,
+          34.76244
+        ],
+        [
+          113.76979,
+          34.78233
+        ],
+        [
+          113.7685,
+          34.79048
+        ],
+        [
+          113.76885,
+          34.79577
+        ],
+        [
+          113.76606,
+          34.79763
+        ],
+        [
+          113.76054,
+          34.7979
+        ],
+        [
+          113.75784,
+          34.79709
+        ],
+        [
+          113.75014,
+          34.79288
+        ],
+        [
+          113.74036,
+          34.79196
+        ],
+        [
+          113.71473,
+          34.79533
+        ],
+        [
+          113.70782,
+          34.7969
+        ],
+        [
+          113.70403,
+          34.79683
+        ],
+        [
+          113.69618,
+          34.79447
+        ],
+        [
+          113.6723,
+          34.79908
+        ],
+        [
+          113.65584,
+          34.80087
+        ],
+        [
+          113.63931,
+          34.80075
+        ],
+        [
+          113.62046,
+          34.79257
+        ],
+        [
+          113.61154,
+          34.79012
+        ],
+        [
+          113.59178,
+          34.79293
+        ],
+        [
+          113.57747,
+          34.79146
+        ],
+        [
+          113.56614,
+          34.79528
+        ],
+        [
+          113.56273,
+          34.79863
+        ],
+        [
+          113.56241,
+          34.80772
+        ],
+        [
+          113.56153,
+          34.80882
+        ],
+        [
+          113.56003,
+          34.80917
+        ],
+        [
+          113.4724,
+          34.80901
+        ]
+      ]
+    },
+    {
+      "id": "zhengzhou.l9",
+      "ref": "9",
+      "name": "城郊线",
+      "color": "#A2AE73",
+      "system": "subway",
+      "lengthKm": 40.62,
+      "stationCount": 17,
+      "stations": [
+        {
+          "id": "zhengzhou.南四环",
+          "name": "南四环",
+          "nameEn": "Nansihuan",
+          "lon": 113.675742,
+          "lat": 34.66405
+        },
+        {
+          "id": "zhengzhou.十八里河",
+          "name": "十八里河",
+          "nameEn": "Shibalihe",
+          "lon": 113.677545,
+          "lat": 34.648984
+        },
+        {
+          "id": "zhengzhou.沙窝李",
+          "name": "沙窝李",
+          "nameEn": "Shawoli",
+          "lon": 113.675534,
+          "lat": 34.627839
+        },
+        {
+          "id": "zhengzhou.后胡",
+          "name": "后胡",
+          "nameEn": "Shuanghudadao",
+          "lon": 113.67697,
+          "lat": 34.612786
+        },
+        {
+          "id": "zhengzhou.小乔",
+          "name": "小乔",
+          "nameEn": "Xiaoqiao",
+          "lon": 113.689656,
+          "lat": 34.601653
+        },
+        {
+          "id": "zhengzhou.华南城西",
+          "name": "华南城西",
+          "nameEn": "Huanancheng West",
+          "lon": 113.719828,
+          "lat": 34.595106
+        },
+        {
+          "id": "zhengzhou.华南城",
+          "name": "华南城",
+          "nameEn": "Hunancheng",
+          "lon": 113.743063,
+          "lat": 34.595154
+        },
+        {
+          "id": "zhengzhou.华南城东",
+          "name": "华南城东",
+          "nameEn": "Huanancheng East",
+          "lon": 113.767849,
+          "lat": 34.595222
+        },
+        {
+          "id": "zhengzhou.孟庄",
+          "name": "孟庄",
+          "nameEn": "Mengzhuang",
+          "lon": 113.812335,
+          "lat": 34.586847
+        },
+        {
+          "id": "zhengzhou.港区北",
+          "name": "港区北",
+          "nameEn": "Gangqu North",
+          "lon": 113.832136,
+          "lat": 34.585933
+        },
+        {
+          "id": "zhengzhou.康平湖",
+          "name": "康平湖",
+          "nameEn": "Kangpinghu",
+          "lon": 113.847036,
+          "lat": 34.586
+        },
+        {
+          "id": "zhengzhou.兰河公园",
+          "name": "兰河公园",
+          "nameEn": "Lanhegongyuan",
+          "lon": 113.853215,
+          "lat": 34.577974
+        },
+        {
+          "id": "zhengzhou.恩平湖",
+          "name": "恩平湖",
+          "nameEn": "Enpinghu",
+          "lon": 113.854116,
+          "lat": 34.569921
+        },
+        {
+          "id": "zhengzhou.综合保税区",
+          "name": "综合保税区",
+          "nameEn": "ZONGHE BAOSHUIQU",
+          "lon": 113.851512,
+          "lat": 34.552081
+        },
+        {
+          "id": "zhengzhou.新郑机场",
+          "name": "新郑机场",
+          "nameEn": "Xinzheng International Airport",
+          "lon": 113.847314,
+          "lat": 34.527035
+        },
+        {
+          "id": "zhengzhou.机场东",
+          "name": "机场东",
+          "nameEn": "Jichangdong",
+          "lon": 113.89517,
+          "lat": 34.511194
+        },
+        {
+          "id": "zhengzhou.港区会展",
+          "name": "港区会展",
+          "nameEn": "Gangquhuizhan",
+          "lon": 113.917788,
+          "lat": 34.498634
+        }
+      ],
+      "track": [
+        [
+          113.67674,
+          34.64629
+        ],
+        [
+          113.67494,
+          34.63278
+        ],
+        [
+          113.67764,
+          34.60461
+        ],
+        [
+          113.67889,
+          34.60247
+        ],
+        [
+          113.6806,
+          34.60162
+        ],
+        [
+          113.69357,
+          34.60175
+        ],
+        [
+          113.70016,
+          34.59745
+        ],
+        [
+          113.7053,
+          34.59494
+        ],
+        [
+          113.70829,
+          34.59433
+        ],
+        [
+          113.71756,
+          34.5951
+        ],
+        [
+          113.77096,
+          34.59519
+        ],
+        [
+          113.77454,
+          34.59446
+        ],
+        [
+          113.79472,
+          34.58725
+        ],
+        [
+          113.83214,
+          34.58593
+        ],
+        [
+          113.84824,
+          34.58602
+        ],
+        [
+          113.85183,
+          34.58517
+        ],
+        [
+          113.85321,
+          34.58304
+        ],
+        [
+          113.85322,
+          34.57625
+        ],
+        [
+          113.8541,
+          34.5707
+        ],
+        [
+          113.85368,
+          34.56143
+        ],
+        [
+          113.84953,
+          34.54574
+        ],
+        [
+          113.84896,
+          34.54495
+        ],
+        [
+          113.84727,
+          34.54461
+        ],
+        [
+          113.83638,
+          34.54814
+        ],
+        [
+          113.83383,
+          34.54854
+        ],
+        [
+          113.83183,
+          34.5481
+        ],
+        [
+          113.82935,
+          34.54531
+        ],
+        [
+          113.82755,
+          34.53882
+        ],
+        [
+          113.82765,
+          34.5367
+        ],
+        [
+          113.82878,
+          34.53447
+        ],
+        [
+          113.8317,
+          34.53225
+        ],
+        [
+          113.91481,
+          34.50433
+        ],
+        [
+          113.91708,
+          34.50252
+        ],
+        [
+          113.91772,
+          34.50093
+        ],
+        [
+          113.91787,
+          34.49125
+        ],
+        [
+          113.9185,
+          34.49002
+        ],
+        [
+          113.92129,
+          34.48854
+        ],
+        [
+          113.93084,
+          34.48861
+        ]
+      ]
+    },
+    {
+      "id": "zhengzhou.l10",
+      "ref": "10",
+      "name": "10号线",
+      "color": "#BE6254",
+      "system": "subway",
+      "lengthKm": 20.97,
+      "stationCount": 12,
+      "stations": [
+        {
+          "id": "zhengzhou.郑州西站",
+          "name": "郑州西站",
+          "nameEn": "ZHENGZHOUXI RAILWAY STATION",
+          "lon": 113.421304,
+          "lat": 34.750797
+        },
+        {
+          "id": "zhengzhou.李商隐公园",
+          "name": "李商隐公园",
+          "nameEn": "LISHANGYIN GONGYUAN",
+          "lon": 113.44058,
+          "lat": 34.750493
+        },
+        {
+          "id": "zhengzhou.庙王",
+          "name": "庙王",
+          "nameEn": "MIAOWANG",
+          "lon": 113.476161,
+          "lat": 34.750228
+        },
+        {
+          "id": "zhengzhou.柳湖",
+          "name": "柳湖",
+          "nameEn": "Liuhu",
+          "lon": 113.500417,
+          "lat": 34.749038
+        },
+        {
+          "id": "zhengzhou.市委党校",
+          "name": "市委党校",
+          "nameEn": "Shiwei Dangxiao",
+          "lon": 113.535369,
+          "lat": 34.749007
+        },
+        {
+          "id": "zhengzhou.郑州一中",
+          "name": "郑州一中",
+          "nameEn": "ZHENGZHOU YIZHONG",
+          "lon": 113.550553,
+          "lat": 34.749097
+        },
+        {
+          "id": "zhengzhou.西流湖公园南",
+          "name": "西流湖公园南",
+          "nameEn": "XILIUHU GONGYUAN NAN",
+          "lon": 113.576441,
+          "lat": 34.748632
+        },
+        {
+          "id": "zhengzhou.二砂",
+          "name": "二砂",
+          "nameEn": "ERSHA",
+          "lon": 113.592301,
+          "lat": 34.748646
+        },
+        {
+          "id": "zhengzhou.市中心医院",
+          "name": "市中心医院",
+          "nameEn": "Zhengzhou Central Hospital",
+          "lon": 113.608985,
+          "lat": 34.748644
+        },
+        {
+          "id": "zhengzhou.绿城广场",
+          "name": "绿城广场",
+          "nameEn": "LUCHENG GUANGCHANG",
+          "lon": 113.623646,
+          "lat": 34.74827
+        },
+        {
+          "id": "zhengzhou.医学院",
+          "name": "医学院",
+          "nameEn": "Yixueyuan",
+          "lon": 113.639476,
+          "lat": 34.74588
+        },
+        {
+          "id": "zhengzhou.郑州火车站",
+          "name": "郑州火车站",
+          "nameEn": "Zhengzhou Railway Station",
+          "lon": 113.64898,
+          "lat": 34.747943
+        }
+      ],
+      "track": [
+        [
+          113.4213,
+          34.7508
+        ],
+        [
+          113.4772,
+          34.75024
+        ],
+        [
+          113.50896,
+          34.74871
+        ],
+        [
+          113.55484,
+          34.74912
+        ],
+        [
+          113.56411,
+          34.74864
+        ],
+        [
+          113.63353,
+          34.7485
+        ],
+        [
+          113.63674,
+          34.74615
+        ],
+        [
+          113.63828,
+          34.74588
+        ],
+        [
+          113.64308,
+          34.74607
+        ],
+        [
+          113.64898,
+          34.74794
+        ]
+      ]
+    },
+    {
+      "id": "zhengzhou.l12",
+      "ref": "12",
+      "name": "12号线",
+      "color": "#1A60A5",
+      "system": "subway",
+      "lengthKm": 16.41,
+      "stationCount": 11,
+      "stations": [
+        {
+          "id": "zhengzhou.龙子湖东",
+          "name": "龙子湖东",
+          "nameEn": "Longzihu Dong",
+          "lon": 113.820571,
+          "lat": 34.795742
+        },
+        {
+          "id": "zhengzhou.龙子湖",
+          "name": "龙子湖",
+          "nameEn": "Longzihu",
+          "lon": 113.804114,
+          "lat": 34.793871
+        },
+        {
+          "id": "zhengzhou.龙子湖西",
+          "name": "龙子湖西",
+          "nameEn": "Longzihu Xi",
+          "lon": 113.787825,
+          "lat": 34.794225
+        },
+        {
+          "id": "zhengzhou.高铁公园",
+          "name": "高铁公园",
+          "nameEn": "Gaotie Gongyuan",
+          "lon": 113.767849,
+          "lat": 34.793917
+        },
+        {
+          "id": "zhengzhou.东风东路",
+          "name": "东风东路",
+          "nameEn": "Dongfengdong Lu",
+          "lon": 113.754575,
+          "lat": 34.782861
+        },
+        {
+          "id": "zhengzhou.儿童医院",
+          "name": "儿童医院",
+          "nameEn": "Children's Hospital",
+          "lon": 113.743857,
+          "lat": 34.776168
+        },
+        {
+          "id": "zhengzhou.黄河南路",
+          "name": "黄河南路",
+          "nameEn": "South Huanghe Road",
+          "lon": 113.738183,
+          "lat": 34.763108
+        },
+        {
+          "id": "zhengzhou.西周",
+          "name": "西周",
+          "nameEn": "Xizhou",
+          "lon": 113.74051,
+          "lat": 34.749978
+        },
+        {
+          "id": "zhengzhou.经北五路",
+          "name": "经北五路",
+          "nameEn": "Jingbeiwu Lu",
+          "lon": 113.740678,
+          "lat": 34.731468
+        },
+        {
+          "id": "zhengzhou.福塔东",
+          "name": "福塔东",
+          "nameEn": "Futa Dong",
+          "lon": 113.740684,
+          "lat": 34.72131
+        },
+        {
+          "id": "zhengzhou.梁湖",
+          "name": "梁湖",
+          "nameEn": "Lianghu",
+          "lon": 113.737409,
+          "lat": 34.703752
+        }
+      ],
+      "track": [
+        [
+          113.82057,
+          34.79574
+        ],
+        [
+          113.80515,
+          34.79387
+        ],
+        [
+          113.77533,
+          34.79457
+        ],
+        [
+          113.76785,
+          34.79392
+        ],
+        [
+          113.76499,
+          34.79229
+        ],
+        [
+          113.75103,
+          34.78006
+        ],
+        [
+          113.73615,
+          34.77268
+        ],
+        [
+          113.73609,
+          34.77154
+        ],
+        [
+          113.73809,
+          34.76805
+        ],
+        [
+          113.73832,
+          34.75492
+        ],
+        [
+          113.74043,
+          34.75079
+        ],
+        [
+          113.74065,
+          34.74835
+        ],
+        [
+          113.74072,
+          34.7172
+        ],
+        [
+          113.73767,
+          34.70895
+        ],
+        [
+          113.73741,
+          34.70375
+        ]
+      ]
+    }
+  ]
+}

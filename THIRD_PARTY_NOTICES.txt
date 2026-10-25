@@ -1,5 +1,23 @@
 Third-party notices / 第三方资料与许可
 
+Upstream project: city-and-metro (base of this fork)
+---------------------------------------------------
+Copyright: (c) 2026 VinsonFung. All rights reserved.
+Source: https://github.com/VinsonFung/city-and-metro
+Base version: v2.0.0, commit 4102340 (2026-10-22)
+License: 非商业使用许可证 1.0 (see LICENSE.txt), included as-is
+Modified: yes. This repository is an unofficial fork that adds 54 Chinese
+city maps, staffing, incidents, difficulty levels, headway scheduling and a
+multi-city company layer on top of the upstream game. Changes are tracked by
+git history from the base commit above. Original authorship of the game
+engine, rendering, UI shell and the OSM-based map pipeline belongs to
+VinsonFung; this fork does not claim to be the original or an official release.
+
+本项目是 VinsonFung 的 city-and-metro 的非官方修改版（fork），底座为 v2.0.0
+（commit 4102340）。引擎、渲染、界面外壳与地图管线均源自原作者；本仓库在此
+之上新增了 54 城线网数据、人员雇佣、突发事件、难度档位、排班与多城公司层。
+许可证与版权声明按原许可第 2 条完整保留，修改内容以 git 历史标明。
+
 OpenStreetMap geographic data
 ----------------------------
 Copyright: (c) OpenStreetMap contributors / © OpenStreetMap 贡献者
@@ -9,9 +27,11 @@ License: Open Data Commons Open Database License (ODbL) 1.0
 License URL: https://opendatacommons.org/licenses/odbl/1-0/
 Included license text: licenses/ODbL-1.0.txt
 
-js/geo_gz.js (Guangzhou), js/geo_hz.js (Hangzhou), js/geo_hk.js (Hong Kong)
-and js/geo_tk.js (Tokyo) contain preprocessed OpenStreetMap geographic data,
+The js/geo_*.js files contain preprocessed OpenStreetMap geographic data,
 including waterways, roads, railways, green areas, boundaries and place names.
+This covers the four upstream scenes (geo_gz Guangzhou, geo_hz Hangzhou,
+geo_hk Hong Kong, geo_tk Tokyo) plus the 54 city scenes added by this fork
+(js/geo_<city>.js, city ids listed in js/data_cities.js).
 That database remains available under ODbL 1.0. The game's non-commercial
 license does not add restrictions to rights already granted under ODbL.
 The distributed geographic databases can be obtained from those files in the

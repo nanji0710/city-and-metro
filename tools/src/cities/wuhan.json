@@ -1,1 +1,5702 @@
-{"id":"wuhan","name":"武汉","province":"湖北省","center":[114.31346,30.54497],"stats":{"lines":16,"stations":398,"lengthKm":594.4},"lines":[{"id":"wuhan.lL1","ref":"L1","name":"L1线","color":"#0000CD","system":"tram","lengthKm":11.53,"stationCount":17,"stations":[{"id":"wuhan.华中大","name":"华中大","nameEn":"Huazhong University of Science and Technology","lon":114.406204,"lat":30.509704},{"id":"wuhan.步行街 省中医院","name":"步行街 省中医院","nameEn":"Walking Street and Hospital of Traditional Chinese Medicine","lon":114.401049,"lat":30.508596},{"id":"wuhan.常青藤路","name":"常青藤路","nameEn":"Changqingtang Road","lon":114.403883,"lat":30.506301},{"id":"wuhan.创业街","name":"创业街","nameEn":"Chuangye Street","lon":114.407301,"lat":30.504426},{"id":"wuhan.雄楚大道","name":"雄楚大道","nameEn":"Xiongchu Avenue","lon":114.406835,"lat":30.499996},{"id":"wuhan.新竹路","name":"新竹路","nameEn":"Xinzhu Road","lon":114.405839,"lat":30.49232},{"id":"wuhan.武汉职院","name":"武汉职院","nameEn":"Wuhan Polytechnic","lon":114.40531,"lat":30.488243},{"id":"wuhan.光谷天地","name":"光谷天地","nameEn":"Optics Valley World","lon":114.404241,"lat":30.479597},{"id":"wuhan.软件园路","name":"软件园路","nameEn":"Software Park Road","lon":114.403881,"lat":30.476625},{"id":"wuhan.华夏学院","name":"华夏学院","nameEn":"Huaxia University of Technology","lon":114.403279,"lat":30.469106},{"id":"wuhan.当代国际花园","name":"当代国际花园","nameEn":"Donde International Garden","lon":114.407076,"lat":30.46598},{"id":"wuhan.光谷大道","name":"光谷大道","nameEn":"Optics Valley Avenue","lon":114.41977,"lat":30.466723},{"id":"wuhan.工程大学","name":"工程大学","nameEn":"Wuhan University of Technology","lon":114.425742,"lat":30.467183},{"id":"wuhan.流芳园横路","name":"流芳园横路","nameEn":"Liufangyuanheng Road","lon":114.432039,"lat":30.459758},{"id":"wuhan.高新四路","name":"高新四路","nameEn":"Gaoxin 4th Road","lon":114.433435,"lat":30.453339},{"id":"wuhan.高新五路","name":"高新五路","nameEn":"Gaoxin 5th Road","lon":114.435827,"lat":30.44692},{"id":"wuhan.佛祖岭","name":"佛祖岭","nameEn":"Fozuling","lon":114.437613,"lat":30.441933}],"track":[[114.4062,30.5097],[114.40098,30.50904],[114.40156,30.50652],[114.40745,30.50568],[114.40302,30.4659],[114.40423,30.46537],[114.41293,30.46694],[114.42125,30.46676],[114.43093,30.46768],[114.43317,30.45401],[114.43761,30.44193]]},{"id":"wuhan.lL2","ref":"L2","name":"L2线","color":"#FF0000","system":"tram","lengthKm":19.23,"stationCount":25,"stations":[{"id":"wuhan.城铁汤逊湖","name":"城铁汤逊湖","nameEn":"Tangxunhu City Railway Station","lon":114.380377,"lat":30.447086},{"id":"wuhan.三园路","name":"三园路","nameEn":"Sanyuan Road","lon":114.384826,"lat":30.445707},{"id":"wuhan.华中科技园","name":"华中科技园","nameEn":"Huazhong University Science Park","lon":114.391626,"lat":30.452095},{"id":"wuhan.武大园","name":"武大园","nameEn":"Wuhan University Science Park","lon":114.396437,"lat":30.457877},{"id":"wuhan.万科城市花园","name":"万科城市花园","nameEn":"Vanke City Garden","lon":114.399972,"lat":30.462408},{"id":"wuhan.当代国际花园","name":"当代国际花园","nameEn":"Donde International Garden","lon":114.407076,"lat":30.46598},{"id":"wuhan.光谷大道","name":"光谷大道","nameEn":"Optics Valley Avenue","lon":114.41977,"lat":30.466723},{"id":"wuhan.工程大学","name":"工程大学","nameEn":"Wuhan University of Technology","lon":114.425742,"lat":30.467183},{"id":"wuhan.仪表学校","name":"仪表学校","nameEn":"Instrument and Electronic Technical School","lon":114.439505,"lat":30.469484},{"id":"wuhan.国际网球中心","name":"国际网球中心","nameEn":"International Tennis Center","lon":114.46018,"lat":30.473243},{"id":"wuhan.奥体中心","name":"奥体中心","nameEn":"Olympic Sport Center","lon":114.465222,"lat":30.473249},{"id":"wuhan.奥风路","name":"奥风路","nameEn":"Aofeng Road","lon":114.471739,"lat":30.473656},{"id":"wuhan.大吕路","name":"大吕路","nameEn":"Dalü Road","lon":114.481564,"lat":30.474449},{"id":"wuhan.光谷四路","name":"光谷四路","nameEn":"Optics Valley 4th Road","lon":114.489876,"lat":30.47411},{"id":"wuhan.光谷五路","name":"光谷五路","nameEn":"Optics Valley 5th Road","lon":114.496667,"lat":30.473111},{"id":"wuhan.花溪路","name":"花溪路","nameEn":"Huaxi Road","lon":114.500415,"lat":30.472448},{"id":"wuhan.神墩五路","name":"神墩五路","nameEn":"Shedun 5th Road","lon":114.50731,"lat":30.474711},{"id":"wuhan.高科园路","name":"高科园路","nameEn":"Gaokeyuan Road","lon":114.516526,"lat":30.475338},{"id":"wuhan.高科园二路","name":"高科园二路","nameEn":"Gaokeyuan 2nd Road","lon":114.522251,"lat":30.475695},{"id":"wuhan.高新二路","name":"高新二路","nameEn":"Gaoxin 2nd Road","lon":114.528795,"lat":30.479284},{"id":"wuhan.神墩三路","name":"神墩三路","nameEn":"Shendun 3rd Road","lon":114.528824,"lat":30.483633},{"id":"wuhan.光谷七路","name":"光谷七路","nameEn":"Optics Valley 7th Road","lon":114.528796,"lat":30.492208},{"id":"wuhan.华为武汉基地","name":"华为武汉基地","nameEn":"Huawei Wuhan Research Institute","lon":114.526681,"lat":30.497867},{"id":"wuhan.九峰一路","name":"九峰一路","nameEn":"Jiufeng 1st Road","lon":114.524992,"lat":30.502081},{"id":"wuhan.光谷植物园","name":"光谷植物园","nameEn":"Optics Valley Botanical Garden","lon":114.527997,"lat":30.504555}],"track":[[114.37995,30.44726],[114.38423,30.44545],[114.38675,30.44675],[114.38873,30.44845],[114.40177,30.46456],[114.40708,30.46598],[114.41293,30.46694],[114.42472,30.46706],[114.44019,30.46956],[114.44367,30.46932],[114.44921,30.47126],[114.45146,30.47285],[114.48335,30.47445],[114.49075,30.47401],[114.50396,30.47194],[114.5062,30.47278],[114.50786,30.47534],[114.52851,30.47613],[114.52883,30.49197],[114.52476,30.50273],[114.52842,30.50475]]},{"id":"wuhan.l1","ref":"1","name":"1号线","color":"#0067A1","system":"subway","lengthKm":38.04,"stationCount":32,"stations":[{"id":"wuhan.径河","name":"径河","nameEn":"Jinghe","lon":114.115127,"lat":30.661489},{"id":"wuhan.三店","name":"三店","nameEn":"Sandian","lon":114.115146,"lat":30.651421},{"id":"wuhan.码头潭公园","name":"码头潭公园","nameEn":"Matoutan Park","lon":114.118008,"lat":30.634069},{"id":"wuhan.东吴大道","name":"东吴大道","nameEn":"Dongwu Dadao","lon":114.122914,"lat":30.627244},{"id":"wuhan.五环大道","name":"五环大道","nameEn":"Wuhuan Dadao","lon":114.132998,"lat":30.619979},{"id":"wuhan.额头湾","name":"额头湾","nameEn":"Etouwan","lon":114.150337,"lat":30.620817},{"id":"wuhan.竹叶海","name":"竹叶海","nameEn":"Zhuyehai","lon":114.15834,"lat":30.617264},{"id":"wuhan.舵落口","name":"舵落口","nameEn":"Duoluokou Station","lon":114.163948,"lat":30.612273},{"id":"wuhan.古田一路","name":"古田一路","nameEn":"Gutian 1st Road","lon":114.177556,"lat":30.60683},{"id":"wuhan.古田二路","name":"古田二路","nameEn":"Gutian 2nd Road","lon":114.19121,"lat":30.599945},{"id":"wuhan.古田三路","name":"古田三路","nameEn":"Gutian 3rd Road","lon":114.199345,"lat":30.59581},{"id":"wuhan.古田四路","name":"古田四路","nameEn":"Gutian 4th Road","lon":114.206134,"lat":30.591782},{"id":"wuhan.汉西一路","name":"汉西一路","nameEn":"Hanxi 1st Road","lon":114.213467,"lat":30.587896},{"id":"wuhan.宗关","name":"宗关","nameEn":"Zongguan","lon":114.22094,"lat":30.582885},{"id":"wuhan.太平洋","name":"太平洋","nameEn":"Taipingyang","lon":114.235232,"lat":30.576531},{"id":"wuhan.硚口路","name":"硚口路","nameEn":"Qiaokou","lon":114.244965,"lat":30.574006},{"id":"wuhan.崇仁路","name":"崇仁路","nameEn":"Chongrenlu","lon":114.256463,"lat":30.57642},{"id":"wuhan.利济北路","name":"利济北路","nameEn":"Liji North Road","lon":114.264731,"lat":30.579856},{"id":"wuhan.友谊路","name":"友谊路","nameEn":"Youyi Road","lon":114.273022,"lat":30.583352},{"id":"wuhan.循礼门","name":"循礼门","nameEn":"Xunlimen","lon":114.281677,"lat":30.587992},{"id":"wuhan.大智路","name":"大智路","nameEn":"Dazhi Road","lon":114.289645,"lat":30.594965},{"id":"wuhan.三阳路","name":"三阳路","nameEn":"Sanyang Road","lon":114.296471,"lat":30.601942},{"id":"wuhan.黄浦路","name":"黄浦路","nameEn":"Huangpu Road","lon":114.302737,"lat":30.610815},{"id":"wuhan.头道街","name":"头道街","nameEn":"Toudao Street","lon":114.308547,"lat":30.620272},{"id":"wuhan.二七路","name":"二七路","nameEn":"Erqi Road","lon":114.313356,"lat":30.627327},{"id":"wuhan.徐州新村","name":"徐州新村","nameEn":"Xuzhouxincun","lon":114.317497,"lat":30.633536},{"id":"wuhan.丹水池","name":"丹水池","nameEn":"Danshuichi","lon":114.324575,"lat":30.645798},{"id":"wuhan.新荣","name":"新荣","nameEn":"Xinrong","lon":114.329077,"lat":30.658202},{"id":"wuhan.堤角","name":"堤角","nameEn":"Dijiao","lon":114.332788,"lat":30.668177},{"id":"wuhan.滕子岗","name":"滕子岗","nameEn":"Tengzigang","lon":114.336012,"lat":30.676808},{"id":"wuhan.滠口新城","name":"滠口新城","nameEn":"Shekouxincheng","lon":114.336934,"lat":30.686827},{"id":"wuhan.汉口北","name":"汉口北","nameEn":"Hankou North","lon":114.323899,"lat":30.714408}],"track":[[114.11512,30.66334],[114.11533,30.64045],[114.11854,30.63304],[114.12261,30.62896],[114.12331,30.62199],[114.12482,30.62018],[114.12676,30.61967],[114.15495,30.6207],[114.16197,30.61298],[114.17002,30.61059],[114.20247,30.59421],[114.20862,30.59015],[114.21587,30.58676],[114.22324,30.58135],[114.22795,30.57896],[114.23374,30.57774],[114.23718,30.57492],[114.24105,30.57344],[114.25367,30.57572],[114.25827,30.57697],[114.27927,30.58603],[114.29501,30.59993],[114.30624,30.61559],[114.30707,30.61813],[114.32066,30.63785],[114.32352,30.64332],[114.33645,30.67802],[114.33712,30.69272],[114.33651,30.69568],[114.33244,30.70486],[114.3239,30.71441]]},{"id":"wuhan.l2","ref":"2","name":"2号线","color":"#EC9CBB","system":"subway","lengthKm":58.08,"stationCount":38,"stations":[{"id":"wuhan.天河机场","name":"天河机场","nameEn":"Tianhe International Airport","lon":114.211684,"lat":30.772551},{"id":"wuhan.航空總部","name":"航空總部","nameEn":"Hangkongzongbu","lon":114.221632,"lat":30.73485},{"id":"wuhan.宋家崗","name":"宋家崗","nameEn":"Songjiagang","lon":114.231979,"lat":30.725389},{"id":"wuhan.巨龙大道","name":"巨龙大道","nameEn":"Julong Boulevard","lon":114.247435,"lat":30.714429},{"id":"wuhan.盘龙城","name":"盘龙城","nameEn":"Panlongcheng","lon":114.254198,"lat":30.703023},{"id":"wuhan.宏图大道站","name":"宏图大道站","nameEn":"Hongtu Boulevard","lon":114.272307,"lat":30.67253},{"id":"wuhan.常青城","name":"常青城","nameEn":"Changqingcheng","lon":114.249733,"lat":30.66133},{"id":"wuhan.金银潭","name":"金银潭","nameEn":"Jinyintan","lon":114.237583,"lat":30.652275},{"id":"wuhan.常青花园","name":"常青花园","nameEn":"Changqinghuayuan","lon":114.236934,"lat":30.643353},{"id":"wuhan.长港路","name":"长港路","nameEn":"Changgang Road","lon":114.240373,"lat":30.629858},{"id":"wuhan.汉口火车站","name":"汉口火车站","nameEn":"Hankou Railway Station","lon":114.249568,"lat":30.618224},{"id":"wuhan.范湖","name":"范湖","nameEn":"Fanhu","lon":114.254953,"lat":30.60858},{"id":"wuhan.王家墩东站","name":"王家墩东站","nameEn":"Wangjiadun East","lon":114.257462,"lat":30.597177},{"id":"wuhan.青年路站","name":"青年路站","nameEn":"Qingnian Road","lon":114.259171,"lat":30.588017},{"id":"wuhan.中山公园站","name":"中山公园站","nameEn":"Zhongshan Park","lon":114.26693,"lat":30.584462},{"id":"wuhan.循礼门站","name":"循礼门站","nameEn":"Xunlimen","lon":114.281167,"lat":30.587156},{"id":"wuhan.江汉路","name":"江汉路","nameEn":"Jianghan Road","lon":114.286971,"lat":30.582072},{"id":"wuhan.积玉桥","name":"积玉桥","nameEn":"Jiyuqiao","lon":114.30331,"lat":30.563498},{"id":"wuhan.螃蟹岬","name":"螃蟹岬","nameEn":"Pangxiejia","lon":114.312061,"lat":30.556015},{"id":"wuhan.小龟山","name":"小龟山","nameEn":"Xiaoguishan","lon":114.321162,"lat":30.553418},{"id":"wuhan.洪山广场","name":"洪山广场","nameEn":"Hongshan Square","lon":114.330507,"lat":30.547777},{"id":"wuhan.中南路站","name":"中南路站","nameEn":"Zhongnan Road","lon":114.327375,"lat":30.539865},{"id":"wuhan.宝通寺","name":"宝通寺","nameEn":"Baotong Temple","lon":114.335428,"lat":30.532596},{"id":"wuhan.街道口","name":"街道口","nameEn":"Jiedaokou","lon":114.347683,"lat":30.528926},{"id":"wuhan.广埠屯站","name":"广埠屯站","nameEn":"Guangbutun","lon":114.358417,"lat":30.52485},{"id":"wuhan.虎泉","name":"虎泉","nameEn":"Huquan","lon":114.364757,"lat":30.514677},{"id":"wuhan.杨家湾","name":"杨家湾","nameEn":"Yangjiawan","lon":114.376724,"lat":30.507403},{"id":"wuhan.光谷广场","name":"光谷广场","nameEn":"Optics Valley Square","lon":114.391487,"lat":30.508001},{"id":"wuhan.珞雄路","name":"珞雄路","nameEn":"Luoxiong Road","lon":114.399225,"lat":30.509126},{"id":"wuhan.华中科技大学","name":"华中科技大学","nameEn":"Huazhong University of Science and Technology","lon":114.40936,"lat":30.509582},{"id":"wuhan.光谷大道","name":"光谷大道","nameEn":"Guanggu Boulevard","lon":114.418316,"lat":30.50882},{"id":"wuhan.佳园路","name":"佳园路","nameEn":"Jiayuan Road","lon":114.425298,"lat":30.502482},{"id":"wuhan.武汉东站","name":"武汉东站","nameEn":"Wuhandong Railway Station","lon":114.426034,"lat":30.48901},{"id":"wuhan.黄龙山路","name":"黄龙山路","nameEn":"Huanglongshan Road","lon":114.424594,"lat":30.479864},{"id":"wuhan.金融港北","name":"金融港北","nameEn":"Jinronggang North","lon":114.414793,"lat":30.464189},{"id":"wuhan.秀湖","name":"秀湖","nameEn":"Xiuhu","lon":114.415408,"lat":30.450067},{"id":"wuhan.藏龙东街","name":"藏龙东街","nameEn":"Canglong East Street","lon":114.423969,"lat":30.439409},{"id":"wuhan.佛祖岭","name":"佛祖岭","nameEn":"Fozuling","lon":114.434228,"lat":30.440893}],"track":[[114.19735,30.75667],[114.19673,30.75389],[114.19705,30.75136],[114.19999,30.74696],[114.20355,30.74504],[114.21081,30.7436],[114.21393,30.7423],[114.23798,30.71994],[114.24744,30.71443],[114.25424,30.7121],[114.25496,30.71019],[114.25421,30.69782],[114.25553,30.69302],[114.25949,30.68726],[114.26978,30.67757],[114.27327,30.67044],[114.2731,30.66854],[114.27168,30.66733],[114.26605,30.66663],[114.25599,30.66207],[114.23831,30.65988],[114.2367,30.65887],[114.236,30.65758],[114.23836,30.64996],[114.23662,30.64207],[114.23665,30.63941],[114.24213,30.62538],[114.247,30.62216],[114.24827,30.61957],[114.25146,30.61634],[114.2537,30.61068],[114.25743,30.6047],[114.25797,30.60109],[114.25754,30.59327],[114.26034,30.5854],[114.26209,30.58424],[114.26456,30.58383],[114.27295,30.58615],[114.27618,30.58871],[114.27848,30.58883],[114.28599,30.58327],[114.29041,30.57845],[114.30601,30.57303],[114.30704,30.57182],[114.30727,30.56984],[114.30204,30.56109],[114.30194,30.55939],[114.30263,30.55834],[114.30448,30.55735],[114.31678,30.55517],[114.32841,30.55102],[114.33032,30.54886],[114.33054,30.54635],[114.32612,30.53747],[114.32673,30.5355],[114.35614,30.52644],[114.36371,30.52058],[114.36376,30.51606],[114.366,30.51337],[114.37435,30.50777],[114.3856,30.50715],[114.40533,30.50992],[114.425,30.50801],[114.4259,30.50602],[114.42506,30.49912],[114.42703,30.4948],[114.42459,30.47986],[114.42341,30.47612],[114.42204,30.47423],[114.41656,30.46972],[114.41498,30.46653],[114.41561,30.44533],[114.41497,30.44151],[114.41627,30.43938],[114.41878,30.43848],[114.42952,30.44081],[114.43423,30.44089]]},{"id":"wuhan.l3","ref":"3","name":"3号线","color":"#D3B466","system":"subway","lengthKm":29.65,"stationCount":24,"stations":[{"id":"wuhan.宏图大道站","name":"宏图大道站","nameEn":"Hongtu Boulevard","lon":114.272394,"lat":30.672677},{"id":"wuhan.市民之家","name":"市民之家","nameEn":"Citizens Home","lon":114.293915,"lat":30.663383},{"id":"wuhan.後湖大道","name":"後湖大道","nameEn":"Houhu Boulevard","lon":114.298646,"lat":30.652803},{"id":"wuhan.兴业路","name":"兴业路","nameEn":"Xingye Road","lon":114.298017,"lat":30.645519},{"id":"wuhan.二七小路","name":"二七小路","nameEn":"Erqi Branch Road","lon":114.302251,"lat":30.631172},{"id":"wuhan.羅家莊","name":"羅家莊","nameEn":"Luojiazhuang","lon":114.298969,"lat":30.626726},{"id":"wuhan.赵家条","name":"赵家条","nameEn":"Zhaojiatiao","lon":114.291586,"lat":30.620532},{"id":"wuhan.惠濟二路","name":"惠濟二路","nameEn":"Huiji 2nd Road","lon":114.284669,"lat":30.614447},{"id":"wuhan.香港路","name":"香港路","nameEn":"Xianggang Road","lon":114.279383,"lat":30.607898},{"id":"wuhan.菱角湖","name":"菱角湖","nameEn":"Lingjiaohu","lon":114.270187,"lat":30.606548},{"id":"wuhan.范湖","name":"范湖","nameEn":"Fanhu","lon":114.255605,"lat":30.610256},{"id":"wuhan.雲飛路","name":"雲飛路","nameEn":"Yunfei Road","lon":114.246539,"lat":30.60753},{"id":"wuhan.武汉商务区","name":"武汉商务区","nameEn":"Wuhan Business District","lon":114.240872,"lat":30.59841},{"id":"wuhan.雙墩","name":"雙墩","nameEn":"Shuangdun","lon":114.226696,"lat":30.589024},{"id":"wuhan.宗关站","name":"宗关站","nameEn":"Zongguan","lon":114.220458,"lat":30.583572},{"id":"wuhan.王家湾","name":"王家湾","nameEn":"Wangjiawan","lon":114.20468,"lat":30.564691},{"id":"wuhan.龍陽村","name":"龍陽村","nameEn":"Longyangcun","lon":114.200962,"lat":30.555505},{"id":"wuhan.陶家岭","name":"陶家岭","nameEn":"Taojialing","lon":114.196531,"lat":30.548131},{"id":"wuhan.四新大道","name":"四新大道","nameEn":"Sixin Boulevard","lon":114.189054,"lat":30.537067},{"id":"wuhan.汉阳客运站","name":"汉阳客运站","nameEn":"Hanyang Long-Distance Bus Station","lon":114.183484,"lat":30.530124},{"id":"wuhan.三角湖","name":"三角湖","nameEn":"Sanjiaohu","lon":114.17403,"lat":30.518804},{"id":"wuhan.体育中心","name":"体育中心","nameEn":"Sports Center","lon":114.165512,"lat":30.508601},{"id":"wuhan.东风公司","name":"东风公司","nameEn":"Dongfeng Motor Corporation","lon":114.160673,"lat":30.502796},{"id":"wuhan.沌阳大道","name":"沌阳大道","nameEn":"Zhuanyang Boulevard","lon":114.151893,"lat":30.492291}],"track":[[114.27239,30.67268],[114.2761,30.66596],[114.29565,30.66318],[114.29849,30.66116],[114.29989,30.65802],[114.29764,30.64879],[114.2977,30.64688],[114.30042,30.63865],[114.30061,30.63544],[114.30224,30.63282],[114.30213,30.63018],[114.30146,30.62891],[114.2851,30.61486],[114.27765,30.60626],[114.26784,30.60691],[114.26414,30.61054],[114.262,30.61129],[114.25819,30.61036],[114.25184,30.60995],[114.24339,30.60609],[114.24243,30.60464],[114.24038,30.59656],[114.23937,30.59519],[114.2231,30.58724],[114.21912,30.58214],[114.21579,30.58022],[114.20794,30.57207],[114.20006,30.55334],[114.18905,30.53707],[114.15189,30.49229]]},{"id":"wuhan.l4","ref":"4","name":"4号线","color":"#A6D30B","system":"subway","lengthKm":50.62,"stationCount":37,"stations":[{"id":"wuhan.柏林","name":"柏林","nameEn":"Bailin","lon":113.989143,"lat":30.584692},{"id":"wuhan.新庙村","name":"新庙村","nameEn":"Xinmiaocun","lon":114.003649,"lat":30.582239},{"id":"wuhan.临嶂大道","name":"临嶂大道","nameEn":"Linzhang Boulevard","lon":114.022679,"lat":30.574141},{"id":"wuhan.蔡甸广场","name":"蔡甸广场","nameEn":"Caidian Square","lon":114.034979,"lat":30.575268},{"id":"wuhan.凤凰路","name":"凤凰路","nameEn":"Fenghuang Road","lon":114.053358,"lat":30.566077},{"id":"wuhan.新农","name":"新农","nameEn":"Xinnong","lon":114.070798,"lat":30.561942},{"id":"wuhan.知音","name":"知音","nameEn":"Zhiyin","lon":114.087604,"lat":30.558681},{"id":"wuhan.集贤","name":"集贤","nameEn":"Jixian","lon":114.108333,"lat":30.552579},{"id":"wuhan.新天","name":"新天","nameEn":"Xintian","lon":114.118294,"lat":30.554501},{"id":"wuhan.黄金口","name":"黄金口","nameEn":"Huangjinkou","lon":114.139666,"lat":30.566313},{"id":"wuhan.孟家铺站","name":"孟家铺站","nameEn":"Mengjiapu","lon":114.168369,"lat":30.567414},{"id":"wuhan.永安堂站","name":"永安堂站","nameEn":"Yong'antang","lon":114.183434,"lat":30.568826},{"id":"wuhan.玉龙路站","name":"玉龙路站","nameEn":"Yulong Road","lon":114.195266,"lat":30.567143},{"id":"wuhan.王家湾","name":"王家湾","nameEn":"Wangjiawan","lon":114.204702,"lat":30.564444},{"id":"wuhan.十里铺站","name":"十里铺站","nameEn":"Shilipu","lon":114.213477,"lat":30.561854},{"id":"wuhan.七里庙站","name":"七里庙站","nameEn":"Qilimiao","lon":114.226732,"lat":30.559011},{"id":"wuhan.五里墩站","name":"五里墩站","nameEn":"Wulidun","lon":114.23683,"lat":30.555991},{"id":"wuhan.汉阳火车站","name":"汉阳火车站","nameEn":"Hanyang Railway Station","lon":114.247495,"lat":30.554128},{"id":"wuhan.钟家村站","name":"钟家村站","nameEn":"Zhongjiacun","lon":114.260597,"lat":30.551071},{"id":"wuhan.拦江路站","name":"拦江路站","nameEn":"Lanjiang Road","lon":114.263349,"lat":30.545609},{"id":"wuhan.复兴路","name":"复兴路","nameEn":"Fuxing Road","lon":114.295625,"lat":30.536664},{"id":"wuhan.首义路站","name":"首义路站","nameEn":"Shouyi Road","lon":114.304808,"lat":30.535745},{"id":"wuhan.武昌火车站","name":"武昌火车站","nameEn":"Wuchang Railway Station","lon":114.311435,"lat":30.532936},{"id":"wuhan.梅苑小区","name":"梅苑小区","nameEn":"Meiyuanxiaoqu","lon":114.320628,"lat":30.533264},{"id":"wuhan.中南路站E出口","name":"中南路站E出口","nameEn":"Zhongnan Road","lon":114.327504,"lat":30.539827},{"id":"wuhan.洪山广场","name":"洪山广场","nameEn":"Hongshan Square","lon":114.331422,"lat":30.547765},{"id":"wuhan.楚河汉街","name":"楚河汉街","nameEn":"Chuhe Hanjie","lon":114.335899,"lat":30.556179},{"id":"wuhan.青鱼嘴","name":"青鱼嘴","nameEn":"Qingyuzui","lon":114.343539,"lat":30.56517},{"id":"wuhan.东亭","name":"东亭","nameEn":"Dongting","lon":114.350029,"lat":30.572522},{"id":"wuhan.岳家嘴","name":"岳家嘴","nameEn":"Yuejiazui","lon":114.356239,"lat":30.579147},{"id":"wuhan.铁机路","name":"铁机路","nameEn":"Tieji Road","lon":114.363771,"lat":30.586341},{"id":"wuhan.罗家港","name":"罗家港","nameEn":"Luojiagang","lon":114.366136,"lat":30.594773},{"id":"wuhan.园林路","name":"园林路","nameEn":"Yuanlin Road","lon":114.373127,"lat":30.602662},{"id":"wuhan.仁和路","name":"仁和路","nameEn":"Renhe Road","lon":114.383544,"lat":30.607378},{"id":"wuhan.工业四路","name":"工业四路","nameEn":"Gongye 4th Road","lon":114.400069,"lat":30.61016},{"id":"wuhan.杨春湖","name":"杨春湖","nameEn":"Yangchunhu","lon":114.410741,"lat":30.607565},{"id":"wuhan.武汉火车站","name":"武汉火车站","nameEn":"Wuhan Railway Station","lon":114.419182,"lat":30.609559}],"track":[[113.98914,30.58469],[114.00236,30.58278],[114.02221,30.57422],[114.03876,30.57553],[114.05227,30.56644],[114.05958,30.56416],[114.06619,30.56377],[114.07449,30.56069],[114.08676,30.55894],[114.09319,30.55541],[114.10378,30.55234],[114.107,30.55237],[114.11749,30.55445],[114.12371,30.55414],[114.12649,30.55463],[114.13012,30.55734],[114.12996,30.56256],[114.13053,30.56399],[114.13427,30.56617],[114.15689,30.56657],[114.16473,30.56751],[114.17497,30.56732],[114.18511,30.56943],[114.18793,30.56941],[114.20875,30.56308],[114.23031,30.55843],[114.24239,30.55413],[114.24601,30.55374],[114.25425,30.55605],[114.25852,30.55547],[114.2604,30.5539],[114.26108,30.54772],[114.26918,30.54163],[114.29123,30.53683],[114.30543,30.53564],[114.31252,30.53243],[114.31456,30.53216],[114.31887,30.53334],[114.32299,30.53321],[114.32554,30.53489],[114.32642,30.53782],[114.33699,30.55798],[114.36035,30.58369],[114.36704,30.58829],[114.36757,30.59064],[114.36573,30.5969],[114.36737,30.5996],[114.38354,30.60738],[114.40077,30.61026],[114.40299,30.61008],[114.40673,30.60767],[114.40863,30.60718],[114.4237,30.6105],[114.42513,30.60954],[114.42557,30.60669]]},{"id":"wuhan.l5","ref":"5","name":"5号线","color":"#A43034","system":"subway","lengthKm":37.39,"stationCount":27,"stations":[{"id":"wuhan.武汉站东广场","name":"武汉站东广场","nameEn":"Wuhan Railway Station","lon":114.421349,"lat":30.608558},{"id":"wuhan.厂前","name":"厂前","nameEn":"","lon":114.42884,"lat":30.613298},{"id":"wuhan.武钢","name":"武钢","nameEn":"","lon":114.43187,"lat":30.621293},{"id":"wuhan.工人村","name":"工人村","nameEn":"","lon":114.420365,"lat":30.633885},{"id":"wuhan.青宜居","name":"青宜居","nameEn":"","lon":114.414002,"lat":30.644925},{"id":"wuhan.红钢城","name":"红钢城","nameEn":"","lon":114.396215,"lat":30.641534},{"id":"wuhan.和平公园","name":"和平公园","nameEn":"","lon":114.381137,"lat":30.633865},{"id":"wuhan.建设二路","name":"建设二路","nameEn":"","lon":114.370779,"lat":30.62717},{"id":"wuhan.科普公园","name":"科普公园","nameEn":"","lon":114.359612,"lat":30.620224},{"id":"wuhan.余家头","name":"余家头","nameEn":"","lon":114.346615,"lat":30.610313},{"id":"wuhan.杨园铁四院","name":"杨园铁四院","nameEn":"","lon":114.337595,"lat":30.602077},{"id":"wuhan.徐家棚","name":"徐家棚","nameEn":"Xujiapeng","lon":114.328102,"lat":30.592973},{"id":"wuhan.三角路","name":"三角路","nameEn":"","lon":114.319862,"lat":30.583635},{"id":"wuhan.三层楼","name":"三层楼","nameEn":"","lon":114.309062,"lat":30.571749},{"id":"wuhan.积玉桥","name":"积玉桥","nameEn":"Jiyuqiao","lon":114.303169,"lat":30.563719},{"id":"wuhan.昙华林武胜门","name":"昙华林武胜门","nameEn":"","lon":114.299859,"lat":30.556754},{"id":"wuhan.司门口黄鹤楼","name":"司门口黄鹤楼","nameEn":"","lon":114.296724,"lat":30.549361},{"id":"wuhan.彭刘杨","name":"彭刘杨","nameEn":"","lon":114.295866,"lat":30.543551},{"id":"wuhan.复兴路","name":"复兴路","nameEn":"Fuxing Road","lon":114.29604,"lat":30.536775},{"id":"wuhan.八铺街","name":"八铺街","nameEn":"","lon":114.295094,"lat":30.522829},{"id":"wuhan.烽火村","name":"烽火村","nameEn":"","lon":114.293225,"lat":30.511826},{"id":"wuhan.张家湾","name":"张家湾","nameEn":"","lon":114.287907,"lat":30.497888},{"id":"wuhan.光霞","name":"光霞","nameEn":"Guangxia","lon":114.287653,"lat":30.48094},{"id":"wuhan.白沙六路","name":"白沙六路","nameEn":"","lon":114.287808,"lat":30.471211},{"id":"wuhan.中医药大学","name":"中医药大学","nameEn":"Hubei University of Chinese Medicine","lon":114.26329,"lat":30.456302},{"id":"wuhan.黄家湖（武科大）","name":"黄家湖（武科大）","nameEn":"Huangjiahu (Wuhan University of Science and Technology)","lon":114.25737,"lat":30.44585},{"id":"wuhan.红霞","name":"红霞","nameEn":"Hongxia","lon":114.256351,"lat":30.433459}],"track":[[114.42135,30.60856],[114.42137,30.61091],[114.42298,30.61277],[114.42485,30.61337],[114.43231,30.61346],[114.43485,30.61536],[114.4353,30.61793],[114.43406,30.61977],[114.42196,30.62876],[114.4204,30.63274],[114.42021,30.63939],[114.41856,30.64352],[114.41666,30.64458],[114.40967,30.64519],[114.40539,30.64322],[114.39963,30.6432],[114.38565,30.63635],[114.35961,30.62022],[114.3446,30.60873],[114.32613,30.59105],[114.30503,30.56676],[114.30225,30.56198],[114.29617,30.54808],[114.29602,30.53408],[114.29424,30.52655],[114.29563,30.52029],[114.29419,30.51375],[114.28966,30.50606],[114.28748,30.49578],[114.2877,30.46522],[114.28634,30.46359],[114.28475,30.46303],[114.27933,30.46423],[114.26847,30.46417],[114.26601,30.46303],[114.26457,30.45871],[114.25695,30.44486],[114.25635,30.43346]]},{"id":"wuhan.l6","ref":"6","name":"6号线","color":"#007128","system":"subway","lengthKm":42.63,"stationCount":32,"stations":[{"id":"wuhan.东风公司","name":"东风公司","nameEn":"Dongfeng Motor Corporation","lon":114.160889,"lat":30.502462},{"id":"wuhan.车城东路","name":"车城东路","nameEn":"Checheng East Road","lon":114.174572,"lat":30.497882},{"id":"wuhan.江城大道","name":"江城大道","nameEn":"Jiangcheng Boulevard","lon":114.196815,"lat":30.498826},{"id":"wuhan.老关村","name":"老关村","nameEn":"Laoguancun","lon":114.220447,"lat":30.495162},{"id":"wuhan.国博中心南","name":"国博中心南","nameEn":"South International Expo Centre","lon":114.230456,"lat":30.507463},{"id":"wuhan.国博中心北","name":"国博中心北","nameEn":"North International Expo Centre","lon":114.237205,"lat":30.5131},{"id":"wuhan.前进村","name":"前进村","nameEn":"Qianjincun","lon":114.24803,"lat":30.522651},{"id":"wuhan.建港","name":"建港","nameEn":"Jiangang","lon":114.253925,"lat":30.528742},{"id":"wuhan.马鹦路","name":"马鹦路","nameEn":"Maying Road","lon":114.26139,"lat":30.540525},{"id":"wuhan.钟家村站","name":"钟家村站","nameEn":"Zhongjiacun","lon":114.260768,"lat":30.551066},{"id":"wuhan.琴台","name":"琴台","nameEn":"Qintai","lon":114.260881,"lat":30.559989},{"id":"wuhan.武胜路","name":"武胜路","nameEn":"Wusheng Road","lon":114.263148,"lat":30.571877},{"id":"wuhan.汉正街","name":"汉正街","nameEn":"Hanzheng Street","lon":114.270396,"lat":30.574141},{"id":"wuhan.六渡桥","name":"六渡桥","nameEn":"Liuduqiao","lon":114.278614,"lat":30.577367},{"id":"wuhan.江汉路","name":"江汉路","nameEn":"Jianghan Road","lon":114.286033,"lat":30.582717},{"id":"wuhan.大智路","name":"大智路","nameEn":"Dazhi Road","lon":114.288732,"lat":30.594696},{"id":"wuhan.苗栗路","name":"苗栗路","nameEn":"Miaoli Road","lon":114.284552,"lat":30.601301},{"id":"wuhan.香港路","name":"香港路","nameEn":"Xianggang Road","lon":114.279231,"lat":30.607592},{"id":"wuhan.三眼桥","name":"三眼桥","nameEn":"Sanyanqiao","lon":114.270306,"lat":30.612935},{"id":"wuhan.唐家墩","name":"唐家墩","nameEn":"Tangjiadun","lon":114.265906,"lat":30.620127},{"id":"wuhan.石桥","name":"石桥","nameEn":"Shiqiao","lon":114.259696,"lat":30.633415},{"id":"wuhan.杨汊湖","name":"杨汊湖","nameEn":"Yangchahu","lon":114.255709,"lat":30.638316},{"id":"wuhan.常青花园","name":"常青花园","nameEn":"Changqinghuayuan","lon":114.238409,"lat":30.643345},{"id":"wuhan.轻工大学","name":"轻工大学","nameEn":"Polytechnic University","lon":114.228895,"lat":30.642167},{"id":"wuhan.园博园北","name":"园博园北","nameEn":"Garden Expo North","lon":114.217682,"lat":30.640341},{"id":"wuhan.金银湖","name":"金银湖","nameEn":"Jinyinhu","lon":114.199423,"lat":30.641779},{"id":"wuhan.金银湖公园","name":"金银湖公园","nameEn":"Jinyinhu Park","lon":114.175127,"lat":30.639175},{"id":"wuhan.海口三路","name":"海口三路","nameEn":"Haikou 3rd Road","lon":114.161904,"lat":30.636762},{"id":"wuhan.二雅路","name":"二雅路","nameEn":"Erya Road","lon":114.147103,"lat":30.635427},{"id":"wuhan.五环体育中心","name":"五环体育中心","nameEn":"Five Rings Sports Center","lon":114.131426,"lat":30.636368},{"id":"wuhan.码头潭公园","name":"码头潭公园","nameEn":"Matoutan Park","lon":114.118864,"lat":30.635339},{"id":"wuhan.新城十一路","name":"新城十一路","nameEn":"Xincheng 11th Road","lon":114.103359,"lat":30.635281}],"track":[[114.16089,30.50246],[114.16562,30.50001],[114.18021,30.49663],[114.19125,30.49986],[114.19431,30.50008],[114.21067,30.49052],[114.21401,30.49059],[114.21804,30.49229],[114.22889,30.50483],[114.23328,30.51169],[114.23981,30.51407],[114.26162,30.53674],[114.26068,30.55337],[114.25995,30.55676],[114.26121,30.56224],[114.25999,30.56421],[114.25669,30.56605],[114.25683,30.57035],[114.25879,30.57157],[114.26504,30.57201],[114.27394,30.5753],[114.28436,30.58029],[114.28686,30.58381],[114.28843,30.58798],[114.28901,30.59362],[114.28819,30.59627],[114.28527,30.59946],[114.28284,30.60395],[114.27923,30.60759],[114.26789,30.61458],[114.26215,30.62988],[114.2512,30.64413],[114.24914,30.645],[114.24107,30.64464],[114.23389,30.64147],[114.225,30.64259],[114.21955,30.64001],[114.21216,30.64154],[114.20423,30.64101],[114.18991,30.64361],[114.18571,30.64359],[114.18244,30.64259],[114.17813,30.63995],[114.16603,30.63698],[114.15428,30.63681],[114.14407,30.63482],[114.12673,30.63665],[114.11668,30.63492],[114.1091,30.63471],[114.10336,30.63528]]},{"id":"wuhan.l7","ref":"7","name":"7号线","color":"#EB7C16","system":"subway","lengthKm":81.6,"stationCount":36,"stations":[{"id":"wuhan.青龙山地铁小镇","name":"青龙山地铁小镇","nameEn":"Qinglongshan Ditiexiaozhen","lon":114.32893,"lat":30.320735},{"id":"wuhan.纸坊大街","name":"纸坊大街","nameEn":"Zhifang Avenue","lon":114.319202,"lat":30.347676},{"id":"wuhan.北华街","name":"北华街","nameEn":"Beihua Street","lon":114.318244,"lat":30.360523},{"id":"wuhan.谭鑫培公园","name":"谭鑫培公园","nameEn":"Tanxinpei Park","lon":114.316432,"lat":30.374104},{"id":"wuhan.江夏客厅","name":"江夏客厅","nameEn":"Jiangxiaketing","lon":114.316497,"lat":30.391904},{"id":"wuhan.大花岭","name":"大花岭","nameEn":"Dahualing","lon":114.314794,"lat":30.41484},{"id":"wuhan.新路村","name":"新路村","nameEn":"Xinlucun","lon":114.313018,"lat":30.444099},{"id":"wuhan.野芷湖","name":"野芷湖","nameEn":"Yezhihu","lon":114.314242,"lat":30.463128},{"id":"wuhan.板桥","name":"板桥","nameEn":"Banqiao","lon":114.308019,"lat":30.477461},{"id":"wuhan.湖工大","name":"湖工大","nameEn":"Hubei University of Technology","lon":114.307948,"lat":30.486877},{"id":"wuhan.建安街","name":"建安街","nameEn":"Jian'an Street","lon":114.308401,"lat":30.506116},{"id":"wuhan.瑞安街","name":"瑞安街","nameEn":"Ruian Street","lon":114.308924,"lat":30.517596},{"id":"wuhan.武昌火车站","name":"武昌火车站","nameEn":"Wuchang Railway Station","lon":114.311333,"lat":30.533329},{"id":"wuhan.小东门","name":"小东门","nameEn":"Xiaodongmen","lon":114.313222,"lat":30.547319},{"id":"wuhan.螃蟹岬","name":"螃蟹岬","nameEn":"Pangxiejia","lon":114.312047,"lat":30.556291},{"id":"wuhan.新河街","name":"新河街","nameEn":"Xinhe Street","lon":114.311819,"lat":30.566067},{"id":"wuhan.湖北大学","name":"湖北大学","nameEn":"Hubei University","lon":114.323511,"lat":30.579616},{"id":"wuhan.徐家棚","name":"徐家棚","nameEn":"Xujiapeng","lon":114.326278,"lat":30.591155},{"id":"wuhan.三阳路","name":"三阳路","nameEn":"Sanyang Road","lon":114.294806,"lat":30.601703},{"id":"wuhan.香港路","name":"香港路","nameEn":"Xianggang Road","lon":114.27954,"lat":30.607873},{"id":"wuhan.取水楼","name":"取水楼","nameEn":"Qushuilou","lon":114.268025,"lat":30.599647},{"id":"wuhan.王家墩东站","name":"王家墩东站","nameEn":"Wangjiadun East","lon":114.257158,"lat":30.596635},{"id":"wuhan.武汉商务区","name":"武汉商务区","nameEn":"Wuhan Business District","lon":114.241061,"lat":30.598441},{"id":"wuhan.常码头","name":"常码头","nameEn":"Changmatou","lon":114.22902,"lat":30.607429},{"id":"wuhan.园博园","name":"园博园","nameEn":"Garden Expo","lon":114.220443,"lat":30.621714},{"id":"wuhan.园博园北","name":"园博园北","nameEn":"Garden Expo North","lon":114.217683,"lat":30.640277},{"id":"wuhan.马池","name":"马池","nameEn":"Machi","lon":114.22,"lat":30.657712},{"id":"wuhan.汤云海路","name":"汤云海路","nameEn":"Tangyunhai Road","lon":114.232685,"lat":30.702301},{"id":"wuhan.巨龙大道","name":"巨龙大道","nameEn":"Julong Boulevard","lon":114.250558,"lat":30.714489},{"id":"wuhan.腾龙大道","name":"腾龙大道","nameEn":"Tenglong Boulevard","lon":114.25449,"lat":30.729879},{"id":"wuhan.天阳大道","name":"天阳大道","nameEn":"Tianyang Boulevard","lon":114.264734,"lat":30.767722},{"id":"wuhan.裕福路","name":"裕福路","nameEn":"Yufu Road","lon":114.272991,"lat":30.788108},{"id":"wuhan.横店","name":"横店","nameEn":"Hengdian","lon":114.284381,"lat":30.806482},{"id":"wuhan.青仔村","name":"青仔村","nameEn":"","lon":114.327212,"lat":30.884357},{"id":"wuhan.百泰路","name":"百泰路","nameEn":"","lon":114.352731,"lat":30.885965},{"id":"wuhan.黄陂广场","name":"黄陂广场","nameEn":"","lon":114.375557,"lat":30.88277}],"track":[[114.31982,30.34013],[114.3197,30.33878],[114.31906,30.35414],[114.31615,30.37728],[114.31697,30.38886],[114.31622,30.39468],[114.31315,30.40763],[114.31627,30.42013],[114.31633,30.43723],[114.31554,30.44029],[114.31125,30.4461],[114.31057,30.44841],[114.31192,30.45174],[114.31639,30.45393],[114.31722,30.4562],[114.31511,30.46005],[114.31279,30.46802],[114.30967,30.47025],[114.30864,30.4723],[114.3077,30.48063],[114.30793,30.48767],[114.30721,30.49066],[114.30782,30.49367],[114.30964,30.49706],[114.30975,30.49945],[114.30837,30.5035],[114.30899,30.52069],[114.30703,30.52493],[114.30787,30.52795],[114.31142,30.53355],[114.31328,30.54452],[114.31208,30.55411],[114.31207,30.56787],[114.32006,30.57672],[114.32811,30.58355],[114.3309,30.58513],[114.33134,30.5873],[114.32032,30.59509],[114.30389,30.59772],[114.28936,30.60444],[114.28726,30.60592],[114.28529,30.60868],[114.28329,30.60947],[114.28061,30.60897],[114.2739,30.60221],[114.26135,30.59695],[114.25124,30.59648],[114.2373,30.5992],[114.23483,30.60035],[114.23149,30.60537],[114.2281,30.60822],[114.22631,30.61187],[114.22265,30.61465],[114.22078,30.6183],[114.2203,30.62433],[114.22226,30.6274],[114.22263,30.62953],[114.21783,30.63742],[114.21771,30.64121],[114.21658,30.64577],[114.21718,30.64798],[114.21997,30.65181],[114.22002,30.66714],[114.21889,30.67207],[114.23415,30.70519],[114.23673,30.70621],[114.24538,30.70636],[114.2496,30.71334],[114.25412,30.71908],[114.2546,30.72442],[114.25425,30.74927],[114.255,30.75423],[114.26286,30.76345],[114.26721,30.77281],[114.27409,30.79075],[114.28249,30.80259],[114.28576,30.80926],[114.29119,30.81658],[114.29244,30.82593],[114.29218,30.83451],[114.29314,30.83777],[114.29612,30.84106],[114.30648,30.84726],[114.30834,30.84985],[114.31056,30.87538],[114.3125,30.87978],[114.31501,30.88182],[114.3182,30.8831],[114.3476,30.88714],[114.35103,30.8868],[114.36113,30.88195],[114.36954,30.88305],[114.37663,30.88278]]},{"id":"wuhan.l8","ref":"8","name":"8号线","color":"#9DABAA","system":"subway","lengthKm":38.71,"stationCount":26,"stations":[{"id":"wuhan.军运村","name":"军运村","nameEn":"Military Athletes' Village","lon":114.289734,"lat":30.429866},{"id":"wuhan.黄家湖地铁小镇","name":"黄家湖地铁小镇","nameEn":"Huangjiahu Ditiexiaozhen","lon":114.292693,"lat":30.439131},{"id":"wuhan.野芷湖","name":"野芷湖","nameEn":"Yezhihu","lon":114.313151,"lat":30.463632},{"id":"wuhan.马湖","name":"马湖","nameEn":"Mahu","lon":114.319627,"lat":30.473741},{"id":"wuhan.省农科院","name":"省农科院","nameEn":"Hubei Academy of Agricultural Sciences","lon":114.32064,"lat":30.484411},{"id":"wuhan.文昌路","name":"文昌路","nameEn":"Wenchang Road","lon":114.32376,"lat":30.494522},{"id":"wuhan.文治街","name":"文治街","nameEn":"Wenzhi Street","lon":114.33897,"lat":30.50277},{"id":"wuhan.马房山","name":"马房山","nameEn":"Mafangshan","lon":114.34492,"lat":30.517463},{"id":"wuhan.街道口","name":"街道口","nameEn":"Jiedaokou","lon":114.347767,"lat":30.528363},{"id":"wuhan.小洪山","name":"小洪山","nameEn":"Xiaohongshan","lon":114.347005,"lat":30.538012},{"id":"wuhan.洪山路","name":"洪山路","nameEn":"Hongshan Road","lon":114.338268,"lat":30.547615},{"id":"wuhan.水果湖","name":"水果湖","nameEn":"Shuiguohu","lon":114.340922,"lat":30.553987},{"id":"wuhan.中南医院","name":"中南医院","nameEn":"Zhongnan Hospital","lon":114.351768,"lat":30.559101},{"id":"wuhan.省博湖北日报","name":"省博湖北日报","nameEn":"Hubei Provincial Museum & Hubei Daily","lon":114.359743,"lat":30.567068},{"id":"wuhan.梨园","name":"梨园","nameEn":"Liyuan","lon":114.364571,"lat":30.577173},{"id":"wuhan.岳家嘴","name":"岳家嘴","nameEn":"Yuejiazui","lon":114.35579,"lat":30.579024},{"id":"wuhan.汪家墩","name":"汪家墩","nameEn":"Wangjiadun","lon":114.34558,"lat":30.58646},{"id":"wuhan.徐东","name":"徐东","nameEn":"Xudong","lon":114.340226,"lat":30.590469},{"id":"wuhan.徐家棚","name":"徐家棚","nameEn":"Xujiapeng","lon":114.33003,"lat":30.594408},{"id":"wuhan.黄浦路","name":"黄浦路","nameEn":"Huangpu Road","lon":114.302948,"lat":30.610312},{"id":"wuhan.赵家条","name":"赵家条","nameEn":"Zhaojiatiao","lon":114.291666,"lat":30.62049},{"id":"wuhan.竹叶山","name":"竹叶山","nameEn":"Zhuyeshan","lon":114.281748,"lat":30.628003},{"id":"wuhan.中一路","name":"中一路","nameEn":"Zhongyi Road","lon":114.27563,"lat":30.64263},{"id":"wuhan.塔子湖","name":"塔子湖","nameEn":"Tazihu","lon":114.275075,"lat":30.654776},{"id":"wuhan.宏图大道","name":"宏图大道","nameEn":"Hongtu Boulevard","lon":114.274963,"lat":30.671722},{"id":"wuhan.金潭路","name":"金潭路","nameEn":"Jintan Road","lon":114.277985,"lat":30.678115}],"track":[[114.2893,30.42766],[114.2914,30.43586],[114.29492,30.44333],[114.29768,30.45379],[114.30017,30.45584],[114.30798,30.45878],[114.31009,30.46131],[114.31868,30.46803],[114.3188,30.47085],[114.32026,30.47503],[114.32065,30.48536],[114.31831,30.49183],[114.3186,30.49341],[114.32209,30.49483],[114.32879,30.49373],[114.3343,30.49552],[114.34425,30.51224],[114.34543,30.52238],[114.35001,30.53485],[114.34869,30.53709],[114.34555,30.53874],[114.33918,30.53973],[114.33727,30.54114],[114.33675,30.54333],[114.33814,30.54612],[114.33862,30.55083],[114.34387,30.55795],[114.35469,30.55969],[114.35593,30.56073],[114.35792,30.56492],[114.3611,30.56863],[114.36817,30.57072],[114.36936,30.57193],[114.36965,30.57376],[114.36889,30.57559],[114.36753,30.57654],[114.35738,30.57831],[114.35317,30.58035],[114.33512,30.59414],[114.32772,30.59455],[114.32462,30.5957],[114.31055,30.6074],[114.29527,30.61247],[114.29073,30.62224],[114.2784,30.63025],[114.2743,30.64921],[114.27615,30.6642],[114.27426,30.66947],[114.2786,30.67941]]},{"id":"wuhan.l11","ref":"11","name":"11号线","color":"#F6D300","system":"subway","lengthKm":40.71,"stationCount":23,"stations":[{"id":"wuhan.葛店南站","name":"葛店南站","nameEn":"Gedian South Railway Station","lon":114.655128,"lat":30.492242},{"id":"wuhan.左岭","name":"左岭","nameEn":"Zuoling","lon":114.615717,"lat":30.490948},{"id":"wuhan.未来三路","name":"未来三路","nameEn":"Weilai 3rd Road","lon":114.600767,"lat":30.489042},{"id":"wuhan.未来一路","name":"未来一路","nameEn":"Weilai 1st Road","lon":114.580315,"lat":30.487214},{"id":"wuhan.长岭山","name":"长岭山","nameEn":"Changlingshan","lon":114.558044,"lat":30.489928},{"id":"wuhan.光谷七路","name":"光谷七路","nameEn":"Guanggu 7th Road","lon":114.528626,"lat":30.490698},{"id":"wuhan.豹澥","name":"豹澥","nameEn":"Baoxie","lon":114.517902,"lat":30.491156},{"id":"wuhan.光谷六路","name":"光谷六路","nameEn":"Guanggu 6th Road","lon":114.506937,"lat":30.487657},{"id":"wuhan.光谷五路","name":"光谷五路","nameEn":"Guanggu 5th Road","lon":114.497523,"lat":30.48768},{"id":"wuhan.光谷四路","name":"光谷四路","nameEn":"Guanggu 4th Road","lon":114.48628,"lat":30.491725},{"id":"wuhan.光谷生物园","name":"光谷生物园","nameEn":"Guanggushengwuyuan","lon":114.476015,"lat":30.489995},{"id":"wuhan.光谷同济医院","name":"光谷同济医院","nameEn":"Tongji Hospital","lon":114.460559,"lat":30.487744},{"id":"wuhan.湖口","name":"湖口","nameEn":"Hukou","lon":114.44223,"lat":30.490668},{"id":"wuhan.武汉东站","name":"武汉东站","nameEn":"Wuhandong Railway Station","lon":114.427959,"lat":30.489176},{"id":"wuhan.关山大道","name":"关山大道","nameEn":"Guanshan Boulevard","lon":114.407272,"lat":30.499535},{"id":"wuhan.光谷广场","name":"光谷广场","nameEn":"Optics Valley Square","lon":114.393167,"lat":30.50847},{"id":"wuhan.武汉体育学院","name":"武汉体育学院","nameEn":"Wuhan Sports University","lon":114.37393,"lat":30.51945},{"id":"wuhan.虎泉","name":"虎泉","nameEn":"Huquan","lon":114.36236,"lat":30.515781},{"id":"wuhan.马房山","name":"马房山","nameEn":"Mafangshan","lon":114.344273,"lat":30.516637},{"id":"wuhan.丁字桥","name":"丁字桥","nameEn":"Dingziqiao","lon":114.324793,"lat":30.524106},{"id":"wuhan.武昌站东广场","name":"武昌站东广场","nameEn":"East Square of Wuchang Railway Station","lon":114.31677,"lat":30.53156},{"id":"wuhan.紫阳湖","name":"紫阳湖","nameEn":"Ziyanghu","lon":114.295685,"lat":30.5308},{"id":"wuhan.江安路","name":"江安路","nameEn":"Jiang'an Road","lon":114.287853,"lat":30.521067}],"track":[[114.65513,30.49224],[114.62561,30.49194],[114.60726,30.49052],[114.59378,30.48729],[114.58738,30.48662],[114.548,30.49131],[114.53161,30.49063],[114.51587,30.49121],[114.51373,30.49068],[114.51113,30.48831],[114.50941,30.48772],[114.49557,30.48771],[114.49354,30.48816],[114.49052,30.49132],[114.48834,30.49197],[114.45784,30.48746],[114.45239,30.48793],[114.43868,30.4913],[114.43687,30.49094],[114.43349,30.48851],[114.43146,30.48831],[114.42508,30.48976],[114.42219,30.49102],[114.42073,30.49578],[114.41563,30.49853],[114.40421,30.49981],[114.40209,30.50053],[114.39989,30.50542],[114.39659,30.50653],[114.38988,30.51024],[114.38051,30.51788],[114.37019,30.51998],[114.36863,30.51945],[114.36613,30.51661],[114.36445,30.51587],[114.33854,30.5167],[114.33587,30.51807],[114.33159,30.52258],[114.32109,30.52552],[114.31999,30.52685],[114.31925,30.52965],[114.31236,30.53495],[114.30615,30.53582],[114.30006,30.53538],[114.29735,30.53445],[114.29605,30.53258],[114.29496,30.52769],[114.28908,30.52376],[114.28674,30.51788],[114.28316,30.5138],[114.28227,30.51098]]},{"id":"wuhan.l12","ref":"12","name":"12号线","color":"#00A3E9","system":"subway","lengthKm":34.52,"stationCount":23,"stations":[{"id":"wuhan.墨水湖公园","name":"墨水湖公园","nameEn":"Moshuihu Park","lon":114.209688,"lat":30.553274},{"id":"wuhan.港口村","name":"港口村","nameEn":"Gangkoucun","lon":114.201753,"lat":30.539447},{"id":"wuhan.芳草路","name":"芳草路","nameEn":"Fangcao Road","lon":114.197246,"lat":30.531586},{"id":"wuhan.四新中路","name":"四新中路","nameEn":"Sixin Middle Road","lon":114.200062,"lat":30.521454},{"id":"wuhan.四新南路","name":"四新南路","nameEn":"Sixin South Road","lon":114.210232,"lat":30.514848},{"id":"wuhan.国博新城","name":"国博新城","nameEn":"Guoboxincheng","lon":114.221627,"lat":30.509583},{"id":"wuhan.国博中心南","name":"国博中心南","nameEn":"South International Expo Centre","lon":114.231919,"lat":30.505047},{"id":"wuhan.夹套河","name":"夹套河","nameEn":"Jiataohe","lon":114.263667,"lat":30.486167},{"id":"wuhan.市农科院","name":"市农科院","nameEn":"Wuhan Academy of Agricultural Sciences","lon":114.271525,"lat":30.48176},{"id":"wuhan.光霞","name":"光霞","nameEn":"Guangxia","lon":114.284928,"lat":30.480181},{"id":"wuhan.省农科院南","name":"省农科院南","nameEn":"Hubei Academy of Agricultural Sciences South","lon":114.311322,"lat":30.483633},{"id":"wuhan.楚祥大道","name":"楚祥大道","nameEn":"Chuxiang Boulevard","lon":114.314703,"lat":30.492763},{"id":"wuhan.富安街","name":"富安街","nameEn":"Fu'an Street","lon":114.314969,"lat":30.502406},{"id":"wuhan.瑞安街东","name":"瑞安街东","nameEn":"Rui'an Street East","lon":114.31406,"lat":30.515121},{"id":"wuhan.武昌站东广场","name":"武昌站东广场","nameEn":"East Square of Wuchang Railway Station","lon":114.314235,"lat":30.531463},{"id":"wuhan.十五中","name":"十五中","nameEn":"Wuhan No.15 Senior Middle School","lon":114.321906,"lat":30.539616},{"id":"wuhan.何家垅","name":"何家垅","nameEn":"Hejialong","lon":114.326071,"lat":30.550366},{"id":"wuhan.公正路","name":"公正路","nameEn":"Gongzheng Road","lon":114.331719,"lat":30.558694},{"id":"wuhan.秦园中路","name":"秦园中路","nameEn":"Qinyuan Middle Road","lon":114.337049,"lat":30.580519},{"id":"wuhan.汪家墩","name":"汪家墩","nameEn":"Wangjiadun","lon":114.346135,"lat":30.587048},{"id":"wuhan.团结大道","name":"团结大道","nameEn":"Tuanjie Boulevard","lon":114.358473,"lat":30.594895},{"id":"wuhan.园林路","name":"园林路","nameEn":"Yuanlin Road","lon":114.370947,"lat":30.602457},{"id":"wuhan.钢都花园","name":"钢都花园","nameEn":"Gangduhuayuan","lon":114.363202,"lat":30.61503}],"track":[[114.20969,30.55327],[114.20668,30.54917],[114.19587,30.52861],[114.19596,30.525],[114.19804,30.52273],[114.21023,30.51485],[114.23046,30.50598],[114.27327,30.48095],[114.27727,30.48016],[114.2976,30.48011],[114.30741,30.48094],[114.31275,30.48513],[114.31452,30.49068],[114.31524,30.49995],[114.31394,30.51564],[114.31254,30.51891],[114.30881,30.52249],[114.30856,30.52465],[114.31392,30.53097],[114.31593,30.53516],[114.321,30.53818],[114.32502,30.54459],[114.32531,30.54847],[114.32651,30.5512],[114.3287,30.55318],[114.33285,30.56076],[114.33603,30.56461],[114.33613,30.56837],[114.33172,30.57382],[114.3317,30.57569],[114.33247,30.57741],[114.35698,30.59416],[114.36108,30.59603],[114.3686,30.59599],[114.37124,30.59766],[114.37189,30.59903],[114.37176,30.60089],[114.3632,30.61503]]},{"id":"wuhan.l16","ref":"16","name":"16号线","color":"#C24C6D","system":"subway","lengthKm":36.85,"stationCount":14,"stations":[{"id":"wuhan.通航機場","name":"通航機場","nameEn":"Hannan General Airport","lon":114.056995,"lat":30.272302},{"id":"wuhan.紗帽","name":"紗帽","nameEn":"Shamao","lon":114.046092,"lat":30.283037},{"id":"wuhan.周家河","name":"周家河","nameEn":"Zhoujiahe","lon":114.029456,"lat":30.307123},{"id":"wuhan.湾湖","name":"湾湖","nameEn":"Wanhu","lon":114.041455,"lat":30.3259},{"id":"wuhan.协子河","name":"协子河","nameEn":"Xiezihe","lon":114.054192,"lat":30.334666},{"id":"wuhan.马影河","name":"马影河","nameEn":"Mayinghe","lon":114.063044,"lat":30.344005},{"id":"wuhan.桂子湖","name":"桂子湖","nameEn":"Guizihu","lon":114.088045,"lat":30.360865},{"id":"wuhan.大军山","name":"大军山","nameEn":"Dajunshan","lon":114.127095,"lat":30.377732},{"id":"wuhan.枫林","name":"枫林","nameEn":"Fenglin","lon":114.139082,"lat":30.391651},{"id":"wuhan.小军山","name":"小军山","nameEn":"Xiaojunshan","lon":114.152874,"lat":30.407014},{"id":"wuhan.沌口","name":"沌口","nameEn":"Zhuankou","lon":114.199808,"lat":30.464474},{"id":"wuhan.南太子湖","name":"南太子湖","nameEn":"South Taizihu","lon":114.214632,"lat":30.479038},{"id":"wuhan.老关村","name":"老关村","nameEn":"Laoguancun","lon":114.220833,"lat":30.495035},{"id":"wuhan.国博中心南","name":"国博中心南","nameEn":"South International Expo Centre","lon":114.230654,"lat":30.506933}],"track":[[114.05699,30.2723],[114.04349,30.28562],[114.03473,30.29696],[114.02549,30.31565],[114.02527,30.31864],[114.02654,30.32159],[114.02835,30.32331],[114.03113,30.32458],[114.04482,30.32636],[114.05022,30.32859],[114.05677,30.33859],[114.06677,30.34719],[114.06911,30.35198],[114.07218,30.35457],[114.08379,30.35886],[114.09112,30.36256],[114.09623,30.36437],[114.10083,30.36833],[114.10982,30.37244],[114.11231,30.37286],[114.11898,30.37235],[114.12492,30.37462],[114.1314,30.38394],[114.14411,30.39658],[114.15053,30.40378],[114.15567,30.41072],[114.15681,30.41356],[114.15696,30.41844],[114.1582,30.42066],[114.16871,30.42903],[114.18389,30.44917],[114.21367,30.47781],[114.2208,30.48761],[114.22093,30.48909],[114.21991,30.49168],[114.22038,30.49444],[114.22802,30.50297],[114.23239,30.50982]]},{"id":"wuhan.l19","ref":"19","name":"19号线","color":"#5AC1A7","system":"subway","lengthKm":23.11,"stationCount":7,"stations":[{"id":"wuhan.武汉站西广场","name":"武汉站西广场","nameEn":"West Square of Wuhan Railway Station","lon":114.417074,"lat":30.607412},{"id":"wuhan.武东","name":"武东","nameEn":"Wudong","lon":114.450834,"lat":30.580799},{"id":"wuhan.鼓架山","name":"鼓架山","nameEn":"Gujiashan","lon":114.459467,"lat":30.557113},{"id":"wuhan.花山新城","name":"花山新城","nameEn":"Huashanxincheng","lon":114.497983,"lat":30.557244},{"id":"wuhan.花山河","name":"花山河","nameEn":"Huashanhe","lon":114.506759,"lat":30.543573},{"id":"wuhan.光谷五路","name":"光谷五路","nameEn":"West Square of Wuhan Railway Station","lon":114.497413,"lat":30.487835},{"id":"wuhan.新月溪公园","name":"新月溪公园","nameEn":"Xinyuexi Park","lon":114.497501,"lat":30.478134}],"track":[[114.41707,30.60741],[114.41987,30.60263],[114.41952,30.59759],[114.421,30.59496],[114.42361,30.594],[114.43068,30.59359],[114.43391,30.59274],[114.43835,30.58926],[114.44116,30.58428],[114.44289,30.58262],[114.44571,30.5816],[114.45736,30.57971],[114.45988,30.57817],[114.46117,30.57615],[114.46169,30.57356],[114.45812,30.56172],[114.45813,30.55919],[114.46604,30.54962],[114.47028,30.54895],[114.47457,30.55058],[114.48085,30.55746],[114.48471,30.55918],[114.48817,30.5598],[114.49338,30.55931],[114.49638,30.55815],[114.50854,30.55036],[114.50923,30.54887],[114.50899,30.54664],[114.5057,30.5424],[114.50335,30.54019],[114.49765,30.53892],[114.49653,30.53711],[114.49343,30.50803],[114.49409,30.50458],[114.49748,30.49561],[114.4975,30.47813]]},{"id":"wuhan.l21","ref":"21","name":"阳逻线","color":"#B2007B","system":"subway","lengthKm":34.83,"stationCount":16,"stations":[{"id":"wuhan.後湖大道","name":"後湖大道","nameEn":"Houhu Boulevard","lon":114.298907,"lat":30.652568},{"id":"wuhan.百步亭花园路","name":"百步亭花园路","nameEn":"Baibutinghuayuan Road","lon":114.310083,"lat":30.656785},{"id":"wuhan.新荣","name":"新荣","nameEn":"Xinrong","lon":114.327767,"lat":30.659944},{"id":"wuhan.幸福湾","name":"幸福湾","nameEn":"Xingfuwan","lon":114.338721,"lat":30.674484},{"id":"wuhan.朱家河","name":"朱家河","nameEn":"Zhujiahe","lon":114.358949,"lat":30.682372},{"id":"wuhan.谌家矶","name":"谌家矶","nameEn":"Shenjiaji","lon":114.367637,"lat":30.6861},{"id":"wuhan.青龙","name":"青龙","nameEn":"Qinglong","lon":114.384869,"lat":30.707616},{"id":"wuhan.高车","name":"高车","nameEn":"Gaoche","lon":114.403334,"lat":30.715826},{"id":"wuhan.武湖","name":"武湖","nameEn":"Wuhu","lon":114.424176,"lat":30.709234},{"id":"wuhan.沙口","name":"沙口","nameEn":"Shakou","lon":114.472096,"lat":30.71161},{"id":"wuhan.军民村","name":"军民村","nameEn":"Junmincun","lon":114.50994,"lat":30.712487},{"id":"wuhan.武生院","name":"武生院","nameEn":"Wuhan Bioengineering Institute","lon":114.520417,"lat":30.711097},{"id":"wuhan.阳逻","name":"阳逻","nameEn":"Yangluo","lon":114.547921,"lat":30.706109},{"id":"wuhan.阳逻开发区","name":"阳逻开发区","nameEn":"Yangluo Develoment Zone","lon":114.56267,"lat":30.704194},{"id":"wuhan.施岗","name":"施岗","nameEn":"Shigang","lon":114.59573,"lat":30.70883},{"id":"wuhan.金台","name":"金台","nameEn":"Jintai","lon":114.614042,"lat":30.71635}],"track":[[114.29891,30.65257],[114.31532,30.65875],[114.32595,30.65941],[114.33203,30.6614],[114.33472,30.66357],[114.33976,30.67746],[114.34225,30.68011],[114.34601,30.68126],[114.35393,30.68127],[114.35818,30.6821],[114.37469,30.68914],[114.37987,30.69195],[114.382,30.69468],[114.38549,30.71125],[114.38715,30.71336],[114.38953,30.71443],[114.40136,30.71577],[114.41026,30.71583],[114.41388,30.71465],[114.42026,30.7099],[114.42294,30.70914],[114.45616,30.71211],[114.46413,30.71231],[114.47585,30.7114],[114.47884,30.71235],[114.48316,30.7152],[114.4871,30.71579],[114.50175,30.71424],[114.51365,30.71179],[114.5269,30.71045],[114.53752,30.71111],[114.54096,30.70998],[114.55041,30.70483],[114.55555,30.70403],[114.57185,30.70467],[114.59964,30.70959],[114.61404,30.71635]]},{"id":"wuhan.lT1","ref":"T1","name":"T1号线","color":"#CC5923","system":"tram","lengthKm":16.86,"stationCount":21,"stations":[{"id":"wuhan.车轮广场","name":"车轮广场","nameEn":"","lon":114.150775,"lat":30.492264},{"id":"wuhan.水府街","name":"水府街","nameEn":"Shuifu street","lon":114.143937,"lat":30.496548},{"id":"wuhan.滨湖社区","name":"滨湖社区","nameEn":"Checheng Avenue","lon":114.139076,"lat":30.49238},{"id":"wuhan.莲湖路","name":"莲湖路","nameEn":"Lianhu Road","lon":114.134377,"lat":30.480648},{"id":"wuhan.枫树一路","name":"枫树一路","nameEn":"Fengshu First Road","lon":114.121874,"lat":30.474599},{"id":"wuhan.枫树三路","name":"枫树三路","nameEn":"Fengshu Third Road","lon":114.111677,"lat":30.469836},{"id":"wuhan.枫树五路","name":"枫树五路","nameEn":"Fengshu Fifth Road","lon":114.102558,"lat":30.465579},{"id":"wuhan.枫树六路","name":"枫树六路","nameEn":"Fengshu Sixth Road","lon":114.095896,"lat":30.463148},{"id":"wuhan.武汉商学院","name":"武汉商学院","nameEn":"Wuhan Business University","lon":114.084691,"lat":30.461467},{"id":"wuhan.格力电器","name":"格力电器","nameEn":"","lon":114.078505,"lat":30.459647},{"id":"wuhan.东风大道","name":"东风大道","nameEn":"","lon":114.079214,"lat":30.45571},{"id":"wuhan.硃山湖大道","name":"硃山湖大道","nameEn":"","lon":114.080979,"lat":30.451242},{"id":"wuhan.硃山湖（北）","name":"硃山湖（北）","nameEn":"","lon":114.084528,"lat":30.444065},{"id":"wuhan.硃山湖（南）","name":"硃山湖（南）","nameEn":"","lon":114.085277,"lat":30.436937},{"id":"wuhan.硃山","name":"硃山","nameEn":"","lon":114.082434,"lat":30.431543},{"id":"wuhan.凤凰苑","name":"凤凰苑","nameEn":"","lon":114.082973,"lat":30.42211},{"id":"wuhan.黄陵正街","name":"黄陵正街","nameEn":"","lon":114.075345,"lat":30.414114},{"id":"wuhan.幸福桥","name":"幸福桥","nameEn":"","lon":114.071022,"lat":30.411093},{"id":"wuhan.蒲潭","name":"蒲潭","nameEn":"","lon":114.066952,"lat":30.408287},{"id":"wuhan.官莲湖车辆基地","name":"官莲湖车辆基地","nameEn":"","lon":114.061854,"lat":30.404785},{"id":"wuhan.得胜港","name":"得胜港","nameEn":"","lon":114.0591,"lat":30.402889}],"track":[[114.15101,30.49212],[114.14296,30.49691],[114.13787,30.49057],[114.13778,30.48882],[114.13933,30.48449],[114.13397,30.48035],[114.0994,30.46419],[114.09357,30.46269],[114.0786,30.46054],[114.07964,30.45369],[114.08442,30.44437],[114.08557,30.43851],[114.08508,30.43596],[114.08337,30.43386],[114.08154,30.42911],[114.08221,30.42342],[114.08391,30.42065],[114.05876,30.40266]]}]}
+{
+  "id": "wuhan",
+  "name": "武汉",
+  "province": "湖北省",
+  "center": [
+    114.31346,
+    30.54497
+  ],
+  "stats": {
+    "lines": 16,
+    "stations": 398,
+    "lengthKm": 594.4
+  },
+  "lines": [
+    {
+      "id": "wuhan.lL1",
+      "ref": "L1",
+      "name": "光谷L1",
+      "color": "#0000CD",
+      "system": "tram",
+      "lengthKm": 11.53,
+      "stationCount": 17,
+      "stations": [
+        {
+          "id": "wuhan.华中大",
+          "name": "华中大",
+          "nameEn": "Huazhong University of Science and Technology",
+          "lon": 114.406204,
+          "lat": 30.509704
+        },
+        {
+          "id": "wuhan.步行街 省中医院",
+          "name": "步行街 省中医院",
+          "nameEn": "Walking Street and Hospital of Traditional Chinese Medicine",
+          "lon": 114.401049,
+          "lat": 30.508596
+        },
+        {
+          "id": "wuhan.常青藤路",
+          "name": "常青藤路",
+          "nameEn": "Changqingtang Road",
+          "lon": 114.403883,
+          "lat": 30.506301
+        },
+        {
+          "id": "wuhan.创业街",
+          "name": "创业街",
+          "nameEn": "Chuangye Street",
+          "lon": 114.407301,
+          "lat": 30.504426
+        },
+        {
+          "id": "wuhan.雄楚大道",
+          "name": "雄楚大道",
+          "nameEn": "Xiongchu Avenue",
+          "lon": 114.406835,
+          "lat": 30.499996
+        },
+        {
+          "id": "wuhan.新竹路",
+          "name": "新竹路",
+          "nameEn": "Xinzhu Road",
+          "lon": 114.405839,
+          "lat": 30.49232
+        },
+        {
+          "id": "wuhan.武汉职院",
+          "name": "武汉职院",
+          "nameEn": "Wuhan Polytechnic",
+          "lon": 114.40531,
+          "lat": 30.488243
+        },
+        {
+          "id": "wuhan.光谷天地",
+          "name": "光谷天地",
+          "nameEn": "Optics Valley World",
+          "lon": 114.404241,
+          "lat": 30.479597
+        },
+        {
+          "id": "wuhan.软件园路",
+          "name": "软件园路",
+          "nameEn": "Software Park Road",
+          "lon": 114.403881,
+          "lat": 30.476625
+        },
+        {
+          "id": "wuhan.华夏学院",
+          "name": "华夏学院",
+          "nameEn": "Huaxia University of Technology",
+          "lon": 114.403279,
+          "lat": 30.469106
+        },
+        {
+          "id": "wuhan.当代国际花园",
+          "name": "当代国际花园",
+          "nameEn": "Donde International Garden",
+          "lon": 114.407076,
+          "lat": 30.46598
+        },
+        {
+          "id": "wuhan.光谷大道",
+          "name": "光谷大道",
+          "nameEn": "Optics Valley Avenue",
+          "lon": 114.41977,
+          "lat": 30.466723
+        },
+        {
+          "id": "wuhan.工程大学",
+          "name": "工程大学",
+          "nameEn": "Wuhan University of Technology",
+          "lon": 114.425742,
+          "lat": 30.467183
+        },
+        {
+          "id": "wuhan.流芳园横路",
+          "name": "流芳园横路",
+          "nameEn": "Liufangyuanheng Road",
+          "lon": 114.432039,
+          "lat": 30.459758
+        },
+        {
+          "id": "wuhan.高新四路",
+          "name": "高新四路",
+          "nameEn": "Gaoxin 4th Road",
+          "lon": 114.433435,
+          "lat": 30.453339
+        },
+        {
+          "id": "wuhan.高新五路",
+          "name": "高新五路",
+          "nameEn": "Gaoxin 5th Road",
+          "lon": 114.435827,
+          "lat": 30.44692
+        },
+        {
+          "id": "wuhan.佛祖岭",
+          "name": "佛祖岭",
+          "nameEn": "Fozuling",
+          "lon": 114.437613,
+          "lat": 30.441933
+        }
+      ],
+      "track": [
+        [
+          114.4062,
+          30.5097
+        ],
+        [
+          114.40098,
+          30.50904
+        ],
+        [
+          114.40156,
+          30.50652
+        ],
+        [
+          114.40745,
+          30.50568
+        ],
+        [
+          114.40302,
+          30.4659
+        ],
+        [
+          114.40423,
+          30.46537
+        ],
+        [
+          114.41293,
+          30.46694
+        ],
+        [
+          114.42125,
+          30.46676
+        ],
+        [
+          114.43093,
+          30.46768
+        ],
+        [
+          114.43317,
+          30.45401
+        ],
+        [
+          114.43761,
+          30.44193
+        ]
+      ]
+    },
+    {
+      "id": "wuhan.lL2",
+      "ref": "L2",
+      "name": "光谷L2",
+      "color": "#FF0000",
+      "system": "tram",
+      "lengthKm": 19.23,
+      "stationCount": 25,
+      "stations": [
+        {
+          "id": "wuhan.城铁汤逊湖",
+          "name": "城铁汤逊湖",
+          "nameEn": "Tangxunhu City Railway Station",
+          "lon": 114.380377,
+          "lat": 30.447086
+        },
+        {
+          "id": "wuhan.三园路",
+          "name": "三园路",
+          "nameEn": "Sanyuan Road",
+          "lon": 114.384826,
+          "lat": 30.445707
+        },
+        {
+          "id": "wuhan.华中科技园",
+          "name": "华中科技园",
+          "nameEn": "Huazhong University Science Park",
+          "lon": 114.391626,
+          "lat": 30.452095
+        },
+        {
+          "id": "wuhan.武大园",
+          "name": "武大园",
+          "nameEn": "Wuhan University Science Park",
+          "lon": 114.396437,
+          "lat": 30.457877
+        },
+        {
+          "id": "wuhan.万科城市花园",
+          "name": "万科城市花园",
+          "nameEn": "Vanke City Garden",
+          "lon": 114.399972,
+          "lat": 30.462408
+        },
+        {
+          "id": "wuhan.当代国际花园",
+          "name": "当代国际花园",
+          "nameEn": "Donde International Garden",
+          "lon": 114.407076,
+          "lat": 30.46598
+        },
+        {
+          "id": "wuhan.光谷大道",
+          "name": "光谷大道",
+          "nameEn": "Optics Valley Avenue",
+          "lon": 114.41977,
+          "lat": 30.466723
+        },
+        {
+          "id": "wuhan.工程大学",
+          "name": "工程大学",
+          "nameEn": "Wuhan University of Technology",
+          "lon": 114.425742,
+          "lat": 30.467183
+        },
+        {
+          "id": "wuhan.仪表学校",
+          "name": "仪表学校",
+          "nameEn": "Instrument and Electronic Technical School",
+          "lon": 114.439505,
+          "lat": 30.469484
+        },
+        {
+          "id": "wuhan.国际网球中心",
+          "name": "国际网球中心",
+          "nameEn": "International Tennis Center",
+          "lon": 114.46018,
+          "lat": 30.473243
+        },
+        {
+          "id": "wuhan.奥体中心",
+          "name": "奥体中心",
+          "nameEn": "Olympic Sport Center",
+          "lon": 114.465222,
+          "lat": 30.473249
+        },
+        {
+          "id": "wuhan.奥风路",
+          "name": "奥风路",
+          "nameEn": "Aofeng Road",
+          "lon": 114.471739,
+          "lat": 30.473656
+        },
+        {
+          "id": "wuhan.大吕路",
+          "name": "大吕路",
+          "nameEn": "Dalü Road",
+          "lon": 114.481564,
+          "lat": 30.474449
+        },
+        {
+          "id": "wuhan.光谷四路",
+          "name": "光谷四路",
+          "nameEn": "Optics Valley 4th Road",
+          "lon": 114.489876,
+          "lat": 30.47411
+        },
+        {
+          "id": "wuhan.光谷五路",
+          "name": "光谷五路",
+          "nameEn": "Optics Valley 5th Road",
+          "lon": 114.496667,
+          "lat": 30.473111
+        },
+        {
+          "id": "wuhan.花溪路",
+          "name": "花溪路",
+          "nameEn": "Huaxi Road",
+          "lon": 114.500415,
+          "lat": 30.472448
+        },
+        {
+          "id": "wuhan.神墩五路",
+          "name": "神墩五路",
+          "nameEn": "Shedun 5th Road",
+          "lon": 114.50731,
+          "lat": 30.474711
+        },
+        {
+          "id": "wuhan.高科园路",
+          "name": "高科园路",
+          "nameEn": "Gaokeyuan Road",
+          "lon": 114.516526,
+          "lat": 30.475338
+        },
+        {
+          "id": "wuhan.高科园二路",
+          "name": "高科园二路",
+          "nameEn": "Gaokeyuan 2nd Road",
+          "lon": 114.522251,
+          "lat": 30.475695
+        },
+        {
+          "id": "wuhan.高新二路",
+          "name": "高新二路",
+          "nameEn": "Gaoxin 2nd Road",
+          "lon": 114.528795,
+          "lat": 30.479284
+        },
+        {
+          "id": "wuhan.神墩三路",
+          "name": "神墩三路",
+          "nameEn": "Shendun 3rd Road",
+          "lon": 114.528824,
+          "lat": 30.483633
+        },
+        {
+          "id": "wuhan.光谷七路",
+          "name": "光谷七路",
+          "nameEn": "Optics Valley 7th Road",
+          "lon": 114.528796,
+          "lat": 30.492208
+        },
+        {
+          "id": "wuhan.华为武汉基地",
+          "name": "华为武汉基地",
+          "nameEn": "Huawei Wuhan Research Institute",
+          "lon": 114.526681,
+          "lat": 30.497867
+        },
+        {
+          "id": "wuhan.九峰一路",
+          "name": "九峰一路",
+          "nameEn": "Jiufeng 1st Road",
+          "lon": 114.524992,
+          "lat": 30.502081
+        },
+        {
+          "id": "wuhan.光谷植物园",
+          "name": "光谷植物园",
+          "nameEn": "Optics Valley Botanical Garden",
+          "lon": 114.527997,
+          "lat": 30.504555
+        }
+      ],
+      "track": [
+        [
+          114.37995,
+          30.44726
+        ],
+        [
+          114.38423,
+          30.44545
+        ],
+        [
+          114.38675,
+          30.44675
+        ],
+        [
+          114.38873,
+          30.44845
+        ],
+        [
+          114.40177,
+          30.46456
+        ],
+        [
+          114.40708,
+          30.46598
+        ],
+        [
+          114.41293,
+          30.46694
+        ],
+        [
+          114.42472,
+          30.46706
+        ],
+        [
+          114.44019,
+          30.46956
+        ],
+        [
+          114.44367,
+          30.46932
+        ],
+        [
+          114.44921,
+          30.47126
+        ],
+        [
+          114.45146,
+          30.47285
+        ],
+        [
+          114.48335,
+          30.47445
+        ],
+        [
+          114.49075,
+          30.47401
+        ],
+        [
+          114.50396,
+          30.47194
+        ],
+        [
+          114.5062,
+          30.47278
+        ],
+        [
+          114.50786,
+          30.47534
+        ],
+        [
+          114.52851,
+          30.47613
+        ],
+        [
+          114.52883,
+          30.49197
+        ],
+        [
+          114.52476,
+          30.50273
+        ],
+        [
+          114.52842,
+          30.50475
+        ]
+      ]
+    },
+    {
+      "id": "wuhan.l1",
+      "ref": "1",
+      "name": "1号线",
+      "color": "#0067A1",
+      "system": "subway",
+      "lengthKm": 38.04,
+      "stationCount": 32,
+      "stations": [
+        {
+          "id": "wuhan.径河",
+          "name": "径河",
+          "nameEn": "Jinghe",
+          "lon": 114.115127,
+          "lat": 30.661489
+        },
+        {
+          "id": "wuhan.三店",
+          "name": "三店",
+          "nameEn": "Sandian",
+          "lon": 114.115146,
+          "lat": 30.651421
+        },
+        {
+          "id": "wuhan.码头潭公园",
+          "name": "码头潭公园",
+          "nameEn": "Matoutan Park",
+          "lon": 114.118008,
+          "lat": 30.634069
+        },
+        {
+          "id": "wuhan.东吴大道",
+          "name": "东吴大道",
+          "nameEn": "Dongwu Dadao",
+          "lon": 114.122914,
+          "lat": 30.627244
+        },
+        {
+          "id": "wuhan.五环大道",
+          "name": "五环大道",
+          "nameEn": "Wuhuan Dadao",
+          "lon": 114.132998,
+          "lat": 30.619979
+        },
+        {
+          "id": "wuhan.额头湾",
+          "name": "额头湾",
+          "nameEn": "Etouwan",
+          "lon": 114.150337,
+          "lat": 30.620817
+        },
+        {
+          "id": "wuhan.竹叶海",
+          "name": "竹叶海",
+          "nameEn": "Zhuyehai",
+          "lon": 114.15834,
+          "lat": 30.617264
+        },
+        {
+          "id": "wuhan.舵落口",
+          "name": "舵落口",
+          "nameEn": "Duoluokou Station",
+          "lon": 114.163948,
+          "lat": 30.612273
+        },
+        {
+          "id": "wuhan.古田一路",
+          "name": "古田一路",
+          "nameEn": "Gutian 1st Road",
+          "lon": 114.177556,
+          "lat": 30.60683
+        },
+        {
+          "id": "wuhan.古田二路",
+          "name": "古田二路",
+          "nameEn": "Gutian 2nd Road",
+          "lon": 114.19121,
+          "lat": 30.599945
+        },
+        {
+          "id": "wuhan.古田三路",
+          "name": "古田三路",
+          "nameEn": "Gutian 3rd Road",
+          "lon": 114.199345,
+          "lat": 30.59581
+        },
+        {
+          "id": "wuhan.古田四路",
+          "name": "古田四路",
+          "nameEn": "Gutian 4th Road",
+          "lon": 114.206134,
+          "lat": 30.591782
+        },
+        {
+          "id": "wuhan.汉西一路",
+          "name": "汉西一路",
+          "nameEn": "Hanxi 1st Road",
+          "lon": 114.213467,
+          "lat": 30.587896
+        },
+        {
+          "id": "wuhan.宗关",
+          "name": "宗关",
+          "nameEn": "Zongguan",
+          "lon": 114.22094,
+          "lat": 30.582885
+        },
+        {
+          "id": "wuhan.太平洋",
+          "name": "太平洋",
+          "nameEn": "Taipingyang",
+          "lon": 114.235232,
+          "lat": 30.576531
+        },
+        {
+          "id": "wuhan.硚口路",
+          "name": "硚口路",
+          "nameEn": "Qiaokou",
+          "lon": 114.244965,
+          "lat": 30.574006
+        },
+        {
+          "id": "wuhan.崇仁路",
+          "name": "崇仁路",
+          "nameEn": "Chongrenlu",
+          "lon": 114.256463,
+          "lat": 30.57642
+        },
+        {
+          "id": "wuhan.利济北路",
+          "name": "利济北路",
+          "nameEn": "Liji North Road",
+          "lon": 114.264731,
+          "lat": 30.579856
+        },
+        {
+          "id": "wuhan.友谊路",
+          "name": "友谊路",
+          "nameEn": "Youyi Road",
+          "lon": 114.273022,
+          "lat": 30.583352
+        },
+        {
+          "id": "wuhan.循礼门",
+          "name": "循礼门",
+          "nameEn": "Xunlimen",
+          "lon": 114.281677,
+          "lat": 30.587992
+        },
+        {
+          "id": "wuhan.大智路",
+          "name": "大智路",
+          "nameEn": "Dazhi Road",
+          "lon": 114.289645,
+          "lat": 30.594965
+        },
+        {
+          "id": "wuhan.三阳路",
+          "name": "三阳路",
+          "nameEn": "Sanyang Road",
+          "lon": 114.296471,
+          "lat": 30.601942
+        },
+        {
+          "id": "wuhan.黄浦路",
+          "name": "黄浦路",
+          "nameEn": "Huangpu Road",
+          "lon": 114.302737,
+          "lat": 30.610815
+        },
+        {
+          "id": "wuhan.头道街",
+          "name": "头道街",
+          "nameEn": "Toudao Street",
+          "lon": 114.308547,
+          "lat": 30.620272
+        },
+        {
+          "id": "wuhan.二七路",
+          "name": "二七路",
+          "nameEn": "Erqi Road",
+          "lon": 114.313356,
+          "lat": 30.627327
+        },
+        {
+          "id": "wuhan.徐州新村",
+          "name": "徐州新村",
+          "nameEn": "Xuzhouxincun",
+          "lon": 114.317497,
+          "lat": 30.633536
+        },
+        {
+          "id": "wuhan.丹水池",
+          "name": "丹水池",
+          "nameEn": "Danshuichi",
+          "lon": 114.324575,
+          "lat": 30.645798
+        },
+        {
+          "id": "wuhan.新荣",
+          "name": "新荣",
+          "nameEn": "Xinrong",
+          "lon": 114.329077,
+          "lat": 30.658202
+        },
+        {
+          "id": "wuhan.堤角",
+          "name": "堤角",
+          "nameEn": "Dijiao",
+          "lon": 114.332788,
+          "lat": 30.668177
+        },
+        {
+          "id": "wuhan.滕子岗",
+          "name": "滕子岗",
+          "nameEn": "Tengzigang",
+          "lon": 114.336012,
+          "lat": 30.676808
+        },
+        {
+          "id": "wuhan.滠口新城",
+          "name": "滠口新城",
+          "nameEn": "Shekouxincheng",
+          "lon": 114.336934,
+          "lat": 30.686827
+        },
+        {
+          "id": "wuhan.汉口北",
+          "name": "汉口北",
+          "nameEn": "Hankou North",
+          "lon": 114.323899,
+          "lat": 30.714408
+        }
+      ],
+      "track": [
+        [
+          114.11512,
+          30.66334
+        ],
+        [
+          114.11533,
+          30.64045
+        ],
+        [
+          114.11854,
+          30.63304
+        ],
+        [
+          114.12261,
+          30.62896
+        ],
+        [
+          114.12331,
+          30.62199
+        ],
+        [
+          114.12482,
+          30.62018
+        ],
+        [
+          114.12676,
+          30.61967
+        ],
+        [
+          114.15495,
+          30.6207
+        ],
+        [
+          114.16197,
+          30.61298
+        ],
+        [
+          114.17002,
+          30.61059
+        ],
+        [
+          114.20247,
+          30.59421
+        ],
+        [
+          114.20862,
+          30.59015
+        ],
+        [
+          114.21587,
+          30.58676
+        ],
+        [
+          114.22324,
+          30.58135
+        ],
+        [
+          114.22795,
+          30.57896
+        ],
+        [
+          114.23374,
+          30.57774
+        ],
+        [
+          114.23718,
+          30.57492
+        ],
+        [
+          114.24105,
+          30.57344
+        ],
+        [
+          114.25367,
+          30.57572
+        ],
+        [
+          114.25827,
+          30.57697
+        ],
+        [
+          114.27927,
+          30.58603
+        ],
+        [
+          114.29501,
+          30.59993
+        ],
+        [
+          114.30624,
+          30.61559
+        ],
+        [
+          114.30707,
+          30.61813
+        ],
+        [
+          114.32066,
+          30.63785
+        ],
+        [
+          114.32352,
+          30.64332
+        ],
+        [
+          114.33645,
+          30.67802
+        ],
+        [
+          114.33712,
+          30.69272
+        ],
+        [
+          114.33651,
+          30.69568
+        ],
+        [
+          114.33244,
+          30.70486
+        ],
+        [
+          114.3239,
+          30.71441
+        ]
+      ]
+    },
+    {
+      "id": "wuhan.l2",
+      "ref": "2",
+      "name": "2号线",
+      "color": "#EC9CBB",
+      "system": "subway",
+      "lengthKm": 58.08,
+      "stationCount": 38,
+      "stations": [
+        {
+          "id": "wuhan.天河机场",
+          "name": "天河机场",
+          "nameEn": "Tianhe International Airport",
+          "lon": 114.211684,
+          "lat": 30.772551
+        },
+        {
+          "id": "wuhan.航空總部",
+          "name": "航空總部",
+          "nameEn": "Hangkongzongbu",
+          "lon": 114.221632,
+          "lat": 30.73485
+        },
+        {
+          "id": "wuhan.宋家崗",
+          "name": "宋家崗",
+          "nameEn": "Songjiagang",
+          "lon": 114.231979,
+          "lat": 30.725389
+        },
+        {
+          "id": "wuhan.巨龙大道",
+          "name": "巨龙大道",
+          "nameEn": "Julong Boulevard",
+          "lon": 114.247435,
+          "lat": 30.714429
+        },
+        {
+          "id": "wuhan.盘龙城",
+          "name": "盘龙城",
+          "nameEn": "Panlongcheng",
+          "lon": 114.254198,
+          "lat": 30.703023
+        },
+        {
+          "id": "wuhan.宏图大道站",
+          "name": "宏图大道站",
+          "nameEn": "Hongtu Boulevard",
+          "lon": 114.272307,
+          "lat": 30.67253
+        },
+        {
+          "id": "wuhan.常青城",
+          "name": "常青城",
+          "nameEn": "Changqingcheng",
+          "lon": 114.249733,
+          "lat": 30.66133
+        },
+        {
+          "id": "wuhan.金银潭",
+          "name": "金银潭",
+          "nameEn": "Jinyintan",
+          "lon": 114.237583,
+          "lat": 30.652275
+        },
+        {
+          "id": "wuhan.常青花园",
+          "name": "常青花园",
+          "nameEn": "Changqinghuayuan",
+          "lon": 114.236934,
+          "lat": 30.643353
+        },
+        {
+          "id": "wuhan.长港路",
+          "name": "长港路",
+          "nameEn": "Changgang Road",
+          "lon": 114.240373,
+          "lat": 30.629858
+        },
+        {
+          "id": "wuhan.汉口火车站",
+          "name": "汉口火车站",
+          "nameEn": "Hankou Railway Station",
+          "lon": 114.249568,
+          "lat": 30.618224
+        },
+        {
+          "id": "wuhan.范湖",
+          "name": "范湖",
+          "nameEn": "Fanhu",
+          "lon": 114.254953,
+          "lat": 30.60858
+        },
+        {
+          "id": "wuhan.王家墩东站",
+          "name": "王家墩东站",
+          "nameEn": "Wangjiadun East",
+          "lon": 114.257462,
+          "lat": 30.597177
+        },
+        {
+          "id": "wuhan.青年路站",
+          "name": "青年路站",
+          "nameEn": "Qingnian Road",
+          "lon": 114.259171,
+          "lat": 30.588017
+        },
+        {
+          "id": "wuhan.中山公园站",
+          "name": "中山公园站",
+          "nameEn": "Zhongshan Park",
+          "lon": 114.26693,
+          "lat": 30.584462
+        },
+        {
+          "id": "wuhan.循礼门站",
+          "name": "循礼门站",
+          "nameEn": "Xunlimen",
+          "lon": 114.281167,
+          "lat": 30.587156
+        },
+        {
+          "id": "wuhan.江汉路",
+          "name": "江汉路",
+          "nameEn": "Jianghan Road",
+          "lon": 114.286971,
+          "lat": 30.582072
+        },
+        {
+          "id": "wuhan.积玉桥",
+          "name": "积玉桥",
+          "nameEn": "Jiyuqiao",
+          "lon": 114.30331,
+          "lat": 30.563498
+        },
+        {
+          "id": "wuhan.螃蟹岬",
+          "name": "螃蟹岬",
+          "nameEn": "Pangxiejia",
+          "lon": 114.312061,
+          "lat": 30.556015
+        },
+        {
+          "id": "wuhan.小龟山",
+          "name": "小龟山",
+          "nameEn": "Xiaoguishan",
+          "lon": 114.321162,
+          "lat": 30.553418
+        },
+        {
+          "id": "wuhan.洪山广场",
+          "name": "洪山广场",
+          "nameEn": "Hongshan Square",
+          "lon": 114.330507,
+          "lat": 30.547777
+        },
+        {
+          "id": "wuhan.中南路站",
+          "name": "中南路站",
+          "nameEn": "Zhongnan Road",
+          "lon": 114.327375,
+          "lat": 30.539865
+        },
+        {
+          "id": "wuhan.宝通寺",
+          "name": "宝通寺",
+          "nameEn": "Baotong Temple",
+          "lon": 114.335428,
+          "lat": 30.532596
+        },
+        {
+          "id": "wuhan.街道口",
+          "name": "街道口",
+          "nameEn": "Jiedaokou",
+          "lon": 114.347683,
+          "lat": 30.528926
+        },
+        {
+          "id": "wuhan.广埠屯站",
+          "name": "广埠屯站",
+          "nameEn": "Guangbutun",
+          "lon": 114.358417,
+          "lat": 30.52485
+        },
+        {
+          "id": "wuhan.虎泉",
+          "name": "虎泉",
+          "nameEn": "Huquan",
+          "lon": 114.364757,
+          "lat": 30.514677
+        },
+        {
+          "id": "wuhan.杨家湾",
+          "name": "杨家湾",
+          "nameEn": "Yangjiawan",
+          "lon": 114.376724,
+          "lat": 30.507403
+        },
+        {
+          "id": "wuhan.光谷广场",
+          "name": "光谷广场",
+          "nameEn": "Optics Valley Square",
+          "lon": 114.391487,
+          "lat": 30.508001
+        },
+        {
+          "id": "wuhan.珞雄路",
+          "name": "珞雄路",
+          "nameEn": "Luoxiong Road",
+          "lon": 114.399225,
+          "lat": 30.509126
+        },
+        {
+          "id": "wuhan.华中科技大学",
+          "name": "华中科技大学",
+          "nameEn": "Huazhong University of Science and Technology",
+          "lon": 114.40936,
+          "lat": 30.509582
+        },
+        {
+          "id": "wuhan.光谷大道",
+          "name": "光谷大道",
+          "nameEn": "Guanggu Boulevard",
+          "lon": 114.418316,
+          "lat": 30.50882
+        },
+        {
+          "id": "wuhan.佳园路",
+          "name": "佳园路",
+          "nameEn": "Jiayuan Road",
+          "lon": 114.425298,
+          "lat": 30.502482
+        },
+        {
+          "id": "wuhan.武汉东站",
+          "name": "武汉东站",
+          "nameEn": "Wuhandong Railway Station",
+          "lon": 114.426034,
+          "lat": 30.48901
+        },
+        {
+          "id": "wuhan.黄龙山路",
+          "name": "黄龙山路",
+          "nameEn": "Huanglongshan Road",
+          "lon": 114.424594,
+          "lat": 30.479864
+        },
+        {
+          "id": "wuhan.金融港北",
+          "name": "金融港北",
+          "nameEn": "Jinronggang North",
+          "lon": 114.414793,
+          "lat": 30.464189
+        },
+        {
+          "id": "wuhan.秀湖",
+          "name": "秀湖",
+          "nameEn": "Xiuhu",
+          "lon": 114.415408,
+          "lat": 30.450067
+        },
+        {
+          "id": "wuhan.藏龙东街",
+          "name": "藏龙东街",
+          "nameEn": "Canglong East Street",
+          "lon": 114.423969,
+          "lat": 30.439409
+        },
+        {
+          "id": "wuhan.佛祖岭",
+          "name": "佛祖岭",
+          "nameEn": "Fozuling",
+          "lon": 114.434228,
+          "lat": 30.440893
+        }
+      ],
+      "track": [
+        [
+          114.19735,
+          30.75667
+        ],
+        [
+          114.19673,
+          30.75389
+        ],
+        [
+          114.19705,
+          30.75136
+        ],
+        [
+          114.19999,
+          30.74696
+        ],
+        [
+          114.20355,
+          30.74504
+        ],
+        [
+          114.21081,
+          30.7436
+        ],
+        [
+          114.21393,
+          30.7423
+        ],
+        [
+          114.23798,
+          30.71994
+        ],
+        [
+          114.24744,
+          30.71443
+        ],
+        [
+          114.25424,
+          30.7121
+        ],
+        [
+          114.25496,
+          30.71019
+        ],
+        [
+          114.25421,
+          30.69782
+        ],
+        [
+          114.25553,
+          30.69302
+        ],
+        [
+          114.25949,
+          30.68726
+        ],
+        [
+          114.26978,
+          30.67757
+        ],
+        [
+          114.27327,
+          30.67044
+        ],
+        [
+          114.2731,
+          30.66854
+        ],
+        [
+          114.27168,
+          30.66733
+        ],
+        [
+          114.26605,
+          30.66663
+        ],
+        [
+          114.25599,
+          30.66207
+        ],
+        [
+          114.23831,
+          30.65988
+        ],
+        [
+          114.2367,
+          30.65887
+        ],
+        [
+          114.236,
+          30.65758
+        ],
+        [
+          114.23836,
+          30.64996
+        ],
+        [
+          114.23662,
+          30.64207
+        ],
+        [
+          114.23665,
+          30.63941
+        ],
+        [
+          114.24213,
+          30.62538
+        ],
+        [
+          114.247,
+          30.62216
+        ],
+        [
+          114.24827,
+          30.61957
+        ],
+        [
+          114.25146,
+          30.61634
+        ],
+        [
+          114.2537,
+          30.61068
+        ],
+        [
+          114.25743,
+          30.6047
+        ],
+        [
+          114.25797,
+          30.60109
+        ],
+        [
+          114.25754,
+          30.59327
+        ],
+        [
+          114.26034,
+          30.5854
+        ],
+        [
+          114.26209,
+          30.58424
+        ],
+        [
+          114.26456,
+          30.58383
+        ],
+        [
+          114.27295,
+          30.58615
+        ],
+        [
+          114.27618,
+          30.58871
+        ],
+        [
+          114.27848,
+          30.58883
+        ],
+        [
+          114.28599,
+          30.58327
+        ],
+        [
+          114.29041,
+          30.57845
+        ],
+        [
+          114.30601,
+          30.57303
+        ],
+        [
+          114.30704,
+          30.57182
+        ],
+        [
+          114.30727,
+          30.56984
+        ],
+        [
+          114.30204,
+          30.56109
+        ],
+        [
+          114.30194,
+          30.55939
+        ],
+        [
+          114.30263,
+          30.55834
+        ],
+        [
+          114.30448,
+          30.55735
+        ],
+        [
+          114.31678,
+          30.55517
+        ],
+        [
+          114.32841,
+          30.55102
+        ],
+        [
+          114.33032,
+          30.54886
+        ],
+        [
+          114.33054,
+          30.54635
+        ],
+        [
+          114.32612,
+          30.53747
+        ],
+        [
+          114.32673,
+          30.5355
+        ],
+        [
+          114.35614,
+          30.52644
+        ],
+        [
+          114.36371,
+          30.52058
+        ],
+        [
+          114.36376,
+          30.51606
+        ],
+        [
+          114.366,
+          30.51337
+        ],
+        [
+          114.37435,
+          30.50777
+        ],
+        [
+          114.3856,
+          30.50715
+        ],
+        [
+          114.40533,
+          30.50992
+        ],
+        [
+          114.425,
+          30.50801
+        ],
+        [
+          114.4259,
+          30.50602
+        ],
+        [
+          114.42506,
+          30.49912
+        ],
+        [
+          114.42703,
+          30.4948
+        ],
+        [
+          114.42459,
+          30.47986
+        ],
+        [
+          114.42341,
+          30.47612
+        ],
+        [
+          114.42204,
+          30.47423
+        ],
+        [
+          114.41656,
+          30.46972
+        ],
+        [
+          114.41498,
+          30.46653
+        ],
+        [
+          114.41561,
+          30.44533
+        ],
+        [
+          114.41497,
+          30.44151
+        ],
+        [
+          114.41627,
+          30.43938
+        ],
+        [
+          114.41878,
+          30.43848
+        ],
+        [
+          114.42952,
+          30.44081
+        ],
+        [
+          114.43423,
+          30.44089
+        ]
+      ]
+    },
+    {
+      "id": "wuhan.l3",
+      "ref": "3",
+      "name": "3号线",
+      "color": "#D3B466",
+      "system": "subway",
+      "lengthKm": 29.65,
+      "stationCount": 24,
+      "stations": [
+        {
+          "id": "wuhan.宏图大道站",
+          "name": "宏图大道站",
+          "nameEn": "Hongtu Boulevard",
+          "lon": 114.272394,
+          "lat": 30.672677
+        },
+        {
+          "id": "wuhan.市民之家",
+          "name": "市民之家",
+          "nameEn": "Citizens Home",
+          "lon": 114.293915,
+          "lat": 30.663383
+        },
+        {
+          "id": "wuhan.後湖大道",
+          "name": "後湖大道",
+          "nameEn": "Houhu Boulevard",
+          "lon": 114.298646,
+          "lat": 30.652803
+        },
+        {
+          "id": "wuhan.兴业路",
+          "name": "兴业路",
+          "nameEn": "Xingye Road",
+          "lon": 114.298017,
+          "lat": 30.645519
+        },
+        {
+          "id": "wuhan.二七小路",
+          "name": "二七小路",
+          "nameEn": "Erqi Branch Road",
+          "lon": 114.302251,
+          "lat": 30.631172
+        },
+        {
+          "id": "wuhan.羅家莊",
+          "name": "羅家莊",
+          "nameEn": "Luojiazhuang",
+          "lon": 114.298969,
+          "lat": 30.626726
+        },
+        {
+          "id": "wuhan.赵家条",
+          "name": "赵家条",
+          "nameEn": "Zhaojiatiao",
+          "lon": 114.291586,
+          "lat": 30.620532
+        },
+        {
+          "id": "wuhan.惠濟二路",
+          "name": "惠濟二路",
+          "nameEn": "Huiji 2nd Road",
+          "lon": 114.284669,
+          "lat": 30.614447
+        },
+        {
+          "id": "wuhan.香港路",
+          "name": "香港路",
+          "nameEn": "Xianggang Road",
+          "lon": 114.279383,
+          "lat": 30.607898
+        },
+        {
+          "id": "wuhan.菱角湖",
+          "name": "菱角湖",
+          "nameEn": "Lingjiaohu",
+          "lon": 114.270187,
+          "lat": 30.606548
+        },
+        {
+          "id": "wuhan.范湖",
+          "name": "范湖",
+          "nameEn": "Fanhu",
+          "lon": 114.255605,
+          "lat": 30.610256
+        },
+        {
+          "id": "wuhan.雲飛路",
+          "name": "雲飛路",
+          "nameEn": "Yunfei Road",
+          "lon": 114.246539,
+          "lat": 30.60753
+        },
+        {
+          "id": "wuhan.武汉商务区",
+          "name": "武汉商务区",
+          "nameEn": "Wuhan Business District",
+          "lon": 114.240872,
+          "lat": 30.59841
+        },
+        {
+          "id": "wuhan.雙墩",
+          "name": "雙墩",
+          "nameEn": "Shuangdun",
+          "lon": 114.226696,
+          "lat": 30.589024
+        },
+        {
+          "id": "wuhan.宗关站",
+          "name": "宗关站",
+          "nameEn": "Zongguan",
+          "lon": 114.220458,
+          "lat": 30.583572
+        },
+        {
+          "id": "wuhan.王家湾",
+          "name": "王家湾",
+          "nameEn": "Wangjiawan",
+          "lon": 114.20468,
+          "lat": 30.564691
+        },
+        {
+          "id": "wuhan.龍陽村",
+          "name": "龍陽村",
+          "nameEn": "Longyangcun",
+          "lon": 114.200962,
+          "lat": 30.555505
+        },
+        {
+          "id": "wuhan.陶家岭",
+          "name": "陶家岭",
+          "nameEn": "Taojialing",
+          "lon": 114.196531,
+          "lat": 30.548131
+        },
+        {
+          "id": "wuhan.四新大道",
+          "name": "四新大道",
+          "nameEn": "Sixin Boulevard",
+          "lon": 114.189054,
+          "lat": 30.537067
+        },
+        {
+          "id": "wuhan.汉阳客运站",
+          "name": "汉阳客运站",
+          "nameEn": "Hanyang Long-Distance Bus Station",
+          "lon": 114.183484,
+          "lat": 30.530124
+        },
+        {
+          "id": "wuhan.三角湖",
+          "name": "三角湖",
+          "nameEn": "Sanjiaohu",
+          "lon": 114.17403,
+          "lat": 30.518804
+        },
+        {
+          "id": "wuhan.体育中心",
+          "name": "体育中心",
+          "nameEn": "Sports Center",
+          "lon": 114.165512,
+          "lat": 30.508601
+        },
+        {
+          "id": "wuhan.东风公司",
+          "name": "东风公司",
+          "nameEn": "Dongfeng Motor Corporation",
+          "lon": 114.160673,
+          "lat": 30.502796
+        },
+        {
+          "id": "wuhan.沌阳大道",
+          "name": "沌阳大道",
+          "nameEn": "Zhuanyang Boulevard",
+          "lon": 114.151893,
+          "lat": 30.492291
+        }
+      ],
+      "track": [
+        [
+          114.27239,
+          30.67268
+        ],
+        [
+          114.2761,
+          30.66596
+        ],
+        [
+          114.29565,
+          30.66318
+        ],
+        [
+          114.29849,
+          30.66116
+        ],
+        [
+          114.29989,
+          30.65802
+        ],
+        [
+          114.29764,
+          30.64879
+        ],
+        [
+          114.2977,
+          30.64688
+        ],
+        [
+          114.30042,
+          30.63865
+        ],
+        [
+          114.30061,
+          30.63544
+        ],
+        [
+          114.30224,
+          30.63282
+        ],
+        [
+          114.30213,
+          30.63018
+        ],
+        [
+          114.30146,
+          30.62891
+        ],
+        [
+          114.2851,
+          30.61486
+        ],
+        [
+          114.27765,
+          30.60626
+        ],
+        [
+          114.26784,
+          30.60691
+        ],
+        [
+          114.26414,
+          30.61054
+        ],
+        [
+          114.262,
+          30.61129
+        ],
+        [
+          114.25819,
+          30.61036
+        ],
+        [
+          114.25184,
+          30.60995
+        ],
+        [
+          114.24339,
+          30.60609
+        ],
+        [
+          114.24243,
+          30.60464
+        ],
+        [
+          114.24038,
+          30.59656
+        ],
+        [
+          114.23937,
+          30.59519
+        ],
+        [
+          114.2231,
+          30.58724
+        ],
+        [
+          114.21912,
+          30.58214
+        ],
+        [
+          114.21579,
+          30.58022
+        ],
+        [
+          114.20794,
+          30.57207
+        ],
+        [
+          114.20006,
+          30.55334
+        ],
+        [
+          114.18905,
+          30.53707
+        ],
+        [
+          114.15189,
+          30.49229
+        ]
+      ]
+    },
+    {
+      "id": "wuhan.l4",
+      "ref": "4",
+      "name": "4号线",
+      "color": "#A6D30B",
+      "system": "subway",
+      "lengthKm": 50.62,
+      "stationCount": 37,
+      "stations": [
+        {
+          "id": "wuhan.柏林",
+          "name": "柏林",
+          "nameEn": "Bailin",
+          "lon": 113.989143,
+          "lat": 30.584692
+        },
+        {
+          "id": "wuhan.新庙村",
+          "name": "新庙村",
+          "nameEn": "Xinmiaocun",
+          "lon": 114.003649,
+          "lat": 30.582239
+        },
+        {
+          "id": "wuhan.临嶂大道",
+          "name": "临嶂大道",
+          "nameEn": "Linzhang Boulevard",
+          "lon": 114.022679,
+          "lat": 30.574141
+        },
+        {
+          "id": "wuhan.蔡甸广场",
+          "name": "蔡甸广场",
+          "nameEn": "Caidian Square",
+          "lon": 114.034979,
+          "lat": 30.575268
+        },
+        {
+          "id": "wuhan.凤凰路",
+          "name": "凤凰路",
+          "nameEn": "Fenghuang Road",
+          "lon": 114.053358,
+          "lat": 30.566077
+        },
+        {
+          "id": "wuhan.新农",
+          "name": "新农",
+          "nameEn": "Xinnong",
+          "lon": 114.070798,
+          "lat": 30.561942
+        },
+        {
+          "id": "wuhan.知音",
+          "name": "知音",
+          "nameEn": "Zhiyin",
+          "lon": 114.087604,
+          "lat": 30.558681
+        },
+        {
+          "id": "wuhan.集贤",
+          "name": "集贤",
+          "nameEn": "Jixian",
+          "lon": 114.108333,
+          "lat": 30.552579
+        },
+        {
+          "id": "wuhan.新天",
+          "name": "新天",
+          "nameEn": "Xintian",
+          "lon": 114.118294,
+          "lat": 30.554501
+        },
+        {
+          "id": "wuhan.黄金口",
+          "name": "黄金口",
+          "nameEn": "Huangjinkou",
+          "lon": 114.139666,
+          "lat": 30.566313
+        },
+        {
+          "id": "wuhan.孟家铺站",
+          "name": "孟家铺站",
+          "nameEn": "Mengjiapu",
+          "lon": 114.168369,
+          "lat": 30.567414
+        },
+        {
+          "id": "wuhan.永安堂站",
+          "name": "永安堂站",
+          "nameEn": "Yong'antang",
+          "lon": 114.183434,
+          "lat": 30.568826
+        },
+        {
+          "id": "wuhan.玉龙路站",
+          "name": "玉龙路站",
+          "nameEn": "Yulong Road",
+          "lon": 114.195266,
+          "lat": 30.567143
+        },
+        {
+          "id": "wuhan.王家湾",
+          "name": "王家湾",
+          "nameEn": "Wangjiawan",
+          "lon": 114.204702,
+          "lat": 30.564444
+        },
+        {
+          "id": "wuhan.十里铺站",
+          "name": "十里铺站",
+          "nameEn": "Shilipu",
+          "lon": 114.213477,
+          "lat": 30.561854
+        },
+        {
+          "id": "wuhan.七里庙站",
+          "name": "七里庙站",
+          "nameEn": "Qilimiao",
+          "lon": 114.226732,
+          "lat": 30.559011
+        },
+        {
+          "id": "wuhan.五里墩站",
+          "name": "五里墩站",
+          "nameEn": "Wulidun",
+          "lon": 114.23683,
+          "lat": 30.555991
+        },
+        {
+          "id": "wuhan.汉阳火车站",
+          "name": "汉阳火车站",
+          "nameEn": "Hanyang Railway Station",
+          "lon": 114.247495,
+          "lat": 30.554128
+        },
+        {
+          "id": "wuhan.钟家村站",
+          "name": "钟家村站",
+          "nameEn": "Zhongjiacun",
+          "lon": 114.260597,
+          "lat": 30.551071
+        },
+        {
+          "id": "wuhan.拦江路站",
+          "name": "拦江路站",
+          "nameEn": "Lanjiang Road",
+          "lon": 114.263349,
+          "lat": 30.545609
+        },
+        {
+          "id": "wuhan.复兴路",
+          "name": "复兴路",
+          "nameEn": "Fuxing Road",
+          "lon": 114.295625,
+          "lat": 30.536664
+        },
+        {
+          "id": "wuhan.首义路站",
+          "name": "首义路站",
+          "nameEn": "Shouyi Road",
+          "lon": 114.304808,
+          "lat": 30.535745
+        },
+        {
+          "id": "wuhan.武昌火车站",
+          "name": "武昌火车站",
+          "nameEn": "Wuchang Railway Station",
+          "lon": 114.311435,
+          "lat": 30.532936
+        },
+        {
+          "id": "wuhan.梅苑小区",
+          "name": "梅苑小区",
+          "nameEn": "Meiyuanxiaoqu",
+          "lon": 114.320628,
+          "lat": 30.533264
+        },
+        {
+          "id": "wuhan.中南路站E出口",
+          "name": "中南路站E出口",
+          "nameEn": "Zhongnan Road",
+          "lon": 114.327504,
+          "lat": 30.539827
+        },
+        {
+          "id": "wuhan.洪山广场",
+          "name": "洪山广场",
+          "nameEn": "Hongshan Square",
+          "lon": 114.331422,
+          "lat": 30.547765
+        },
+        {
+          "id": "wuhan.楚河汉街",
+          "name": "楚河汉街",
+          "nameEn": "Chuhe Hanjie",
+          "lon": 114.335899,
+          "lat": 30.556179
+        },
+        {
+          "id": "wuhan.青鱼嘴",
+          "name": "青鱼嘴",
+          "nameEn": "Qingyuzui",
+          "lon": 114.343539,
+          "lat": 30.56517
+        },
+        {
+          "id": "wuhan.东亭",
+          "name": "东亭",
+          "nameEn": "Dongting",
+          "lon": 114.350029,
+          "lat": 30.572522
+        },
+        {
+          "id": "wuhan.岳家嘴",
+          "name": "岳家嘴",
+          "nameEn": "Yuejiazui",
+          "lon": 114.356239,
+          "lat": 30.579147
+        },
+        {
+          "id": "wuhan.铁机路",
+          "name": "铁机路",
+          "nameEn": "Tieji Road",
+          "lon": 114.363771,
+          "lat": 30.586341
+        },
+        {
+          "id": "wuhan.罗家港",
+          "name": "罗家港",
+          "nameEn": "Luojiagang",
+          "lon": 114.366136,
+          "lat": 30.594773
+        },
+        {
+          "id": "wuhan.园林路",
+          "name": "园林路",
+          "nameEn": "Yuanlin Road",
+          "lon": 114.373127,
+          "lat": 30.602662
+        },
+        {
+          "id": "wuhan.仁和路",
+          "name": "仁和路",
+          "nameEn": "Renhe Road",
+          "lon": 114.383544,
+          "lat": 30.607378
+        },
+        {
+          "id": "wuhan.工业四路",
+          "name": "工业四路",
+          "nameEn": "Gongye 4th Road",
+          "lon": 114.400069,
+          "lat": 30.61016
+        },
+        {
+          "id": "wuhan.杨春湖",
+          "name": "杨春湖",
+          "nameEn": "Yangchunhu",
+          "lon": 114.410741,
+          "lat": 30.607565
+        },
+        {
+          "id": "wuhan.武汉火车站",
+          "name": "武汉火车站",
+          "nameEn": "Wuhan Railway Station",
+          "lon": 114.419182,
+          "lat": 30.609559
+        }
+      ],
+      "track": [
+        [
+          113.98914,
+          30.58469
+        ],
+        [
+          114.00236,
+          30.58278
+        ],
+        [
+          114.02221,
+          30.57422
+        ],
+        [
+          114.03876,
+          30.57553
+        ],
+        [
+          114.05227,
+          30.56644
+        ],
+        [
+          114.05958,
+          30.56416
+        ],
+        [
+          114.06619,
+          30.56377
+        ],
+        [
+          114.07449,
+          30.56069
+        ],
+        [
+          114.08676,
+          30.55894
+        ],
+        [
+          114.09319,
+          30.55541
+        ],
+        [
+          114.10378,
+          30.55234
+        ],
+        [
+          114.107,
+          30.55237
+        ],
+        [
+          114.11749,
+          30.55445
+        ],
+        [
+          114.12371,
+          30.55414
+        ],
+        [
+          114.12649,
+          30.55463
+        ],
+        [
+          114.13012,
+          30.55734
+        ],
+        [
+          114.12996,
+          30.56256
+        ],
+        [
+          114.13053,
+          30.56399
+        ],
+        [
+          114.13427,
+          30.56617
+        ],
+        [
+          114.15689,
+          30.56657
+        ],
+        [
+          114.16473,
+          30.56751
+        ],
+        [
+          114.17497,
+          30.56732
+        ],
+        [
+          114.18511,
+          30.56943
+        ],
+        [
+          114.18793,
+          30.56941
+        ],
+        [
+          114.20875,
+          30.56308
+        ],
+        [
+          114.23031,
+          30.55843
+        ],
+        [
+          114.24239,
+          30.55413
+        ],
+        [
+          114.24601,
+          30.55374
+        ],
+        [
+          114.25425,
+          30.55605
+        ],
+        [
+          114.25852,
+          30.55547
+        ],
+        [
+          114.2604,
+          30.5539
+        ],
+        [
+          114.26108,
+          30.54772
+        ],
+        [
+          114.26918,
+          30.54163
+        ],
+        [
+          114.29123,
+          30.53683
+        ],
+        [
+          114.30543,
+          30.53564
+        ],
+        [
+          114.31252,
+          30.53243
+        ],
+        [
+          114.31456,
+          30.53216
+        ],
+        [
+          114.31887,
+          30.53334
+        ],
+        [
+          114.32299,
+          30.53321
+        ],
+        [
+          114.32554,
+          30.53489
+        ],
+        [
+          114.32642,
+          30.53782
+        ],
+        [
+          114.33699,
+          30.55798
+        ],
+        [
+          114.36035,
+          30.58369
+        ],
+        [
+          114.36704,
+          30.58829
+        ],
+        [
+          114.36757,
+          30.59064
+        ],
+        [
+          114.36573,
+          30.5969
+        ],
+        [
+          114.36737,
+          30.5996
+        ],
+        [
+          114.38354,
+          30.60738
+        ],
+        [
+          114.40077,
+          30.61026
+        ],
+        [
+          114.40299,
+          30.61008
+        ],
+        [
+          114.40673,
+          30.60767
+        ],
+        [
+          114.40863,
+          30.60718
+        ],
+        [
+          114.4237,
+          30.6105
+        ],
+        [
+          114.42513,
+          30.60954
+        ],
+        [
+          114.42557,
+          30.60669
+        ]
+      ]
+    },
+    {
+      "id": "wuhan.l5",
+      "ref": "5",
+      "name": "5号线",
+      "color": "#A43034",
+      "system": "subway",
+      "lengthKm": 37.39,
+      "stationCount": 27,
+      "stations": [
+        {
+          "id": "wuhan.武汉站东广场",
+          "name": "武汉站东广场",
+          "nameEn": "Wuhan Railway Station",
+          "lon": 114.421349,
+          "lat": 30.608558
+        },
+        {
+          "id": "wuhan.厂前",
+          "name": "厂前",
+          "nameEn": "",
+          "lon": 114.42884,
+          "lat": 30.613298
+        },
+        {
+          "id": "wuhan.武钢",
+          "name": "武钢",
+          "nameEn": "",
+          "lon": 114.43187,
+          "lat": 30.621293
+        },
+        {
+          "id": "wuhan.工人村",
+          "name": "工人村",
+          "nameEn": "",
+          "lon": 114.420365,
+          "lat": 30.633885
+        },
+        {
+          "id": "wuhan.青宜居",
+          "name": "青宜居",
+          "nameEn": "",
+          "lon": 114.414002,
+          "lat": 30.644925
+        },
+        {
+          "id": "wuhan.红钢城",
+          "name": "红钢城",
+          "nameEn": "",
+          "lon": 114.396215,
+          "lat": 30.641534
+        },
+        {
+          "id": "wuhan.和平公园",
+          "name": "和平公园",
+          "nameEn": "",
+          "lon": 114.381137,
+          "lat": 30.633865
+        },
+        {
+          "id": "wuhan.建设二路",
+          "name": "建设二路",
+          "nameEn": "",
+          "lon": 114.370779,
+          "lat": 30.62717
+        },
+        {
+          "id": "wuhan.科普公园",
+          "name": "科普公园",
+          "nameEn": "",
+          "lon": 114.359612,
+          "lat": 30.620224
+        },
+        {
+          "id": "wuhan.余家头",
+          "name": "余家头",
+          "nameEn": "",
+          "lon": 114.346615,
+          "lat": 30.610313
+        },
+        {
+          "id": "wuhan.杨园铁四院",
+          "name": "杨园铁四院",
+          "nameEn": "",
+          "lon": 114.337595,
+          "lat": 30.602077
+        },
+        {
+          "id": "wuhan.徐家棚",
+          "name": "徐家棚",
+          "nameEn": "Xujiapeng",
+          "lon": 114.328102,
+          "lat": 30.592973
+        },
+        {
+          "id": "wuhan.三角路",
+          "name": "三角路",
+          "nameEn": "",
+          "lon": 114.319862,
+          "lat": 30.583635
+        },
+        {
+          "id": "wuhan.三层楼",
+          "name": "三层楼",
+          "nameEn": "",
+          "lon": 114.309062,
+          "lat": 30.571749
+        },
+        {
+          "id": "wuhan.积玉桥",
+          "name": "积玉桥",
+          "nameEn": "Jiyuqiao",
+          "lon": 114.303169,
+          "lat": 30.563719
+        },
+        {
+          "id": "wuhan.昙华林武胜门",
+          "name": "昙华林武胜门",
+          "nameEn": "",
+          "lon": 114.299859,
+          "lat": 30.556754
+        },
+        {
+          "id": "wuhan.司门口黄鹤楼",
+          "name": "司门口黄鹤楼",
+          "nameEn": "",
+          "lon": 114.296724,
+          "lat": 30.549361
+        },
+        {
+          "id": "wuhan.彭刘杨",
+          "name": "彭刘杨",
+          "nameEn": "",
+          "lon": 114.295866,
+          "lat": 30.543551
+        },
+        {
+          "id": "wuhan.复兴路",
+          "name": "复兴路",
+          "nameEn": "Fuxing Road",
+          "lon": 114.29604,
+          "lat": 30.536775
+        },
+        {
+          "id": "wuhan.八铺街",
+          "name": "八铺街",
+          "nameEn": "",
+          "lon": 114.295094,
+          "lat": 30.522829
+        },
+        {
+          "id": "wuhan.烽火村",
+          "name": "烽火村",
+          "nameEn": "",
+          "lon": 114.293225,
+          "lat": 30.511826
+        },
+        {
+          "id": "wuhan.张家湾",
+          "name": "张家湾",
+          "nameEn": "",
+          "lon": 114.287907,
+          "lat": 30.497888
+        },
+        {
+          "id": "wuhan.光霞",
+          "name": "光霞",
+          "nameEn": "Guangxia",
+          "lon": 114.287653,
+          "lat": 30.48094
+        },
+        {
+          "id": "wuhan.白沙六路",
+          "name": "白沙六路",
+          "nameEn": "",
+          "lon": 114.287808,
+          "lat": 30.471211
+        },
+        {
+          "id": "wuhan.中医药大学",
+          "name": "中医药大学",
+          "nameEn": "Hubei University of Chinese Medicine",
+          "lon": 114.26329,
+          "lat": 30.456302
+        },
+        {
+          "id": "wuhan.黄家湖（武科大）",
+          "name": "黄家湖（武科大）",
+          "nameEn": "Huangjiahu (Wuhan University of Science and Technology)",
+          "lon": 114.25737,
+          "lat": 30.44585
+        },
+        {
+          "id": "wuhan.红霞",
+          "name": "红霞",
+          "nameEn": "Hongxia",
+          "lon": 114.256351,
+          "lat": 30.433459
+        }
+      ],
+      "track": [
+        [
+          114.42135,
+          30.60856
+        ],
+        [
+          114.42137,
+          30.61091
+        ],
+        [
+          114.42298,
+          30.61277
+        ],
+        [
+          114.42485,
+          30.61337
+        ],
+        [
+          114.43231,
+          30.61346
+        ],
+        [
+          114.43485,
+          30.61536
+        ],
+        [
+          114.4353,
+          30.61793
+        ],
+        [
+          114.43406,
+          30.61977
+        ],
+        [
+          114.42196,
+          30.62876
+        ],
+        [
+          114.4204,
+          30.63274
+        ],
+        [
+          114.42021,
+          30.63939
+        ],
+        [
+          114.41856,
+          30.64352
+        ],
+        [
+          114.41666,
+          30.64458
+        ],
+        [
+          114.40967,
+          30.64519
+        ],
+        [
+          114.40539,
+          30.64322
+        ],
+        [
+          114.39963,
+          30.6432
+        ],
+        [
+          114.38565,
+          30.63635
+        ],
+        [
+          114.35961,
+          30.62022
+        ],
+        [
+          114.3446,
+          30.60873
+        ],
+        [
+          114.32613,
+          30.59105
+        ],
+        [
+          114.30503,
+          30.56676
+        ],
+        [
+          114.30225,
+          30.56198
+        ],
+        [
+          114.29617,
+          30.54808
+        ],
+        [
+          114.29602,
+          30.53408
+        ],
+        [
+          114.29424,
+          30.52655
+        ],
+        [
+          114.29563,
+          30.52029
+        ],
+        [
+          114.29419,
+          30.51375
+        ],
+        [
+          114.28966,
+          30.50606
+        ],
+        [
+          114.28748,
+          30.49578
+        ],
+        [
+          114.2877,
+          30.46522
+        ],
+        [
+          114.28634,
+          30.46359
+        ],
+        [
+          114.28475,
+          30.46303
+        ],
+        [
+          114.27933,
+          30.46423
+        ],
+        [
+          114.26847,
+          30.46417
+        ],
+        [
+          114.26601,
+          30.46303
+        ],
+        [
+          114.26457,
+          30.45871
+        ],
+        [
+          114.25695,
+          30.44486
+        ],
+        [
+          114.25635,
+          30.43346
+        ]
+      ]
+    },
+    {
+      "id": "wuhan.l6",
+      "ref": "6",
+      "name": "6号线",
+      "color": "#007128",
+      "system": "subway",
+      "lengthKm": 42.63,
+      "stationCount": 32,
+      "stations": [
+        {
+          "id": "wuhan.东风公司",
+          "name": "东风公司",
+          "nameEn": "Dongfeng Motor Corporation",
+          "lon": 114.160889,
+          "lat": 30.502462
+        },
+        {
+          "id": "wuhan.车城东路",
+          "name": "车城东路",
+          "nameEn": "Checheng East Road",
+          "lon": 114.174572,
+          "lat": 30.497882
+        },
+        {
+          "id": "wuhan.江城大道",
+          "name": "江城大道",
+          "nameEn": "Jiangcheng Boulevard",
+          "lon": 114.196815,
+          "lat": 30.498826
+        },
+        {
+          "id": "wuhan.老关村",
+          "name": "老关村",
+          "nameEn": "Laoguancun",
+          "lon": 114.220447,
+          "lat": 30.495162
+        },
+        {
+          "id": "wuhan.国博中心南",
+          "name": "国博中心南",
+          "nameEn": "South International Expo Centre",
+          "lon": 114.230456,
+          "lat": 30.507463
+        },
+        {
+          "id": "wuhan.国博中心北",
+          "name": "国博中心北",
+          "nameEn": "North International Expo Centre",
+          "lon": 114.237205,
+          "lat": 30.5131
+        },
+        {
+          "id": "wuhan.前进村",
+          "name": "前进村",
+          "nameEn": "Qianjincun",
+          "lon": 114.24803,
+          "lat": 30.522651
+        },
+        {
+          "id": "wuhan.建港",
+          "name": "建港",
+          "nameEn": "Jiangang",
+          "lon": 114.253925,
+          "lat": 30.528742
+        },
+        {
+          "id": "wuhan.马鹦路",
+          "name": "马鹦路",
+          "nameEn": "Maying Road",
+          "lon": 114.26139,
+          "lat": 30.540525
+        },
+        {
+          "id": "wuhan.钟家村站",
+          "name": "钟家村站",
+          "nameEn": "Zhongjiacun",
+          "lon": 114.260768,
+          "lat": 30.551066
+        },
+        {
+          "id": "wuhan.琴台",
+          "name": "琴台",
+          "nameEn": "Qintai",
+          "lon": 114.260881,
+          "lat": 30.559989
+        },
+        {
+          "id": "wuhan.武胜路",
+          "name": "武胜路",
+          "nameEn": "Wusheng Road",
+          "lon": 114.263148,
+          "lat": 30.571877
+        },
+        {
+          "id": "wuhan.汉正街",
+          "name": "汉正街",
+          "nameEn": "Hanzheng Street",
+          "lon": 114.270396,
+          "lat": 30.574141
+        },
+        {
+          "id": "wuhan.六渡桥",
+          "name": "六渡桥",
+          "nameEn": "Liuduqiao",
+          "lon": 114.278614,
+          "lat": 30.577367
+        },
+        {
+          "id": "wuhan.江汉路",
+          "name": "江汉路",
+          "nameEn": "Jianghan Road",
+          "lon": 114.286033,
+          "lat": 30.582717
+        },
+        {
+          "id": "wuhan.大智路",
+          "name": "大智路",
+          "nameEn": "Dazhi Road",
+          "lon": 114.288732,
+          "lat": 30.594696
+        },
+        {
+          "id": "wuhan.苗栗路",
+          "name": "苗栗路",
+          "nameEn": "Miaoli Road",
+          "lon": 114.284552,
+          "lat": 30.601301
+        },
+        {
+          "id": "wuhan.香港路",
+          "name": "香港路",
+          "nameEn": "Xianggang Road",
+          "lon": 114.279231,
+          "lat": 30.607592
+        },
+        {
+          "id": "wuhan.三眼桥",
+          "name": "三眼桥",
+          "nameEn": "Sanyanqiao",
+          "lon": 114.270306,
+          "lat": 30.612935
+        },
+        {
+          "id": "wuhan.唐家墩",
+          "name": "唐家墩",
+          "nameEn": "Tangjiadun",
+          "lon": 114.265906,
+          "lat": 30.620127
+        },
+        {
+          "id": "wuhan.石桥",
+          "name": "石桥",
+          "nameEn": "Shiqiao",
+          "lon": 114.259696,
+          "lat": 30.633415
+        },
+        {
+          "id": "wuhan.杨汊湖",
+          "name": "杨汊湖",
+          "nameEn": "Yangchahu",
+          "lon": 114.255709,
+          "lat": 30.638316
+        },
+        {
+          "id": "wuhan.常青花园",
+          "name": "常青花园",
+          "nameEn": "Changqinghuayuan",
+          "lon": 114.238409,
+          "lat": 30.643345
+        },
+        {
+          "id": "wuhan.轻工大学",
+          "name": "轻工大学",
+          "nameEn": "Polytechnic University",
+          "lon": 114.228895,
+          "lat": 30.642167
+        },
+        {
+          "id": "wuhan.园博园北",
+          "name": "园博园北",
+          "nameEn": "Garden Expo North",
+          "lon": 114.217682,
+          "lat": 30.640341
+        },
+        {
+          "id": "wuhan.金银湖",
+          "name": "金银湖",
+          "nameEn": "Jinyinhu",
+          "lon": 114.199423,
+          "lat": 30.641779
+        },
+        {
+          "id": "wuhan.金银湖公园",
+          "name": "金银湖公园",
+          "nameEn": "Jinyinhu Park",
+          "lon": 114.175127,
+          "lat": 30.639175
+        },
+        {
+          "id": "wuhan.海口三路",
+          "name": "海口三路",
+          "nameEn": "Haikou 3rd Road",
+          "lon": 114.161904,
+          "lat": 30.636762
+        },
+        {
+          "id": "wuhan.二雅路",
+          "name": "二雅路",
+          "nameEn": "Erya Road",
+          "lon": 114.147103,
+          "lat": 30.635427
+        },
+        {
+          "id": "wuhan.五环体育中心",
+          "name": "五环体育中心",
+          "nameEn": "Five Rings Sports Center",
+          "lon": 114.131426,
+          "lat": 30.636368
+        },
+        {
+          "id": "wuhan.码头潭公园",
+          "name": "码头潭公园",
+          "nameEn": "Matoutan Park",
+          "lon": 114.118864,
+          "lat": 30.635339
+        },
+        {
+          "id": "wuhan.新城十一路",
+          "name": "新城十一路",
+          "nameEn": "Xincheng 11th Road",
+          "lon": 114.103359,
+          "lat": 30.635281
+        }
+      ],
+      "track": [
+        [
+          114.16089,
+          30.50246
+        ],
+        [
+          114.16562,
+          30.50001
+        ],
+        [
+          114.18021,
+          30.49663
+        ],
+        [
+          114.19125,
+          30.49986
+        ],
+        [
+          114.19431,
+          30.50008
+        ],
+        [
+          114.21067,
+          30.49052
+        ],
+        [
+          114.21401,
+          30.49059
+        ],
+        [
+          114.21804,
+          30.49229
+        ],
+        [
+          114.22889,
+          30.50483
+        ],
+        [
+          114.23328,
+          30.51169
+        ],
+        [
+          114.23981,
+          30.51407
+        ],
+        [
+          114.26162,
+          30.53674
+        ],
+        [
+          114.26068,
+          30.55337
+        ],
+        [
+          114.25995,
+          30.55676
+        ],
+        [
+          114.26121,
+          30.56224
+        ],
+        [
+          114.25999,
+          30.56421
+        ],
+        [
+          114.25669,
+          30.56605
+        ],
+        [
+          114.25683,
+          30.57035
+        ],
+        [
+          114.25879,
+          30.57157
+        ],
+        [
+          114.26504,
+          30.57201
+        ],
+        [
+          114.27394,
+          30.5753
+        ],
+        [
+          114.28436,
+          30.58029
+        ],
+        [
+          114.28686,
+          30.58381
+        ],
+        [
+          114.28843,
+          30.58798
+        ],
+        [
+          114.28901,
+          30.59362
+        ],
+        [
+          114.28819,
+          30.59627
+        ],
+        [
+          114.28527,
+          30.59946
+        ],
+        [
+          114.28284,
+          30.60395
+        ],
+        [
+          114.27923,
+          30.60759
+        ],
+        [
+          114.26789,
+          30.61458
+        ],
+        [
+          114.26215,
+          30.62988
+        ],
+        [
+          114.2512,
+          30.64413
+        ],
+        [
+          114.24914,
+          30.645
+        ],
+        [
+          114.24107,
+          30.64464
+        ],
+        [
+          114.23389,
+          30.64147
+        ],
+        [
+          114.225,
+          30.64259
+        ],
+        [
+          114.21955,
+          30.64001
+        ],
+        [
+          114.21216,
+          30.64154
+        ],
+        [
+          114.20423,
+          30.64101
+        ],
+        [
+          114.18991,
+          30.64361
+        ],
+        [
+          114.18571,
+          30.64359
+        ],
+        [
+          114.18244,
+          30.64259
+        ],
+        [
+          114.17813,
+          30.63995
+        ],
+        [
+          114.16603,
+          30.63698
+        ],
+        [
+          114.15428,
+          30.63681
+        ],
+        [
+          114.14407,
+          30.63482
+        ],
+        [
+          114.12673,
+          30.63665
+        ],
+        [
+          114.11668,
+          30.63492
+        ],
+        [
+          114.1091,
+          30.63471
+        ],
+        [
+          114.10336,
+          30.63528
+        ]
+      ]
+    },
+    {
+      "id": "wuhan.l7",
+      "ref": "7",
+      "name": "7号线",
+      "color": "#EB7C16",
+      "system": "subway",
+      "lengthKm": 81.6,
+      "stationCount": 36,
+      "stations": [
+        {
+          "id": "wuhan.青龙山地铁小镇",
+          "name": "青龙山地铁小镇",
+          "nameEn": "Qinglongshan Ditiexiaozhen",
+          "lon": 114.32893,
+          "lat": 30.320735
+        },
+        {
+          "id": "wuhan.纸坊大街",
+          "name": "纸坊大街",
+          "nameEn": "Zhifang Avenue",
+          "lon": 114.319202,
+          "lat": 30.347676
+        },
+        {
+          "id": "wuhan.北华街",
+          "name": "北华街",
+          "nameEn": "Beihua Street",
+          "lon": 114.318244,
+          "lat": 30.360523
+        },
+        {
+          "id": "wuhan.谭鑫培公园",
+          "name": "谭鑫培公园",
+          "nameEn": "Tanxinpei Park",
+          "lon": 114.316432,
+          "lat": 30.374104
+        },
+        {
+          "id": "wuhan.江夏客厅",
+          "name": "江夏客厅",
+          "nameEn": "Jiangxiaketing",
+          "lon": 114.316497,
+          "lat": 30.391904
+        },
+        {
+          "id": "wuhan.大花岭",
+          "name": "大花岭",
+          "nameEn": "Dahualing",
+          "lon": 114.314794,
+          "lat": 30.41484
+        },
+        {
+          "id": "wuhan.新路村",
+          "name": "新路村",
+          "nameEn": "Xinlucun",
+          "lon": 114.313018,
+          "lat": 30.444099
+        },
+        {
+          "id": "wuhan.野芷湖",
+          "name": "野芷湖",
+          "nameEn": "Yezhihu",
+          "lon": 114.314242,
+          "lat": 30.463128
+        },
+        {
+          "id": "wuhan.板桥",
+          "name": "板桥",
+          "nameEn": "Banqiao",
+          "lon": 114.308019,
+          "lat": 30.477461
+        },
+        {
+          "id": "wuhan.湖工大",
+          "name": "湖工大",
+          "nameEn": "Hubei University of Technology",
+          "lon": 114.307948,
+          "lat": 30.486877
+        },
+        {
+          "id": "wuhan.建安街",
+          "name": "建安街",
+          "nameEn": "Jian'an Street",
+          "lon": 114.308401,
+          "lat": 30.506116
+        },
+        {
+          "id": "wuhan.瑞安街",
+          "name": "瑞安街",
+          "nameEn": "Ruian Street",
+          "lon": 114.308924,
+          "lat": 30.517596
+        },
+        {
+          "id": "wuhan.武昌火车站",
+          "name": "武昌火车站",
+          "nameEn": "Wuchang Railway Station",
+          "lon": 114.311333,
+          "lat": 30.533329
+        },
+        {
+          "id": "wuhan.小东门",
+          "name": "小东门",
+          "nameEn": "Xiaodongmen",
+          "lon": 114.313222,
+          "lat": 30.547319
+        },
+        {
+          "id": "wuhan.螃蟹岬",
+          "name": "螃蟹岬",
+          "nameEn": "Pangxiejia",
+          "lon": 114.312047,
+          "lat": 30.556291
+        },
+        {
+          "id": "wuhan.新河街",
+          "name": "新河街",
+          "nameEn": "Xinhe Street",
+          "lon": 114.311819,
+          "lat": 30.566067
+        },
+        {
+          "id": "wuhan.湖北大学",
+          "name": "湖北大学",
+          "nameEn": "Hubei University",
+          "lon": 114.323511,
+          "lat": 30.579616
+        },
+        {
+          "id": "wuhan.徐家棚",
+          "name": "徐家棚",
+          "nameEn": "Xujiapeng",
+          "lon": 114.326278,
+          "lat": 30.591155
+        },
+        {
+          "id": "wuhan.三阳路",
+          "name": "三阳路",
+          "nameEn": "Sanyang Road",
+          "lon": 114.294806,
+          "lat": 30.601703
+        },
+        {
+          "id": "wuhan.香港路",
+          "name": "香港路",
+          "nameEn": "Xianggang Road",
+          "lon": 114.27954,
+          "lat": 30.607873
+        },
+        {
+          "id": "wuhan.取水楼",
+          "name": "取水楼",
+          "nameEn": "Qushuilou",
+          "lon": 114.268025,
+          "lat": 30.599647
+        },
+        {
+          "id": "wuhan.王家墩东站",
+          "name": "王家墩东站",
+          "nameEn": "Wangjiadun East",
+          "lon": 114.257158,
+          "lat": 30.596635
+        },
+        {
+          "id": "wuhan.武汉商务区",
+          "name": "武汉商务区",
+          "nameEn": "Wuhan Business District",
+          "lon": 114.241061,
+          "lat": 30.598441
+        },
+        {
+          "id": "wuhan.常码头",
+          "name": "常码头",
+          "nameEn": "Changmatou",
+          "lon": 114.22902,
+          "lat": 30.607429
+        },
+        {
+          "id": "wuhan.园博园",
+          "name": "园博园",
+          "nameEn": "Garden Expo",
+          "lon": 114.220443,
+          "lat": 30.621714
+        },
+        {
+          "id": "wuhan.园博园北",
+          "name": "园博园北",
+          "nameEn": "Garden Expo North",
+          "lon": 114.217683,
+          "lat": 30.640277
+        },
+        {
+          "id": "wuhan.马池",
+          "name": "马池",
+          "nameEn": "Machi",
+          "lon": 114.22,
+          "lat": 30.657712
+        },
+        {
+          "id": "wuhan.汤云海路",
+          "name": "汤云海路",
+          "nameEn": "Tangyunhai Road",
+          "lon": 114.232685,
+          "lat": 30.702301
+        },
+        {
+          "id": "wuhan.巨龙大道",
+          "name": "巨龙大道",
+          "nameEn": "Julong Boulevard",
+          "lon": 114.250558,
+          "lat": 30.714489
+        },
+        {
+          "id": "wuhan.腾龙大道",
+          "name": "腾龙大道",
+          "nameEn": "Tenglong Boulevard",
+          "lon": 114.25449,
+          "lat": 30.729879
+        },
+        {
+          "id": "wuhan.天阳大道",
+          "name": "天阳大道",
+          "nameEn": "Tianyang Boulevard",
+          "lon": 114.264734,
+          "lat": 30.767722
+        },
+        {
+          "id": "wuhan.裕福路",
+          "name": "裕福路",
+          "nameEn": "Yufu Road",
+          "lon": 114.272991,
+          "lat": 30.788108
+        },
+        {
+          "id": "wuhan.横店",
+          "name": "横店",
+          "nameEn": "Hengdian",
+          "lon": 114.284381,
+          "lat": 30.806482
+        },
+        {
+          "id": "wuhan.青仔村",
+          "name": "青仔村",
+          "nameEn": "",
+          "lon": 114.327212,
+          "lat": 30.884357
+        },
+        {
+          "id": "wuhan.百泰路",
+          "name": "百泰路",
+          "nameEn": "",
+          "lon": 114.352731,
+          "lat": 30.885965
+        },
+        {
+          "id": "wuhan.黄陂广场",
+          "name": "黄陂广场",
+          "nameEn": "",
+          "lon": 114.375557,
+          "lat": 30.88277
+        }
+      ],
+      "track": [
+        [
+          114.31982,
+          30.34013
+        ],
+        [
+          114.3197,
+          30.33878
+        ],
+        [
+          114.31906,
+          30.35414
+        ],
+        [
+          114.31615,
+          30.37728
+        ],
+        [
+          114.31697,
+          30.38886
+        ],
+        [
+          114.31622,
+          30.39468
+        ],
+        [
+          114.31315,
+          30.40763
+        ],
+        [
+          114.31627,
+          30.42013
+        ],
+        [
+          114.31633,
+          30.43723
+        ],
+        [
+          114.31554,
+          30.44029
+        ],
+        [
+          114.31125,
+          30.4461
+        ],
+        [
+          114.31057,
+          30.44841
+        ],
+        [
+          114.31192,
+          30.45174
+        ],
+        [
+          114.31639,
+          30.45393
+        ],
+        [
+          114.31722,
+          30.4562
+        ],
+        [
+          114.31511,
+          30.46005
+        ],
+        [
+          114.31279,
+          30.46802
+        ],
+        [
+          114.30967,
+          30.47025
+        ],
+        [
+          114.30864,
+          30.4723
+        ],
+        [
+          114.3077,
+          30.48063
+        ],
+        [
+          114.30793,
+          30.48767
+        ],
+        [
+          114.30721,
+          30.49066
+        ],
+        [
+          114.30782,
+          30.49367
+        ],
+        [
+          114.30964,
+          30.49706
+        ],
+        [
+          114.30975,
+          30.49945
+        ],
+        [
+          114.30837,
+          30.5035
+        ],
+        [
+          114.30899,
+          30.52069
+        ],
+        [
+          114.30703,
+          30.52493
+        ],
+        [
+          114.30787,
+          30.52795
+        ],
+        [
+          114.31142,
+          30.53355
+        ],
+        [
+          114.31328,
+          30.54452
+        ],
+        [
+          114.31208,
+          30.55411
+        ],
+        [
+          114.31207,
+          30.56787
+        ],
+        [
+          114.32006,
+          30.57672
+        ],
+        [
+          114.32811,
+          30.58355
+        ],
+        [
+          114.3309,
+          30.58513
+        ],
+        [
+          114.33134,
+          30.5873
+        ],
+        [
+          114.32032,
+          30.59509
+        ],
+        [
+          114.30389,
+          30.59772
+        ],
+        [
+          114.28936,
+          30.60444
+        ],
+        [
+          114.28726,
+          30.60592
+        ],
+        [
+          114.28529,
+          30.60868
+        ],
+        [
+          114.28329,
+          30.60947
+        ],
+        [
+          114.28061,
+          30.60897
+        ],
+        [
+          114.2739,
+          30.60221
+        ],
+        [
+          114.26135,
+          30.59695
+        ],
+        [
+          114.25124,
+          30.59648
+        ],
+        [
+          114.2373,
+          30.5992
+        ],
+        [
+          114.23483,
+          30.60035
+        ],
+        [
+          114.23149,
+          30.60537
+        ],
+        [
+          114.2281,
+          30.60822
+        ],
+        [
+          114.22631,
+          30.61187
+        ],
+        [
+          114.22265,
+          30.61465
+        ],
+        [
+          114.22078,
+          30.6183
+        ],
+        [
+          114.2203,
+          30.62433
+        ],
+        [
+          114.22226,
+          30.6274
+        ],
+        [
+          114.22263,
+          30.62953
+        ],
+        [
+          114.21783,
+          30.63742
+        ],
+        [
+          114.21771,
+          30.64121
+        ],
+        [
+          114.21658,
+          30.64577
+        ],
+        [
+          114.21718,
+          30.64798
+        ],
+        [
+          114.21997,
+          30.65181
+        ],
+        [
+          114.22002,
+          30.66714
+        ],
+        [
+          114.21889,
+          30.67207
+        ],
+        [
+          114.23415,
+          30.70519
+        ],
+        [
+          114.23673,
+          30.70621
+        ],
+        [
+          114.24538,
+          30.70636
+        ],
+        [
+          114.2496,
+          30.71334
+        ],
+        [
+          114.25412,
+          30.71908
+        ],
+        [
+          114.2546,
+          30.72442
+        ],
+        [
+          114.25425,
+          30.74927
+        ],
+        [
+          114.255,
+          30.75423
+        ],
+        [
+          114.26286,
+          30.76345
+        ],
+        [
+          114.26721,
+          30.77281
+        ],
+        [
+          114.27409,
+          30.79075
+        ],
+        [
+          114.28249,
+          30.80259
+        ],
+        [
+          114.28576,
+          30.80926
+        ],
+        [
+          114.29119,
+          30.81658
+        ],
+        [
+          114.29244,
+          30.82593
+        ],
+        [
+          114.29218,
+          30.83451
+        ],
+        [
+          114.29314,
+          30.83777
+        ],
+        [
+          114.29612,
+          30.84106
+        ],
+        [
+          114.30648,
+          30.84726
+        ],
+        [
+          114.30834,
+          30.84985
+        ],
+        [
+          114.31056,
+          30.87538
+        ],
+        [
+          114.3125,
+          30.87978
+        ],
+        [
+          114.31501,
+          30.88182
+        ],
+        [
+          114.3182,
+          30.8831
+        ],
+        [
+          114.3476,
+          30.88714
+        ],
+        [
+          114.35103,
+          30.8868
+        ],
+        [
+          114.36113,
+          30.88195
+        ],
+        [
+          114.36954,
+          30.88305
+        ],
+        [
+          114.37663,
+          30.88278
+        ]
+      ]
+    },
+    {
+      "id": "wuhan.l8",
+      "ref": "8",
+      "name": "8号线",
+      "color": "#9DABAA",
+      "system": "subway",
+      "lengthKm": 38.71,
+      "stationCount": 26,
+      "stations": [
+        {
+          "id": "wuhan.军运村",
+          "name": "军运村",
+          "nameEn": "Military Athletes' Village",
+          "lon": 114.289734,
+          "lat": 30.429866
+        },
+        {
+          "id": "wuhan.黄家湖地铁小镇",
+          "name": "黄家湖地铁小镇",
+          "nameEn": "Huangjiahu Ditiexiaozhen",
+          "lon": 114.292693,
+          "lat": 30.439131
+        },
+        {
+          "id": "wuhan.野芷湖",
+          "name": "野芷湖",
+          "nameEn": "Yezhihu",
+          "lon": 114.313151,
+          "lat": 30.463632
+        },
+        {
+          "id": "wuhan.马湖",
+          "name": "马湖",
+          "nameEn": "Mahu",
+          "lon": 114.319627,
+          "lat": 30.473741
+        },
+        {
+          "id": "wuhan.省农科院",
+          "name": "省农科院",
+          "nameEn": "Hubei Academy of Agricultural Sciences",
+          "lon": 114.32064,
+          "lat": 30.484411
+        },
+        {
+          "id": "wuhan.文昌路",
+          "name": "文昌路",
+          "nameEn": "Wenchang Road",
+          "lon": 114.32376,
+          "lat": 30.494522
+        },
+        {
+          "id": "wuhan.文治街",
+          "name": "文治街",
+          "nameEn": "Wenzhi Street",
+          "lon": 114.33897,
+          "lat": 30.50277
+        },
+        {
+          "id": "wuhan.马房山",
+          "name": "马房山",
+          "nameEn": "Mafangshan",
+          "lon": 114.34492,
+          "lat": 30.517463
+        },
+        {
+          "id": "wuhan.街道口",
+          "name": "街道口",
+          "nameEn": "Jiedaokou",
+          "lon": 114.347767,
+          "lat": 30.528363
+        },
+        {
+          "id": "wuhan.小洪山",
+          "name": "小洪山",
+          "nameEn": "Xiaohongshan",
+          "lon": 114.347005,
+          "lat": 30.538012
+        },
+        {
+          "id": "wuhan.洪山路",
+          "name": "洪山路",
+          "nameEn": "Hongshan Road",
+          "lon": 114.338268,
+          "lat": 30.547615
+        },
+        {
+          "id": "wuhan.水果湖",
+          "name": "水果湖",
+          "nameEn": "Shuiguohu",
+          "lon": 114.340922,
+          "lat": 30.553987
+        },
+        {
+          "id": "wuhan.中南医院",
+          "name": "中南医院",
+          "nameEn": "Zhongnan Hospital",
+          "lon": 114.351768,
+          "lat": 30.559101
+        },
+        {
+          "id": "wuhan.省博湖北日报",
+          "name": "省博湖北日报",
+          "nameEn": "Hubei Provincial Museum & Hubei Daily",
+          "lon": 114.359743,
+          "lat": 30.567068
+        },
+        {
+          "id": "wuhan.梨园",
+          "name": "梨园",
+          "nameEn": "Liyuan",
+          "lon": 114.364571,
+          "lat": 30.577173
+        },
+        {
+          "id": "wuhan.岳家嘴",
+          "name": "岳家嘴",
+          "nameEn": "Yuejiazui",
+          "lon": 114.35579,
+          "lat": 30.579024
+        },
+        {
+          "id": "wuhan.汪家墩",
+          "name": "汪家墩",
+          "nameEn": "Wangjiadun",
+          "lon": 114.34558,
+          "lat": 30.58646
+        },
+        {
+          "id": "wuhan.徐东",
+          "name": "徐东",
+          "nameEn": "Xudong",
+          "lon": 114.340226,
+          "lat": 30.590469
+        },
+        {
+          "id": "wuhan.徐家棚",
+          "name": "徐家棚",
+          "nameEn": "Xujiapeng",
+          "lon": 114.33003,
+          "lat": 30.594408
+        },
+        {
+          "id": "wuhan.黄浦路",
+          "name": "黄浦路",
+          "nameEn": "Huangpu Road",
+          "lon": 114.302948,
+          "lat": 30.610312
+        },
+        {
+          "id": "wuhan.赵家条",
+          "name": "赵家条",
+          "nameEn": "Zhaojiatiao",
+          "lon": 114.291666,
+          "lat": 30.62049
+        },
+        {
+          "id": "wuhan.竹叶山",
+          "name": "竹叶山",
+          "nameEn": "Zhuyeshan",
+          "lon": 114.281748,
+          "lat": 30.628003
+        },
+        {
+          "id": "wuhan.中一路",
+          "name": "中一路",
+          "nameEn": "Zhongyi Road",
+          "lon": 114.27563,
+          "lat": 30.64263
+        },
+        {
+          "id": "wuhan.塔子湖",
+          "name": "塔子湖",
+          "nameEn": "Tazihu",
+          "lon": 114.275075,
+          "lat": 30.654776
+        },
+        {
+          "id": "wuhan.宏图大道",
+          "name": "宏图大道",
+          "nameEn": "Hongtu Boulevard",
+          "lon": 114.274963,
+          "lat": 30.671722
+        },
+        {
+          "id": "wuhan.金潭路",
+          "name": "金潭路",
+          "nameEn": "Jintan Road",
+          "lon": 114.277985,
+          "lat": 30.678115
+        }
+      ],
+      "track": [
+        [
+          114.2893,
+          30.42766
+        ],
+        [
+          114.2914,
+          30.43586
+        ],
+        [
+          114.29492,
+          30.44333
+        ],
+        [
+          114.29768,
+          30.45379
+        ],
+        [
+          114.30017,
+          30.45584
+        ],
+        [
+          114.30798,
+          30.45878
+        ],
+        [
+          114.31009,
+          30.46131
+        ],
+        [
+          114.31868,
+          30.46803
+        ],
+        [
+          114.3188,
+          30.47085
+        ],
+        [
+          114.32026,
+          30.47503
+        ],
+        [
+          114.32065,
+          30.48536
+        ],
+        [
+          114.31831,
+          30.49183
+        ],
+        [
+          114.3186,
+          30.49341
+        ],
+        [
+          114.32209,
+          30.49483
+        ],
+        [
+          114.32879,
+          30.49373
+        ],
+        [
+          114.3343,
+          30.49552
+        ],
+        [
+          114.34425,
+          30.51224
+        ],
+        [
+          114.34543,
+          30.52238
+        ],
+        [
+          114.35001,
+          30.53485
+        ],
+        [
+          114.34869,
+          30.53709
+        ],
+        [
+          114.34555,
+          30.53874
+        ],
+        [
+          114.33918,
+          30.53973
+        ],
+        [
+          114.33727,
+          30.54114
+        ],
+        [
+          114.33675,
+          30.54333
+        ],
+        [
+          114.33814,
+          30.54612
+        ],
+        [
+          114.33862,
+          30.55083
+        ],
+        [
+          114.34387,
+          30.55795
+        ],
+        [
+          114.35469,
+          30.55969
+        ],
+        [
+          114.35593,
+          30.56073
+        ],
+        [
+          114.35792,
+          30.56492
+        ],
+        [
+          114.3611,
+          30.56863
+        ],
+        [
+          114.36817,
+          30.57072
+        ],
+        [
+          114.36936,
+          30.57193
+        ],
+        [
+          114.36965,
+          30.57376
+        ],
+        [
+          114.36889,
+          30.57559
+        ],
+        [
+          114.36753,
+          30.57654
+        ],
+        [
+          114.35738,
+          30.57831
+        ],
+        [
+          114.35317,
+          30.58035
+        ],
+        [
+          114.33512,
+          30.59414
+        ],
+        [
+          114.32772,
+          30.59455
+        ],
+        [
+          114.32462,
+          30.5957
+        ],
+        [
+          114.31055,
+          30.6074
+        ],
+        [
+          114.29527,
+          30.61247
+        ],
+        [
+          114.29073,
+          30.62224
+        ],
+        [
+          114.2784,
+          30.63025
+        ],
+        [
+          114.2743,
+          30.64921
+        ],
+        [
+          114.27615,
+          30.6642
+        ],
+        [
+          114.27426,
+          30.66947
+        ],
+        [
+          114.2786,
+          30.67941
+        ]
+      ]
+    },
+    {
+      "id": "wuhan.l11",
+      "ref": "11",
+      "name": "11号线",
+      "color": "#F6D300",
+      "system": "subway",
+      "lengthKm": 40.71,
+      "stationCount": 23,
+      "stations": [
+        {
+          "id": "wuhan.葛店南站",
+          "name": "葛店南站",
+          "nameEn": "Gedian South Railway Station",
+          "lon": 114.655128,
+          "lat": 30.492242
+        },
+        {
+          "id": "wuhan.左岭",
+          "name": "左岭",
+          "nameEn": "Zuoling",
+          "lon": 114.615717,
+          "lat": 30.490948
+        },
+        {
+          "id": "wuhan.未来三路",
+          "name": "未来三路",
+          "nameEn": "Weilai 3rd Road",
+          "lon": 114.600767,
+          "lat": 30.489042
+        },
+        {
+          "id": "wuhan.未来一路",
+          "name": "未来一路",
+          "nameEn": "Weilai 1st Road",
+          "lon": 114.580315,
+          "lat": 30.487214
+        },
+        {
+          "id": "wuhan.长岭山",
+          "name": "长岭山",
+          "nameEn": "Changlingshan",
+          "lon": 114.558044,
+          "lat": 30.489928
+        },
+        {
+          "id": "wuhan.光谷七路",
+          "name": "光谷七路",
+          "nameEn": "Guanggu 7th Road",
+          "lon": 114.528626,
+          "lat": 30.490698
+        },
+        {
+          "id": "wuhan.豹澥",
+          "name": "豹澥",
+          "nameEn": "Baoxie",
+          "lon": 114.517902,
+          "lat": 30.491156
+        },
+        {
+          "id": "wuhan.光谷六路",
+          "name": "光谷六路",
+          "nameEn": "Guanggu 6th Road",
+          "lon": 114.506937,
+          "lat": 30.487657
+        },
+        {
+          "id": "wuhan.光谷五路",
+          "name": "光谷五路",
+          "nameEn": "Guanggu 5th Road",
+          "lon": 114.497523,
+          "lat": 30.48768
+        },
+        {
+          "id": "wuhan.光谷四路",
+          "name": "光谷四路",
+          "nameEn": "Guanggu 4th Road",
+          "lon": 114.48628,
+          "lat": 30.491725
+        },
+        {
+          "id": "wuhan.光谷生物园",
+          "name": "光谷生物园",
+          "nameEn": "Guanggushengwuyuan",
+          "lon": 114.476015,
+          "lat": 30.489995
+        },
+        {
+          "id": "wuhan.光谷同济医院",
+          "name": "光谷同济医院",
+          "nameEn": "Tongji Hospital",
+          "lon": 114.460559,
+          "lat": 30.487744
+        },
+        {
+          "id": "wuhan.湖口",
+          "name": "湖口",
+          "nameEn": "Hukou",
+          "lon": 114.44223,
+          "lat": 30.490668
+        },
+        {
+          "id": "wuhan.武汉东站",
+          "name": "武汉东站",
+          "nameEn": "Wuhandong Railway Station",
+          "lon": 114.427959,
+          "lat": 30.489176
+        },
+        {
+          "id": "wuhan.关山大道",
+          "name": "关山大道",
+          "nameEn": "Guanshan Boulevard",
+          "lon": 114.407272,
+          "lat": 30.499535
+        },
+        {
+          "id": "wuhan.光谷广场",
+          "name": "光谷广场",
+          "nameEn": "Optics Valley Square",
+          "lon": 114.393167,
+          "lat": 30.50847
+        },
+        {
+          "id": "wuhan.武汉体育学院",
+          "name": "武汉体育学院",
+          "nameEn": "Wuhan Sports University",
+          "lon": 114.37393,
+          "lat": 30.51945
+        },
+        {
+          "id": "wuhan.虎泉",
+          "name": "虎泉",
+          "nameEn": "Huquan",
+          "lon": 114.36236,
+          "lat": 30.515781
+        },
+        {
+          "id": "wuhan.马房山",
+          "name": "马房山",
+          "nameEn": "Mafangshan",
+          "lon": 114.344273,
+          "lat": 30.516637
+        },
+        {
+          "id": "wuhan.丁字桥",
+          "name": "丁字桥",
+          "nameEn": "Dingziqiao",
+          "lon": 114.324793,
+          "lat": 30.524106
+        },
+        {
+          "id": "wuhan.武昌站东广场",
+          "name": "武昌站东广场",
+          "nameEn": "East Square of Wuchang Railway Station",
+          "lon": 114.31677,
+          "lat": 30.53156
+        },
+        {
+          "id": "wuhan.紫阳湖",
+          "name": "紫阳湖",
+          "nameEn": "Ziyanghu",
+          "lon": 114.295685,
+          "lat": 30.5308
+        },
+        {
+          "id": "wuhan.江安路",
+          "name": "江安路",
+          "nameEn": "Jiang'an Road",
+          "lon": 114.287853,
+          "lat": 30.521067
+        }
+      ],
+      "track": [
+        [
+          114.65513,
+          30.49224
+        ],
+        [
+          114.62561,
+          30.49194
+        ],
+        [
+          114.60726,
+          30.49052
+        ],
+        [
+          114.59378,
+          30.48729
+        ],
+        [
+          114.58738,
+          30.48662
+        ],
+        [
+          114.548,
+          30.49131
+        ],
+        [
+          114.53161,
+          30.49063
+        ],
+        [
+          114.51587,
+          30.49121
+        ],
+        [
+          114.51373,
+          30.49068
+        ],
+        [
+          114.51113,
+          30.48831
+        ],
+        [
+          114.50941,
+          30.48772
+        ],
+        [
+          114.49557,
+          30.48771
+        ],
+        [
+          114.49354,
+          30.48816
+        ],
+        [
+          114.49052,
+          30.49132
+        ],
+        [
+          114.48834,
+          30.49197
+        ],
+        [
+          114.45784,
+          30.48746
+        ],
+        [
+          114.45239,
+          30.48793
+        ],
+        [
+          114.43868,
+          30.4913
+        ],
+        [
+          114.43687,
+          30.49094
+        ],
+        [
+          114.43349,
+          30.48851
+        ],
+        [
+          114.43146,
+          30.48831
+        ],
+        [
+          114.42508,
+          30.48976
+        ],
+        [
+          114.42219,
+          30.49102
+        ],
+        [
+          114.42073,
+          30.49578
+        ],
+        [
+          114.41563,
+          30.49853
+        ],
+        [
+          114.40421,
+          30.49981
+        ],
+        [
+          114.40209,
+          30.50053
+        ],
+        [
+          114.39989,
+          30.50542
+        ],
+        [
+          114.39659,
+          30.50653
+        ],
+        [
+          114.38988,
+          30.51024
+        ],
+        [
+          114.38051,
+          30.51788
+        ],
+        [
+          114.37019,
+          30.51998
+        ],
+        [
+          114.36863,
+          30.51945
+        ],
+        [
+          114.36613,
+          30.51661
+        ],
+        [
+          114.36445,
+          30.51587
+        ],
+        [
+          114.33854,
+          30.5167
+        ],
+        [
+          114.33587,
+          30.51807
+        ],
+        [
+          114.33159,
+          30.52258
+        ],
+        [
+          114.32109,
+          30.52552
+        ],
+        [
+          114.31999,
+          30.52685
+        ],
+        [
+          114.31925,
+          30.52965
+        ],
+        [
+          114.31236,
+          30.53495
+        ],
+        [
+          114.30615,
+          30.53582
+        ],
+        [
+          114.30006,
+          30.53538
+        ],
+        [
+          114.29735,
+          30.53445
+        ],
+        [
+          114.29605,
+          30.53258
+        ],
+        [
+          114.29496,
+          30.52769
+        ],
+        [
+          114.28908,
+          30.52376
+        ],
+        [
+          114.28674,
+          30.51788
+        ],
+        [
+          114.28316,
+          30.5138
+        ],
+        [
+          114.28227,
+          30.51098
+        ]
+      ]
+    },
+    {
+      "id": "wuhan.l12",
+      "ref": "12",
+      "name": "12号线",
+      "color": "#00A3E9",
+      "system": "subway",
+      "lengthKm": 34.52,
+      "stationCount": 23,
+      "stations": [
+        {
+          "id": "wuhan.墨水湖公园",
+          "name": "墨水湖公园",
+          "nameEn": "Moshuihu Park",
+          "lon": 114.209688,
+          "lat": 30.553274
+        },
+        {
+          "id": "wuhan.港口村",
+          "name": "港口村",
+          "nameEn": "Gangkoucun",
+          "lon": 114.201753,
+          "lat": 30.539447
+        },
+        {
+          "id": "wuhan.芳草路",
+          "name": "芳草路",
+          "nameEn": "Fangcao Road",
+          "lon": 114.197246,
+          "lat": 30.531586
+        },
+        {
+          "id": "wuhan.四新中路",
+          "name": "四新中路",
+          "nameEn": "Sixin Middle Road",
+          "lon": 114.200062,
+          "lat": 30.521454
+        },
+        {
+          "id": "wuhan.四新南路",
+          "name": "四新南路",
+          "nameEn": "Sixin South Road",
+          "lon": 114.210232,
+          "lat": 30.514848
+        },
+        {
+          "id": "wuhan.国博新城",
+          "name": "国博新城",
+          "nameEn": "Guoboxincheng",
+          "lon": 114.221627,
+          "lat": 30.509583
+        },
+        {
+          "id": "wuhan.国博中心南",
+          "name": "国博中心南",
+          "nameEn": "South International Expo Centre",
+          "lon": 114.231919,
+          "lat": 30.505047
+        },
+        {
+          "id": "wuhan.夹套河",
+          "name": "夹套河",
+          "nameEn": "Jiataohe",
+          "lon": 114.263667,
+          "lat": 30.486167
+        },
+        {
+          "id": "wuhan.市农科院",
+          "name": "市农科院",
+          "nameEn": "Wuhan Academy of Agricultural Sciences",
+          "lon": 114.271525,
+          "lat": 30.48176
+        },
+        {
+          "id": "wuhan.光霞",
+          "name": "光霞",
+          "nameEn": "Guangxia",
+          "lon": 114.284928,
+          "lat": 30.480181
+        },
+        {
+          "id": "wuhan.省农科院南",
+          "name": "省农科院南",
+          "nameEn": "Hubei Academy of Agricultural Sciences South",
+          "lon": 114.311322,
+          "lat": 30.483633
+        },
+        {
+          "id": "wuhan.楚祥大道",
+          "name": "楚祥大道",
+          "nameEn": "Chuxiang Boulevard",
+          "lon": 114.314703,
+          "lat": 30.492763
+        },
+        {
+          "id": "wuhan.富安街",
+          "name": "富安街",
+          "nameEn": "Fu'an Street",
+          "lon": 114.314969,
+          "lat": 30.502406
+        },
+        {
+          "id": "wuhan.瑞安街东",
+          "name": "瑞安街东",
+          "nameEn": "Rui'an Street East",
+          "lon": 114.31406,
+          "lat": 30.515121
+        },
+        {
+          "id": "wuhan.武昌站东广场",
+          "name": "武昌站东广场",
+          "nameEn": "East Square of Wuchang Railway Station",
+          "lon": 114.314235,
+          "lat": 30.531463
+        },
+        {
+          "id": "wuhan.十五中",
+          "name": "十五中",
+          "nameEn": "Wuhan No.15 Senior Middle School",
+          "lon": 114.321906,
+          "lat": 30.539616
+        },
+        {
+          "id": "wuhan.何家垅",
+          "name": "何家垅",
+          "nameEn": "Hejialong",
+          "lon": 114.326071,
+          "lat": 30.550366
+        },
+        {
+          "id": "wuhan.公正路",
+          "name": "公正路",
+          "nameEn": "Gongzheng Road",
+          "lon": 114.331719,
+          "lat": 30.558694
+        },
+        {
+          "id": "wuhan.秦园中路",
+          "name": "秦园中路",
+          "nameEn": "Qinyuan Middle Road",
+          "lon": 114.337049,
+          "lat": 30.580519
+        },
+        {
+          "id": "wuhan.汪家墩",
+          "name": "汪家墩",
+          "nameEn": "Wangjiadun",
+          "lon": 114.346135,
+          "lat": 30.587048
+        },
+        {
+          "id": "wuhan.团结大道",
+          "name": "团结大道",
+          "nameEn": "Tuanjie Boulevard",
+          "lon": 114.358473,
+          "lat": 30.594895
+        },
+        {
+          "id": "wuhan.园林路",
+          "name": "园林路",
+          "nameEn": "Yuanlin Road",
+          "lon": 114.370947,
+          "lat": 30.602457
+        },
+        {
+          "id": "wuhan.钢都花园",
+          "name": "钢都花园",
+          "nameEn": "Gangduhuayuan",
+          "lon": 114.363202,
+          "lat": 30.61503
+        }
+      ],
+      "track": [
+        [
+          114.20969,
+          30.55327
+        ],
+        [
+          114.20668,
+          30.54917
+        ],
+        [
+          114.19587,
+          30.52861
+        ],
+        [
+          114.19596,
+          30.525
+        ],
+        [
+          114.19804,
+          30.52273
+        ],
+        [
+          114.21023,
+          30.51485
+        ],
+        [
+          114.23046,
+          30.50598
+        ],
+        [
+          114.27327,
+          30.48095
+        ],
+        [
+          114.27727,
+          30.48016
+        ],
+        [
+          114.2976,
+          30.48011
+        ],
+        [
+          114.30741,
+          30.48094
+        ],
+        [
+          114.31275,
+          30.48513
+        ],
+        [
+          114.31452,
+          30.49068
+        ],
+        [
+          114.31524,
+          30.49995
+        ],
+        [
+          114.31394,
+          30.51564
+        ],
+        [
+          114.31254,
+          30.51891
+        ],
+        [
+          114.30881,
+          30.52249
+        ],
+        [
+          114.30856,
+          30.52465
+        ],
+        [
+          114.31392,
+          30.53097
+        ],
+        [
+          114.31593,
+          30.53516
+        ],
+        [
+          114.321,
+          30.53818
+        ],
+        [
+          114.32502,
+          30.54459
+        ],
+        [
+          114.32531,
+          30.54847
+        ],
+        [
+          114.32651,
+          30.5512
+        ],
+        [
+          114.3287,
+          30.55318
+        ],
+        [
+          114.33285,
+          30.56076
+        ],
+        [
+          114.33603,
+          30.56461
+        ],
+        [
+          114.33613,
+          30.56837
+        ],
+        [
+          114.33172,
+          30.57382
+        ],
+        [
+          114.3317,
+          30.57569
+        ],
+        [
+          114.33247,
+          30.57741
+        ],
+        [
+          114.35698,
+          30.59416
+        ],
+        [
+          114.36108,
+          30.59603
+        ],
+        [
+          114.3686,
+          30.59599
+        ],
+        [
+          114.37124,
+          30.59766
+        ],
+        [
+          114.37189,
+          30.59903
+        ],
+        [
+          114.37176,
+          30.60089
+        ],
+        [
+          114.3632,
+          30.61503
+        ]
+      ]
+    },
+    {
+      "id": "wuhan.l16",
+      "ref": "16",
+      "name": "16号线",
+      "color": "#C24C6D",
+      "system": "subway",
+      "lengthKm": 36.85,
+      "stationCount": 14,
+      "stations": [
+        {
+          "id": "wuhan.通航機場",
+          "name": "通航機場",
+          "nameEn": "Hannan General Airport",
+          "lon": 114.056995,
+          "lat": 30.272302
+        },
+        {
+          "id": "wuhan.紗帽",
+          "name": "紗帽",
+          "nameEn": "Shamao",
+          "lon": 114.046092,
+          "lat": 30.283037
+        },
+        {
+          "id": "wuhan.周家河",
+          "name": "周家河",
+          "nameEn": "Zhoujiahe",
+          "lon": 114.029456,
+          "lat": 30.307123
+        },
+        {
+          "id": "wuhan.湾湖",
+          "name": "湾湖",
+          "nameEn": "Wanhu",
+          "lon": 114.041455,
+          "lat": 30.3259
+        },
+        {
+          "id": "wuhan.协子河",
+          "name": "协子河",
+          "nameEn": "Xiezihe",
+          "lon": 114.054192,
+          "lat": 30.334666
+        },
+        {
+          "id": "wuhan.马影河",
+          "name": "马影河",
+          "nameEn": "Mayinghe",
+          "lon": 114.063044,
+          "lat": 30.344005
+        },
+        {
+          "id": "wuhan.桂子湖",
+          "name": "桂子湖",
+          "nameEn": "Guizihu",
+          "lon": 114.088045,
+          "lat": 30.360865
+        },
+        {
+          "id": "wuhan.大军山",
+          "name": "大军山",
+          "nameEn": "Dajunshan",
+          "lon": 114.127095,
+          "lat": 30.377732
+        },
+        {
+          "id": "wuhan.枫林",
+          "name": "枫林",
+          "nameEn": "Fenglin",
+          "lon": 114.139082,
+          "lat": 30.391651
+        },
+        {
+          "id": "wuhan.小军山",
+          "name": "小军山",
+          "nameEn": "Xiaojunshan",
+          "lon": 114.152874,
+          "lat": 30.407014
+        },
+        {
+          "id": "wuhan.沌口",
+          "name": "沌口",
+          "nameEn": "Zhuankou",
+          "lon": 114.199808,
+          "lat": 30.464474
+        },
+        {
+          "id": "wuhan.南太子湖",
+          "name": "南太子湖",
+          "nameEn": "South Taizihu",
+          "lon": 114.214632,
+          "lat": 30.479038
+        },
+        {
+          "id": "wuhan.老关村",
+          "name": "老关村",
+          "nameEn": "Laoguancun",
+          "lon": 114.220833,
+          "lat": 30.495035
+        },
+        {
+          "id": "wuhan.国博中心南",
+          "name": "国博中心南",
+          "nameEn": "South International Expo Centre",
+          "lon": 114.230654,
+          "lat": 30.506933
+        }
+      ],
+      "track": [
+        [
+          114.05699,
+          30.2723
+        ],
+        [
+          114.04349,
+          30.28562
+        ],
+        [
+          114.03473,
+          30.29696
+        ],
+        [
+          114.02549,
+          30.31565
+        ],
+        [
+          114.02527,
+          30.31864
+        ],
+        [
+          114.02654,
+          30.32159
+        ],
+        [
+          114.02835,
+          30.32331
+        ],
+        [
+          114.03113,
+          30.32458
+        ],
+        [
+          114.04482,
+          30.32636
+        ],
+        [
+          114.05022,
+          30.32859
+        ],
+        [
+          114.05677,
+          30.33859
+        ],
+        [
+          114.06677,
+          30.34719
+        ],
+        [
+          114.06911,
+          30.35198
+        ],
+        [
+          114.07218,
+          30.35457
+        ],
+        [
+          114.08379,
+          30.35886
+        ],
+        [
+          114.09112,
+          30.36256
+        ],
+        [
+          114.09623,
+          30.36437
+        ],
+        [
+          114.10083,
+          30.36833
+        ],
+        [
+          114.10982,
+          30.37244
+        ],
+        [
+          114.11231,
+          30.37286
+        ],
+        [
+          114.11898,
+          30.37235
+        ],
+        [
+          114.12492,
+          30.37462
+        ],
+        [
+          114.1314,
+          30.38394
+        ],
+        [
+          114.14411,
+          30.39658
+        ],
+        [
+          114.15053,
+          30.40378
+        ],
+        [
+          114.15567,
+          30.41072
+        ],
+        [
+          114.15681,
+          30.41356
+        ],
+        [
+          114.15696,
+          30.41844
+        ],
+        [
+          114.1582,
+          30.42066
+        ],
+        [
+          114.16871,
+          30.42903
+        ],
+        [
+          114.18389,
+          30.44917
+        ],
+        [
+          114.21367,
+          30.47781
+        ],
+        [
+          114.2208,
+          30.48761
+        ],
+        [
+          114.22093,
+          30.48909
+        ],
+        [
+          114.21991,
+          30.49168
+        ],
+        [
+          114.22038,
+          30.49444
+        ],
+        [
+          114.22802,
+          30.50297
+        ],
+        [
+          114.23239,
+          30.50982
+        ]
+      ]
+    },
+    {
+      "id": "wuhan.l19",
+      "ref": "19",
+      "name": "19号线",
+      "color": "#5AC1A7",
+      "system": "subway",
+      "lengthKm": 23.11,
+      "stationCount": 7,
+      "stations": [
+        {
+          "id": "wuhan.武汉站西广场",
+          "name": "武汉站西广场",
+          "nameEn": "West Square of Wuhan Railway Station",
+          "lon": 114.417074,
+          "lat": 30.607412
+        },
+        {
+          "id": "wuhan.武东",
+          "name": "武东",
+          "nameEn": "Wudong",
+          "lon": 114.450834,
+          "lat": 30.580799
+        },
+        {
+          "id": "wuhan.鼓架山",
+          "name": "鼓架山",
+          "nameEn": "Gujiashan",
+          "lon": 114.459467,
+          "lat": 30.557113
+        },
+        {
+          "id": "wuhan.花山新城",
+          "name": "花山新城",
+          "nameEn": "Huashanxincheng",
+          "lon": 114.497983,
+          "lat": 30.557244
+        },
+        {
+          "id": "wuhan.花山河",
+          "name": "花山河",
+          "nameEn": "Huashanhe",
+          "lon": 114.506759,
+          "lat": 30.543573
+        },
+        {
+          "id": "wuhan.光谷五路",
+          "name": "光谷五路",
+          "nameEn": "West Square of Wuhan Railway Station",
+          "lon": 114.497413,
+          "lat": 30.487835
+        },
+        {
+          "id": "wuhan.新月溪公园",
+          "name": "新月溪公园",
+          "nameEn": "Xinyuexi Park",
+          "lon": 114.497501,
+          "lat": 30.478134
+        }
+      ],
+      "track": [
+        [
+          114.41707,
+          30.60741
+        ],
+        [
+          114.41987,
+          30.60263
+        ],
+        [
+          114.41952,
+          30.59759
+        ],
+        [
+          114.421,
+          30.59496
+        ],
+        [
+          114.42361,
+          30.594
+        ],
+        [
+          114.43068,
+          30.59359
+        ],
+        [
+          114.43391,
+          30.59274
+        ],
+        [
+          114.43835,
+          30.58926
+        ],
+        [
+          114.44116,
+          30.58428
+        ],
+        [
+          114.44289,
+          30.58262
+        ],
+        [
+          114.44571,
+          30.5816
+        ],
+        [
+          114.45736,
+          30.57971
+        ],
+        [
+          114.45988,
+          30.57817
+        ],
+        [
+          114.46117,
+          30.57615
+        ],
+        [
+          114.46169,
+          30.57356
+        ],
+        [
+          114.45812,
+          30.56172
+        ],
+        [
+          114.45813,
+          30.55919
+        ],
+        [
+          114.46604,
+          30.54962
+        ],
+        [
+          114.47028,
+          30.54895
+        ],
+        [
+          114.47457,
+          30.55058
+        ],
+        [
+          114.48085,
+          30.55746
+        ],
+        [
+          114.48471,
+          30.55918
+        ],
+        [
+          114.48817,
+          30.5598
+        ],
+        [
+          114.49338,
+          30.55931
+        ],
+        [
+          114.49638,
+          30.55815
+        ],
+        [
+          114.50854,
+          30.55036
+        ],
+        [
+          114.50923,
+          30.54887
+        ],
+        [
+          114.50899,
+          30.54664
+        ],
+        [
+          114.5057,
+          30.5424
+        ],
+        [
+          114.50335,
+          30.54019
+        ],
+        [
+          114.49765,
+          30.53892
+        ],
+        [
+          114.49653,
+          30.53711
+        ],
+        [
+          114.49343,
+          30.50803
+        ],
+        [
+          114.49409,
+          30.50458
+        ],
+        [
+          114.49748,
+          30.49561
+        ],
+        [
+          114.4975,
+          30.47813
+        ]
+      ]
+    },
+    {
+      "id": "wuhan.l21",
+      "ref": "21",
+      "name": "阳逻线",
+      "color": "#B2007B",
+      "system": "subway",
+      "lengthKm": 34.83,
+      "stationCount": 16,
+      "stations": [
+        {
+          "id": "wuhan.後湖大道",
+          "name": "後湖大道",
+          "nameEn": "Houhu Boulevard",
+          "lon": 114.298907,
+          "lat": 30.652568
+        },
+        {
+          "id": "wuhan.百步亭花园路",
+          "name": "百步亭花园路",
+          "nameEn": "Baibutinghuayuan Road",
+          "lon": 114.310083,
+          "lat": 30.656785
+        },
+        {
+          "id": "wuhan.新荣",
+          "name": "新荣",
+          "nameEn": "Xinrong",
+          "lon": 114.327767,
+          "lat": 30.659944
+        },
+        {
+          "id": "wuhan.幸福湾",
+          "name": "幸福湾",
+          "nameEn": "Xingfuwan",
+          "lon": 114.338721,
+          "lat": 30.674484
+        },
+        {
+          "id": "wuhan.朱家河",
+          "name": "朱家河",
+          "nameEn": "Zhujiahe",
+          "lon": 114.358949,
+          "lat": 30.682372
+        },
+        {
+          "id": "wuhan.谌家矶",
+          "name": "谌家矶",
+          "nameEn": "Shenjiaji",
+          "lon": 114.367637,
+          "lat": 30.6861
+        },
+        {
+          "id": "wuhan.青龙",
+          "name": "青龙",
+          "nameEn": "Qinglong",
+          "lon": 114.384869,
+          "lat": 30.707616
+        },
+        {
+          "id": "wuhan.高车",
+          "name": "高车",
+          "nameEn": "Gaoche",
+          "lon": 114.403334,
+          "lat": 30.715826
+        },
+        {
+          "id": "wuhan.武湖",
+          "name": "武湖",
+          "nameEn": "Wuhu",
+          "lon": 114.424176,
+          "lat": 30.709234
+        },
+        {
+          "id": "wuhan.沙口",
+          "name": "沙口",
+          "nameEn": "Shakou",
+          "lon": 114.472096,
+          "lat": 30.71161
+        },
+        {
+          "id": "wuhan.军民村",
+          "name": "军民村",
+          "nameEn": "Junmincun",
+          "lon": 114.50994,
+          "lat": 30.712487
+        },
+        {
+          "id": "wuhan.武生院",
+          "name": "武生院",
+          "nameEn": "Wuhan Bioengineering Institute",
+          "lon": 114.520417,
+          "lat": 30.711097
+        },
+        {
+          "id": "wuhan.阳逻",
+          "name": "阳逻",
+          "nameEn": "Yangluo",
+          "lon": 114.547921,
+          "lat": 30.706109
+        },
+        {
+          "id": "wuhan.阳逻开发区",
+          "name": "阳逻开发区",
+          "nameEn": "Yangluo Develoment Zone",
+          "lon": 114.56267,
+          "lat": 30.704194
+        },
+        {
+          "id": "wuhan.施岗",
+          "name": "施岗",
+          "nameEn": "Shigang",
+          "lon": 114.59573,
+          "lat": 30.70883
+        },
+        {
+          "id": "wuhan.金台",
+          "name": "金台",
+          "nameEn": "Jintai",
+          "lon": 114.614042,
+          "lat": 30.71635
+        }
+      ],
+      "track": [
+        [
+          114.29891,
+          30.65257
+        ],
+        [
+          114.31532,
+          30.65875
+        ],
+        [
+          114.32595,
+          30.65941
+        ],
+        [
+          114.33203,
+          30.6614
+        ],
+        [
+          114.33472,
+          30.66357
+        ],
+        [
+          114.33976,
+          30.67746
+        ],
+        [
+          114.34225,
+          30.68011
+        ],
+        [
+          114.34601,
+          30.68126
+        ],
+        [
+          114.35393,
+          30.68127
+        ],
+        [
+          114.35818,
+          30.6821
+        ],
+        [
+          114.37469,
+          30.68914
+        ],
+        [
+          114.37987,
+          30.69195
+        ],
+        [
+          114.382,
+          30.69468
+        ],
+        [
+          114.38549,
+          30.71125
+        ],
+        [
+          114.38715,
+          30.71336
+        ],
+        [
+          114.38953,
+          30.71443
+        ],
+        [
+          114.40136,
+          30.71577
+        ],
+        [
+          114.41026,
+          30.71583
+        ],
+        [
+          114.41388,
+          30.71465
+        ],
+        [
+          114.42026,
+          30.7099
+        ],
+        [
+          114.42294,
+          30.70914
+        ],
+        [
+          114.45616,
+          30.71211
+        ],
+        [
+          114.46413,
+          30.71231
+        ],
+        [
+          114.47585,
+          30.7114
+        ],
+        [
+          114.47884,
+          30.71235
+        ],
+        [
+          114.48316,
+          30.7152
+        ],
+        [
+          114.4871,
+          30.71579
+        ],
+        [
+          114.50175,
+          30.71424
+        ],
+        [
+          114.51365,
+          30.71179
+        ],
+        [
+          114.5269,
+          30.71045
+        ],
+        [
+          114.53752,
+          30.71111
+        ],
+        [
+          114.54096,
+          30.70998
+        ],
+        [
+          114.55041,
+          30.70483
+        ],
+        [
+          114.55555,
+          30.70403
+        ],
+        [
+          114.57185,
+          30.70467
+        ],
+        [
+          114.59964,
+          30.70959
+        ],
+        [
+          114.61404,
+          30.71635
+        ]
+      ]
+    },
+    {
+      "id": "wuhan.lT1",
+      "ref": "T1",
+      "name": "光谷T1",
+      "color": "#CC5923",
+      "system": "tram",
+      "lengthKm": 16.86,
+      "stationCount": 21,
+      "stations": [
+        {
+          "id": "wuhan.车轮广场",
+          "name": "车轮广场",
+          "nameEn": "",
+          "lon": 114.150775,
+          "lat": 30.492264
+        },
+        {
+          "id": "wuhan.水府街",
+          "name": "水府街",
+          "nameEn": "Shuifu street",
+          "lon": 114.143937,
+          "lat": 30.496548
+        },
+        {
+          "id": "wuhan.滨湖社区",
+          "name": "滨湖社区",
+          "nameEn": "Checheng Avenue",
+          "lon": 114.139076,
+          "lat": 30.49238
+        },
+        {
+          "id": "wuhan.莲湖路",
+          "name": "莲湖路",
+          "nameEn": "Lianhu Road",
+          "lon": 114.134377,
+          "lat": 30.480648
+        },
+        {
+          "id": "wuhan.枫树一路",
+          "name": "枫树一路",
+          "nameEn": "Fengshu First Road",
+          "lon": 114.121874,
+          "lat": 30.474599
+        },
+        {
+          "id": "wuhan.枫树三路",
+          "name": "枫树三路",
+          "nameEn": "Fengshu Third Road",
+          "lon": 114.111677,
+          "lat": 30.469836
+        },
+        {
+          "id": "wuhan.枫树五路",
+          "name": "枫树五路",
+          "nameEn": "Fengshu Fifth Road",
+          "lon": 114.102558,
+          "lat": 30.465579
+        },
+        {
+          "id": "wuhan.枫树六路",
+          "name": "枫树六路",
+          "nameEn": "Fengshu Sixth Road",
+          "lon": 114.095896,
+          "lat": 30.463148
+        },
+        {
+          "id": "wuhan.武汉商学院",
+          "name": "武汉商学院",
+          "nameEn": "Wuhan Business University",
+          "lon": 114.084691,
+          "lat": 30.461467
+        },
+        {
+          "id": "wuhan.格力电器",
+          "name": "格力电器",
+          "nameEn": "",
+          "lon": 114.078505,
+          "lat": 30.459647
+        },
+        {
+          "id": "wuhan.东风大道",
+          "name": "东风大道",
+          "nameEn": "",
+          "lon": 114.079214,
+          "lat": 30.45571
+        },
+        {
+          "id": "wuhan.硃山湖大道",
+          "name": "硃山湖大道",
+          "nameEn": "",
+          "lon": 114.080979,
+          "lat": 30.451242
+        },
+        {
+          "id": "wuhan.硃山湖（北）",
+          "name": "硃山湖（北）",
+          "nameEn": "",
+          "lon": 114.084528,
+          "lat": 30.444065
+        },
+        {
+          "id": "wuhan.硃山湖（南）",
+          "name": "硃山湖（南）",
+          "nameEn": "",
+          "lon": 114.085277,
+          "lat": 30.436937
+        },
+        {
+          "id": "wuhan.硃山",
+          "name": "硃山",
+          "nameEn": "",
+          "lon": 114.082434,
+          "lat": 30.431543
+        },
+        {
+          "id": "wuhan.凤凰苑",
+          "name": "凤凰苑",
+          "nameEn": "",
+          "lon": 114.082973,
+          "lat": 30.42211
+        },
+        {
+          "id": "wuhan.黄陵正街",
+          "name": "黄陵正街",
+          "nameEn": "",
+          "lon": 114.075345,
+          "lat": 30.414114
+        },
+        {
+          "id": "wuhan.幸福桥",
+          "name": "幸福桥",
+          "nameEn": "",
+          "lon": 114.071022,
+          "lat": 30.411093
+        },
+        {
+          "id": "wuhan.蒲潭",
+          "name": "蒲潭",
+          "nameEn": "",
+          "lon": 114.066952,
+          "lat": 30.408287
+        },
+        {
+          "id": "wuhan.官莲湖车辆基地",
+          "name": "官莲湖车辆基地",
+          "nameEn": "",
+          "lon": 114.061854,
+          "lat": 30.404785
+        },
+        {
+          "id": "wuhan.得胜港",
+          "name": "得胜港",
+          "nameEn": "",
+          "lon": 114.0591,
+          "lat": 30.402889
+        }
+      ],
+      "track": [
+        [
+          114.15101,
+          30.49212
+        ],
+        [
+          114.14296,
+          30.49691
+        ],
+        [
+          114.13787,
+          30.49057
+        ],
+        [
+          114.13778,
+          30.48882
+        ],
+        [
+          114.13933,
+          30.48449
+        ],
+        [
+          114.13397,
+          30.48035
+        ],
+        [
+          114.0994,
+          30.46419
+        ],
+        [
+          114.09357,
+          30.46269
+        ],
+        [
+          114.0786,
+          30.46054
+        ],
+        [
+          114.07964,
+          30.45369
+        ],
+        [
+          114.08442,
+          30.44437
+        ],
+        [
+          114.08557,
+          30.43851
+        ],
+        [
+          114.08508,
+          30.43596
+        ],
+        [
+          114.08337,
+          30.43386
+        ],
+        [
+          114.08154,
+          30.42911
+        ],
+        [
+          114.08221,
+          30.42342
+        ],
+        [
+          114.08391,
+          30.42065
+        ],
+        [
+          114.05876,
+          30.40266
+        ]
+      ]
+    }
+  ]
+}

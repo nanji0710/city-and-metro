@@ -148,7 +148,7 @@
     // 效果汇总
     const effRows = [];
     if (se.incidentMult < 1) effRows.push(['事故率', '×' + se.incidentMult.toFixed(2), 'good']);
-    if (se.onTimeAdd > 0) effRows.push(['准点率', '+' + (se.onTimeAdd * 100).toFixed(1) + ' 个百分点', 'good']);
+    if (se.onTimeAdd > 0) effRows.push(['事故影响时长', '−' + (Math.min(0.35, se.onTimeAdd) * 100).toFixed(1) + '%', 'good']);
     if (se.satAdd > 0) effRows.push(['满意度', '+' + se.satAdd.toFixed(1), 'good']);
     if (se.maintMult < 1) effRows.push(['维保成本', '×' + se.maintMult.toFixed(2), 'good']);
     if (se.revenueMult > 1) effRows.push(['票款与广告', '×' + se.revenueMult.toFixed(3), 'good']);
@@ -184,7 +184,7 @@
           h('br'),
           '工资随年份通胀上涨；在职满 2 年的老员工每年 1 月会要求涨薪。',
           h('br'),
-          '六种角色各管一摊：线长让事故自动处置、调度与司机提升准点、检修压低维保、站务提满意度、商业提票款与广告。');
+          '六种角色各管一摊：线长让事故自动处置、调度与司机缩短事故影响时长、检修压低维保与维修费、站务提满意度、商业提票款与广告。');
       }, false, 'help'));
     }
 

@@ -185,6 +185,27 @@ if (CM.Incidents) {
   }
   const rate365 = fired / days;
   check('4 列车一年触发率在 5%~20%', rate365 > 0.05 && rate365 < 0.20, (rate365 * 100).toFixed(1) + '%（' + fired + '/' + days + ' 天）');
+
+  // 人员两个「加性/乘性」效果必须真的落进事故对象里（v3.0.1 前它们只在面板上显示）
+  // 用同一个 gg 与同一组 se 的 incidentMult，保证 rng 流与概率判断一致，只让被检效果不同。
+  {
+    const base = { incidentMult: 1, onTimeAdd: 0, repairMult: 1 };
+    const buff = { incidentMult: 1, onTimeAdd: 0.10, repairMult: 0.80 };
+    let ia = null, ib = null;
+    for (let d = 1; d <= 60 && !(ia && ib); d++) {
+      const gg = {
+        seed: 20261024, clock: { y: 1990, m: 1, d: d },
+        compiled: { routes: [{ id: 'r1', lineId: 'l1', cars: 4, stIdx: new Array(14).fill(0), line: { name: '1 号线' }, label: '1 号线' }] },
+      };
+      const a = I.roll(gg, 'wd', base);
+      const b = I.roll(gg, 'wd', buff);
+      if (a && b) { ia = a; ib = b; }
+    }
+    check('repairMult<1 时维修费真的更低', !!(ia && ib) && ib.cost < ia.cost,
+      ia && ib ? ia.cost.toFixed(2) + ' → ' + ib.cost.toFixed(2) + ' 万元' : '未抽到事件');
+    check('onTimeAdd>0 时事故影响时长真的更短', !!(ia && ib) && ib.minutes < ia.minutes,
+      ia && ib ? ia.minutes + ' → ' + ib.minutes + ' 分钟' : '未抽到事件');
+  }
 }
 
 // ---------- 6. 真实一局：跑 365 天 ----------

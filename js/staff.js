@@ -6,7 +6,7 @@
 //   玩家建完线就只能看着数字走。我们要让「人」成为第三条成本曲线，并且是玩家可以直接干预的那条：
 //     · 不雇人 → 线路照跑，但事故只能你亲手点，事故损失全额吃下；
 //     · 雇线长 → 事故自动处置，代价是更贵更慢的维修费（用钱买时间）；
-//     · 雇调度 → 准点率与事故概率下降；
+//     · 雇调度 → 事故影响时长与事故概率下降；
 //     · 雇检修 → 维保费用下降、车龄增长变慢；
 //     · 雇站务 → 车站满意度上升（间接抬客流）；
 //     · 雇商务 → 广告与商业收入上升。
@@ -32,13 +32,13 @@
     },
     {
       key: 'dispatcher', name: '行车调度', icon: 'clock', base: 1.5, signing: 2.6,
-      desc: '盯运行图。准点率上升，事故概率下降。线路越多越值钱，只跑一条线时基本看不出来。',
-      effect: '准点率 + · 事故率 −',
+      desc: '盯运行图。事故影响时长缩短，事故概率下降。线路越多越值钱，只跑一条线时基本看不出来。',
+      effect: '事故时长 − · 事故率 −',
     },
     {
       key: 'driver', name: '列车司机', icon: 'train', base: 1.2, signing: 1.3,
-      desc: '按图行车。准点率小幅上升，事故概率小幅下降。车多时是刚需，车少时可以省。',
-      effect: '准点率 + · 事故率 −',
+      desc: '按图行车。事故影响时长小幅缩短，事故概率小幅下降。车多时是刚需，车少时可以省。',
+      effect: '事故时长 − · 事故率 −',
     },
     {
       key: 'maintainer', name: '车辆检修', icon: 'hammer', base: 1.3, signing: 1.5,
@@ -75,8 +75,8 @@
     { key: 'incident', name: '老练', text: '事故概率 −12%', value: 0.88 },
     { key: 'incident', name: '稳手', text: '事故概率 −8%', value: 0.92 },
     { key: 'incident', name: '冒失', text: '事故概率 +15%', value: 1.15 },
-    { key: 'onTime', name: '守时', text: '准点率 +2.5%', value: 0.025 },
-    { key: 'onTime', name: '拖沓', text: '准点率 −2%', value: -0.02 },
+    { key: 'onTime', name: '守时', text: '事故影响时长 −2.5%', value: 0.025 },
+    { key: 'onTime', name: '拖沓', text: '事故影响时长 +2%', value: -0.02 },
     { key: 'cost', name: '会算账', text: '该角色相关成本 −10%', value: 0.90 },
     { key: 'cost', name: '大手大脚', text: '该角色相关成本 +12%', value: 1.12 },
     { key: 'sat', name: '热心', text: '满意度 +4', value: 4 },
@@ -202,7 +202,7 @@
   //
   // 返回：
   //   incidentMult  事故概率乘数（<1 更好）
-  //   onTimeAdd     准点率加值（直接加到 0~1 的准点率上）
+  //   onTimeAdd     准点加成：折算成事故影响时长的缩短比例（见 incidents.js 的 roll）
   //   satAdd        满意度加值（直接加到 0~100 的满意度上）
   //   repairMult    维修费乘数
   //   maintMult     维保成本乘数
