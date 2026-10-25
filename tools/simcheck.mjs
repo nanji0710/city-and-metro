@@ -373,21 +373,47 @@ if (CM.Company) {
   const pay2 = CO.payAccess(co, 'gz', 30000, 0);
   check('钱不够时拒绝进驻', pay2.ok === false && CO.branchOf(co, 'gz').funds === 10, pay2.error || '');
 
-  // 分部上缴：净利为正才抽，亏损月不抽
+  // 分部上缴：净利为正才抽，亏损月不抽。
+  // 上缴额按「上一个已结算月份」算 —— monthGen 里 openMonth 已经把 cur 换成空账，
+  // 此刻读 cur 只能读到本月刚发的拨款，所以引擎用 econ.lastClosed()。
   CO.updateBranch(co, 'gz', { funds: 400000 });
+  const pool0 = CO.poolOf(CO.get(co.id));
   const fakeG = {
     mapId: 'gz', company: { id: co.id, name: co.name }, clock: { y: 2025, m: 3 },
-    econ: { isFree: () => false, funds: 400000, cur: { fare: 100000, ops: 40000 } },
+    econ: { isFree: () => false, funds: 400000, lastClosed: () => ({ fare: 100000, ops: 40000 }) },
   };
   const rm = CO.remit(fakeG, 2025, 3);
   const expect = (100000 - 40000) * CO.REMIT_RATE;
   check('分部按月按净利上缴', rm && Math.abs(rm.paid - expect) < 1, rm ? rm.paid.toFixed(1) + ' vs ' + expect.toFixed(1) : 'null');
+  // 关键回归：上缴的钱必须落到公司自有资金上，不能凭空蒸发（旧实现就是扣完没人收）
+  check('上缴的钱进入公司自有资金', Math.abs(CO.poolOf(CO.get(co.id)) - (pool0 + expect)) < 1,
+    CO.poolOf(CO.get(co.id)).toFixed(1) + ' vs ' + (pool0 + expect).toFixed(1));
   const fakeG2 = {
     mapId: 'gz', company: { id: co.id, name: co.name }, clock: { y: 2025, m: 4 },
-    econ: { isFree: () => false, funds: 400000, cur: { fare: 10000, ops: 90000 } },
+    econ: { isFree: () => false, funds: 400000, lastClosed: () => ({ fare: 10000, ops: 90000 }) },
   };
   const rm2 = CO.remit(fakeG2, 2025, 4);
   check('亏损月不抽成', rm2 && rm2.paid === 0, rm2 ? String(rm2.paid) : 'null');
+
+  // 公司自有资金必须真的能花出去，否则 pool 只是另一种死账
+  const fakeG3 = {
+    mapId: 'gz', company: { id: co.id, name: co.name }, clock: { y: 2025, m: 5 },
+    econ: { isFree: () => false, funds: 400000, lastClosed: () => ({ fare: 200000, ops: 0 }) },
+  };
+  CO.remit(fakeG3, 2025, 5);                       // 再缴 70000，pool 累积到能付得起最低档接入费
+  CO.updateBranch(co, 'gz', { funds: 0 });         // 分部账清空，只剩公司自有资金
+  const poolNow = CO.poolOf(CO.get(co.id));
+  const avail = CO.available(CO.get(co.id), 'gz');
+  check('可动用额 = 分部现金 + 公司自有资金', Math.abs(avail - poolNow) < 1, avail.toFixed(1) + ' vs ' + poolNow.toFixed(1));
+  const feeA = CO.accessFee('aomen');
+  const canA = CO.canJoin(CO.get(co.id), 'aomen', 'gz');
+  check('分部没钱但公司有钱时仍可进驻', canA.ok === (poolNow >= feeA), canA.reason || '');
+  if (poolNow >= feeA) {
+    const pA = CO.payAccess(CO.get(co.id), 'gz', feeA, 0);
+    check('分部账空时进驻费从公司自有资金扣', pA.ok && pA.fromBranch === 0 && Math.abs(pA.fromPool - feeA) < 1,
+      pA.ok ? ('branch=' + pA.fromBranch + ' pool=' + pA.fromPool) : pA.error);
+    check('扣完公司自有资金相应减少', Math.abs(CO.poolOf(CO.get(co.id)) - (poolNow - feeA)) < 1);
+  }
 
   // 破产分部不拖垮公司：只把该分部标停运
   const c2 = CO.get(co.id);

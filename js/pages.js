@@ -834,13 +834,18 @@
         h('div', null, h('small', null, '交通对经济'), h('b', { class: mv.te.eff >= 1 ? 'good' : 'bad' }, pctS(mv.te.eff - 1)))),
       mv.shocks.length ? h('div', { class: 'ec-shock' }, CM.icon('bolt', 13), h('span', null, mv.shocks.slice(0, 2).map(function (s) { return s.ev.title.replace(/^模拟：/, ''); }).join('、') + (mv.shocks.length > 2 ? ' 等 ' + mv.shocks.length + ' 项' : '') + ' 正在影响经济')) : null);
   };
-  // 拨款依据：基础额度 × 财力系数 × 满意度系数 × 任务修正 = 拨款
+  // 拨款依据：min(基础额度 × 财力系数 × 满意度系数 × 任务修正, 上月运营成本 × grantOpsMult)
   UI.prototype.grantChain = function (y, m, compact) {
     const E = this.g().econ;
     const box = h('div', { class: 'gchain' + (compact ? ' compact' : '') });
     const step = function (label, v, cls) { box.appendChild(h('div', { class: 'gc-step ' + (cls || '') }, h('small', null, label), h('b', { class: 'num' }, v))); };
     step('基础额度', U.fmtMoney(E.grantQuota(y, m)));
     for (const f of E.grantFactors(y, m)) step(f.kind === 'fisc' ? '财力' : (f.kind === 'sat' ? '满意度' : '任务'), '×' + f.f.toFixed(2), f.f >= 1.005 ? 'up' : (f.f <= 0.995 ? 'down' : ''));
+    // 封顶项：拨款不会超过「上月运营成本 × CFG.economy.grantOpsMult」。
+    // 不经营的月份 ops = 0，所以这里显示「—」而不是 0，避免玩家以为被扣了钱。
+    const ci = E.grantCapInfo(y, m);
+    step('运营成本封顶', ci.hasHistory ? U.fmtMoney(ci.cap) : '—', E.grantQuota(y, m) > ci.cap ? 'down' : '');
+    step('本月拨款', U.fmtMoney(E.grantFor(y, m)));
     return box;
   };
 
@@ -965,7 +970,9 @@
         b.appendChild(self.grantChain(ny, nm, false));
         b.appendChild(h('div', { class: 'chg small', style: { marginTop: '6px' } }, h('b', null, '下月（' + ny + '年' + nm + '月）拨款'), h('b', { class: 'num' }, U.fmtMoney(E.grantFor(ny, nm)))));
         for (const f of E.grantFactors(ny, nm)) if (f.kind === 'task') b.appendChild(h('div', { class: 'tiny muted' }, '· ' + f.label + ' ×' + f.f.toFixed(2)));
-        b.appendChild(h('div', { class: 'note', style: { marginTop: '6px' } }, '基础额度按城市与年代设定；财力系数来自城市经济（上一年地方财政收入）；满意度系数 ×0.6–1.4；任务未完成时在 ' + CFG.economy.failGrantMonths + ' 个月内 ×' + CFG.economy.failGrantFactor + '（多项叠加最低按 ×0.6）。拨款每月初发放一次，不会重复发放或补发。'));
+        b.appendChild(h('div', { class: 'note', style: { marginTop: '6px' } }, '基础额度按城市与年代设定；财力系数来自城市经济（上一年地方财政收入）；满意度系数 ×0.6–1.4；任务未完成时在 ' + CFG.economy.failGrantMonths + ' 个月内 ×' + CFG.economy.failGrantFactor + '（多项叠加最低按 ×0.6）。'
+          + '此外拨款还有一条硬上限：不超过「上月运营成本 ×' + (CFG.economy.grantOpsMult || 1.35).toFixed(2) + '」—— 不经营的线路不产生拨款，想多拿拨款只能先把线路真正跑起来。'
+          + '拨款每月初发放一次，不会重复发放或补发；开局当月没有上月账目，所以第一笔拨款从第二个月开始。'));
         return b;
       }, true, 'bank'));
     }

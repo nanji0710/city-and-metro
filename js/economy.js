@@ -105,11 +105,45 @@
   Economy.prototype.fiscalFactor = function () { return this.fisc && isFinite(this.fisc.f) ? this.fisc.f : 1; };
   // 基础额度：按城市与年代设定的地铁资金基数（不含财力、满意度与任务调整）
   Economy.prototype.grantQuota = function (y, m) { return U.interp(CFG.economy.grantBase, y + ((m || 1) - 1) / 12); };
+  /* 最近一个已封账的月份（没有则 null）。
+   * 拨款与上缴都按「上月真实账目」折算，而不是按当月正在累积的 cur ——
+   * 因为 openMonth 已经把 cur 换成新的空账，此时读 cur 只能读到刚发的拨款本身。 */
+  Economy.prototype.lastClosed = function () {
+    const l = this.ledger;
+    return l && l.length ? l[l.length - 1] : null;
+  };
   Economy.prototype.grantFor = function (y, m) {
     const ym = U.ymIndex(y, m);
     let f = 0.6 + 0.8 * this.sat / 100, mf = 1;
     for (const md of this.mods) if (md.kind === 'grant' && md.until >= ym) mf *= md.factor;
-    return this.grantQuota(y, m) * this.fiscalFactor() * f * Math.max(0.6, mf) * this.diffMult('grantMult');
+    const quota = this.grantQuota(y, m) * this.fiscalFactor() * f * Math.max(0.6, mf) * this.diffMult('grantMult');
+    /* 拨款封顶（本作改造）——看到这里就不要再往下找「为什么钱变少了」。
+     *
+     * 基底是无条件定额拨款：每座城每月固定发一笔（2025 年约 12 亿元），
+     * 与城市规模、与经营好坏全都无关。单城局里那只是「政府托底」，玩家感觉不到异常；
+     * 但接上多城公司层之后就变成了印钞机：
+     *   进驻任何一座城 → 首月起白拿 12 亿/月 → 接入费 3~28 亿不到三个月回本。
+     * 于是「经营」这件事完全不重要，最优解是无限进驻新城市，
+     * 「先做小城、攒钱、再进城」的成长链就被自己拆掉了。
+     *
+     * 改成「按上月实际运营成本的一定倍数封顶」（倍数见 CFG.economy.grantOpsMult）：
+     *   - 不经营的城：上月 ops = 0 → 拨款 0，没有免费的午餐；
+     *   - 经营的城：拨款随运营规模走，大小城市自然拉开差距，不再是一个常数；
+     *   - 想多拿拨款，必须先把线路真正跑起来（多买车、多开班、多设站），
+     *     而这些都是真实的资本开支，拿到的钱永远追不平花出去的钱。
+     * 保留 quota 作上限，是为了让「大城市财力更强」这条基底设定继续成立 ——
+     * 城市很大但玩家只开一条线时，拨款不会超过它本该有的盘子。 */
+    const prev = this.lastClosed();
+    const ops = prev ? Math.max(0, prev.ops || 0) : 0;
+    const mult = typeof CFG.economy.grantOpsMult === 'number' ? CFG.economy.grantOpsMult : 1.35;
+    return Math.min(quota, ops * mult);
+  };
+  /* 拨款被「运营成本封顶」压掉了多少：返回 { raw, cap, granted }，供 UI 解释。 */
+  Economy.prototype.grantCapInfo = function (y, m) {
+    const prev = this.lastClosed();
+    const ops = prev ? Math.max(0, prev.ops || 0) : 0;
+    const mult = typeof CFG.economy.grantOpsMult === 'number' ? CFG.economy.grantOpsMult : 1.35;
+    return { ops: ops, cap: ops * mult, mult: mult, hasHistory: !!prev };
   };
   // 难度倍率（本作独有）。没有 CM.Difficulty 时一律 1，保证基底行为不变。
   Economy.prototype.diffMult = function (key) {

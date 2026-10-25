@@ -52,11 +52,20 @@
   /* 可进驻城市列表：按进驻费从低到高，只列出还没进驻的。
    * 能不能进驻看的是**付款分部自己的账**（当前在玩的这座城），不是金库合计 ——
    * 金库是合计值，拿它判「买得起」会出现「A 城有钱 B 城却扣不动」的假绿灯。 */
+  /* 付款分部：当前在玩的那座城；它还没登记成分部时退回第一个分部。
+   * 面板与 companyJoin 必须用同一套解析，否则列表放行的和点下去扣的不是同一笔钱。 */
+  function payerOf(self, co) {
+    const g = self.g();
+    if (g && g.mapId && CO().branchOf(co, g.mapId)) return g.mapId;
+    return co && co.branches.length ? co.branches[0].mapId : null;
+  }
+
   function joinList(self, co) {
     const wrap = h('div', { class: 'co-join' });
-    const g = self.g();
-    const payer = g && g.mapId ? CO().branchOf(co, g.mapId) : null;
-    const payerFunds = payer ? (typeof payer.funds === 'number' ? payer.funds : 0) : CO().treasury(co);
+    // 可动用额 = 付款分部账面 + 公司自有现金 pool。必须与 Company.canJoin /
+    // payAccess 用同一个来源，否则会出现「面板说能进、点下去扣不动」的假绿灯。
+    const pid = payerOf(self, co);
+    const payerFunds = pid ? CO().available(co, pid) : CO().treasury(co);
     const std = CM.Difficulty ? CM.Difficulty.startFundsOf(self._diffKey || CM.Difficulty.DEFAULT_KEY) : 0;
     const rows = [];
     for (const id in CM.MAPS) {
@@ -107,14 +116,15 @@
 
     const cards = h('div', { class: 'fin-cards' });
     cards.append(
-      this.stat('公司金库', U.fmtMoney(treasury), '各分部账面现金合计', 'good', 'bank'),
+      this.stat('公司金库', U.fmtMoney(treasury), '各分部现金 + 公司自有资金', 'good', 'bank'),
       this.stat('分部', co.branches.length + ' 座', co.branches.length > 1 ? '可以同时经营多座城市' : '再进驻一座就能分散风险', 'muted', 'globe'),
-      this.stat('上缴比例', Math.round(CO().REMIT_RATE * 100) + '%', '每月从分部净利中划入金库', 'muted', 'percent'));
+      this.stat('上缴比例', Math.round(CO().REMIT_RATE * 100) + '%', '每月从上月净利划入公司自有资金', 'muted', 'percent'));
     el.appendChild(cards);
 
     el.appendChild(this.callout('info', 'info',
-      '每家分部都是一局完整的地图，各存各的档。金库是所有分部现金的合计 —— ' +
-      '进驻新城市要付接入费，钱从这里出。'));
+      '每家分部都是一局完整的地图，各存各的档。金库 = 各分部账面现金 + 公司自有资金（' +
+      U.fmtMoney(CO().poolOf(co)) + '）；分部每月按上月净利的 ' + Math.round(CO().REMIT_RATE * 100) + '% 上缴进公司自有资金。' +
+      '进驻新城市要付接入费与启动金：先扣当前分部的账，不够再动公司自有资金。'));
 
     const sec1 = h('div', { class: 'co-sec' });
     sec1.appendChild(h('div', { class: 'co-sh' }, h('b', null, '分部（' + co.branches.length + '）')));
@@ -149,19 +159,24 @@
     const g = this.g();                 // 付款分部 = 当前正在玩的这座城
     const co = CO().active();
     if (!co) { this.toast('还没有公司', 'warn'); return; }
-    const j = CO().joinOpts(co, mapId, CM.Difficulty ? (this._diffKey || CM.Difficulty.DEFAULT_KEY) : 'normal');
+    // 显式把付款分部传进去：joinOpts → canJoin 的「启动金上限」要按同一个
+    // 可动用额算，否则确认框里的启动金可能大于实际付得起的钱。
+    const j = CO().joinOpts(co, mapId, CM.Difficulty ? (this._diffKey || CM.Difficulty.DEFAULT_KEY) : 'normal', null, payerOf(self, co));
     if (!j.ok) { this.toast(j.error, 'warn'); return; }
     const mp = mapOf(mapId);
     this.confirm('进驻 ' + (mp ? mp.name : mapId),
-      '接入费 ' + U.fmtMoney(j.fee) + '，从公司金库划出；' +
-      '新城启动资金 ' + U.fmtMoney(j.startFunds) + '（金库剩余与标准开局资金取较小值）。' +
+      '接入费 ' + U.fmtMoney(j.fee) + '，从当前分部的账上划出（不够再动公司自有资金）；' +
+      '新城启动资金 ' + U.fmtMoney(j.startFunds) + '（可动用余额与标准开局资金取较小值）。' +
       '进驻后这一局的盈亏独立结算。',
       '确认进驻', function () {
         const c = CO().get(co.id);
-        // 接入费 + 新城启动金都从付款分部账上划走 —— 否则每进一城白拿一笔钱，越扩张越富
-        const pay = CO().payAccess(c, g && g.mapId ? g.mapId : c.branches[0].mapId, j.fee, j.startFunds);
+        // 接入费 + 新城启动金都从付款分部账上划走 —— 否则每进一城白拿一笔钱，越扩张越富。
+        // 付款分部与列表用的是同一个 payerOf()，保证「列表放行的就扣得动」。
+        const pid = payerOf(self, c);
+        const pay = CO().payAccess(c, pid, j.fee, j.startFunds);
         if (!pay.ok) { self.toast(pay.error, 'bad'); return; }
-        if (g && g.econ) g.econ.funds = pay.branch.funds;
+        // 只有付款方就是当前这一局时才把余额写回游戏；否则会把别座城的钱搬到眼前这一局。
+        if (g && g.econ && pid === g.mapId) g.econ.funds = pay.branch.funds;
         CO().addBranch(c, { mapId: mapId, name: (mp ? mp.name : mapId) + '分部', funds: j.startFunds });
         CO().setActive(c.id);
         snd('build');

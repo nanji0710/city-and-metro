@@ -85,13 +85,35 @@
     return { ok: true, company: c };
   };
 
+  /* 取一份**存储里的当前记录**。save() 是把整个对象覆盖回去的，
+   * 调用方手里只要拿着过期副本（比如 Company.create 的返回值），
+   * 后加的字段就会被旧值抹掉 —— 公司自有资金 pool 就是这么被清零过的。
+   * 所有写操作都先从存储取一次，再改、再存。 */
+  Company.fresh = function (c) {
+    if (!c || !c.id) return c || null;
+    return readAll()[c.id] || c;
+  };
+
+  /* 存盘，并把结果同步回调用方手里的那个对象。
+   * 写操作都改成「读最新 → 改 → 存」，如果不同步回去，调用方拿着的旧引用
+   * 就再也看不到自己刚做的改动（分支、资金全都对不上）。 */
+  Company.commit = function (c, cur) {
+    const r = Company.save(cur);
+    if (r.ok && c && c !== cur) Object.assign(c, cur);
+    return r;
+  };
+
   Company.create = function (name, homeMapId) {
     const c = {
       id: U.uid('co'),
       name: (name || '').trim() || '城轨公司',
       createdAt: nowIso(),
       updatedAt: nowIso(),
-      treasury: 0,
+      /* 公司层自有现金（pool）。以前这里是个从不被读取的 treasury:0 字段，
+       * 而 Company.treasury() 其实是「各分部 funds 之和」—— 于是分部的上缴
+       * 扣了钱却没有任何账户收到，35% 的净利凭空消失（见 remit 的注释）。
+       * 现在 pool 是真的账：分部上缴进 pool，进驻新城可以从 pool 出钱。 */
+      pool: 0,
       branches: [],
       home: homeMapId || null,
     };
@@ -126,19 +148,38 @@
     return null;
   };
 
-  /* 金库 = 各家分部账面现金之和。
-   * 不做成「一个独立的数字」是因为那样必须处理「分部有钱但金库没钱」的两套账，
-   * 而玩家在面板上看到的钱必须和他在那个城市里看到的钱是同一笔。 */
+  /* 公司自有现金。老存档没有这个字段，一律按 0 处理（不迁移、不补发）。 */
+  Company.poolOf = function (c) {
+    return c && typeof c.pool === 'number' && isFinite(c.pool) ? c.pool : 0;
+  };
+
+  /* 金库 = 各分部账面现金 + 公司自有现金 pool。
+   * 不做成「只记一个总数」是因为玩家在面板上看到的钱必须和他在那座城市里
+   * 看到的钱是同一笔；而 pool 是分部之外的第二处真实账户（上缴所得），
+   * 它必须能被指出「钱到底在哪」，否则又会重演「扣了钱但没有收款方」。 */
   Company.treasury = function (c) {
     if (!c) return 0;
-    let t = 0;
+    let t = Company.poolOf(c);
     for (const b of c.branches) t += (typeof b.funds === 'number' ? b.funds : 0);
     return t;
   };
 
+  /* 给定付款方时**真正可以动用的钱**：该分部账面 + 公司 pool。
+   * canJoin 与 payAccess 必须用同一个函数算，否则会重现
+   * 「面板说能进、点下去扣不动」的假绿灯。 */
+  Company.available = function (c, payerMapId) {
+    if (!c) return 0;
+    if (!payerMapId) return Company.treasury(c);
+    const pb = Company.branchOf(c, payerMapId);
+    if (!pb) return 0;
+    return (typeof pb.funds === 'number' ? pb.funds : 0) + Company.poolOf(c);
+  };
+
   Company.addBranch = function (c, br) {
     if (!c) return { ok: false, error: '公司不存在' };
-    const old = Company.branchOf(c, br.mapId);
+    const cur = Company.fresh(c);
+    if (!cur) return { ok: false, error: '公司不存在' };
+    const old = Company.branchOf(cur, br.mapId);
     if (old) return { ok: true, branch: old, existed: true };
     const b = {
       mapId: br.mapId,
@@ -148,28 +189,33 @@
       slotId: br.slotId || null,
       failed: false,
     };
-    c.branches.push(b);
-    const r = Company.save(c);
+    cur.branches.push(b);
+    const r = Company.commit(c, cur);
     return r.ok ? { ok: true, branch: b } : r;
   };
 
   Company.updateBranch = function (c, mapId, patch) {
-    const b = Company.branchOf(c, mapId);
+    const cur = Company.fresh(c);
+    if (!cur) return { ok: false, error: '公司不存在' };
+    const b = Company.branchOf(cur, mapId);
     if (!b) return { ok: false, error: '这个城市还没有分部' };
     Object.assign(b, patch || {});
-    const r = Company.save(c);
+    const r = Company.commit(c, cur);
     return r.ok ? { ok: true, branch: b } : r;
   };
 
   Company.dropBranch = function (c, mapId) {
     if (!c) return { ok: false, error: '公司不存在' };
-    c.branches = c.branches.filter(function (b) { return b.mapId !== mapId; });
-    const r = Company.save(c);
+    const cur = Company.fresh(c);
+    if (!cur) return { ok: false, error: '公司不存在' };
+    cur.branches = cur.branches.filter(function (b) { return b.mapId !== mapId; });
+    const r = Company.commit(c, cur);
     return r.ok ? { ok: true } : r;
   };
 
   /* 能不能进驻某城。返回 { ok, fee, have, short, reason }。
-   * have 取的是**付款分部自己的账**，不是金库合计 —— 进驻费是从某一座城的账上扣的，
+   * have 取的是**付款分部真正能动的钱** = 该分部账面 + 公司自有现金 pool。
+   * 仍不接受「金库合计」冒充付款能力：进驻费是从某一个分部起扣的，
    * 拿合计去判「买得起」会出现「面板说能进，点下去却扣不动」的假绿灯。
    * payerMapId 缺省时退回金库合计，方便没有具体付款方时做能力评估。 */
   Company.canJoin = function (c, mapId, payerMapId) {
@@ -178,42 +224,60 @@
     const fee = Company.accessFee(mapId);
     let have;
     if (payerMapId) {
-      const pb = Company.branchOf(c, payerMapId);
       // 显式指定了付款分部却找不到：这是调用方的错，不能退回金库合计蒙混过关 ——
       // 否则「面板放行、扣费时报分部不存在」会在玩家点确认的那一刻才炸
-      if (!pb) return { ok: false, reason: '付款分部不存在' };
-      have = typeof pb.funds === 'number' ? pb.funds : 0;
+      if (!Company.branchOf(c, payerMapId)) return { ok: false, reason: '付款分部不存在' };
+      have = Company.available(c, payerMapId);
     } else {
       have = Company.treasury(c);
     }
     if (have < fee) {
-      return { ok: false, fee: fee, have: have, short: fee - have, reason: '这座城的账上还差 ' + U.fmtMoney(fee - have) };
+      return { ok: false, fee: fee, have: have, short: fee - have, reason: '可动用的钱还差 ' + U.fmtMoney(fee - have) };
     }
     return { ok: true, fee: fee, have: have };
   };
 
   /* 分部每月上缴。由 game.js 的 monthGen 调用。
-   * 从 econ.funds 直接扣 —— 这是唯一一处「分部与金库之间真实的钱移动」，
-   * 扣完立刻写回公司记录，这样即便玩家不切城也不会丢账。 */
+   * 两处旧实现的错，都在这里修掉：
+   * 1) 原来读 g.econ.cur 当「本月净利」，但 monthGen 里 openMonth 已经把 cur
+   *    换成一张新的空账，此刻读到的只有刚发的拨款 —— 于是「上缴 35% 净利」
+   *    实际变成了「上缴 35% 拨款」。改用 lastClosed()，即上一个真正结算完的月份。
+   * 2) 原来从 econ.funds 扣掉之后没有任何账户收到（Company.treasury 只是各分部之和），
+   *    这 35% 是凭空销毁的。现在转入公司自有现金 pool，一分不少。 */
   Company.remit = function (g, y, m) {
-    const c = Company.active();
-    if (!c || !g || !g.company || g.company.id !== c.id) return null;
+    const c0 = Company.active();
+    if (!c0 || !g || !g.company || g.company.id !== c0.id) return null;
+    // 先读一份存储里的最新记录再改：直接改 c0 再走 updateBranch 的话，
+    // fresh() 会读到旧副本，刚加上去的 pool 会被覆盖掉。
+    const c = Company.fresh(c0) || c0;
     const b = Company.branchOf(c, g.mapId);
     if (!b) return null;
     if (g.econ.isFree()) return null;
-    // 上缴额按「本月净利」而不是余额：亏损的月份不该继续抽钱，那等于惩罚经营失败的城市
-    const cur = g.econ.cur || {};
-    const net = (cur.fare || 0) + (cur.grant || 0) + (cur.reward || 0)
-      - (cur.ops || 0) - (cur.construction || 0) - (cur.demolition || 0)
-      - (cur.upgrade || 0) - (cur.relocation || 0) - (cur.interest || 0) - (cur.penalty || 0);
+    // 上缴额按「上月净利」而不是余额：亏损的月份不该继续抽钱，那等于惩罚经营失败的城市
+    const last = g.econ.lastClosed ? g.econ.lastClosed() : null;
+    let net = 0;
+    if (last) {
+      net = (last.fare || 0) + (last.grant || 0) + (last.reward || 0)
+        - (last.ops || 0) - (last.construction || 0) - (last.demolition || 0)
+        - (last.upgrade || 0) - (last.relocation || 0) - (last.interest || 0) - (last.penalty || 0);
+    }
     let paid = 0;
     if (net > 0) {
       const want = net * REMIT_RATE;
       const can = Math.min(want, Math.max(0, g.econ.funds));
-      if (can > 0.01) { g.econ.funds -= can; paid = can; }
+      if (can > 0.01) {
+        g.econ.funds -= can;
+        paid = can;
+        c.pool = Company.poolOf(c) + paid;   // 收款方：公司自有现金
+        c.updatedAt = nowIso();
+      }
     }
-    Company.updateBranch(c, g.mapId, { funds: g.econ.funds, lastRemit: { y: y, m: m, amount: paid } });
-    return { paid: paid, branch: Company.branchOf(c, g.mapId) };
+    // 在同一个最新副本上一起改分部与 pool，再一次性存盘 —— 分两次走
+    // updateBranch 的话，第二次会从存储里再解析一份，把 pool 的增量冲掉。
+    b.funds = g.econ.funds;
+    b.lastRemit = { y: y, m: m, amount: paid };
+    Company.commit(c0, c);
+    return { paid: paid, branch: Company.branchOf(c, g.mapId), pool: Company.poolOf(c) };
   };
 
   /* 把当前这一局的现金写回公司记录。切城、退城、存档前都要调。 */
@@ -266,12 +330,21 @@
    * 否则多城玩法会变成「每进一城白拿一笔启动金」，越扩张越有钱，经济直接失衡。 */
   Company.payAccess = function (c, payerMapId, fee, startFunds) {
     if (!c) return { ok: false, error: '公司不存在' };
-    const b = Company.branchOf(c, payerMapId);
+    const co = Company.fresh(c);
+    if (!co) return { ok: false, error: '公司不存在' };
+    const b = Company.branchOf(co, payerMapId);
     if (!b) return { ok: false, error: '付款分部不存在' };
     const need = (fee || 0) + (startFunds || 0);
-    if ((b.funds || 0) < need) return { ok: false, error: '这个分部账上不够（需要 ' + U.fmtMoney(need) + '）' };
-    Company.updateBranch(c, payerMapId, { funds: b.funds - need });
-    return { ok: true, branch: Company.branchOf(c, payerMapId) };
+    const avail = Company.available(co, payerMapId);
+    if (avail < need) return { ok: false, error: '可动用的钱不够（需要 ' + U.fmtMoney(need) + '）' };
+    // 先扣分部自己的账，不够的部分再从公司自有资金出 —— 顺序固定，
+    // 与 canJoin 用同一个 available()，保证「面板放行的就一定扣得动」。
+    const fromBranch = Math.min(need, Math.max(0, b.funds || 0));
+    const fromPool = need - fromBranch;
+    b.funds = (b.funds || 0) - fromBranch;
+    co.pool = Company.poolOf(co) - fromPool;
+    Company.commit(c, co);
+    return { ok: true, branch: Company.branchOf(Company.fresh(co), payerMapId), fromBranch: fromBranch, fromPool: fromPool };
   };
 
   /* 生成一局「进驻新城」的开局参数。
