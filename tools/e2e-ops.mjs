@@ -34,7 +34,7 @@ const EDGE = [
 ]
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
-/* 把四条线全部拉到 900 秒（15 分钟一班）—— 比默认的 240 秒稀得多，
+/* 把广州战役图的五条线全部拉到 900 秒（15 分钟一班）—— 比默认的 240 秒稀得多，
  * 但还没到「不像地铁」的程度，免得测试同时触发了服务质量崩盘的其它分支。 */
 const SPARSE = 900
 
@@ -52,7 +52,7 @@ async function main() {
     try {
       proc = spawn(exe, [
         `--remote-debugging-port=${PORT}`,
-        '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
+        '--headless=new', '--disable-gpu', '--disable-extensions', '--no-first-run', '--no-default-browser-check',
         `--user-data-dir=${PROFILE}`, '--window-size=1680,1050',
         '--allow-file-access-from-files', 'about:blank',
       ], { stdio: 'ignore' })
@@ -122,7 +122,7 @@ async function main() {
         manual: lines.length ? CM.Ops.get(lines[0]).manual : null,
       });
     })()`))
-    check('广州挑战局开起来了', boot.map === 'guangzhou' && boot.lines === 4, boot)
+    check('广州挑战局开起来了', boot.map === 'guangzhou' && boot.lines === 5, boot)
     check('默认没接管（引擎自己在排班）', boot.manual === false, { manual: boot.manual })
 
     // ---------- 2. 打开排班面板，点「节能优先」 ----------

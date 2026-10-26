@@ -128,17 +128,53 @@
   CM.newGame = function (opts) {
     if (CM.Soundscape) CM.Soundscape.reset();
     const mp = CM.MAPS[opts.map] || CM.MAPS.gz;
+    /*
+     * 战役锁图：经营挑战只能从五张战役图开始，其余城市必须由公司池解锁。
+     * 自由建造与教程不受影响；旧公司（没有 campaign）视为 legacy 全解锁。
+     */
+    if (opts.mode === 'challenge' && CM.Company && !opts.tutorial) {
+      let co = CM.Company.active();
+      const camp = co ? CM.Company.campaignOf(co) : null;
+      if (co && camp && !camp.legacy && !CM.Company.canStartMap(co, mp.id, 'challenge')) {
+        fail(new Error('这座城市尚未解锁。请先在公司面板用公司池解锁「' + (mp.name || mp.id) + '」。'), '开始战役');
+        return;
+      }
+      if (!co) {
+        if (!CM.Company.isStarter(mp.id)) {
+          fail(new Error('战役只能从五张战役地图开始；其他城市需要先解锁。'), '开始战役');
+          return;
+        }
+        const r = CM.Company.startCampaign('城轨公司 · ' + (mp.data.city || mp.name || mp.id), mp.id);
+        if (!r.ok) { fail(new Error(r.error || '创建战役公司失败'), '开始战役'); return; }
+        co = r.company;
+        CM.Company.setActive(co.id);
+      }
+      opts.company = { id: co.id, name: co.name };
+    }
     ui.showLoading('正在生成 ' + mp.cfg.START.y + ' 年的' + mp.data.city + '，并计算居民出行…');
-    setTimeout(function () {
-      try { CM.useMap(mp.id); start(CM.Game.create(opts), true); } catch (e) { CM.useMap(CM.game ? CM.game.mapId : 'gz'); fail(e, '创建新游戏'); }
-    }, 60);
+    const boot = function () {
+      setTimeout(function () {
+        try { CM.useMap(mp.id); start(CM.Game.create(opts), true); } catch (e) { CM.useMap(CM.game ? CM.game.mapId : 'gz'); fail(e, '创建新游戏'); }
+      }, 60);
+    };
+    // 54 城底图按选图懒加载；基底图 / 教程地图已同步加载，Promise 立即完成。
+    if (CM.loadGeo) CM.loadGeo(mp.id).then(boot, function (e) { fail(e, '载入地图底图'); });
+    else boot();
   };
   CM.loadGame = function (data) {
     if (CM.Soundscape) CM.Soundscape.reset();
+    const mapId = (data.meta && data.meta.map) || 'gz';
     ui.showLoading('正在载入存档并恢复城市与交通状态…');
-    setTimeout(function () {
-      try { CM.useMap((data.meta && data.meta.map) || 'gz'); start(CM.Game.restore(data), false); } catch (e) { CM.useMap(CM.game ? CM.game.mapId : 'gz'); fail(e, '载入存档'); }
-    }, 60);
+    const boot = function () {
+      setTimeout(function () {
+        try { CM.useMap(mapId); start(CM.Game.restore(data), false); } catch (e) {
+          try { CM.useMap(CM.game ? CM.game.mapId : 'gz'); } catch (e2) { /* 底图未载入时保留当前画面 */ }
+          fail(e, '载入存档');
+        }
+      }, 60);
+    };
+    if (CM.loadGeo) CM.loadGeo(mapId).then(boot, function (e) { fail(e, '载入地图底图'); });
+    else boot();
   };
   CM.endGame = function () {
     if (CM.Soundscape) CM.Soundscape.reset();

@@ -68,9 +68,10 @@
     const payerFunds = pid ? CO().available(co, pid) : CO().treasury(co);
     const std = CM.Difficulty ? CM.Difficulty.startFundsOf(self._diffKey || CM.Difficulty.DEFAULT_KEY) : 0;
     const rows = [];
+    const hidden = CM.HIDDEN_MAPS || [];
     for (const id in CM.MAPS) {
       const mp = CM.MAPS[id];
-      if (mp.tutorial || mp.kind === 'fictional') continue;
+      if (mp.tutorial || mp.kind === 'fictional' || hidden.indexOf(id) >= 0) continue;
       if (CO().branchOf(co, id)) continue;
       rows.push({ id: id, fee: CO().accessFee(id), mp: mp });
     }
@@ -84,7 +85,7 @@
       const start = Math.min(std, Math.max(0, payerFunds - r.fee));
       const need = r.fee + start;
       const short = payerFunds < need;
-      const row = h('div', { class: 'co-jrow' + (short ? ' short' : '') },
+      const row = h('div', { class: 'co-jrow' + (short ? ' short' : ''), 'data-map': r.id },
         h('span', { class: 'dot', style: { background: 'var(--accent)' } }),
         h('div', { class: 'grow' },
           h('b', null, r.mp.name || r.id),
@@ -102,6 +103,100 @@
     return wrap;
   }
 
+  /* 战役地图列表：已解锁可开始，未解锁显示公司池解锁费。 */
+  function campaignMapList(self, co) {
+    const wrap = h('div', { class: 'co-join' });
+    const camp = CO().campaignOf(co) || { unlocked: [] };
+    const rows = [], hidden = CM.HIDDEN_MAPS || [];
+    for (const id in CM.MAPS) {
+      const mp = CM.MAPS[id];
+      if (mp.tutorial || mp.kind === 'fictional' || hidden.indexOf(id) >= 0) continue;
+      if (CO().branchOf(co, id)) continue;
+      rows.push({ id: id, mp: mp, fee: CO().unlockFee(id), unlocked: CO().isUnlocked(co, id) });
+    }
+    rows.sort(function (a, b) {
+      return (a.unlocked === b.unlocked ? 0 : (a.unlocked ? -1 : 1)) || a.fee - b.fee;
+    });
+    if (!rows.length) {
+      wrap.appendChild(h('div', { class: 'note' }, '所有城市都已经进驻了。'));
+      return wrap;
+    }
+    const dk = self._diffKey || (CM.Difficulty ? CM.Difficulty.DEFAULT_KEY : 'normal');
+    const std = CM.Difficulty ? CM.Difficulty.startFundsOf(dk) : 0;
+    for (const r of rows) {
+      const pool = co.pool || 0;
+      const short = !r.unlocked && pool < r.fee;
+      const row = h('div', { class: 'co-jrow' + (short ? ' short' : ''), 'data-map': r.id },
+        h('span', { class: 'dot', style: { background: r.unlocked ? 'var(--good)' : 'var(--faint)' } }),
+        h('div', { class: 'grow' },
+          h('b', null, r.mp.name || r.id),
+          h('div', { class: 'tiny muted' },
+            (CO().STARTER_META[r.id] ? (CO().STARTER_META[r.id].tier === 'advanced' ? '进阶 · ' : '入门 · ') + CO().STARTER_META[r.id].trait + ' · ' : '') +
+            (r.mp.region || '') + ' · ' + (r.mp.tags || []).join(' · ') +
+            (r.unlocked ? ' · 标准启动金 ' + U.fmtMoney(std) : ' · 解锁费 ' + U.fmtMoney(r.fee)))),
+        h('span', { class: 'co-fee num' }, r.unlocked ? '已解锁' : U.fmtMoney(r.fee)),
+        h('button', {
+          class: 'btn sm' + (r.unlocked && !short ? ' primary' : ''),
+          disabled: short ? true : null,
+          'data-tip': short ? ('公司池还差 ' + U.fmtMoney(r.fee - pool)) :
+            (r.unlocked ? '切换到这座城市，开一局新的经营挑战' : '从公司池支付解锁费，之后可随时开始'),
+          onclick: function () {
+            if (r.unlocked) self.companyStartBranch(r.id);
+            else self.companyUnlock(r.id);
+          },
+        }, r.unlocked ? '开始' : (short ? '不够' : '解锁')));
+      wrap.appendChild(row);
+    }
+    return wrap;
+  }
+
+  /* 当前分部的公司注资。注资只允许当前这一局，避免改 localStorage 后被存档覆盖。
+   * 额度必须点击时重新读最新公司记录：面板渲染后跨月、注资或上缴都会改变剩余额度，
+   * 否则就会出现「按钮写着 1750 万，点下去却说超上限」的假额度。 */
+  function injectCard(self, co, g, b) {
+    const wrap = h('div', { class: 'co-sec' });
+    wrap.appendChild(h('div', { class: 'co-sh' }, h('b', null, '向当前分部注资'), h('span', { class: 'tiny muted' }, '公司池 → 本地现金')));
+    if (!g || !b) {
+      wrap.appendChild(h('div', { class: 'note' }, '先切换到一座分部，才能向它注资。'));
+      return wrap;
+    }
+    const caps = CO().injectCap(CO().fresh(co) || co, g.mapId, g.clock.y, g.clock.m);
+    const pool = CO().poolOf(CO().fresh(co) || co);
+    wrap.appendChild(h('div', { class: 'note' },
+      '公司池 ' + U.fmtMoney(pool) + '；过去 12 个月正利润 ' + U.fmtMoney(caps.yearProfit) +
+      '，发展注资剩余额度 ' + U.fmtMoney(caps.dev) + '；紧急救援剩余额度 ' + U.fmtMoney(caps.rescue) + '。',
+      h('br'), '可自定义金额，单位万元（1 亿 = 10000）。留空则按当前模式的全部剩余额度注资；只进当前分部。'));
+    const amountIn = h('input', {
+      type: 'number', min: 0, step: 100, inputmode: 'decimal',
+      class: 'co-inject-input', placeholder: '自定义金额（万元）',
+      'aria-label': '自定义注资金额，单位万元',
+    });
+    const fillMax = function (rescue) {
+      const c = CO().injectCap(CO().fresh(co) || co, g.mapId, g.clock.y, g.clock.m);
+      const poolNow = CO().poolOf(CO().fresh(co) || co);
+      amountIn.value = Math.max(0, Math.round(Math.min(poolNow, rescue ? c.rescue : c.dev)));
+    };
+    const quick = h('div', { class: 'row', style: { gap: '6px', marginTop: '6px' } },
+      h('button', { class: 'btn sm', onclick: function () { fillMax(false); } }, '发展最大'),
+      h('button', { class: 'btn sm', onclick: function () { fillMax(true); } }, '救援最大'),
+      h('button', { class: 'btn sm', onclick: function () { amountIn.value = ''; } }, '清空'));
+    const row = h('div', { class: 'row', style: { gap: '6px', marginTop: '6px' } });
+    row.appendChild(h('button', {
+      class: 'btn sm primary',
+      disabled: pool > 0 ? null : true,
+      onclick: function () { self.companyInject(amountIn.value, false); },
+    }, '确认发展注资'));
+    row.appendChild(h('button', {
+      class: 'btn sm',
+      disabled: pool > 0 ? null : true,
+      onclick: function () { self.companyInject(amountIn.value, true); },
+    }, '确认紧急救援'));
+    wrap.appendChild(amountIn);
+    wrap.appendChild(quick);
+    wrap.appendChild(row);
+    return wrap;
+  }
+
   UI.prototype.page_company = function () {
     const self = this;
     const el = h('div', { class: 'co-page' });
@@ -114,17 +209,21 @@
     const treasury = CO().treasury(co);
     const cur = g && g.mapId ? CO().branchOf(co, g.mapId) : null;
 
+    const camp = CO().campaignOf(co);
+    const isCampaign = !!(camp && !camp.legacy);
     const cards = h('div', { class: 'fin-cards' });
     cards.append(
       this.stat('公司金库', U.fmtMoney(treasury), '各分部现金 + 公司自有资金', 'good', 'bank'),
+      this.stat('公司池', U.fmtMoney(CO().poolOf(co)), '解锁地图与向分部注资', 'muted', 'bank'),
       this.stat('分部', co.branches.length + ' 座', co.branches.length > 1 ? '可以同时经营多座城市' : '再进驻一座就能分散风险', 'muted', 'globe'),
-      this.stat('上缴比例', Math.round(CO().REMIT_RATE * 100) + '%', '每月从上月净利划入公司自有资金', 'muted', 'percent'));
+      this.stat('上缴比例', Math.round(CO().REMIT_RATE * 100) + '%', '上月经营现金流的 30% 进公司池', 'muted', 'percent'));
     el.appendChild(cards);
 
     el.appendChild(this.callout('info', 'info',
       '每家分部都是一局完整的地图，各存各的档。金库 = 各分部账面现金 + 公司自有资金（' +
-      U.fmtMoney(CO().poolOf(co)) + '）；分部每月按上月净利的 ' + Math.round(CO().REMIT_RATE * 100) + '% 上缴进公司自有资金。' +
-      '进驻新城市要付接入费与启动金：先扣当前分部的账，不够再动公司自有资金。'));
+      U.fmtMoney(CO().poolOf(co)) + '）；分部每月按上月经营现金流的 ' + Math.round(CO().REMIT_RATE * 100) + '% 上缴进公司池。' +
+      (isCampaign ? '解锁新地图从公司池扣费；已解锁城市可以随时开始新的经营挑战。'
+        : '旧公司保留全地图权限；新战役会从四张入门图和一张进阶图开始锁图。')));
 
     const sec1 = h('div', { class: 'co-sec' });
     sec1.appendChild(h('div', { class: 'co-sh' }, h('b', null, '分部（' + co.branches.length + '）')));
@@ -134,20 +233,31 @@
     }
     el.appendChild(sec1);
 
+    if (isCampaign && CO().campaignOver(co)) {
+      el.appendChild(this.callout('bad', 'error',
+        '战役已破产：所有已解锁城市的分部都已停运，公司池也不足最低救援额。可以读取旧存档，或开始新的战役。'));
+    }
+    if (isCampaign) el.appendChild(injectCard(self, co, g, cur));
+
     const sec2 = h('div', { class: 'co-sec' });
-    sec2.appendChild(h('div', { class: 'co-sh' }, h('b', null, '可以进驻的城市'), h('span', { class: 'tiny muted' }, '按接入费从低到高')));
-    sec2.appendChild(joinList(self, co));
+    sec2.appendChild(h('div', { class: 'co-sh' },
+      h('b', null, isCampaign ? '地图与解锁' : '可以进驻的城市'),
+      h('span', { class: 'tiny muted' }, isCampaign ? '已解锁可直接开始 · 未解锁从公司池购买' : '按接入费从低到高')));
+    sec2.appendChild(isCampaign ? campaignMapList(self, co) : joinList(self, co));
     el.appendChild(sec2);
 
     el.appendChild(this.sec('co-help', '这套东西是怎么运作的', '', function () {
       return h('div', { class: 'note' },
         '每座城市的账是完全独立的：票价、拨款、债券、破产判定都只看那一座城市自己的数据。',
         h('br'),
-        '公司层只做两件事：把分部每月净利的 ' + Math.round(CO().REMIT_RATE * 100) + '% 划进金库，以及在你进驻新城时收一次接入费。',
+        '分部每月把上月经营现金流的 ' + Math.round(CO().REMIT_RATE * 100) + '% 划进公司池，70% 留在本地；本地现金不能跨城使用。',
         h('br'),
-        '一座城市破产不会拖垮公司，但那个分部就停运了；反过来，金库没钱就进不了新城。',
+        isCampaign ? '公司池可以解锁新地图，也可以注资当前分部；解锁费 8/10/15/20 亿，按城市档位。'
+          : '旧公司保留全地图权限；新战役会从四张入门图和一张进阶图开始锁图。',
         h('br'),
-        '金库数字 = 各分部账面现金之和，所以你在这里看到的钱和你在城市里看到的是同一笔。');
+        '一座城市破产不会拖垮公司，但那个分部就停运了；公司池和本地账都空了，才是真正的战役破产。',
+        h('br'),
+        '金库数字 = 各分部账面现金 + 公司自有资金，所以你在这里看到的钱和你在城市里看到的是同一笔。');
     }, false, 'help'));
 
     return { title: '公司 · ' + co.name, el };
@@ -184,5 +294,80 @@
         if (g && CM.Save) CM.Save.save(g, 'auto');
         CM.newGame(j.opts);
       }, false, 'globe');
+  };
+
+  /* 战役：进入已解锁城市，开一局新的经营挑战。不另收接入费。 */
+  UI.prototype.companyStartBranch = function (mapId) {
+    const self = this;
+    const co = CO().active();
+    if (!co) { this.toast('还没有公司', 'warn'); return; }
+    if (!CO().isUnlocked(co, mapId)) { this.toast('这座城市尚未解锁', 'warn'); return; }
+    if (CO().branchOf(co, mapId)) { this.toast('这座城市已经登记为分部', 'info'); return; }
+    const mp = mapOf(mapId);
+    if (!mp) { this.toast('地图不存在', 'bad'); return; }
+    const g = this.g();
+    this.confirm('开始 ' + (mp.name || mapId), '使用标准开局资金进入「' + (mp.name || mapId) +
+      '」；公司池不会扣除启动资金，之后可随时向当前分部注资。', '开始经营', function () {
+      if (g && CM.Save) CM.Save.save(g, 'auto');
+      CM.newGame({
+        map: mapId, mode: 'challenge',
+        difficulty: self._diffKey || (CM.Difficulty ? CM.Difficulty.DEFAULT_KEY : 'normal'),
+        name: '经营挑战 · ' + (mp.data.city || mp.name) + ' ' + mp.cfg.START.y,
+        company: { id: co.id, name: co.name },
+      });
+    }, false, 'play');
+  };
+
+  /* 战役：从公司池购买地图解锁。 */
+  UI.prototype.companyUnlock = function (mapId) {
+    const co = CO().active();
+    if (!co) { this.toast('还没有公司', 'warn'); return; }
+    const mp = mapOf(mapId), fee = CO().unlockFee(mapId);
+    this.confirm('解锁 ' + (mp ? mp.name : mapId),
+      '从公司池支付 ' + U.fmtMoney(fee) + ' 解锁「' + (mp ? mp.name : mapId) + '」。解锁后永久可开始新的经营挑战。',
+      '确认解锁', function () {
+        const r = CO().unlockMap(co, mapId);
+        if (!r.ok) { this.toast(r.error || '解锁失败', 'bad'); return; }
+        snd('build');
+        this.toast('已解锁「' + (mp ? mp.name : mapId) + '」', 'good');
+        this.rerenderPage();
+      }.bind(this), false, 'map');
+  };
+
+  /* 战役：公司池 → 当前分部现金。amount 为空/0 时使用该模式当前最大可用额度。 */
+  UI.prototype.companyInject = function (amount, rescue) {
+    const g = this.g(), co0 = CO().active();
+    if (!g || !co0) { this.toast('没有当前分部', 'warn'); return; }
+    // 公司面板可能已经开了几个月；点击确认时必须用最新公司记录和剩余额度重算。
+    const co = CO().fresh(co0) || co0;
+    let amt = Math.round(Number(amount) || 0);
+    const caps = CO().injectCap(co, g.mapId, g.clock.y, g.clock.m);
+    const cap = rescue ? caps.rescue : caps.dev;
+    if (amt <= 0) amt = Math.round(Math.min(CO().poolOf(co), cap));
+    if (amt <= 0) {
+      this.toast(rescue ? '没有可用紧急救援额度' : '没有可用发展注资额度', 'warn');
+      return;
+    }
+    if (amt > cap + 1e-6) {
+      this.toast('注资超过当前' + (rescue ? '紧急救援' : '发展注资') + '上限（可用 ' + U.fmtMoney(cap) + '）', 'warn');
+      return;
+    }
+    if (CO().poolOf(co) < amt) {
+      this.toast('公司池不足（可用 ' + U.fmtMoney(CO().poolOf(co)) + '）', 'warn');
+      return;
+    }
+    this.confirm(rescue ? '紧急救援' : '发展注资',
+      '从公司池划出 ' + U.fmtMoney(amt) + ' 到「' + (g.city && g.city.name || g.mapId) + '」的本地现金。' +
+      (rescue ? '紧急救援额度按 3 个月运营成本计算。' : '发展注资额度按过去 12 个月正利润的 50% 计算。'),
+      '确认注资', function () {
+        const r = CO().inject(g, amt, !!rescue);
+        if (!r.ok) { this.toast(r.error || '注资失败', 'bad'); return; }
+        snd('build');
+        this.toast('已注资 ' + U.fmtMoney(amt), 'good');
+        this.markUnsaved();
+        // 注资已经改了本地现金，必须尽快落盘；否则读回旧档会丢掉这笔钱。
+        if (CM.Save) CM.Save.save(g, 'auto');
+        this.rerenderPage();
+      }.bind(this), false, 'bank');
   };
 })(window.CM);

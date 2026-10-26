@@ -24,16 +24,31 @@
   const KEY = CFG.saves.prefix + 'companies';
   const VER = 1;
 
-  /* 进驻费按城市档位（maps.js 里 mp.difficulty 1~4）定价，单位万元。
-   * 定价思路：第一座城免费（就是开局那局），之后每多一座城的门槛按档位陡增 ——
-   * 因为大城市本身客流盘子就大，进驻费低的话「先攒钱直接跳北京」会成为唯一最优解，
-   * 而小城经营就没人玩了。 */
+  /* 旧版公司的进驻费（legacy 兼容）。战役模式不再走这条路，改用公司池解锁费。 */
   const ACCESS_FEE = { 1: 30000, 2: 80000, 3: 160000, 4: 280000 };
 
+  /* 战役模式：4 张入门图 + 1 张进阶图。
+   * 入门图用小线网练手；进阶图用 5 线网络考验多线经营。
+   * difficultyKey 只是建议难度，玩家仍可在选图页手动改档。
+   * 其余 49 张真实城市默认锁定，由公司池购买解锁。
+   * 自由建造模式不受这里影响。 */
+  const STARTERS = ['wenzhou', 'luoyang', 'wuhu', 'lanzhou', 'guangzhou'];
+  const STARTER_META = {
+    wenzhou: { tier: 'entry', difficultyKey: 'easy', trait: '浙南首段', desc: '只接管一条真实线路的前 4 站，适合第一次熟悉排班、票款与公司账。' },
+    luoyang: { tier: 'entry', difficultyKey: 'easy', trait: '古都首段', desc: '只接管一条真实线路的前 4 站，剩余线网由你从零扩展。' },
+    wuhu: { tier: 'entry', difficultyKey: 'easy', trait: '江城首段', desc: '只接管一条真实线路的前 4 站，规模很小，重点练低成本运营。' },
+    lanzhou: { tier: 'entry', difficultyKey: 'easy', trait: '河谷首段', desc: '只接管一条真实线路的前 4 站，在地形约束下补齐第一批线路。' },
+    guangzhou: { tier: 'advanced', difficultyKey: 'hard', trait: '珠水多中心', desc: '五线七十站的进阶起点，多中心通勤和跨江组织同时上强度。' },
+  };
+
+  /* 解锁费（万元）：最低 8 亿，最高 20 亿；不按“进驻费”重复收。 */
+  const UNLOCK_FEE = { 1: 80000, 2: 100000, 3: 150000, 4: 200000 };
+  const CAMPAIGN_POOL = 50000;   // 公司开办资金 5 亿
+
   /* 分部每月往金库上缴的比例。
-   * 为什么不 100%：分部自己也要留运营现金，全抽走会让玩家每次切回老城都先吃一次现金荒。
-   * 为什么不 0：那样公司层就没有存在感，金库永远是空的，进驻费永远付不起。 */
-  const REMIT_RATE = 0.35;
+   * 30% 归公司，70% 留在本地；本地现金只能用于当前地图。
+   * 上缴按“上月已封账经营现金流”计算，见 remit()。 */
+  const REMIT_RATE = 0.30;
 
   function readAll() {
     let raw = null;
@@ -58,12 +73,23 @@
 
   Company.ACCESS_FEE = ACCESS_FEE;
   Company.REMIT_RATE = REMIT_RATE;
+  Company.STARTERS = STARTERS.slice();
+  Company.STARTER_META = STARTER_META;
+  Company.UNLOCK_FEE = UNLOCK_FEE;
+  Company.CAMPAIGN_POOL = CAMPAIGN_POOL;
 
   Company.accessFee = function (mapId) {
     const mp = CM.MAPS && CM.MAPS[mapId];
     const d = mp ? (mp.difficulty || 2) : 2;
     return ACCESS_FEE[d] || ACCESS_FEE[2];
   };
+
+  Company.unlockFee = function (mapId) {
+    const mp = CM.MAPS && CM.MAPS[mapId];
+    const d = mp ? (mp.difficulty || 2) : 2;
+    return UNLOCK_FEE[d] || UNLOCK_FEE[2];
+  };
+  Company.isStarter = function (mapId) { return STARTERS.indexOf(mapId) >= 0; };
 
   Company.all = function () {
     const list = readAll();
@@ -103,22 +129,101 @@
     return r;
   };
 
-  Company.create = function (name, homeMapId) {
+  Company.create = function (name, homeMapId, opts) {
+    const campaign = opts && opts.campaign ? {
+      version: 1,
+      starterMapId: homeMapId,
+      unlocked: STARTERS.concat(homeMapId ? [homeMapId] : []).filter(function (v, i, a) { return a.indexOf(v) === i; }),
+      legacy: false,
+      bankrupt: false,
+      createdAt: nowIso(),
+    } : null;
     const c = {
       id: U.uid('co'),
       name: (name || '').trim() || '城轨公司',
       createdAt: nowIso(),
       updatedAt: nowIso(),
-      /* 公司层自有现金（pool）。以前这里是个从不被读取的 treasury:0 字段，
-       * 而 Company.treasury() 其实是「各分部 funds 之和」—— 于是分部的上缴
-       * 扣了钱却没有任何账户收到，35% 的净利凭空消失（见 remit 的注释）。
-       * 现在 pool 是真的账：分部上缴进 pool，进驻新城可以从 pool 出钱。 */
-      pool: 0,
+      /* 公司层自有现金（pool）：分部上缴进 pool，解锁地图与注资从 pool 出。
+       * 战役开局给 5 亿开办资金；普通/旧公司仍为 0。 */
+      pool: (opts && typeof opts.pool === 'number' && isFinite(opts.pool)) ? Math.max(0, Math.round(opts.pool)) : 0,
       branches: [],
       home: homeMapId || null,
+      campaign: campaign,
     };
     const r = Company.save(c);
     return r.ok ? { ok: true, company: c } : r;
+  };
+
+  /* 战役入口：只能从五张战役图（4 入门 + 1 进阶）开始。旧公司（没有 campaign）走 legacy，不锁图。 */
+  Company.startCampaign = function (name, starterMapId) {
+    if (!Company.isStarter(starterMapId)) return { ok: false, error: '战役只能从五张战役地图开始' };
+    return Company.create(name, starterMapId, { campaign: true, pool: CAMPAIGN_POOL });
+  };
+
+  /* 旧公司兼容：没有 campaign 字段 = 旧版全解锁公司。
+   * 返回一个只读视图，不写存储；真正解锁/迁移发生在 unlock()。 */
+  Company.campaignOf = function (c) {
+    if (!c) return null;
+    if (c.campaign) return c.campaign;
+    return { version: 0, legacy: true, unlocked: CM.MAP_ORDER ? CM.MAP_ORDER.slice() : [], bankrupt: false };
+  };
+
+  Company.isUnlocked = function (c, mapId) {
+    if (!mapId) return false;
+    const mp = CM.MAPS && CM.MAPS[mapId];
+    if (mp && (mp.tutorial || mp.kind === 'fictional')) return true;
+    const camp = Company.campaignOf(c);
+    if (!camp || camp.legacy) return true;
+    return camp.unlocked.indexOf(mapId) >= 0;
+  };
+
+  /* 地图是否可以开始：自由模式永远可以；经营挑战必须已解锁。
+   * 没有公司时只允许五张战役图，用来创建战役。 */
+  Company.canStartMap = function (c, mapId, mode) {
+    const mp = CM.MAPS && CM.MAPS[mapId];
+    if (!mp) return false;
+    if (mode === 'free' || mp.tutorial) return true;
+    if (!c) return STARTERS.indexOf(mapId) >= 0;
+    const camp = Company.campaignOf(c);
+    if (!camp || camp.legacy) return true;
+    return camp.unlocked.indexOf(mapId) >= 0 || STARTERS.indexOf(mapId) >= 0;
+  };
+
+  /* 战役级破产：所有已解锁地图都已有分部且全部停运，公司池又低于最低救援额。
+   * 还有未进驻的已解锁地图时不算破产 —— 玩家还能开新分部。 */
+  Company.campaignOver = function (c) {
+    const camp = Company.campaignOf(c);
+    if (!camp || camp.legacy || camp.bankrupt) return false;
+    const unlocked = camp.unlocked || [];
+    if (!unlocked.length) return false;
+    if (unlocked.some(function (id) { return !Company.branchOf(c, id); })) return false;
+    if (c.branches.some(function (b) { return !b.failed; })) return false;
+    return (c.pool || 0) < 20000;
+  };
+
+  Company.unlockMap = function (c, mapId) {
+    const co = Company.fresh(c);
+    if (!co) return { ok: false, error: '公司不存在' };
+    const camp = Company.campaignOf(co);
+    if (!camp || camp.legacy) return { ok: false, error: '旧公司不参与锁图' };
+    if (!CM.MAPS[mapId] || CM.MAPS[mapId].tutorial || CM.MAPS[mapId].kind === 'fictional') {
+      return { ok: false, error: '这张地图不能解锁' };
+    }
+    if (camp.unlocked.indexOf(mapId) >= 0) return { ok: false, error: '这座城市已经解锁' };
+    const fee = Company.unlockFee(mapId);
+    if ((co.pool || 0) < fee) return { ok: false, error: '公司池不足（解锁费 ' + U.fmtMoney(fee) + '）' };
+    co.pool = (co.pool || 0) - fee;
+    co.campaign = {
+      version: 1,
+      starterMapId: camp.starterMapId || co.home || null,
+      unlocked: camp.unlocked.concat([mapId]),
+      legacy: false,
+      bankrupt: false,
+      createdAt: camp.createdAt || nowIso(),
+    };
+    co.updatedAt = nowIso();
+    const r = Company.commit(c, co);
+    return r.ok ? { ok: true, fee: fee, company: co } : { ok: false, error: r.error || '写入失败' };
   };
 
   Company.remove = function (id) {
@@ -220,6 +325,16 @@
    * payerMapId 缺省时退回金库合计，方便没有具体付款方时做能力评估。 */
   Company.canJoin = function (c, mapId, payerMapId) {
     if (!c) return { ok: false, reason: '还没有公司' };
+    const mp = CM.MAPS && CM.MAPS[mapId];
+    if (!mp) return { ok: false, reason: '地图不存在' };
+    if (mp.tutorial || mp.kind === 'fictional') return { ok: false, reason: '这张地图不支持公司扩张' };
+    /* 基底五张年代图（广州 1990、杭州 2000、香港 1970、台北 1990、东京 1950）
+     * 仍留在 CM.MAPS 里给开局背景与旧存档用，但不在选图页列出；
+     * 公司扩张也只面向青湾以外的 54 座 2025 城市。这里统一拦住，
+     * 面板遗漏过滤时也不会让玩家点进去开出另一套年代/货币。 */
+    if (CM.HIDDEN_MAPS && CM.HIDDEN_MAPS.indexOf(mapId) >= 0) {
+      return { ok: false, reason: '这张地图不在多城扩张范围内' };
+    }
     if (Company.branchOf(c, mapId)) return { ok: false, reason: '已经进驻过这座城市了' };
     const fee = Company.accessFee(mapId);
     let have;
@@ -238,16 +353,10 @@
   };
 
   /* 分部每月上缴。由 game.js 的 monthGen 调用。
-   * 三处旧实现的错，都在这里修掉：
-   * 1) 原来读 g.econ.cur 当「本月净利」，但 monthGen 里 openMonth 已经把 cur
-   *    换成一张新的空账，此刻读到的只有刚发的拨款 —— 于是「上缴 35% 净利」
-   *    实际变成了「上缴 35% 拨款」。改用 lastClosed()，即上一个真正结算完的月份。
-   * 2) 原来从 econ.funds 扣掉之后没有任何账户收到（Company.treasury 只是各分部之和），
-   *    这 35% 是凭空销毁的。现在转入公司自有现金 pool，一分不少。
-   * 3) 上缴额直接从 econ.funds 上减，不经过 econ.spend()，于是本月账本里
-   *    「期末 − 期初」对不上任何科目 —— 财政页看不到这笔钱，玩家会以为账算错了。
-   *    现在走 spend('remit', ...)，账本有 remit 科目、流水有记录、恒等式成立。
-   *    同时净利里补上「本金偿还」：还本是真金白银的流出，不该算成可分配利润。 */
+   * 三处旧实现的教训仍然保留：
+   * 1) 只读 lastClosed()，不读当前未封账的 cur；
+   * 2) 收款方必须是公司自有现金 pool，不能让钱凭空消失；
+   * 3) 必须走 spend('remit', ...)，让账本和资金流水都能对上。 */
   Company.remit = function (g, y, m) {
     const c0 = Company.active();
     if (!c0 || !g || !g.company || g.company.id !== c0.id) return null;
@@ -257,19 +366,24 @@
     const b = Company.branchOf(c, g.mapId);
     if (!b) return null;
     if (g.econ.isFree()) return null;
-    // 上缴额按「上月净利」而不是余额：亏损的月份不该继续抽钱，那等于惩罚经营失败的城市
+
+    /* 30% 分成口径：上月已封账的**经营现金流**，不是会计净利。
+     * - 不含财政拨款：地方补贴留在本地；
+     * - 不含建设/改造支出：扩张期不把公司池抽干；
+     * - 保留 2 个月运营成本作为本地安全垫。
+     * 这样既能给公司池稳定收入，也不会把正在扩张的分部抽成负现金。 */
     const last = g.econ.lastClosed ? g.econ.lastClosed() : null;
     let net = 0;
     if (last) {
-      net = (last.fare || 0) + (last.grant || 0) + (last.reward || 0)
-        - (last.ops || 0) - (last.construction || 0) - (last.demolition || 0)
-        - (last.upgrade || 0) - (last.relocation || 0) - (last.interest || 0)
+      net = (last.fare || 0) + (last.reward || 0)
+        - (last.ops || 0) - (last.interest || 0)
         - (last.principal || 0) - (last.penalty || 0);
     }
+    const reserve = last ? 2 * (last.ops || 0) : 0;
     let paid = 0;
     if (net > 0) {
       const want = net * REMIT_RATE;
-      const can = Math.min(want, Math.max(0, g.econ.funds));
+      const can = Math.min(want, Math.max(0, g.econ.funds - reserve));
       if (can > 0.01) {
         g.econ.spend('remit', can);           // 记账（本月 remit 科目 + 资金流水）
         paid = can;
@@ -281,8 +395,65 @@
     // updateBranch 的话，第二次会从存储里再解析一份，把 pool 的增量冲掉。
     b.funds = g.econ.funds;
     b.lastRemit = { y: y, m: m, amount: paid };
+    b.lastOps = last ? (last.ops || 0) : 0;
+    const ym = y * 12 + m;
+    b.profits = (b.profits || []).filter(function (p) { return p && p.ym >= ym - 11; });
+    b.profits.push({ ym: ym, net: net, paid: paid });
+    if (b.profits.length > 12) b.profits.splice(0, b.profits.length - 12);
     Company.commit(c0, c);
     return { paid: paid, branch: Company.branchOf(c, g.mapId), pool: Company.poolOf(c) };
+  };
+
+  /* 公司向当前分部注资。
+   * 只允许注入当前正在玩的这一局：其它分部的存档不在内存里，直接改 localStorage
+   * 会在下一次 onSaved 时被存档里的旧现金覆盖，等于钱凭空消失。
+   *
+   * 上限分两种，且都按 12 个月滚动扣减：
+   * - 发展注资：过去 12 个月正利润之和的 50%；
+   * - 紧急救援：3 个月运营成本（至少 2 亿），用于破产前救急。
+   * 没有历史记录的新分部不能靠“发展注资”拿到钱，必须有救援额度。 */
+  Company.injectCap = function (c, mapId, y, m) {
+    const b = Company.branchOf(c, mapId);
+    if (!b) return { dev: 0, rescue: 0, cap: 0, lastOps: 0, yearProfit: 0, usedDev: 0, usedRescue: 0 };
+    let yearProfit = 0;
+    for (const p of (b.profits || [])) if (p && p.net > 0) yearProfit += p.net;
+    const lastOps = b.lastOps || 0;
+    const ym = (y && m) ? y * 12 + m : null;
+    const hist = (b.injects || []).filter(function (x) { return x && (ym == null || x.ym >= ym - 11); });
+    let usedDev = 0, usedRescue = 0;
+    for (const x of hist) { if (x.rescue) usedRescue += x.amount || 0; else usedDev += x.amount || 0; }
+    const dev = Math.max(0, 0.5 * yearProfit - usedDev);
+    const rescue = Math.max(0, Math.max(3 * lastOps, 20000) - usedRescue);
+    return { dev: dev, rescue: rescue, cap: Math.max(dev, rescue), lastOps: lastOps, yearProfit: yearProfit, usedDev: usedDev, usedRescue: usedRescue };
+  };
+
+  Company.inject = function (g, amount, rescue) {
+    const c0 = Company.active();
+    if (!c0 || !g || !g.company || g.company.id !== c0.id) return { ok: false, error: '没有对应的公司' };
+    if (!g.mapId) return { ok: false, error: '当前没有分部' };
+    if (g.econ.isFree()) return { ok: false, error: '自由建造模式不参与公司注资' };
+    const c = Company.fresh(c0) || c0;
+    const b = Company.branchOf(c, g.mapId);
+    if (!b) return { ok: false, error: '当前城市还没有登记为分部' };
+    const amt = Math.round(Number(amount) || 0);
+    if (amt <= 0) return { ok: false, error: '注资金额必须大于 0' };
+    const caps = Company.injectCap(c, g.mapId, g.clock.y, g.clock.m);
+    const cap = rescue ? caps.rescue : caps.dev;
+    if (amt > cap + 1e-6) return { ok: false, error: '注资超过上限（可用 ' + U.fmtMoney(cap) + '）', cap: cap };
+    if ((c.pool || 0) < amt) return { ok: false, error: '公司池不足（可用 ' + U.fmtMoney(c.pool || 0) + '）' };
+    c.pool = (c.pool || 0) - amt;
+    b.funds = (b.funds || 0) + amt;
+    b.injected = (b.injected || 0) + amt;
+    const ym = g.clock.y * 12 + g.clock.m;
+    b.injects = (b.injects || []).filter(function (x) { return x && x.ym >= ym - 11; });
+    b.injects.push({ ym: ym, amount: amt, rescue: !!rescue });
+    c.updatedAt = nowIso();
+    g.econ.income('inject', amt);
+    g.econ.log('inject', amt, 'gen', '公司注资', { y: g.clock.y, m: g.clock.m, d: 1 });
+    if (g.logEvent) g.logEvent({ tag: '公司', title: '公司注资 ' + U.fmtMoney(amt), desc: '从公司池划入当前分部' });
+    const r = Company.commit(c0, c);
+    if (!r.ok) return { ok: false, error: r.error || '写入失败' };
+    return { ok: true, amount: amt, cap: cap, company: c };
   };
 
   /* 把当前这一局的现金写回公司记录。切城、退城、存档前都要调。 */

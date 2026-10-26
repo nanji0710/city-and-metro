@@ -1015,6 +1015,9 @@ button:focus-visible, [role="option"]:focus-visible, [role="tab"]:focus-visible,
 .msel-item:nth-child(2) { animation-delay: .04s; } .msel-item:nth-child(3) { animation-delay: .08s; } .msel-item:nth-child(4) { animation-delay: .12s; } .msel-item:nth-child(n+5) { animation-delay: .16s; }
 .msel-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); border-color: var(--line-strong); }
 .msel-item.on { border-color: var(--accent); box-shadow: var(--ring), var(--shadow-sm); }
+.msel-item.locked { opacity: .72; }
+.msel-item.locked .msel-thumb img { filter: grayscale(.75); }
+.msel-lock-note { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; color: var(--muted); }
 .msel-thumb { position: relative; width: 104px; height: 66px; border-radius: 10px; overflow: hidden; flex: none; background: var(--hover); }
 .msel-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .6s var(--ease); }
 .msel-item:hover .msel-thumb img, .msel-item.on .msel-thumb img { transform: scale(1.1); }
@@ -1703,6 +1706,8 @@ table.tbl-help td { white-space: normal; vertical-align: top; line-height: 1.55;
 .co-jrow .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
 .co-fee { font-size: 12px; color: var(--muted); white-space: nowrap; }
 .co-join { max-height: 320px; overflow-y: auto; }
+.co-inject-input { display: block; width: calc(100% - 24px); margin: 8px 12px 0; padding: 7px 9px; border: 1px solid var(--line-strong); border-radius: 9px; }
+.co-inject-input:focus { outline: none; box-shadow: var(--ring); border-color: var(--accent); }
 @media (max-width: 460px) {
   .co-jrow .co-fee { display: none; }
 }

@@ -6,19 +6,25 @@
  * 中间任何一环断掉（按钮点不动、确认后没反应、切城后钱没带过去、读档回来公司丢了），
  * 玩家看到的就是「点了没用」。这一条链只有真浏览器能走通。
  *
- * 断言（12 项）：
- *   1. 公司面板能打开且当前局已自动登记为分部
- *   2. 可进驻列表里至少有一个「进驻」可用按钮
- *   3. 点「进驻」会弹出确认弹窗，且文案含接入费与启动金
- *   4. 确认后分部数 +1、当前地图切换成新城、新城现金 = 启动金
- *   5. 付款分部账面被扣掉「接入费 + 启动金」（不凭空印钱）
- *   6. 新城这一局带着公司身份（g.company 有 id）
- *   7. 回公司面板能看到两座分部，当前那座带 .on
- *   8. 点另一座分部的「切换到这座城市」能读回老城，且老城现金 = 扣费后余额
- *   9. 金库合计 = 两座分部现金之和（切来切去不会漂）
- *  10. 刷新页面后公司记录仍在（localStorage 活得比任何一局久）
- *  11. 余额不足时按钮禁用并显示「不够」（不再出现「面板放行、点下去扣不动」）
- *  12. 全程 0 console error
+ * 断言（18 项）：
+ *   1. 广州挑战局能开起来
+ *   2. 当前局已自动登记为分部
+ *   3. 公司面板能打开
+ *   4. 可进驻列表里至少有一个「进驻」可用按钮
+ *   5. 点「进驻」会弹出确认弹窗，且文案含接入费与启动金
+ *   6. 确认后分部数 +1
+ *   7. 确认后当前地图切换成新城
+ *   8. 新城这一局带着公司身份（g.company 有 id）
+ *   9. 新城现金 = 启动金（不是凭空多出来的整笔）
+ *   10. 付款分部被扣掉接入费与启动金（不凭空印钱）
+ *   11. 新分部账面 = 新城启动金（不会多出首月拨款）
+ *   12. 公司面板显示两座分部且当前那座高亮
+ *   13. 能切回老城并读回存档
+ *   14. 金库 = 各分部现金 + 公司自有资金
+ *   15. 刷新页面后公司记录仍在（localStorage 活得比任何一局久）
+ *   16. 可进驻列表不包含基底隐藏地图
+ *   17. 余额不足时按钮禁用并显示「不够」
+ *   18. 全程 0 console error
  */
 import { spawn } from 'node:child_process'
 import { mkdirSync } from 'node:fs'
@@ -48,7 +54,7 @@ async function main() {
     try {
       proc = spawn(exe, [
         `--remote-debugging-port=${PORT}`,
-        '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
+        '--headless=new', '--disable-gpu', '--disable-extensions', '--no-first-run', '--no-default-browser-check',
         `--user-data-dir=${PROFILE}`, '--window-size=1680,1050',
         '--allow-file-access-from-files', 'about:blank',
       ], { stdio: 'ignore' })
@@ -109,6 +115,10 @@ async function main() {
   await sleep(2200)
   await evalJs(`(() => {
     try { localStorage.removeItem('cm1.companies'); } catch (e) {}
+    // 这条测试保留旧版“全解锁公司”的接入费/分部账目链路；
+    // 新的战役锁图与解锁流程由 e2e-campaign.mjs 覆盖。
+    const r = CM.Company.create('多城核查公司', 'guangzhou');
+    if (r.ok) CM.Company.setActive(r.company.id);
     return 'CLEAN';
   })()`)
 
@@ -150,16 +160,19 @@ async function main() {
   // ---------- 2. 可进驻列表里至少有一个可用按钮 ----------
   const avail = await evalJs(`(() => {
     const rows = Array.from(document.querySelectorAll('.co-jrow'));
+    const maps = rows.map(r => r.dataset.map);
+    const hiddenRows = maps.filter(id => (CM.HIDDEN_MAPS || []).indexOf(id) >= 0);
     const use = rows.filter(r => { const b = r.querySelector('button'); return b && !b.disabled; });
-    if (!use.length) return JSON.stringify({ ok: false, total: rows.length, short: rows.filter(r => r.classList.contains('short')).length });
+    if (!use.length) return JSON.stringify({ ok: false, total: rows.length, hiddenRows: hiddenRows, short: rows.filter(r => r.classList.contains('short')).length });
     const b = use[0].querySelector('button');
     const name = (use[0].querySelector('b') || {}).innerText || '';
     b.click();
-    return JSON.stringify({ ok: true, name: name, total: rows.length, use: use.length });
+    return JSON.stringify({ ok: true, name: name, total: rows.length, use: use.length, hiddenRows: hiddenRows });
   })()`)
   let a1
   try { a1 = JSON.parse(avail) } catch (e) { a1 = {} }
   check('可进驻列表里至少有一个可用按钮', a1.ok === true, a1)
+  check('可进驻列表不包含基底隐藏地图', Array.isArray(a1.hiddenRows) && a1.hiddenRows.length === 0, a1.hiddenRows)
   await sleep(700)
 
   // ---------- 3. 确认弹窗文案 ----------

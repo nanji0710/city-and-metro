@@ -15,6 +15,8 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const ORDER = [
   'util', 'config', 'news', 'geo_gz', 'geo', 'data_gz', 'data_tutorial',
   'geo_hz', 'data_hz', 'geo_hk', 'data_hk', 'geo_tk', 'data_tk', 'geo_tp', 'data_tp',
+  // 54 城登记：公司扩张要用真实可见城市做目标；底图不加载，maps.js 允许 geo 缺省
+  'data_cities',
   'maps', 'facility', 'city', 'metro', 'sim', 'economy', 'difficulty', 'ops', 'staff', 'incidents',
   'macro', 'game', 'milestones', 'save', 'company',
 ];
@@ -371,15 +373,17 @@ if (CM.Company) {
   check('分部可以登记', CO.branchOf(co, 'gz') !== null);
   check('金库 = 分部现金合计', Math.round(CO.treasury(co)) === 500000);
 
-  const fee = CO.accessFee('hz');
-  check('进驻费按难度档位定价', fee > 0 && CO.accessFee('aomen') <= fee, 'hz=' + fee + ' aomen=' + CO.accessFee('aomen'));
+  const fee = CO.accessFee('beijing');
+  check('进驻费按难度档位定价', fee > 0 && CO.accessFee('aomen') <= fee, 'beijing=' + fee + ' aomen=' + CO.accessFee('aomen'));
 
-  const chk1 = CO.canJoin(co, 'hz', 'gz');
+  const chk1 = CO.canJoin(co, 'aomen', 'gz');
   check('进驻资格按付款分部账判断', chk1.ok === true, chk1.reason || '');
-  const chk2 = CO.canJoin(co, 'hz', 'nosuchcity');
+  const chkH = CO.canJoin(co, 'hz', 'gz');
+  check('基底隐藏地图不可作为扩张目标', chkH.ok === false, chkH.reason || '');
+  const chk2 = CO.canJoin(co, 'aomen', 'nosuchcity');
   check('付款分部不存在时不放行', chk2.ok === false, chk2.reason || '');
 
-  const jo = CO.joinOpts(co, 'hz', 'normal', null, 'gz');
+  const jo = CO.joinOpts(co, 'aomen', 'normal', null, 'gz');
   check('进驻参数可生成', jo.ok === true, jo.error || '');
   check('启动金不超过标准开局资金', jo.startFunds <= CM.Difficulty.startFundsOf('normal'), String(jo.startFunds));
 

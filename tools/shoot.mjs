@@ -365,6 +365,7 @@ async function shoot(scene) {
   const proc = spawn(EDGE, [
     '--headless=new',
     '--disable-gpu',
+    '--disable-extensions',
     '--hide-scrollbars',
     '--no-first-run',
     '--no-default-browser-check',
@@ -410,6 +411,11 @@ async function shoot(scene) {
   })
   await cdp(ws, 'Page.navigate', { url: BASE })
   await sleep(2500)
+  // 截图场景要能直接开任意城市；用旧版全解锁公司绕过战役入门图限制。
+  await cdp(ws, 'Runtime.evaluate', {
+    expression: `(() => { try { const r = CM.Company.create('截图旧公司', 'guangzhou'); if (r.ok) CM.Company.setActive(r.company.id); } catch (e) {} return 'SEED'; })()`,
+    returnByValue: true,
+  })
 
   for (const [kind, arg] of SCENES[scene] ?? []) {
     if (kind === 'wait') { await sleep(arg); continue }

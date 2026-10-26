@@ -37,7 +37,7 @@ async function main() {
     try {
       proc = spawn(exe, [
         `--remote-debugging-port=${PORT}`,
-        '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
+        '--headless=new', '--disable-gpu', '--disable-extensions', '--no-first-run', '--no-default-browser-check',
         `--user-data-dir=${PROFILE}`, '--window-size=1680,1050', 'about:blank',
       ], { stdio: 'ignore' })
       break
@@ -85,6 +85,11 @@ async function main() {
     await sleep(2200)
     const raw = await evalJs(`(async () => {
       const log = [];
+      // 体检跑的是旧版全解锁公司，避免战役锁图把非入门城挡在外面；锁图流程由 e2e-campaign 覆盖。
+      if (CM.Company) {
+        const seed = CM.Company.create('体检旧公司', ${JSON.stringify(city)});
+        if (seed.ok) CM.Company.setActive(seed.company.id);
+      }
       CM.newGame({ map: ${JSON.stringify(city)}, mode: 'challenge', difficulty: 'normal', name: '体检' });
       for (let i = 0; i < 150 && !CM.game; i++) await new Promise(r => setTimeout(r, 100));
       const g = CM.game;
@@ -152,7 +157,7 @@ async function main() {
       for (const L of led) {
         const build = (L.construction || 0) + (L.demolition || 0) + (L.upgrade || 0) + (L.relocation || 0);
         const capexUse = L.capexUse || 0;
-        const sum = (L.grant || 0) + (L.fare || 0) + (L.reward || 0) - (build - capexUse)
+        const sum = (L.grant || 0) + (L.fare || 0) + (L.reward || 0) + (L.inject || 0) - (build - capexUse)
                   - (L.ops || 0) - (L.interest || 0) - (L.principal || 0) - (L.penalty || 0)
                   - (L.remit || 0);
         const delta = (L.end || 0) - (L.start || 0);

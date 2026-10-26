@@ -60,13 +60,34 @@
 
   // ======================== 选择地图 ========================
   UI.prototype.showMapSelect = function (selId) {
-    const self = this, all = CM.MAP_ORDER.slice();
+    const self = this;
+    const co = CM.Company ? CM.Company.active() : null;
+    const locked = function (id) { return CM.Company ? !CM.Company.canStartMap(co, id, 'challenge') : false; };
+    // 战役模式下把已解锁的入门图排在前面；锁定的 49 城放在后面，避免新玩家一进来先看到一屏“未解锁”。
+    const all = CM.MAP_ORDER.slice().sort(function (a, b) {
+      const la = locked(a) ? 1 : 0, lb = locked(b) ? 1 : 0;
+      return la - lb;
+    });
     let sel = selId && CM.MAPS[selId] ? selId : (this._mapSel && CM.MAPS[this._mapSel] ? this._mapSel : all[0]);
     const F = this._mapFilter || (this._mapFilter = { q: '', region: 'all' });
     if (selId) { F.q = ''; F.region = 'all'; }
     const theme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
     const regions = REGION_ORDER.filter(function (r) { return all.some(function (id) { return CM.MAPS[id].region === r; }); });
     const back = function () { self.showStart(); };
+    // 54 城底图按选图懒加载：列表先显示占位图，选中某城后再载入真实缩略图。
+    const thumbSrc = function (id) { return CM.mapThumb(id, theme) || (CM.mapThumbPlaceholder ? CM.mapThumbPlaceholder(id, theme) : ''); };
+    const thumbEls = {};
+    const refreshThumb = function (id) {
+      const src = CM.mapThumb(id, theme);
+      if (src && thumbEls[id]) thumbEls[id].src = src;
+    };
+    const ensureGeo = function (id) {
+      if (!CM.loadGeo || !CM.MAPS[id] || CM.MAPS[id].geo) return;
+      CM.loadGeo(id).then(function () {
+        refreshThumb(id);
+        if (sel === id) drawDetail();
+      }, function (e) { console.error(e); });
+    };
 
     // ---- 左侧：搜索、筛选、地图列表 ----
     const search = h('input', { type: 'search', class: 'msel-q', placeholder: '搜索城市或特色', 'aria-label': '搜索地图', value: F.q, autocomplete: 'off' });
@@ -103,13 +124,17 @@
       return true;
     };
     for (const id of all) {
-      const mp = CM.MAPS[id], n = CM.Save.list(id).length;
-      const it = h('button', { class: 'msel-item', role: 'option', 'data-id': id, onclick: function () { pick(id); }, ondblclick: function () { pick(id); const p = detail.querySelector('.map-mode.primary'); if (p) p.click(); } },
-        h('span', { class: 'msel-thumb' }, h('img', { alt: '', src: CM.mapThumb(id, theme) || '' }), mp.tutorial ? h('span', { class: 'msel-flag' }, '教程') : null),
+      const mp = CM.MAPS[id], n = CM.Save.list(id).length, isLocked = locked(id);
+      const thumb = h('img', { alt: '', src: thumbSrc(id) });
+      thumbEls[id] = thumb;
+      const it = h('button', { class: 'msel-item' + (isLocked ? ' locked' : ''), role: 'option', 'data-id': id, onclick: function () { pick(id); }, ondblclick: function () { pick(id); const p = detail.querySelector('.map-mode.primary'); if (p) p.click(); } },
+        h('span', { class: 'msel-thumb' }, thumb, mp.tutorial ? h('span', { class: 'msel-flag' }, '教程') : null),
         h('span', { class: 'msel-it' },
           h('b', null, mp.title || mp.name),
           h('small', null, mp.tagline || mp.sub),
-          h('span', { class: 'msel-meta' }, h('span', { class: 'tag' }, mp.region || ''), levelEl(mp.difficulty || 2), n ? h('span', { class: 'msel-prog' }, ic('save', 12), n + ' 个进度') : null)));
+          h('span', { class: 'msel-meta' }, h('span', { class: 'tag' }, mp.region || ''), levelEl(mp.difficulty || 2),
+            (CM.Company && CM.Company.STARTER_META[id] ? h('span', { class: 'tag ' + (CM.Company.STARTER_META[id].tier === 'advanced' ? 'b-orange' : 'b-teal') }, CM.Company.STARTER_META[id].tier === 'advanced' ? '进阶' : '入门') : null),
+            isLocked ? h('span', { class: 'tag bad' }, '未解锁') : (n ? h('span', { class: 'msel-prog' }, ic('save', 12), n + ' 个进度') : null))));
       items[id] = it; list.appendChild(it);
     }
     list.appendChild(empty);
@@ -138,7 +163,7 @@
       for (const L of DIFF.LEVELS) {
         chips.appendChild(h('button', {
           class: 'msel-diffchip' + (L.key === cur ? ' on ' + L.color : ''),
-          onclick: function () { self._diffKey = L.key; snd('soft'); drawDetail(); },
+          onclick: function () { self._diffKey = L.key; self._diffKeyManual = true; snd('soft'); drawDetail(); },
         }, h('b', null, L.name), h('span', { class: 'msel-diffstars' }, '★'.repeat(L.stars) + '☆'.repeat(4 - L.stars))));
       }
       row.appendChild(chips);
@@ -146,7 +171,13 @@
     };
     const buildDetail = function () {
       const mp = CM.MAPS[sel], games = CM.Save.list(sel), latest = CM.Save.latest(sel), y0 = mp.cfg.START.y;
+      const isLocked = locked(sel);
       const start = function (mode) {
+        if (mode === 'challenge' && isLocked) {
+          const fee = CM.Company ? CM.Company.unlockFee(sel) : 0;
+          self.toast('「' + (mp.name || sel) + '」尚未解锁；需在公司面板用公司池支付 ' + U.fmtMoney(fee) + ' 解锁费。', 'warn');
+          return;
+        }
         snd('build');
         if (mp.tutorial) CM.newGame({ map: sel, mode: 'free', tutorial: true, name: '新手教程 · ' + mp.data.city });
         else CM.newGame({ map: sel, mode: mode, difficulty: diffKey(), name: (mode === 'free' ? '自由建造' : '经营挑战') + ' · ' + mp.data.city + ' ' + y0 });
@@ -156,11 +187,11 @@
           h('span', { class: 'badge ' + badge }, ic(icon)), h('span', { class: 'grow' }, h('b', null, title), h('small', null, desc)), ic('chev', 16));
       };
       const hero = h('div', { class: 'msel-hero' },
-        h('img', { alt: '', src: CM.mapThumb(sel, theme) || '' }),
+        h('img', { alt: '', src: thumbSrc(sel) || '' }),
         h('div', { class: 'msel-hero-tx' },
           h('div', { class: 'msel-kicker' }, h('span', null, mp.region || ''), h('i'), h('span', null, y0 + ' 年起'), h('i'), h('span', null, mp.kind === 'fictional' || mp.tutorial ? '虚构城市' : '真实地理')),
           h('h2', null, mp.title || mp.name),
-          h('div', { class: 'msel-tagline' }, mp.tagline || mp.sub),
+          h('div', { class: 'msel-tagline' }, (CM.Company && CM.Company.STARTER_META[sel] ? CM.Company.STARTER_META[sel].trait + ' · ' : '') + (mp.tagline || mp.sub)),
           h('div', { class: 'msel-chips' }, levelEl(mp.difficulty || 2), (mp.tags || []).map(function (t) { return h('span', { class: 'tag glass-tag' }, t); }))));
       // 要点：范围、起始、人口、货币等；真实城市另列开局时地图范围的经济规模（城市经济模拟的起点，估算）
       const fl = (mp.facts || []).filter(function (f) { return f[0] !== '模式'; }).slice();
@@ -178,10 +209,21 @@
       const acts = h('div', { class: 'map-actions' });
       const dr = diffRow();
       if (dr && !mp.tutorial) acts.appendChild(dr);
+      if (!mp.tutorial && isLocked) {
+        const fee = CM.Company ? CM.Company.unlockFee(sel) : 0;
+        const pool = co ? (co.pool || 0) : 0;
+        acts.appendChild(h('div', { class: 'note msel-lock-note' },
+          ic('lock', 14), ' 未解锁 · 解锁费 ' + U.fmtMoney(fee) +
+          '；公司池 ' + U.fmtMoney(pool) +
+          (co ? '。进入任意已解锁城市后，在公司面板解锁。' : '。先选择一张战役图开始战役。')));
+      }
       if (mp.tutorial) acts.appendChild(modeBtn('free', 'play', 'b-teal', '开始教程', '从头开始 15 个引导任务（约 20 分钟，不限资金）', true));
       else {
         const dk = diffKey();
-        acts.appendChild(modeBtn('challenge', 'trophy', 'b-gold', '经营挑战', '新游戏 · 初始资金 ' + U.fmtMoney(DIFF ? DIFF.startFundsOf(dk) : mp.cfg.economy.startFunds, undefined, mp.cfg.money) + '（' + (DIFF ? DIFF.get(dk).name : '标准') + '），拨款随城市经济变化', true));
+        acts.appendChild(modeBtn('challenge', 'trophy', 'b-gold', '经营挑战',
+          isLocked ? '未解锁 · 解锁费 ' + U.fmtMoney(CM.Company ? CM.Company.unlockFee(sel) : 0) :
+            '新游戏 · 初始资金 ' + U.fmtMoney(DIFF ? DIFF.startFundsOf(dk) : mp.cfg.economy.startFunds, undefined, mp.cfg.money) + '（' + (DIFF ? DIFF.get(dk).name : '标准') + '），拨款随城市经济变化',
+          !isLocked));
         acts.appendChild(modeBtn('free', 'sparkle', 'b-teal', '自由建造', '新游戏 · 资金不限，任务仅供参考', false));
       }
       acts.appendChild(h('button', { class: 'map-mode sub', disabled: latest ? null : true, 'data-tip': latest ? latest.name + ' · ' + fmtDate(latest) : null, onclick: function () { if (latest) self.loadSlot(latest.slotId); } },
@@ -191,11 +233,24 @@
       // 详情按区块分组：概况（介绍与要点）、地图特色、大事年表；底部为本图操作区
       const block = function (icon, badge, title, kids, cls) { return h('section', { class: 'msel-block ' + (cls || '') }, h('div', { class: 'msel-bh' }, h('span', { class: 'badge ' + badge }, ic(icon, 15)), h('b', null, title)), kids); };
       const progress = games.length ? games.length + ' 个进度 · 最近 ' + (latest ? fmtDate(latest) : '—') : (mp.tutorial ? '还没有开始教程' : '还没有进度');
+      const smeta = CM.Company ? CM.Company.STARTER_META[sel] : null;
+      const campaignBlock = smeta ? block('star', 'b-gold', '战役定位', [
+        h('p', { class: 'msel-intro' }, smeta.desc),
+        h('div', { class: 'msel-facts' }, [
+          ['战役定位', smeta.tier === 'advanced' ? '进阶（五线）' : '入门（小线网）'],
+          ['建议难度', DIFF ? DIFF.get(smeta.difficultyKey).name : '标准运营'],
+          ['初始解锁', '五张战役图默认解锁'],
+          ['发展方向', '用公司池解锁其余 49 城'],
+        ].map(function (f) { return h('div', null, h('span', null, f[0]), h('b', null, f[1])); })),
+      ], 'intro') : null;
+      const scrollKids = [hero];
+      if (campaignBlock) scrollKids.push(campaignBlock);
+      scrollKids.push(
+        block('info', 'b-blue', '城市概况', [h('p', { class: 'msel-intro' }, mp.intro || mp.desc), facts], 'intro'),
+        block('sparkle', 'b-violet', '地图特色', feats),
+        block('calYear', 'b-orange', '大事年表', tl));
       return h('div', { class: 'msel-dwrap' },
-        h('div', { class: 'msel-scroll' }, hero,
-          block('info', 'b-blue', '城市概况', [h('p', { class: 'msel-intro' }, mp.intro || mp.desc), facts], 'intro'),
-          block('sparkle', 'b-violet', '地图特色', feats),
-          block('calYear', 'b-orange', '大事年表', tl)),
+        h('div', { class: 'msel-scroll' }, scrollKids),
         h('div', { class: 'msel-actbar' }, h('div', { class: 'msel-acth' }, h('b', null, mp.tutorial ? '开始教程' : '开始规划 ' + (mp.name || '')), h('span', { class: 'tiny muted' }, ic('save', 12), progress)), acts));
     };
     let first = true;
@@ -208,9 +263,14 @@
       first = false;
     };
     const pick = function (id, quiet) {
-      if (sel === id) return;
+      if (sel === id) { ensureGeo(id); return; }
       sel = id; if (!quiet) snd('soft');
+      // 战役图带建议难度：入门图默认见习、进阶图默认白手起家；
+      // 玩家手动改过难度后不再自动覆盖。
+      const smeta = CM.Company ? CM.Company.STARTER_META[id] : null;
+      if (smeta && smeta.difficultyKey && !self._diffKeyManual && DIFF) self._diffKey = smeta.difficultyKey;
       drawDetail();
+      ensureGeo(id);
       const it = items[id]; if (it && it.scrollIntoView) it.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     };
 
@@ -231,7 +291,7 @@
       const k = vis.indexOf(sel), n = vis[(k + (e.key === 'ArrowDown' ? 1 : -1) + vis.length) % vis.length];
       pick(n);
     });
-    drawDetail(); drawList();
+    drawDetail(); drawList(); ensureGeo(sel);
     this.openScreen(card, back, 'msel-screen');
     requestAnimationFrame(function () { card.focus({ preventScroll: true }); const it = items[sel]; if (it) it.scrollIntoView({ block: 'nearest' }); });
   };
@@ -246,7 +306,7 @@
     const city = g.city, tot = city.totals();
     let open = 0, regs = 0; for (let k = 0; k < city.regions.length; k++) { if (city.regions[k].scenic) continue; regs++; if (city.regionOpen[k]) open++; }
     const y0 = CFG.START.y;
-    const hero = h('div', { class: 'brief-hero' }, h('img', { alt: '', src: CM.mapThumb(mp.id, theme) || '' }),
+    const hero = h('div', { class: 'brief-hero' }, h('img', { alt: '', src: CM.mapThumb(mp.id, theme) || (CM.mapThumbPlaceholder ? CM.mapThumbPlaceholder(mp.id, theme) : '') }),
       h('div', { class: 'brief-hero-tx' }, h('div', { class: 'msel-kicker' }, h('span', null, '开局简报'), h('i'), h('span', null, y0 + ' 年 1 月')), h('h2', null, (D.city || mp.name) + ' · ' + y0), h('div', { class: 'msel-tagline' }, mp.tagline || '')));
     const parts = [hero];
     // 东京等：开局接管既有地铁

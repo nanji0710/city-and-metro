@@ -1,4 +1,5 @@
 // 批量冒烟：把 54 城逐个开局，看是否都能起来。
+// 同时检查每城 cityPack 的任务数 4-10、至少 4 个发布时未完成、任务锚点/设施/站点可建设。
 //
 // 为什么要批量：单城验证只能证明「这一城」没问题。54 城的格网、区域、片区名、
 // 中心点全是 build-data.mjs 现算的，任何一条推导规则在小城上退化都会让那一城开局就崩，
@@ -54,7 +55,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 function launch() {
   const args = [
     `--remote-debugging-port=${PORT}`,
-    '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
+    '--headless=new', '--disable-gpu', '--disable-extensions', '--no-first-run', '--no-default-browser-check',
     '--user-data-dir=' + process.cwd() + '/tools/.edge-smoke',
     '--window-size=1400,900', '--allow-file-access-from-files', 'about:blank',
   ]
@@ -111,6 +112,11 @@ async function main() {
     await sleep(1600)
     const r = await evalJs(`(async () => {
       try {
+        // 冒烟测的是城市生成，不是战役锁图；用旧版全解锁公司绕过入门图限制。
+        if (CM.Company) {
+          const seed = CM.Company.create('冒烟旧公司', ${JSON.stringify(cityId)});
+          if (seed.ok) CM.Company.setActive(seed.company.id);
+        }
         CM.newGame({ map: ${JSON.stringify(cityId)}, mode: 'challenge', name: 'smoke-${cityId}' })
         // CM.newGame 是异步的（内部 setTimeout 60ms 才真正 useMap + Game.create），
         // 所以必须等 CM.game 出现，不能紧接着读 —— 上一版就是在这里全部误判为「game 未创建」。
@@ -122,12 +128,38 @@ async function main() {
         const c = g.city
         const stations = Object.keys(g.net.stations || {}).length
         const segs = Object.keys(g.net.segments || {}).length
+        let taskCount = null, taskEligible = 0, taskErrors = 0, taskInfeasible = 0
+        try {
+          const pack = g.tasks && g.tasks.cityPack ? g.tasks.cityPack(g) : []
+          taskCount = pack.length
+          for (const t of pack) {
+            try {
+              const ev = g.tasks.evaluate(t, g)
+              if (!ev.ok) taskEligible++
+              if (t.type === 'connect') {
+                for (const a of t.anchors) if (!CM.Metro.checkSite(g.city, a.x, a.y, 'underground').ok) taskInfeasible++
+              } else if (t.type === 'facShare') {
+                const f = CM.Fac.byId(t.fac)
+                if (!f || !CM.Tasks.facilityHasSite(g, f)) taskInfeasible++
+              } else if (t.type === 'stationCrowd') {
+                const i = g.compiled.sIndex.get(t.station)
+                const s = i === undefined ? null : g.compiled.stations[i]
+                if (!s || s.size === 'L') taskInfeasible++
+              } else if (t.type === 'zoneCov') {
+                if (!CM.Tasks.zoneHasLand(g, t.zone) || t.target > 0.65) taskInfeasible++
+              } else if (t.type === 'coverage' && t.target > 0.7) taskInfeasible++
+              else if (t.type === 'recovery' && t.target > 0.9) taskInfeasible++
+              else if (t.type === 'zoneCong' && !(t.target < t.start)) taskInfeasible++
+            } catch (e) { taskErrors++ }
+          }
+        } catch (e) { taskCount = 'err:' + (e && e.message || e) }
         return {
           ok: true,
           y: g.clock.y,
           pop: Math.round(c.pop.reduce((a, b) => a + b, 0)),
           roads: (c.roadGroups || []).length,
           stations, segs,
+          taskCount, taskEligible, taskErrors, taskInfeasible,
           cfgWH: [CM.CFG.W, CM.CFG.H],
         }
       } catch (e) { return { ok: false, why: String(e && e.message || e) } }
@@ -136,13 +168,13 @@ async function main() {
     console.log(
       (r && r.ok ? 'OK  ' : 'FAIL') + '  ' + cityId.padEnd(12) +
       (r && r.ok
-        ? ` y=${r.y} grid=${r.cfgWH[0]}x${r.cfgWH[1]} pop=${(r.pop / 10000).toFixed(0)}万 roads=${r.roads} st=${r.stations}/${r.segs}`
+        ? ` y=${r.y} grid=${r.cfgWH[0]}x${r.cfgWH[1]} pop=${(r.pop / 10000).toFixed(0)}万 roads=${r.roads} st=${r.stations}/${r.segs} tasks=${r.taskCount}/${r.taskEligible} taskErr=${r.taskErrors} infeasible=${r.taskInfeasible}`
         : `  ${r && r.why}`) +
       (errors.length ? `  ⚠ ${errors.length} err: ${errors[0].slice(0, 80)}` : '')
     )
   }
 
-  const bad = rows.filter((r) => !r.ok || r.errors.length)
+  const bad = rows.filter((r) => !r.ok || r.errors.length || typeof r.taskCount !== 'number' || r.taskCount < 4 || r.taskCount > 10 || r.taskEligible < 4 || r.taskErrors !== 0 || r.taskInfeasible !== 0)
   console.log(`\n共 ${TARGETS.length} 城：通过 ${TARGETS.length - bad.length} / 失败或告警 ${bad.length}`)
   if (bad.length) console.log('问题城市：' + bad.map((r) => r.cityId).join(', '))
 

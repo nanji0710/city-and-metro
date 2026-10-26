@@ -1789,8 +1789,13 @@
     const self = this, snap = this.saveSnap(g);
     const pending = CM.Save.save(g, 'manual', { slotId: slotId, label: label || ('手动存档 ' + g.clock.y + '年' + g.clock.m + '月') }).then(function (r) {
       if (self.g() !== g) return r;
-      if (r.ok) { self.markSaved(g, r.savedAt, snap); self.toast('已保存到本地（' + (r.size / 1024).toFixed(0) + ' KB）', 'good'); }
-      else { self.save = Object.assign({}, self.save, { state: 'error', at: Date.now(), msg: r.error }); self.toast('保存失败：' + r.error, 'bad'); }
+      if (r.ok) {
+        self.markSaved(g, r.savedAt, snap);
+        // 手动保存同样要把这一局同步进公司记录：玩家可能关闭了自动保存，
+        // 只在手动存档后才算真正落盘，分部现金与槽位不能等到下一次自动保存。
+        if (CM.Company) CM.Company.onSaved(g, r.slotId);
+        self.toast('已保存到本地（' + (r.size / 1024).toFixed(0) + ' KB）', 'good');
+      } else { self.save = Object.assign({}, self.save, { state: 'error', at: Date.now(), msg: r.error }); self.toast('保存失败：' + r.error, 'bad'); }
       self.rerenderPage();
       if (self.screenRefresh) self.screenRefresh();
       return r;
@@ -1912,15 +1917,47 @@
   };
   UI.prototype.showFailure = function (f) {
     const g = this.g(), self = this;
-    const card = h('div', { class: 'card' }, this.cardHead('error', 'b-red', '经营挑战失败'),
+    const co = CM.Company ? CM.Company.active() : null;
+    const camp = co ? CM.Company.campaignOf(co) : null;
+    const campaign = !!(camp && !camp.legacy);
+    const financial = !(f.reasons || []).some(function (r) { return r.indexOf('满意度') >= 0; });
+    let rescue = 0, rescueNeed = 0, rescueCap = 0;
+    if (campaign && financial && g.company) {
+      const caps = CM.Company.injectCap(co, g.mapId, g.clock.y, g.clock.m);
+      const limit = CFG.economy.debtLimit * g.econ.costIndex(g.clock.y);
+      rescueNeed = Math.max(1, limit - g.econ.funds + 1);
+      rescueCap = Math.min(co.pool || 0, caps.cap);
+      rescue = rescueCap >= rescueNeed ? rescueNeed : 0;
+    }
+    const actions = [
+      h('button', { class: 'btn', onclick: function () { self.closeScreen(); self.openPage('finance', null, { root: true }); } }, ic('coin'), '财政详情'),
+      h('button', { class: 'btn', onclick: function () { self.showSaveManager(true); } }, ic('folder'), '读取存档'),
+      h('button', { class: 'btn', onclick: function () { self.backToMenu(); } }, ic('home'), '主菜单'),
+    ];
+    if (campaign) {
+      if (rescue > 0) {
+        actions.push(h('button', { class: 'btn primary', onclick: function () {
+          const r = CM.Company.inject(g, rescue, true);
+          if (!r.ok) { self.toast(r.error || '注资失败', 'bad'); return; }
+          g.econ.failed = null; g.econ.negMonths = 0;
+          g.logEvent({ tag: '公司', title: '公司注资救援', desc: '从公司池划入 ' + U.fmtMoney(rescue) });
+          if (CM.Save) CM.Save.save(g, 'auto');
+          self.closeScreen(); self.toast('公司注资成功，已恢复经营', 'good'); self.markUnsaved();
+        } }, ic('bank'), '公司注资 ' + U.fmtMoney(rescue)));
+      } else {
+        actions.push(h('button', { class: 'btn', disabled: true, 'data-tip': '公司池不足，或失败原因包含满意度，无法用钱解决' }, ic('bank'), '公司注资不足'));
+      }
+      actions.push(h('button', { class: 'btn', onclick: function () { self.closeScreen(); self.openPage('company', null, { root: true }); } }, ic('globe'), '返回公司'));
+    } else {
+      actions.push(h('button', { class: 'btn', onclick: function () { g.econ.mode = 'free'; g.mode = 'free'; g.econ.failed = null; g.logEvent({ tag: '经营', title: '转为自由建造模式继续', desc: '' }); self.closeScreen(); self.toast('已转为自由建造模式', 'info'); self.markUnsaved(); } }, ic('sparkle'), '转为自由建造继续'));
+    }
+    const card = h('div', { class: 'card' }, this.cardHead('error', 'b-red', campaign ? '战役分部停运' : '经营挑战失败'),
       this.callout('bad', 'error', h('div', null, f.reasons.map(function (r) { return h('div', null, '· ' + r); }))),
       this.kv([['资金', U.fmtMoney(g.econ.funds)], ['满意度', Math.round(g.econ.sat) + ''], ['连续负余额', g.econ.negMonths + ' 个月'], ['满意度过低', g.econ.lowSatMonths + ' 个月']]),
-      h('div', { class: 'note', style: { marginTop: '8px' } }, '可以查看财政与指标详情了解恶化原因；读取之前的存档重新经营，或转为自由建造继续发展这座城市（城市经济照常模拟）。'),
-      h('div', { class: 'modal-actions' },
-        h('button', { class: 'btn', onclick: function () { self.closeScreen(); self.openPage('finance', null, { root: true }); } }, ic('coin'), '财政详情'),
-        h('button', { class: 'btn', onclick: function () { self.showSaveManager(true); } }, ic('folder'), '读取存档'),
-        h('button', { class: 'btn', onclick: function () { self.backToMenu(); } }, ic('home'), '主菜单'),
-        h('button', { class: 'btn primary', onclick: function () { g.econ.mode = 'free'; g.mode = 'free'; g.econ.failed = null; g.logEvent({ tag: '经营', title: '转为自由建造模式继续', desc: '' }); self.closeScreen(); self.toast('已转为自由建造模式', 'info'); self.markUnsaved(); } }, ic('sparkle'), '转为自由建造继续')));
+      h('div', { class: 'note', style: { marginTop: '8px' } },
+        campaign ? '战役模式下不能用“转为自由建造”绕过破产。可以读取存档、返回公司经营其它分部，或从公司池注资救援（满意度失败无法用钱解决）。'
+          : '可以查看财政与指标详情了解恶化原因；读取之前的存档重新经营，或转为自由建造继续发展这座城市（城市经济照常模拟）。'),
+      h('div', { class: 'modal-actions' }, actions));
     this.openScreen(card, function () { self.closeScreen(); });
   };
 })(window.CM);

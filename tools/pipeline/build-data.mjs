@@ -11,7 +11,8 @@
 // 推导规则（每条都写清来源，避免以后看不懂数字是怎么来的）：
 //   regions     ← OSM 行政区（geo 里的 admin level 6 区，缺失时退回 level 8 街道）
 //                 引擎 city.js:256-257 原生支持按 admin 名字匹配，不需要改引擎。
-//   plans       ← 按该区内 POI 密度分档：最密的用 cbd，其次 mix，其余 res/resind。
+//   plans       ← 按该区内 POI 总量排序分档：前列用 cbd / mix，其余 res；
+//                 密度只在最后一档用来识别「大片低密度区」→ resind。
 //   centers     ← 我们的真实地铁站 POI（poi/<id>.json 的 breakdown）：
 //                 life→居住密度，commercial+hub→就业密度。
 //   facilities  ← 同源：hub 高的站做成 rail 枢纽，commercial 高的做成 shop。
@@ -370,13 +371,26 @@ async function buildCity(id) {
    */
   const MAX_INIT_LINES = 4
   const MAX_INIT_ST = 14
+  /*
+   * 战役入门/进阶图：
+   * - 四张入门图不带走两条完整既有线，只保留一条真实线路的前 4 站，开局更像“接管一小段”；
+   * - 进阶图广州仍取 5 条线；
+   * - 其余 49 城仍取 4 条线。
+   */
+  const ADVANCED_STARTER_LINES = { guangzhou: 5 }
+  const ENTRY_STARTER_SEGMENTS = { wenzhou: 4, luoyang: 4, wuhu: 4, lanzhou: 4 }
+  const starterSegment = ENTRY_STARTER_SEGMENTS[city.id]
+  const maxLines = starterSegment
+    ? 1
+    : Math.max(1, Math.min(6, ADVANCED_STARTER_LINES[city.id] || MAX_INIT_LINES))
+  const maxStations = starterSegment || MAX_INIT_ST
   const initLines = []
   const rawLines = (city.lines || [])
     .slice()
     .sort((a, b) => (b.stationCount || 0) - (a.stationCount || 0))
-    .slice(0, MAX_INIT_LINES)
+    .slice(0, maxLines)
   for (const ln of rawLines) {
-    const sts = (ln.stations || []).slice(0, MAX_INIT_ST)
+    const sts = (ln.stations || []).slice(0, maxStations)
     if (sts.length < 3) continue
     const xferCount = {}
     for (const l2 of city.lines || []) for (const s2 of l2.stations || []) xferCount[s2.id] = (xferCount[s2.id] || 0) + 1
@@ -430,7 +444,7 @@ async function buildCity(id) {
   /*
    * 镜头优先对准「全部真实地铁站」而不是「开局既有线网」。
    *
-   * 两者不是一回事：initialNetwork 只取站数最多的前 2 条线（MAX_INIT_LINES），
+   * 两者不是一回事：initialNetwork 只取站数最多的前 4 条线（MAX_INIT_LINES），
    * 而玩家的第一印象应该是「这座城市的轨道网在哪」，不只是那两条线。
    * 更重要的一点：大部分城市根本没有 initialNetwork（只有东京有），
    * 那时若退回 places[0] 就只剩一个点、跨度算出来是 0，zoom 会撞到下限 8 ——
@@ -688,7 +702,8 @@ async function main() {
   const tail = '\n})(window.CM);\n'
   await writeFile(OUT, head + body + tail, 'utf8')
 
-  const kb = ((head + body + tail).length / 1024).toFixed(0)
+  const out = head + body + tail
+  const kb = (Buffer.byteLength(out, 'utf8') / 1024).toFixed(0)
   console.log(`写入 ${OUT}：${built.length} 城 → ${kb} KB`)
   if (failed.length) {
     console.log(`跳过 ${failed.length} 城：`)

@@ -45,6 +45,12 @@ for (const reference of references) {
   await stat(asset);
 }
 
+// 54 城底图不在 HTML 里，而是由 CM.loadGeo() 按选图动态加载。
+// 从 data_cities.js 取出城市 id，逐一确认发布目录里真的有对应的 geo_<id>.js。
+const dataCities = await readFile(path.join(output, 'js', 'data_cities.js'), 'utf8');
+const cityIds = [...dataCities.matchAll(/^\s*id:\s*"([a-z0-9_]+)"/gm)].map(match => match[1]);
+for (const id of cityIds) await stat(path.join(output, 'js', `geo_${id}.js`));
+
 let count = 0;
 let bytes = 0;
 async function inspect(directory) {
@@ -64,5 +70,5 @@ async function inspect(directory) {
   }
 }
 await inspect(output);
-console.log(JSON.stringify({ output: 'dist', files: count, bytes, htmlReferencesChecked: references.length }));
+console.log(JSON.stringify({ output: 'dist', files: count, bytes, htmlReferencesChecked: references.length, cityGeoChecked: cityIds.length }));
 

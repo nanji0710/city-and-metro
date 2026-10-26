@@ -2,11 +2,15 @@
 //
 // 为什么需要它：54 座城市的底图与数据各是一个 <script>，手写 108 行必然漏、必然顺序错。
 // 依赖顺序是硬的：
-//   1) 所有 geo_<id>.js —— 只往 CM.MAP_GEO 挂数据，无依赖
+//   1) 基底 geo_<id>.js —— 只往 CM.GEOS / CM.GEO 挂数据，无依赖
 //   2) geo.js           —— 定义 CM.Geo（enc/dec/init），data_*.js 里的 enc 要用它
 //   3) 所有 data_*.js   —— 往 CM.MAP_LIST 里 push 地图
 //   4) maps.js          —— 读取 CM.MAP_LIST 与 CM.MAP_GEO 建立 CM.MAPS
-// 所以这里按「geo_* → geo → data_* → maps」四段拼，maps.js 保持在最后。
+// 所以这里按「基底 geo_* → geo → data_* → maps」四段拼，maps.js 保持在最后。
+//
+// 54 座城市的 geo_<id>.js 不再写进 HTML：它们由 maps.js 的 CM.loadGeo()
+// 在选图/进入地图时动态插入 <script>，避免首屏同步下载 30 MB 底图。
+// 基底五图仍同步加载，供开始界面背景、教程与旧存档兼容。
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 
 const HTML = 'index.html'
@@ -14,7 +18,8 @@ const BEGIN = '  <!-- BEGIN MAP SCRIPTS（由 tools/pipeline/sync-html.mjs 生�
 const END = '  <!-- END MAP SCRIPTS -->'
 
 const files = readdirSync('js')
-const geoFiles = files.filter((f) => /^geo_.*\.js$/.test(f)).sort()
+const BASE_GEO = new Set(['geo_gz.js', 'geo_hz.js', 'geo_hk.js', 'geo_tk.js', 'geo_tp.js'])
+const geoFiles = files.filter((f) => /^geo_.*\.js$/.test(f) && BASE_GEO.has(f)).sort()
 const dataFiles = files.filter((f) => /^data_.*\.js$/.test(f)).sort()
 
 if (!geoFiles.length) {

@@ -11,7 +11,7 @@
   //   分部上缴 remit（多城公司把分部净利的一部分转到公司自有现金，见 company.js）
   function blankMonth(y, m, funds, capex) {
     return { y: y, m: m, start: funds, grant: 0, fare: 0, construction: 0, demolition: 0, upgrade: 0, relocation: 0, ops: 0, reward: 0,
-      bond: 0, interest: 0, principal: 0, penalty: 0, remit: 0, capexUse: 0, capexStart: capex || 0, days: 0, wdDays: 0, weDays: 0, end: funds };
+      bond: 0, interest: 0, principal: 0, penalty: 0, remit: 0, inject: 0, capexUse: 0, capexStart: capex || 0, days: 0, wdDays: 0, weDays: 0, end: funds };
   }
   const BUILD_KINDS = ['construction', 'demolition', 'upgrade', 'relocation'];
   const MONEY_EPS = 1e-7;   // 内部单位是万元；只忽略浮点误差，不能把不足 0.5 万的真实债务清零
@@ -508,6 +508,208 @@
     return { vol: vol, share: vol > 0 ? m / vol : 0 };
   };
 
+  /* 任务可行性用的选址检查：从一个点出发，找最近的可建地下车站位置。
+   * 只用于生成任务，不替代真正的建设校验；返回 [x,y] 或 null。
+   * maxR 单位是格。找不到就不生成该任务，避免出现「锚点在湖中央 / 保护区内」的死任务。 */
+  Tasks.buildableNear = function (city, x, y, maxR) {
+    const M = CM.Metro;
+    if (!M || !M.checkSite) return [x, y];
+    const ok = function (px, py) { return M.checkSite(city, px, py, 'underground').ok; };
+    if (ok(x, y)) return [x, y];
+    const step = 0.5, R = maxR || 4;
+    for (let r = step; r <= R + 1e-9; r += step) {
+      const n = Math.max(8, Math.ceil(r * 8));
+      for (let k = 0; k < n; k++) {
+        const a = k / n * Math.PI * 2;
+        const px = x + Math.cos(a) * r, py = y + Math.sin(a) * r;
+        if (ok(px, py)) return [px, py];
+      }
+    }
+    return null;
+  };
+
+  // 片区是否有足够的可建设陆地：至少 4 格，避免把任务发到整片水域/风景区。
+  Tasks.zoneHasLand = function (g, z) {
+    const city = g.city, model = g.model, cs = model.zoneCells && model.zoneCells[z];
+    if (!cs) return false;
+    let n = 0;
+    for (const c of cs) {
+      const k = city.region[c], rg = city.regions[k];
+      if (!city.regionOpen[k] || !rg || rg.scenic) continue;
+      if (city.landFrac[c] >= 0.5) n++;
+    }
+    return n >= 4;
+  };
+
+  // 设施附近是否有可建站的位置；没有就不发接驳任务。
+  Tasks.facilityHasSite = function (g, f) {
+    return !!Tasks.buildableNear(g.city, f.x, f.y, 3);
+  };
+
+  /* 54 城通用的城市任务包：按地图档位生成 4~10 个动态任务模板。
+   *
+   * 为什么不是逐城手写：54 城没有历史任务数据，手写 400+ 条不现实；但只靠
+   * generate() 里的通用候选，小城常常因为「客流没到 2 万」「拥堵没到 1.4」
+   * 一个任务都发不出来。这里按地图档位给每城 4/6/8/10 个任务，目标值在
+   * 发布当月按实际覆盖、客流、拥堵计算，保证发布时一定还没完成；
+   * 具体何时发布仍由 generate() 每 6 个月抽一个，最多 2 个活跃。
+   */
+  Tasks.prototype.cityPack = function (g) {
+    const model = g.model, city = g.city, acc = model.net ? model.net.acc : null;
+    const mp = (CM.MAPS && CM.MAPS[g.mapId]) || (CM.curMap && CM.curMap()) || {};
+    // 只给 54 座 2025 城市加通用任务包；基底五图与青湾保持原有任务体系。
+    if (mp.tutorial || mp.kind !== 'real' || (CM.HIDDEN_MAPS && CM.HIDDEN_MAPS.indexOf(g.mapId) >= 0)) return [];
+    const tier = U.clamp(mp.difficulty || 2, 1, 4);
+    const count = [4, 6, 8, 10][tier - 1];
+    const ci = g.econ.costIndex(g.clock.y) * (CFG.economy.rewardScale || 1);
+    const months = 24 + tier * 3;
+    const out = [];
+    const add = function (t) { if (out.length < count) out.push(t); };
+    const pct = function (v) { return U.fmtPct(v, 0); };
+    const ppl = function (v) { return U.fmtPeople(v); };
+    const roundK = function (v) { return Math.max(1000, Math.round(v / 1000) * 1000); };
+    const zoneOpen = function (z) {
+      const cs = model.zoneCells && model.zoneCells[z];
+      if (!cs) return false;
+      let n = 0;
+      for (const c of cs) {
+        const k = city.region[c], rg = city.regions[k];
+        if (city.regionOpen[k] && rg && !rg.scenic) n++;
+      }
+      return n >= cs.length / 2;
+    };
+    const curCov = acc ? (acc.coverage || 0) : 0;
+    const avg = (model.dailyFor && model.dailyFor('avg')) || model.daily || {};
+    const wd = (model.dailyFor && model.dailyFor('wd')) || model.dailyWk || avg;
+    const avgNow = avg.metro || 0, wdNow = wd.metro || 0;
+    const reward = function (base) { return Math.round(base * ci); };
+
+    // 1) 覆盖率
+    const cov1 = U.clamp(curCov + 0.06, 0.16, 0.5);
+    add({ packId: 'coverage-1', type: 'coverage', target: cov1, title: '提高地铁覆盖率', desc: '让步行 15 分钟内可达运营车站的人口比例达到 ' + pct(cov1) + '%。统计口径：全图人口。', months: months, reward: reward(35000) });
+
+    // 2) 客流增长（当前客流为基数，保证目标高于现状）
+    const avgT = roundK(Math.max(avgNow * 1.15, avgNow + 2000));
+    add({ packId: 'ridership-avg', type: 'ridership', basis: 'avg', target: avgT, title: '提升日均客运量', desc: '使周平均日地铁客运量达到 ' + ppl(avgT) + ' 人次。统计口径：周平均（5 个工作日 + 2 个周末日）。', months: months, reward: reward(40000) });
+
+    // 3) 经营挑战：票款覆盖率；自由建造：第二个覆盖率目标
+    if (g.econ.mode === 'challenge') {
+      const last = g.econ.ledger[g.econ.ledger.length - 1];
+      const ratio = last && last.ops > 0 ? (last.fare || 0) / last.ops : 0;
+      const recT = Math.min(0.9, Math.max(0.45, ratio + 0.08));
+      add({ packId: 'recovery', type: 'recovery', target: recT, sustain: 2, title: '改善运营收支', desc: '连续 2 个月票款收入不低于运营费用的 ' + pct(recT) + '%。统计口径：上月实际账目。', months: months, reward: reward(40000) });
+    } else {
+      const cov2 = U.clamp(curCov + 0.12, 0.24, 0.62);
+      add({ packId: 'coverage-2', type: 'coverage', target: cov2, title: '扩大地铁覆盖', desc: '让步行 15 分钟内可达运营车站的人口比例达到 ' + pct(cov2) + '%。', months: months, reward: reward(40000) });
+    }
+
+    // 4) 工作日客流
+    const wdT = roundK(Math.max(wdNow * 1.12, wdNow + 1500));
+    add({ packId: 'ridership-wd', type: 'ridership', basis: 'wd', target: wdT, title: '提升工作日通勤客流', desc: '使工作日地铁客运量达到 ' + ppl(wdT) + ' 人次。统计口径：工作日。', months: months, reward: reward(35000) });
+
+    // 5) 片区覆盖：人口多、覆盖低的片区
+    if (acc && model.zoneCells) {
+      let bz = -1, bp = 0;
+      for (let z = 0; z < model.Z; z++) {
+        if (!zoneOpen(z) || !Tasks.zoneHasLand(g, z)) continue;
+        const p = model.zPop ? (model.zPop[z] || 0) : 0;
+        if (p > bp && (acc.zCov[z] || 0) < 0.35) { bp = p; bz = z; }
+      }
+      if (bz >= 0 && bp > 5000) {
+        const cur = acc.zCov[bz] || 0, tgt = Math.min(0.65, cur + 0.15);
+        add({ packId: 'zonecov', type: 'zoneCov', zone: bz, target: tgt, title: '为「' + g.zoneName(bz) + '」补上地铁', desc: '该片区人口约 ' + ppl(bp) + '，地铁覆盖率 ' + pct(cur) + '。使片区覆盖率达到 ' + pct(tgt) + '。统计口径：步行 15 分钟覆盖。', months: months, reward: reward(35000) });
+      }
+    }
+
+    // 6) 重要设施接驳：到访量大、乘地铁比例低的一处
+    if (model.facDaily && model.fn && model.net && g.compiled.stations.length) {
+      let best = null;
+      for (const f of model.fn.list) {
+        if (!Tasks.facilityHasSite(g, f)) continue;
+        const basis = Tasks.facBasis(f), r = Tasks.facShareOf(model, f, basis);
+        if (!r || r.vol < 2000 || r.share > 0.2) continue;
+        const score = r.vol * (1 - r.share);
+        if (!best || score > best.score) best = { f: f, basis: basis, r: r, score: score };
+      }
+      if (best) {
+        const tgt = Math.min(0.45, best.r.share + 0.1);
+        add({ packId: 'facility', type: 'facShare', fac: best.f.id, basis: best.basis, start: best.r.share, target: tgt, title: '地铁服务「' + best.f.name + '」', desc: best.f.name + '（' + best.f.T.name + '）每天约有 ' + ppl(best.r.vol) + ' 人次' + (best.f.T.hub ? '接驳' : '到访') + '，乘地铁比例 ' + pct(best.r.share) + '。使乘地铁比例达到 ' + pct(tgt) + '。统计口径：' + Tasks.BASIS[best.basis] + '。', months: months, reward: reward(45000) });
+      }
+    }
+
+    // 7) 车站拥挤：工作日高峰负荷
+    const sdw = model.stDailyWk || model.stDaily;
+    if (sdw && !model.dailyStale && g.compiled.stations.length) {
+      let bs = -1, br = 0;
+      g.compiled.stations.forEach(function (s, i) {
+        // L 站已是最大规模，无法再靠升级解决拥挤；优先选 S/M，保证有扩建路径。
+        if (s.size === 'L') return;
+        const cap = CFG.metro.stationCap[s.size] || 1;
+        const v = sdw.peak ? (sdw.peak[i] || 0) / cap : 0;
+        if (v > br) { br = v; bs = i; }
+      });
+      if (bs >= 0 && br > 0.8) {
+        const s = g.compiled.stations[bs], tgt = Math.min(0.95, Math.max(0.55, br * 0.85));
+        add({ packId: 'station', type: 'stationCrowd', station: s.id, start: br, target: tgt, title: '缓解「' + (s.name || '车站') + '」车站拥挤', desc: '工作日高峰负荷 ' + pct(br) + '。通过升级车站或分流，使高峰负荷降至 ' + pct(tgt) + ' 以下。统计口径：工作日高峰小时。', months: 18, reward: reward(30000) });
+      }
+    }
+
+    // 8) 片区拥堵：早高峰指数（求解上下文就绪时才计算）
+    if (model.zoneCells && model.ctxs && model.ctxs.wd && model.ctxs.wd.per && model.ctxs.wd.per[0]) {
+      let bz = -1, bv = 0;
+      for (let z = 0; z < model.Z; z++) {
+        if (!zoneOpen(z)) continue;
+        const p = (model.zPop ? (model.zPop[z] || 0) : 0) + (model.zJobs ? (model.zJobs[z] || 0) : 0);
+        if (p < 3000) continue;
+        const v = g.zoneCong(z);
+        if (v > bv) { bv = v; bz = z; }
+      }
+      if (bz >= 0 && bv > 1.2) {
+        const tgt = Math.max(1.05, bv * 0.9);
+        add({ packId: 'congestion', type: 'zoneCong', zone: bz, start: bv, target: tgt, sustain: 2, title: '缓解「' + g.zoneName(bz) + '」交通拥堵', desc: '工作日早高峰拥堵指数 ' + bv.toFixed(2) + '。通过地铁吸引汽车出行，使指数降至 ' + tgt.toFixed(2) + ' 并连续保持 2 个月。统计口径：工作日早高峰。', months: months, reward: reward(40000) });
+      }
+    }
+
+    // 9) 连接两处主要城区：从地名表挑相隔较远的点对。
+    // 每个锚点必须先找到可建站的位置，否则任务会落在水面/风景区/保护区里，玩家无法完成。
+    const pts = (D.places || []).filter(function (p) { return p && p[0] && p[3] >= 3 && p[1] >= 0 && p[2] >= 0 && p[1] <= CFG.W && p[2] <= CFG.H; });
+    const pool = pts.slice().sort(function (a, b) { return (b[3] || 0) - (a[3] || 0); });
+    const anchors = [];
+    for (const p of pool) {
+      const site = Tasks.buildableNear(city, p[1], p[2], 4);
+      if (!site) continue;
+      const q = [p[0], site[0], site[1], p[3]];
+      if (anchors.every(function (a) { return U.dist(q[1], q[2], a[1], a[2]) > 6; })) anchors.push(q);
+      if (anchors.length >= 8) break;
+    }
+    if (anchors.length < 2) {
+      for (const c of (D.centers || []).slice(0, 12)) {
+        const site = Tasks.buildableNear(city, c.x, c.y, 4);
+        if (!site) continue;
+        anchors.push(['片区' + (anchors.length + 1), site[0], site[1], 3]);
+        if (anchors.length >= 4) break;
+      }
+    }
+    const pairs = [];
+    for (let i = 0; i + 1 < anchors.length && pairs.length < 4; i += 2) pairs.push([anchors[i], anchors[i + 1]]);
+    for (let i = 2; i < anchors.length && pairs.length < 4; i++) pairs.push([anchors[0], anchors[i]]);
+    pairs.forEach(function (pair, k) {
+      const a = pair[0], b = pair[1];
+      const an = function (p, n) { return { name: (p && p[0]) || ('城区' + (n + 1)), x: p[1], y: p[2], r: 3.0 }; };
+      add({ packId: 'connect-' + (k + 1), type: 'connect', anchors: [an(a, 0), an(b, 1)], title: '连接' + an(a, 0).name + '与' + an(b, 1).name, desc: '让两处主要城区通过地铁网络连通（可换乘）。统计口径：线路连通，不要求复刻真实走向。', months: months + 6, reward: reward(45000) });
+    });
+
+    // 10) 填满：用递增的客流目标补足到本档位数量
+    let mult = 1.2;
+    while (out.length < count) {
+      const t = roundK(Math.max(avgNow * mult, avgNow + 3000));
+      add({ packId: 'ridership-extra-' + mult.toFixed(2), type: 'ridership', basis: 'avg', target: t, title: '继续提升地铁客流', desc: '使周平均日地铁客运量达到 ' + ppl(t) + ' 人次。', months: months, reward: reward(30000) });
+      mult += 0.08;
+      if (mult > 2) break;
+    }
+    return out.slice(0, count);
+  };
+
   Tasks.prototype.evaluate = function (t, g) {
     const C = g.compiled, model = g.model, acc = model.net ? model.net.acc : null;
     if (t.type === 'connect') {
@@ -643,7 +845,7 @@
     let worst = -1, wv = 0;
     const zoneOpen = function (z) { const cs = model.zoneCells[z]; let n = 0; for (const c of cs) if (city.regionOpen[city.region[c]] && !city.regions[city.region[c]].scenic) n++; return n >= cs.length / 2; };
     for (let z = 0; z < model.Z; z++) {
-      if (model.zPop[z] + model.zJobs[z] < 3000 || !zoneOpen(z) || !free('cong:' + z, 'zoneCong')) continue;
+      if (model.zPop[z] + model.zJobs[z] < 3000 || !zoneOpen(z) || !Tasks.zoneHasLand(g, z) || !free('cong:' + z, 'zoneCong')) continue;
       const v = g.zoneCong(z);
       if (v > wv) { wv = v; worst = z; }
     }
@@ -655,10 +857,10 @@
       let best = -1, bp = 0;
       for (let z = 0; z < model.Z; z++) {
         const p = model.zPop[z];
-        if (p > bp && acc.zCov[z] < 0.2 && zoneOpen(z) && free('cov:' + z, 'zoneCov')) { bp = p; best = z; }
+        if (p > bp && acc.zCov[z] < 0.2 && zoneOpen(z) && Tasks.zoneHasLand(g, z) && free('cov:' + z, 'zoneCov')) { bp = p; best = z; }
       }
       if (best >= 0 && bp > 12000) {
-        cands.push({ type: 'zoneCov', coolKey: 'cov:' + best, zone: best, target: 0.5, title: '为「' + g.zoneName(best) + '」提供地铁服务', desc: '该片区人口约 ' + U.fmtPeople(bp) + '，尚无地铁覆盖。使片区 50% 以上的居民与岗位步行 15 分钟可达车站。', months: 30, reward: 50000 * ci });
+        cands.push({ type: 'zoneCov', coolKey: 'cov:' + best, zone: best, target: 0.45, title: '为「' + g.zoneName(best) + '」提供地铁服务', desc: '该片区人口约 ' + U.fmtPeople(bp) + '，尚无地铁覆盖。使片区 45% 以上的居民与岗位步行 15 分钟可达车站。', months: 30, reward: 50000 * ci });
       }
     }
     // 车站拥挤
@@ -666,7 +868,7 @@
     if (sdw && !model.dailyStale && g.compiled.stations.length) {
       let bs = -1, br = 0;
       g.compiled.stations.forEach(function (s, i) {
-        if (!free('st:' + s.id, 'stationCrowd')) return;
+        if (s.size === 'L' || !free('st:' + s.id, 'stationCrowd')) return;
         const r = sdw.peak[i] / CFG.metro.stationCap[s.size];
         if (r > br) { br = r; bs = i; }
       });
@@ -677,17 +879,22 @@
     }
     // 客流增长
     if (model.daily && model.daily.metro > 20000 && free('ridership', 'ridership')) {
-      cands.push({ type: 'ridership', basis: 'avg', target: Math.round(model.daily.metro * 1.2 / 1000) * 1000, title: '提升地铁客运量', desc: '在期限内使日均地铁客运量较当前提高 20%（可通过新线、延长线、换乘或调整票价实现）。统计口径：周平均（5 个工作日 + 2 个周末日）。', months: 24, reward: 40000 * ci });
+      cands.push({ type: 'ridership', basis: 'avg', target: Math.round(model.daily.metro * 1.15 / 1000) * 1000, title: '提升地铁客运量', desc: '在期限内使日均地铁客运量较当前提高 15%（可通过新线、延长线、换乘或调整票价实现）。统计口径：周平均（5 个工作日 + 2 个周末日）。', months: 30, reward: 40000 * ci });
     }
     // 经营：票款覆盖
     if (g.econ.mode === 'challenge' && model.daily && model.daily.metro > 50000 && free('recovery', 'recovery')) {
-      cands.push({ type: 'recovery', target: 0.7, sustain: 3, title: '改善运营收支', desc: '连续 3 个月票款收入不低于运营费用的 70%。', months: 24, reward: 40000 * ci });
+      const last = g.econ.ledger[g.econ.ledger.length - 1];
+      const ratio = last && last.ops > 0 ? (last.fare || 0) / last.ops : 0;
+      const recT = Math.min(0.85, Math.max(0.65, ratio + 0.08));
+      if (ratio < recT) {
+        cands.push({ type: 'recovery', target: recT, sustain: 3, title: '改善运营收支', desc: '连续 3 个月票款收入不低于运营费用的 ' + U.fmtPct(recT, 0) + '%。', months: 24, reward: 40000 * ci });
+      }
     }
     // 重要设施的地铁接驳（v1.9）：到访量较大、乘地铁比例很低的设施；口径按设施类型（见 Tasks.facBasis）
     if (model.facDaily && model.fn && model.net && g.compiled.stations.length) {
       let best = null;
       for (const f of model.fn.list) {
-        if (!free('fac:' + f.id, 'facShare')) continue;
+        if (!free('fac:' + f.id, 'facShare') || !Tasks.facilityHasSite(g, f)) continue;
         const basis = Tasks.facBasis(f), r = Tasks.facShareOf(model, f, basis);
         if (!r || r.vol < 3000 || r.share > 0.12) continue;
         const score = r.vol * (1 - r.share);
@@ -710,9 +917,20 @@
       if (this.evaluate(c, g).ok) continue;
       cands.push(c, c);   // 权重加倍，让本城任务更常出现
     }
+    // 54 城通用的城市任务包：按地图档位 4~10 个，每个只发布一次。
+    let pack = [];
+    try { pack = this.cityPack(g) || []; } catch (e) { console.error(e); }
+    for (const c of pack) {
+      const key = 'pack:' + c.packId;
+      if (this.issued[key]) continue;
+      if (this.active.some(function (t) { return t.packId === c.packId; })) continue;
+      if (this.evaluate(c, g).ok) { this.issued[key] = 1; continue; }
+      cands.push(c, c);
+    }
     if (!cands.length) return null;
     const c = cands[Math.floor(rng.next() * cands.length)];
     if (c.cityId) self.issued['dyn:' + c.cityId] = 1;
+    if (c.packId) self.issued['pack:' + c.packId] = 1;
     const t = Object.assign({ id: 'd' + (this.seq++), kind: 'dyn', status: 'active', issuedAt: [y, m], deadline: dl(c.months), streak: 0 }, c);
     return t;
   };

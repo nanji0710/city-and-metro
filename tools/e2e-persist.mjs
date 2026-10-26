@@ -6,7 +6,7 @@
  * 玩家刷新一次页面就白雇半天人、白排半天班，而且**不会报任何错**。
  * simcheck 那种 Node 侧断言测不到这一层，只有真刷新一次才知道。
  *
- * 断言（9 项，每一条都必须在刷新之后成立才有意义）：
+ * 断言（10 项，每一条都必须在刷新之后成立才有意义）：
  *   1. 广州挑战局能开起来且有线网
  *   2. 自定义高峰发车间隔能写进去（取 137 秒，既不是默认值也不是任何预设）
  *   3. 从人才市场雇到人
@@ -51,7 +51,7 @@ async function main() {
     try {
       proc = spawn(exe, [
         `--remote-debugging-port=${PORT}`,
-        '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
+        '--headless=new', '--disable-gpu', '--disable-extensions', '--no-first-run', '--no-default-browser-check',
         `--user-data-dir=${PROFILE}`, '--window-size=1680,1050',
         '--allow-file-access-from-files', 'about:blank',
       ], { stdio: 'ignore' })

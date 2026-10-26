@@ -40,7 +40,7 @@ async function main() {
     try {
       proc = spawn(exe, [
         `--remote-debugging-port=${PORT}`,
-        '--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
+        '--headless=new', '--disable-gpu', '--disable-extensions', '--no-first-run', '--no-default-browser-check',
         `--user-data-dir=${PROFILE}`, '--window-size=1680,1050', 'about:blank',
       ], { stdio: 'ignore' })
       break
