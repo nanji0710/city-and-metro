@@ -68,6 +68,13 @@
     const dateV = h('span', { class: 'v' }, '—'), dateK = h('span', { class: 'k' }, '');
     const datePill = h('button', { class: 'pill daypill', 'data-tip': '日期、时段与城市发展', onclick: function () { self.openTop('date'); } }, ring, h('span', { class: 'tx' }, dateK, dateV));
     this.pills.date = { el: datePill, v: dateV, k: dateK };
+    // 战役第一份合同：常驻在日期旁的目标胶囊；没有进行中的合同时自动隐藏。
+    this.goalTx = h('span', { class: 'goal-tx' }, '');
+    this.goalPill = h('button', {
+      class: 'goalpill hidden', type: 'button',
+      'aria-label': '第一份公司合同进度',
+      onclick: function () { self.openTop('company'); },
+    }, ic('flag'), this.goalTx);
     this.tbtns = {};
     const spd = function (id, label, n, tip, key) {
       const b = h('button', { class: 'sbtn' + (n === 0 ? ' pz' : ''), 'data-tip': tip, 'data-key': key, onclick: function () { if (n === 0) self.togglePause(); else self.setSpeed(n); } }, n === 0 ? ic('pause') : label);
@@ -92,6 +99,7 @@
       h('div', { class: 'cluster glass citybar' },
         h('div', { class: 'brand' }, h('img', { src: 'img/logo-white.png', alt: '城市与地铁' })),
         datePill,
+        this.goalPill,
         h('div', { class: 'speed' }, spd('pause', '', 0, '暂停 / 继续', '空格'), spd('s1', '1×', 1, '正常速度', '1'), spd('s2', '3×', 2, '3 倍速', '2'), spd('s3', '8×', 3, '8 倍速', '3')),
         h('div', { class: 'jumps' }, jmp('month', '+1月', 1, '推进 1 个月'), jmp('year', '+1年', 12, '推进 1 年（结束后显示变化）'))),
       h('div', { class: 'spacer' }),
@@ -450,6 +458,23 @@
     if (c.sat.ico !== sk) { c.sat.ico = sk; c.sat.badge.className = 'badge ' + (sk === 'smile' ? 'b-green' : (sk === 'meh' ? 'b-orange' : 'b-red')); c.sat.badge.innerHTML = ''; c.sat.badge.appendChild(ic(sk)); }
     const n = g.tasks.active.length;
     this.taskCnt.textContent = n; this.taskCnt.style.display = n ? '' : 'none';
+    // 第一份公司合同：对局内常驻目标，避免玩家不知道为什么要扩建。
+    // Company.active() 会读 localStorage，这里最多 1 秒刷新一次，不跟着 4Hz HUD 跑。
+    if (this.goalPill && CM.Company && performance.now() - (this._goalT || 0) > 1000) {
+      this._goalT = performance.now();
+      const co = CM.Company.active();
+      const ct = co ? CM.Company.contractOf(co, g) : null;
+      const show = !!(ct && !ct.done && g.mapId === ct.starterMapId && ct.stations != null);
+      this.goalPill.classList.toggle('hidden', !show);
+      if (show) {
+        const tx = ct.stations + ' / ' + ct.target + ' 站';
+        if (this.goalTx.textContent !== tx) this.goalTx.textContent = tx;
+        const tip = '第一份公司合同：在「' + ((CM.MAPS[g.mapId] && CM.MAPS[g.mapId].name) || g.mapId) +
+          '」新增 ' + CM.Company.STARTER_CONTRACT.addStations + ' 站，完成后公司池 +' +
+          U.fmtMoney(ct.reward) + '。点击查看公司面板';
+        if (this.goalPill.getAttribute('data-tip') !== tip) this.goalPill.setAttribute('data-tip', tip);
+      }
+    }
     // 人员（本作独有）：在编人数角标；待处置事故时按钮亮红点
     if (this.staffCnt) {
       const hc = g.staff ? g.staff.hired.length : 0;

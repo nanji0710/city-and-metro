@@ -112,20 +112,23 @@
       const mp = CM.MAPS[id];
       if (mp.tutorial || mp.kind === 'fictional' || hidden.indexOf(id) >= 0) continue;
       if (CO().branchOf(co, id)) continue;
-      rows.push({ id: id, mp: mp, fee: CO().unlockFee(id), unlocked: CO().isUnlocked(co, id) });
+      rows.push({
+        id: id, mp: mp, fee: CO().unlockFee(id), start: CO().startFundsFor(id),
+        unlocked: CO().isUnlocked(co, id),
+      });
     }
     rows.sort(function (a, b) {
-      return (a.unlocked === b.unlocked ? 0 : (a.unlocked ? -1 : 1)) || a.fee - b.fee;
+      return (a.unlocked === b.unlocked ? 0 : (a.unlocked ? -1 : 1)) || (a.fee + a.start) - (b.fee + b.start);
     });
     if (!rows.length) {
       wrap.appendChild(h('div', { class: 'note' }, '所有城市都已经进驻了。'));
       return wrap;
     }
-    const dk = self._diffKey || (CM.Difficulty ? CM.Difficulty.DEFAULT_KEY : 'normal');
-    const std = CM.Difficulty ? CM.Difficulty.startFundsOf(dk) : 0;
     for (const r of rows) {
       const pool = co.pool || 0;
-      const short = !r.unlocked && pool < r.fee;
+      // 解锁只是购买许可；真正开城还要从公司池划出启动金，两个门槛都要满足。
+      const need = r.unlocked ? r.start : r.fee + r.start;
+      const short = pool < need;
       const row = h('div', { class: 'co-jrow' + (short ? ' short' : ''), 'data-map': r.id },
         h('span', { class: 'dot', style: { background: r.unlocked ? 'var(--good)' : 'var(--faint)' } }),
         h('div', { class: 'grow' },
@@ -134,18 +137,18 @@
             (CO().STARTER_META[r.id] ? (CO().STARTER_META[r.id].tier === 'advanced' ? '进阶 · ' : '入门 · ') + CO().STARTER_META[r.id].trait + ' · ' : '') +
             (r.mp.trait ? r.mp.trait.name + ' · ' : '') +
             (r.mp.region || '') + ' · ' + (r.mp.tags || []).join(' · ') +
-            (r.unlocked ? ' · 标准启动金 ' + U.fmtMoney(std) : ' · 解锁费 ' + U.fmtMoney(r.fee)))),
-        h('span', { class: 'co-fee num' }, r.unlocked ? '已解锁' : U.fmtMoney(r.fee)),
+            (r.unlocked ? ' · 公司启动金 ' + U.fmtMoney(r.start) : ' · 解锁 ' + U.fmtMoney(r.fee) + ' + 启动金 ' + U.fmtMoney(r.start)))),
+        h('span', { class: 'co-fee num' }, r.unlocked ? '启动金 ' + U.fmtMoney(r.start) : U.fmtMoney(need)),
         h('button', {
-          class: 'btn sm' + (r.unlocked && !short ? ' primary' : ''),
+          class: 'btn sm' + (!short ? ' primary' : ''),
           disabled: short ? true : null,
-          'data-tip': short ? ('公司池还差 ' + U.fmtMoney(r.fee - pool)) :
-            (r.unlocked ? '切换到这座城市，开一局新的经营挑战' : '从公司池支付解锁费，之后可随时开始'),
+          'data-tip': short ? ('公司池还差 ' + U.fmtMoney(need - pool)) :
+            (r.unlocked ? '从公司池支付启动金，开一局新的经营挑战' : '从公司池支付解锁费；启动金在开城时支付'),
           onclick: function () {
             if (r.unlocked) self.companyStartBranch(r.id);
             else self.companyUnlock(r.id);
           },
-        }, r.unlocked ? '开始' : (short ? '不够' : '解锁')));
+        }, r.unlocked ? (short ? '不够' : '开始') : (short ? '不够' : '解锁')));
       wrap.appendChild(row);
     }
     return wrap;
@@ -317,7 +320,7 @@
       }, false, 'globe');
   };
 
-  /* 战役：进入已解锁城市，开一局新的经营挑战。不另收接入费。 */
+  /* 战役：进入已解锁城市，开一局新的经营挑战。启动金由公司池支付。 */
   UI.prototype.companyStartBranch = function (mapId) {
     const self = this;
     const co = CO().active();
@@ -326,15 +329,37 @@
     if (CO().branchOf(co, mapId)) { this.toast('这座城市已经登记为分部', 'info'); return; }
     const mp = mapOf(mapId);
     if (!mp) { this.toast('地图不存在', 'bad'); return; }
+    const start = CO().startFundsFor(mapId);
+    if ((co.pool || 0) < start) {
+      this.toast('公司池不足：开城需要启动金 ' + U.fmtMoney(start) + '（可用 ' + U.fmtMoney(co.pool || 0) + '）', 'warn');
+      return;
+    }
     const g = this.g();
-    this.confirm('开始 ' + (mp.name || mapId), '使用标准开局资金进入「' + (mp.name || mapId) +
-      '」；公司池不会扣除启动资金，之后可随时向当前分部注资。', '开始经营', function () {
+    this.confirm('开始 ' + (mp.name || mapId),
+      '从公司池划出 ' + U.fmtMoney(start) + ' 作为「' + (mp.name || mapId) +
+      '」的启动金；之后可随时向当前分部追加注资。', '开始经营', function () {
       if (g && CM.Save) CM.Save.save(g, 'auto');
+      const fresh = CO().get(co.id);
+      const before = fresh.pool || 0;
+      fresh.pool = before - start;
+      const saved = CO().save(fresh);
+      if (!saved.ok) { this.toast(saved.error || '公司池写入失败', 'bad'); return; }
+      const ab = CO().addBranch(fresh, {
+        mapId: mapId, name: (mp.name || mapId) + '分部', funds: start,
+      });
+      if (!ab.ok) {
+        fresh.pool = before;
+        CO().save(fresh);
+        this.toast(ab.error || '分部登记失败', 'bad');
+        return;
+      }
       CM.newGame({
         map: mapId, mode: 'challenge',
         difficulty: self._diffKey || (CM.Difficulty ? CM.Difficulty.DEFAULT_KEY : 'normal'),
         name: '经营挑战 · ' + (mp.data.city || mp.name) + ' ' + mp.cfg.START.y,
         company: { id: co.id, name: co.name },
+        startFunds: start,
+        companyBranch: true,
       });
     }, false, 'play');
   };
@@ -343,9 +368,15 @@
   UI.prototype.companyUnlock = function (mapId) {
     const co = CO().active();
     if (!co) { this.toast('还没有公司', 'warn'); return; }
-    const mp = mapOf(mapId), fee = CO().unlockFee(mapId);
+    const mp = mapOf(mapId), fee = CO().unlockFee(mapId), start = CO().startFundsFor(mapId);
+    const total = fee + start;
+    if ((co.pool || 0) < total) {
+      this.toast('公司池不足：解锁 + 首笔启动金共需 ' + U.fmtMoney(total) + '（可用 ' + U.fmtMoney(co.pool || 0) + '）', 'warn');
+      return;
+    }
     this.confirm('解锁 ' + (mp ? mp.name : mapId),
-      '从公司池支付 ' + U.fmtMoney(fee) + ' 解锁「' + (mp ? mp.name : mapId) + '」。解锁后永久可开始新的经营挑战。',
+      '从公司池支付 ' + U.fmtMoney(fee) + ' 解锁「' + (mp ? mp.name : mapId) +
+      '」；开城时还需 ' + U.fmtMoney(start) + ' 启动金。解锁后永久可开始新的经营挑战。',
       '确认解锁', function () {
         const r = CO().unlockMap(co, mapId);
         if (!r.ok) { this.toast(r.error || '解锁失败', 'bad'); return; }

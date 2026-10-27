@@ -153,13 +153,22 @@ async function main() {
             } catch (e) { taskErrors++ }
           }
         } catch (e) { taskCount = 'err:' + (e && e.message || e) }
+        // 真实锚点：每个 data.anchors 都必须能对应一处当前可运营的设施
+        let anchorTotal = 0, anchorBad = 0
+        try {
+          for (const a of (CM.DATA.anchors || [])) {
+            anchorTotal++
+            const f = CM.Fac.list().find(x => x.name === a.name)
+            if (!f || !CM.Fac.active(f, g.clock.y, g.city)) anchorBad++
+          }
+        } catch (e) { anchorBad++ }
         return {
           ok: true,
           y: g.clock.y,
           pop: Math.round(c.pop.reduce((a, b) => a + b, 0)),
           roads: (c.roadGroups || []).length,
           stations, segs,
-          taskCount, taskEligible, taskErrors, taskInfeasible,
+          taskCount, taskEligible, taskErrors, taskInfeasible, anchorTotal, anchorBad,
           cfgWH: [CM.CFG.W, CM.CFG.H],
         }
       } catch (e) { return { ok: false, why: String(e && e.message || e) } }
@@ -168,13 +177,13 @@ async function main() {
     console.log(
       (r && r.ok ? 'OK  ' : 'FAIL') + '  ' + cityId.padEnd(12) +
       (r && r.ok
-        ? ` y=${r.y} grid=${r.cfgWH[0]}x${r.cfgWH[1]} pop=${(r.pop / 10000).toFixed(0)}万 roads=${r.roads} st=${r.stations}/${r.segs} tasks=${r.taskCount}/${r.taskEligible} taskErr=${r.taskErrors} infeasible=${r.taskInfeasible}`
+        ? ` y=${r.y} grid=${r.cfgWH[0]}x${r.cfgWH[1]} pop=${(r.pop / 10000).toFixed(0)}万 roads=${r.roads} st=${r.stations}/${r.segs} tasks=${r.taskCount}/${r.taskEligible} taskErr=${r.taskErrors} infeasible=${r.taskInfeasible} anchors=${r.anchorTotal}/${r.anchorBad}`
         : `  ${r && r.why}`) +
       (errors.length ? `  ⚠ ${errors.length} err: ${errors[0].slice(0, 80)}` : '')
     )
   }
 
-  const bad = rows.filter((r) => !r.ok || r.errors.length || typeof r.taskCount !== 'number' || r.taskCount < 4 || r.taskCount > 10 || r.taskEligible < 4 || r.taskErrors !== 0 || r.taskInfeasible !== 0)
+  const bad = rows.filter((r) => !r.ok || r.errors.length || typeof r.taskCount !== 'number' || r.taskCount < 4 || r.taskCount > 10 || r.taskEligible < 4 || r.taskErrors !== 0 || r.taskInfeasible !== 0 || r.anchorBad !== 0)
   console.log(`\n共 ${TARGETS.length} 城：通过 ${TARGETS.length - bad.length} / 失败或告警 ${bad.length}`)
   if (bad.length) console.log('问题城市：' + bad.map((r) => r.cityId).join(', '))
 

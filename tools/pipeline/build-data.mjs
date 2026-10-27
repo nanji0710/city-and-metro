@@ -56,6 +56,17 @@ const POP_WAN = {
   lanzhou: 440, wulumuqi: 410, aomen: 68, qingyuan: 400,
 }
 
+/* 重点城市的真实锚点：只放确有其物、坐标落在本城底图内的地标/文体设施。
+ * 它们会作为 scenic 设施进入客流与任务系统，同时写进 data.anchors 供选图页展示。
+ * 目前先补五张战役图，后续可按同样格式增加，不要编造不存在的地标。 */
+const CITY_ANCHORS = {
+  guangzhou: { n: '天河体育中心', t: 'stadium', lon: 113.3260, lat: 23.1360, r: 0.9 },
+  luoyang: { n: '洛阳博物馆', t: 'scenic', lon: 112.4545, lat: 34.6185, r: 0.8 },
+  wuhu: { n: '芜湖方特', t: 'scenic', lon: 118.4330, lat: 31.3500, r: 0.9 },
+  wenzhou: { n: '江心屿', t: 'scenic', lon: 120.6440, lat: 28.0310, r: 0.8 },
+  lanzhou: { n: '中山桥', t: 'scenic', lon: 103.8260, lat: 36.0610, r: 0.7 },
+}
+
 /** 线路配色：参考项目给了广州真实配色；其余城市用一套通用高对比色板 */
 const LINE_COLORS = [
   '#e4572e', '#2f6fd0', '#f2b134', '#2a9d6e', '#c33c54', '#7d5ba6',
@@ -346,6 +357,25 @@ async function buildCity(id) {
     if (facilities.length >= 10) break
   }
 
+  // ---- 重点城市真实锚点：只加入坐标确实落在底图内的地标 ----
+  const anchors = []
+  const anchor = CITY_ANCHORS[id]
+  if (anchor) {
+    const [ax, ay] = proj(anchor.lon, anchor.lat)
+    if (ax >= 0 && ay >= 0 && ax <= W && ay <= H) {
+      facilities.push({
+        id: `a_${facilities.length}`,
+        n: anchor.n,
+        t: anchor.t || 'scenic',
+        at: [ax, ay],
+        r: anchor.r != null ? anchor.r : 0.8,
+      })
+      anchors.push({ name: anchor.n, type: anchor.t || 'scenic', at: [+ax.toFixed(1), +ay.toFixed(1)] })
+    } else {
+      console.warn(`  ${id}: 锚点「${anchor.n}」落在底图外，已跳过`)
+    }
+  }
+
   const popWan = POP_WAN[id] || 400
   const popCurve = [
     [2020, popWan * 0.94 * 1e4],
@@ -499,6 +529,7 @@ async function buildCity(id) {
       bridgeDefaultYear: START_YEAR - 30,
       simRoads: [],
       landmarks: [],
+      anchors,
       facilities,
       districtLabels: [],
       // 开局既有真实线网（见上方 initialNetwork 注释）

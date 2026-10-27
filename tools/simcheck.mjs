@@ -455,7 +455,7 @@ if (CM.Company) {
   CO.updateBranch(c2, 'gz', { failed: true });
   check('分部破产只标停运', CO.get(co.id).branches.length >= 1 && CO.branchOf(CO.get(co.id), 'gz').failed === true);
 
-  // 第一份公司合同：新增 3 站后，公司池直接 +3 亿
+  // 第一份公司合同：新增 3 站后，公司池直接 +7 亿
   const camp = CO.startCampaign('合同测试公司', 'wenzhou');
   check('战役公司带第一份合同', camp.ok && camp.company.campaign && camp.company.campaign.contract &&
     camp.company.campaign.contract.target === camp.company.campaign.contract.baseline + 3, camp.error || '');
@@ -471,7 +471,7 @@ if (CM.Company) {
     };
     const poolBefore = CO.poolOf(CO.get(camp.company.id));
     const hit = CO.checkStarterContract(cg);
-    check('第一份合同完成后公司池 +3 亿', !!hit && Math.abs(CO.poolOf(CO.get(camp.company.id)) - (poolBefore + 30000)) < 1,
+    check('第一份合同完成后公司池 +7 亿', !!hit && Math.abs(CO.poolOf(CO.get(camp.company.id)) - (poolBefore + 70000)) < 1,
       hit ? ('pool=' + CO.poolOf(CO.get(camp.company.id))) : 'null');
   }
 

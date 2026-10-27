@@ -98,16 +98,20 @@ const started = jp(await evalJs(`(async () => {
   for (let i = 0; i < 100 && (!g.city.roadGroups || !g.city.roadGroups.length || g.pending); i++) await new Promise(r => setTimeout(r, 200));
   await CM.ui.doAutosave(true);
   await new Promise(r => setTimeout(r, 600));
+  CM.ui.updateTop();
   const co = CM.Company.active();
+  const goal = document.querySelector('.goalpill');
   return JSON.stringify({ map: g.mapId, lines: Object.keys(g.net.lines).length,
     pool: co.pool, branches: co.branches.map(b => b.mapId),
-    unlocked: co.campaign.unlocked, ezhou: CM.Company.canStartMap(co, 'ezhou', 'challenge') });
+    unlocked: co.campaign.unlocked, ezhou: CM.Company.canStartMap(co, 'ezhou', 'challenge'),
+    goal: !!goal && !goal.classList.contains('hidden'), goalText: goal ? goal.innerText.trim() : '' });
 })()`))
 check('广州战役开局成功', started.map === 'guangzhou' && started.lines === 5, started)
 check('战役公司初始池 5 亿', started.pool === 50000, started)
 check('开局城市自动登记为分部', Array.isArray(started.branches) && started.branches[0] === 'guangzhou', started)
 check('五张战役图默认解锁', Array.isArray(started.unlocked) && started.unlocked.length === 5, started)
 check('鄂州默认锁定', started.ezhou === false, started)
+check('对局内 HUD 显示第一份合同', started.goal === true && started.goalText.indexOf('/') >= 0, started)
 
 // 2b. 地图指纹不一致的存档必须拒绝
 const fpGuard = jp(await evalJs(`(() => {
@@ -136,7 +140,7 @@ const panel = jp(await evalJs(`(async () => {
     contract: pageText.indexOf('第一份公司合同') >= 0 });
 })()`))
 check('公司面板出现地图解锁列表', panel.rows === 53 && panel.hasAomen === true && panel.poolText === true, panel)
-check('5 亿公司池不足以解锁 8 亿城市', panel.btn.indexOf('不够') >= 0, panel)
+check('5 亿公司池不足以解锁 8 亿城市并支付启动金', panel.btn.indexOf('不够') >= 0, panel)
 check('公司面板显示月结预计上缴', panel.preview === true, panel)
 check('公司面板显示第一份公司合同', panel.contract === true, panel)
 
@@ -165,7 +169,7 @@ check('解锁确认框说明从公司池扣费', unlocked.fee === true, unlocked
 check('解锁后公司池扣到 2 亿', unlocked.pool === 20000, unlocked)
 check('鄂州变为已解锁', unlocked.unlocked === true && unlocked.can === true, unlocked)
 
-// 5. 从公司面板开始鄂州；新图使用标准启动金
+// 5. 从公司面板开始鄂州；启动金由公司池支付
 const started2 = jp(await evalJs(`(async () => {
   const rows = Array.from(document.querySelectorAll('.co-jrow'));
   const ezhou = rows.find(r => r.dataset.map === 'ezhou');
@@ -186,7 +190,7 @@ const started2 = jp(await evalJs(`(async () => {
 })()`))
 check('解锁后可从公司面板开始新城', started2.map === 'ezhou', started2)
 check('新城仍带公司身份', !!(started2.company && started2.company.id), started2)
-check('新图使用标准启动资金', started2.funds >= 200000, started2)
+check('新图启动金来自公司池 2 亿', started2.funds === 20000 && started2.pool === 0, started2)
 check('新城登记为第二分部', Array.isArray(started2.branches) && started2.branches.length === 2, started2)
 
 // 6. 注资：人为把公司池补到 3 亿，紧急救援额度 2 亿

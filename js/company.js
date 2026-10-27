@@ -43,12 +43,14 @@
 
   /* 解锁费（万元）：最低 8 亿，最高 20 亿；不按“进驻费”重复收。 */
   const UNLOCK_FEE = { 1: 80000, 2: 100000, 3: 150000, 4: 200000 };
+  /* 新分部启动金（万元）：由公司池出，不再使用难度标准 30 亿。
+   * 第一张图解锁 + 启动 = 10 亿；5 亿初始池 + 7 亿合同 = 12 亿，
+   * 首次扩张后仍留 2 亿作为紧急救援余量。 */
+  const START_FUNDS = { 1: 20000, 2: 30000, 3: 40000, 4: 50000 };
   const CAMPAIGN_POOL = 50000;   // 公司开办资金 5 亿
 
-  /* 战役第一份公司合同：在起点城新增 3 站，公司池一次性奖励 3 亿。
-   * 5 亿开办资金 + 3 亿合同奖励 = 刚好够最低 8 亿解锁费，
-   * 让「第一张新图」有明确、可达成的目标，而不是干等经营现金流。 */
-  const STARTER_CONTRACT = { addStations: 3, reward: 30000 };
+  /* 战役第一份公司合同：在起点城新增 3 站，公司池一次性奖励 7 亿。 */
+  const STARTER_CONTRACT = { addStations: 3, reward: 70000 };
 
   function initialStations(mapId) {
     const mp = CM.MAPS && CM.MAPS[mapId];
@@ -100,6 +102,7 @@
   Company.STARTERS = STARTERS.slice();
   Company.STARTER_META = STARTER_META;
   Company.UNLOCK_FEE = UNLOCK_FEE;
+  Company.START_FUNDS = START_FUNDS;
   Company.CAMPAIGN_POOL = CAMPAIGN_POOL;
   Company.STARTER_CONTRACT = STARTER_CONTRACT;
 
@@ -113,6 +116,11 @@
     const mp = CM.MAPS && CM.MAPS[mapId];
     const d = mp ? (mp.difficulty || 2) : 2;
     return UNLOCK_FEE[d] || UNLOCK_FEE[2];
+  };
+  Company.startFundsFor = function (mapId) {
+    const mp = CM.MAPS && CM.MAPS[mapId];
+    const d = mp ? (mp.difficulty || 2) : 2;
+    return START_FUNDS[d] || START_FUNDS[2];
   };
   Company.isStarter = function (mapId) { return STARTERS.indexOf(mapId) >= 0; };
 

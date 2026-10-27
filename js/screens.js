@@ -179,6 +179,11 @@
           self.toast('「' + (mp.name || sel) + '」尚未解锁；需在公司面板用公司池支付 ' + U.fmtMoney(fee) + ' 解锁费。', 'warn');
           return;
         }
+        if (mode === 'challenge' && co && CM.Company && !CM.Company.isStarter(sel) &&
+          CM.Company.isUnlocked(co, sel) && !CM.Company.branchOf(co, sel)) {
+          self.toast('新分部请从公司面板开始，并由公司池支付启动金。', 'warn');
+          return;
+        }
         snd('build');
         if (mp.tutorial) CM.newGame({ map: sel, mode: 'free', tutorial: true, name: '新手教程 · ' + mp.data.city });
         else CM.newGame({ map: sel, mode: mode, difficulty: diffKey(), name: (mode === 'free' ? '自由建造' : '经营挑战') + ' · ' + mp.data.city + ' ' + y0 });
@@ -198,6 +203,8 @@
       const fl = (mp.facts || []).filter(function (f) { return f[0] !== '模式'; }).slice();
       const mc = mp.cfg.macro && mp.cfg.macro !== 'auto' ? mp.cfg.macro : null;
       if (mc && mc.gdp0) { const mo = mp.cfg.money, v = mc.gdp0; fl.push(['开局 GDP', '约 ' + (v >= 1e8 ? (v / 1e8).toFixed(2) + ' 万' + mo.yi : U.fmtMoney(v, 0, mo))]); }
+      const anchors = (mp.data.anchors || []).map(function (a) { return a.name; });
+      if (anchors.length) fl.push(['真实锚点', anchors.join(' · ')]);
       const facts = h('div', { class: 'msel-facts' }, fl.map(function (f) { return h('div', null, h('span', null, f[0]), h('b', { title: f[1] }, f[1])); }));
       const feats = h('div', { class: 'msel-feats' }, (mp.features || []).map(function (f, k) {
         return h('div', { class: 'msel-feat', style: { animationDelay: (0.04 * k) + 's' } }, h('span', { class: 'badge ' + ['b-blue', 'b-teal', 'b-orange', 'b-violet'][k % 4] }, ic(f[0])), h('div', null, h('b', null, f[1]), h('small', null, f[2])));
@@ -240,7 +247,8 @@
         h('div', { class: 'msel-facts' }, [
           ['战役定位', smeta.tier === 'advanced' ? '进阶（五线）' : '入门（小线网）'],
           ['建议难度', DIFF ? DIFF.get(smeta.difficultyKey).name : '标准运营'],
-          ['第一份合同', '新增 ' + (CM.Company.STARTER_CONTRACT ? CM.Company.STARTER_CONTRACT.addStations : 3) + ' 站 → 公司池 +3 亿'],
+          ['第一份合同', '新增 ' + (CM.Company.STARTER_CONTRACT ? CM.Company.STARTER_CONTRACT.addStations : 3) +
+            ' 站 → 公司池 +' + U.fmtMoney(CM.Company.STARTER_CONTRACT ? CM.Company.STARTER_CONTRACT.reward : 70000)],
           ['初始解锁', '五张战役图默认解锁'],
           ['发展方向', '用公司池解锁其余 49 城'],
         ].map(function (f) { return h('div', null, h('span', null, f[0]), h('b', null, f[1])); })),

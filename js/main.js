@@ -139,6 +139,10 @@
         fail(new Error('这座城市尚未解锁。请先在公司面板用公司池解锁「' + (mp.name || mp.id) + '」。'), '开始战役');
         return;
       }
+      if (co && camp && !camp.legacy && !opts.companyBranch && !CM.Company.branchOf(co, mp.id) && !CM.Company.isStarter(mp.id)) {
+        fail(new Error('新分部请从公司面板开始，并由公司池支付启动金。'), '开始战役');
+        return;
+      }
       if (!co) {
         if (!CM.Company.isStarter(mp.id)) {
           fail(new Error('战役只能从五张战役地图开始；其他城市需要先解锁。'), '开始战役');
