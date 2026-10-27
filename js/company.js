@@ -45,6 +45,30 @@
   const UNLOCK_FEE = { 1: 80000, 2: 100000, 3: 150000, 4: 200000 };
   const CAMPAIGN_POOL = 50000;   // 公司开办资金 5 亿
 
+  /* 战役第一份公司合同：在起点城新增 3 站，公司池一次性奖励 3 亿。
+   * 5 亿开办资金 + 3 亿合同奖励 = 刚好够最低 8 亿解锁费，
+   * 让「第一张新图」有明确、可达成的目标，而不是干等经营现金流。 */
+  const STARTER_CONTRACT = { addStations: 3, reward: 30000 };
+
+  function initialStations(mapId) {
+    const mp = CM.MAPS && CM.MAPS[mapId];
+    const net = mp && mp.data && mp.data.initialNetwork;
+    if (!net || !net.lines) return 0;
+    let n = 0;
+    for (const ln of net.lines) n += (ln.stations || []).length;
+    return n;
+  }
+
+  function contractOfCampaign(camp) {
+    if (!camp || camp.legacy) return null;
+    if (camp.contract) return camp.contract;
+    const base = initialStations(camp.starterMapId);
+    return {
+      goal: 'stations', baseline: base, target: base + STARTER_CONTRACT.addStations,
+      reward: STARTER_CONTRACT.reward, done: false,
+    };
+  }
+
   /* 分部每月往金库上缴的比例。
    * 30% 归公司，70% 留在本地；本地现金只能用于当前地图。
    * 上缴按“上月已封账经营现金流”计算，见 remit()。 */
@@ -77,6 +101,7 @@
   Company.STARTER_META = STARTER_META;
   Company.UNLOCK_FEE = UNLOCK_FEE;
   Company.CAMPAIGN_POOL = CAMPAIGN_POOL;
+  Company.STARTER_CONTRACT = STARTER_CONTRACT;
 
   Company.accessFee = function (mapId) {
     const mp = CM.MAPS && CM.MAPS[mapId];
@@ -90,6 +115,42 @@
     return UNLOCK_FEE[d] || UNLOCK_FEE[2];
   };
   Company.isStarter = function (mapId) { return STARTERS.indexOf(mapId) >= 0; };
+
+  /* 第一份公司合同的状态。g 可选：传入当前局时附带已建站数。 */
+  Company.contractOf = function (c, g) {
+    const camp = Company.campaignOf(c);
+    const ct = contractOfCampaign(camp);
+    if (!ct) return null;
+    const stations = g && g.mapId === camp.starterMapId ? Object.keys(g.net.stations || {}).length : null;
+    return {
+      goal: ct.goal, baseline: ct.baseline, target: ct.target, reward: ct.reward,
+      done: !!ct.done, claimedAt: ct.claimedAt || null, starterMapId: camp.starterMapId,
+      stations: stations, progress: stations == null ? null : Math.min(stations, ct.target),
+    };
+  };
+
+  /* 月度检查：门槛达到时把奖励直接打进公司池，不经过本地现金。 */
+  Company.checkStarterContract = function (g) {
+    const c0 = Company.active();
+    if (!c0 || !g || !g.company || g.company.id !== c0.id) return null;
+    const c = Company.fresh(c0) || c0;
+    const camp = Company.campaignOf(c);
+    const ct = contractOfCampaign(camp);
+    if (!ct || ct.done || g.mapId !== camp.starterMapId) return null;
+    const stations = Object.keys(g.net.stations || {}).length;
+    if (stations < ct.target) return null;
+    c.pool = Company.poolOf(c) + ct.reward;
+    c.campaign = Object.assign({}, camp, {
+      contract: Object.assign({}, ct, { done: true, claimedAt: nowIso() }),
+    });
+    c.updatedAt = nowIso();
+    const r = Company.commit(c0, c);
+    if (!r.ok) return null;
+    const msg = '第一份公司合同完成：公司池 +' + U.fmtMoney(ct.reward);
+    if (g.logEvent) g.logEvent({ tag: '公司', title: msg, desc: '在「' + (CM.MAPS[g.mapId] && CM.MAPS[g.mapId].name || g.mapId) + '」新增 ' + STARTER_CONTRACT.addStations + ' 站' });
+    if (g.emit) g.emit('toast', { kind: 'good', text: msg });
+    return { ok: true, reward: ct.reward, pool: Company.poolOf(c) };
+  };
 
   Company.all = function () {
     const list = readAll();
@@ -150,6 +211,7 @@
       home: homeMapId || null,
       campaign: campaign,
     };
+    if (campaign) c.campaign.contract = contractOfCampaign({ ...campaign, starterMapId: homeMapId });
     const r = Company.save(c);
     return r.ok ? { ok: true, company: c } : r;
   };
@@ -402,6 +464,29 @@
     if (b.profits.length > 12) b.profits.splice(0, b.profits.length - 12);
     Company.commit(c0, c);
     return { paid: paid, branch: Company.branchOf(c, g.mapId), pool: Company.poolOf(c) };
+  };
+
+  /* 公司面板用：按当前本地账本预测下次月结能上缴多少，以及为什么是 0。
+   * 不写存储，只读 lastClosed()，与 remit() 使用同一组口径。 */
+  Company.remitPreview = function (g) {
+    const c0 = Company.active();
+    if (!c0 || !g || !g.company || g.company.id !== c0.id) return null;
+    const c = Company.fresh(c0) || c0;
+    if (!Company.branchOf(c, g.mapId)) return null;
+    const last = g.econ.lastClosed ? g.econ.lastClosed() : null;
+    if (!last) {
+      return { net: 0, want: 0, can: 0, reserve: 0, reason: '本月还没有完整账期，月结后才计算。' };
+    }
+    const net = (last.fare || 0) + (last.reward || 0)
+      - (last.ops || 0) - (last.interest || 0)
+      - (last.principal || 0) - (last.penalty || 0);
+    const reserve = 2 * (last.ops || 0);
+    const want = Math.max(0, net * REMIT_RATE);
+    const can = Math.max(0, Math.min(want, g.econ.funds - reserve));
+    let reason = '按上月经营现金流的 30% 预计上缴。';
+    if (net <= 0) reason = '上月经营现金流为负（票款 + 奖励 − 运营 − 利息 − 本金 − 罚款），公司池本次不会增加。';
+    else if (can <= 0.01) reason = '上月有正经营现金流，但本地现金低于 2 个月运营成本，暂不上缴。';
+    return { net: net, want: want, can: can, reserve: reserve, reason: reason };
   };
 
   /* 公司向当前分部注资。

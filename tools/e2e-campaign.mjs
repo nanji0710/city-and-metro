@@ -109,18 +109,36 @@ check('开局城市自动登记为分部', Array.isArray(started.branches) && st
 check('五张战役图默认解锁', Array.isArray(started.unlocked) && started.unlocked.length === 5, started)
 check('鄂州默认锁定', started.ezhou === false, started)
 
+// 2b. 地图指纹不一致的存档必须拒绝
+const fpGuard = jp(await evalJs(`(() => {
+  const env = CM.Save.envelope(CM.game);
+  const payload = JSON.parse(env.body);
+  payload.meta.mapFp = 'tampered-map-fingerprint';
+  const body = JSON.stringify(payload);
+  const bad = Object.assign({}, env, { body: body, checksum: CM.U.fnv(body) });
+  let message = '';
+  try { CM.Save.parseEnvelope(JSON.stringify(bad)); } catch (e) { message = e.message || String(e); }
+  return JSON.stringify({ blocked: message.indexOf('地图数据不一致') >= 0, message: message });
+})()`))
+check('地图指纹不一致的存档会被拒绝', fpGuard.blocked === true, fpGuard)
+
 // 3. 公司面板：51 个未进驻城市，鄂州显示解锁
 const panel = jp(await evalJs(`(async () => {
   CM.ui.openTop('company');
   await new Promise(r => setTimeout(r, 700));
   const rows = Array.from(document.querySelectorAll('.co-jrow'));
   const ezhou = rows.find(r => r.dataset.map === 'ezhou');
+  const pageText = document.querySelector('.co-page') ? document.querySelector('.co-page').innerText : '';
   return JSON.stringify({ rows: rows.length, hasAomen: !!ezhou,
     btn: ezhou ? (ezhou.querySelector('button') || {}).innerText || '' : '',
-    poolText: document.querySelector('.co-page') ? (document.querySelector('.co-page').innerText.indexOf('公司池') >= 0) : false });
+    poolText: pageText.indexOf('公司池') >= 0,
+    preview: pageText.indexOf('下次月结预计上缴') >= 0,
+    contract: pageText.indexOf('第一份公司合同') >= 0 });
 })()`))
 check('公司面板出现地图解锁列表', panel.rows === 53 && panel.hasAomen === true && panel.poolText === true, panel)
 check('5 亿公司池不足以解锁 8 亿城市', panel.btn.indexOf('不够') >= 0, panel)
+check('公司面板显示月结预计上缴', panel.preview === true, panel)
+check('公司面板显示第一份公司合同', panel.contract === true, panel)
 
 // 4. 补足公司池后解锁鄂州
 const unlocked = jp(await evalJs(`(async () => {

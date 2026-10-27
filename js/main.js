@@ -167,7 +167,12 @@
     ui.showLoading('正在载入存档并恢复城市与交通状态…');
     const boot = function () {
       setTimeout(function () {
-        try { CM.useMap(mapId); start(CM.Game.restore(data), false); } catch (e) {
+        try {
+          CM.useMap(mapId);
+          const mapBad = CM.Save && CM.Save.mapMismatch && CM.Save.mapMismatch(data);
+          if (mapBad) throw new Error(mapBad);
+          start(CM.Game.restore(data), false);
+        } catch (e) {
           try { CM.useMap(CM.game ? CM.game.mapId : 'gz'); } catch (e2) { /* 底图未载入时保留当前画面 */ }
           fail(e, '载入存档');
         }

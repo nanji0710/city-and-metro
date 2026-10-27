@@ -19,6 +19,18 @@
   CM.Game = Game;
   Game.prototype.touch = function () { this.rev++; };
 
+  /* 把难度倍率与城市轻量特性合并。城市特性不能改存档结构，
+   * 只是在进入/恢复某一局时折进模型与建设报价。
+   * 需求：模型 demandMult；建设：Metro 全局 buildMult。 */
+  function applyCityRates(g) {
+    const tr = CM.MAPS && CM.MAPS[g.mapId] && CM.MAPS[g.mapId].trait;
+    const D = CM.Difficulty ? CM.Difficulty.get(g.difficulty) : null;
+    const dm = D ? D.demandMult : 1;
+    const bm = D ? D.buildMult : 1;
+    if (g.model) g.model.demandMult = dm * (tr && tr.demand ? tr.demand : 1);
+    if (M && M.setBuildMult) M.setBuildMult(bm * (tr && tr.build ? tr.build : 1));
+  }
+
   Game.create = function (opts) {
     const g = new Game();
     g.id = U.uid('g');
@@ -43,10 +55,8 @@
     g.model = new CM.Model(g.city);
     g.model.setYear(g.clock.y);
     g.model.setDayType(CM.Model.dayType(g.clock.y, g.clock.m, g.clock.d));
-    // 难度：客流盘子。必须在 setNetwork 之前设，否则首帧日客流用的是旧缩放
-    if (CM.Difficulty) g.model.demandMult = CM.Difficulty.get(g.difficulty).demandMult;
-    // 建设成本倍率：必须早于任何 M.evaluate / 预览，否则首帧报价用的是 1.0
-    if (CM.Difficulty) M.setBuildMult(CM.Difficulty.get(g.difficulty).buildMult);
+    // 难度 + 城市特性：客流与建设成本必须在 setNetwork / 第一次报价之前设好
+    applyCityRates(g);
     g.traffic = { v: CFG.TRAFFIC_MODEL };
     g.net = M.empty();
     g.mapInit = buildInitialNetwork(g);   // 开局既有地铁（东京 1950 年等），只在新建时生成一次，随存档保存
@@ -350,6 +360,7 @@
      * 否则会出现「刚拨下来还没还利息就被抽走 35%」这种账面对不上的情况。
      */
     if (this.company && CM.Company) CM.Company.remit(this, y, m);
+    if (this.company && CM.Company) CM.Company.checkStarterContract(this);
     this.recordHistory();
     if (CM.Milestones) CM.Milestones.onMonth(this);
     if (this.draft) {
@@ -660,9 +671,8 @@
     // 难度：从存档里恢复（1.x 与 v2.1 之前的存档没有难度字段，按 normal 兜底）
     g.difficulty = CM.Difficulty ? CM.Difficulty.norm((s.econ && s.econ.difficulty) || CM.Difficulty.DEFAULT_KEY) : null;
     if (g.mode === 'free' && CM.Difficulty) g.difficulty = 'easy';
-    if (CM.Difficulty) g.model.demandMult = CM.Difficulty.get(g.difficulty).demandMult;
-    // 建设成本倍率：必须早于任何 M.evaluate / 预览，否则首帧报价用的是 1.0
-    if (CM.Difficulty) M.setBuildMult(CM.Difficulty.get(g.difficulty).buildMult);
+    // 难度 + 城市特性：读档同样要先恢复客流与建设倍率
+    applyCityRates(g);
     g.model.buildZones(); g.model.buildDemand();
     g.net = s.net;
     g.compiled = M.compile(g.net, g.city);

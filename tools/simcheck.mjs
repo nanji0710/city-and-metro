@@ -17,7 +17,7 @@ const ORDER = [
   'geo_hz', 'data_hz', 'geo_hk', 'data_hk', 'geo_tk', 'data_tk', 'geo_tp', 'data_tp',
   // 54 城登记：公司扩张要用真实可见城市做目标；底图不加载，maps.js 允许 geo 缺省
   'data_cities',
-  'maps', 'facility', 'city', 'metro', 'sim', 'economy', 'difficulty', 'ops', 'staff', 'incidents',
+  'city_traits', 'maps', 'facility', 'city', 'metro', 'sim', 'economy', 'difficulty', 'ops', 'staff', 'incidents',
   'macro', 'game', 'milestones', 'save', 'company',
 ];
 
@@ -455,10 +455,41 @@ if (CM.Company) {
   CO.updateBranch(c2, 'gz', { failed: true });
   check('分部破产只标停运', CO.get(co.id).branches.length >= 1 && CO.branchOf(CO.get(co.id), 'gz').failed === true);
 
+  // 第一份公司合同：新增 3 站后，公司池直接 +3 亿
+  const camp = CO.startCampaign('合同测试公司', 'wenzhou');
+  check('战役公司带第一份合同', camp.ok && camp.company.campaign && camp.company.campaign.contract &&
+    camp.company.campaign.contract.target === camp.company.campaign.contract.baseline + 3, camp.error || '');
+  if (camp.ok) {
+    CO.addBranch(camp.company, { mapId: 'wenzhou', name: '合同测试分部', funds: 300000 });
+    CO.setActive(camp.company.id);
+    const stations = {};
+    for (let i = 0; i < 7; i++) stations['s' + i] = { id: 's' + i };
+    const cg = {
+      mapId: 'wenzhou', company: { id: camp.company.id, name: camp.company.name },
+      net: { stations: stations }, clock: { y: 2025, m: 2 }, logEvent: function () {}, emit: function () {},
+      econ: econStub(0, null),
+    };
+    const poolBefore = CO.poolOf(CO.get(camp.company.id));
+    const hit = CO.checkStarterContract(cg);
+    check('第一份合同完成后公司池 +3 亿', !!hit && Math.abs(CO.poolOf(CO.get(camp.company.id)) - (poolBefore + 30000)) < 1,
+      hit ? ('pool=' + CO.poolOf(CO.get(camp.company.id))) : 'null');
+  }
+
   for (const c of CO.all()) CO.remove(c.id);
   check('公司可清理', CO.all().length === 0);
 } else {
   check('CM.Company 已注册', false);
+}
+
+// 轻量城市特性：54 座 2025 城市必须全部有；基底隐藏图与教程不参与
+if (CM.CITY_TRAITS) {
+  const missing = (CM.MAP_LIST || []).filter(function (m) {
+    return m.kind === 'real' && (CM.HIDDEN_MAPS || []).indexOf(m.id) < 0 && (!CM.MAPS[m.id] || !CM.MAPS[m.id].trait);
+  }).map(function (m) { return m.id; });
+  check('54 城全部有轻量城市特性', missing.length === 0, missing.slice(0, 8).join(','));
+  check('城市特性会调整任务奖励', (CM.MAPS.luoyang.trait.reward !== 1) && CM.CITY_TRAITS.luoyang.reward === CM.MAPS.luoyang.trait.reward);
+} else {
+  check('CM.CITY_TRAITS 已注册', false);
 }
 
 // ---------- 汇总 ----------

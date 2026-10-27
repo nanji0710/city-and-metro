@@ -1644,7 +1644,10 @@
               }
               const current = CM.Save.list().find(function (g) { return g.gameId === gm.gameId; });
               if (!current) throw new Error('该进度已不存在，请取消后刷新列表。');
-              if (current.name !== name) CM.Save.rename(gm.gameId, name);
+              if (current.name !== name) {
+                const rr = CM.Save.rename(gm.gameId, name);
+                if (!rr || !rr.ok) throw new Error((rr && rr.error) || '重命名失败，请重试');
+              }
               const saved = CM.Save.list().find(function (g) { return g.gameId === gm.gameId; });
               if (!saved || saved.name !== name) throw new Error('未能写入名称，请重试。');
               const active = self.g();
@@ -1673,7 +1676,11 @@
         } }, ic('pencil'), '重命名');
         grp.appendChild(h('div', { class: 'h save-name-heading' }, ic(gm.mode === 'free' ? 'sparkle' : 'trophy'), title, h('span', { class: 'tag' }, gm.mode === 'free' ? '自由建造' : '经营挑战'), mapId ? null : h('span', { class: 'tag info' }, (CM.MAPS[gm.map || 'gz'] || { name: gm.map }).name),
           h('div', { class: 'save-name-actions' }, rename,
-            h('button', { class: 'btn sm ghost danger', onclick: function () { self.confirm('删除整个进度？', '「' + gm.name + '」的全部 ' + gm.slots.length + ' 个存档将被永久删除。', '删除', function () { CM.Save.removeGame(gm.gameId); self.showSaveManager(inGame, mapId); }, true, 'trash'); } }, ic('trash'), '删除进度'))));
+            h('button', { class: 'btn sm ghost danger', onclick: function () { self.confirm('删除整个进度？', '「' + gm.name + '」的全部 ' + gm.slots.length + ' 个存档将被永久删除。', '删除', function () {
+              const r = CM.Save.removeGame(gm.gameId);
+              if (!r || !r.ok) { self.toast('删除失败：' + ((r && r.error) || '未知错误'), 'bad'); return; }
+              self.showSaveManager(inGame, mapId);
+            }, true, 'trash'); } }, ic('trash'), '删除进度'))));
         for (const sl of gm.slots) grp.appendChild(self.slotRow(sl, inGame));
         list.appendChild(grp);
       }

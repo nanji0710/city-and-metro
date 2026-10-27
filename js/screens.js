@@ -133,6 +133,7 @@
           h('b', null, mp.title || mp.name),
           h('small', null, mp.tagline || mp.sub),
           h('span', { class: 'msel-meta' }, h('span', { class: 'tag' }, mp.region || ''), levelEl(mp.difficulty || 2),
+            mp.trait ? h('span', { class: 'tag b-violet' }, mp.trait.name) : null,
             (CM.Company && CM.Company.STARTER_META[id] ? h('span', { class: 'tag ' + (CM.Company.STARTER_META[id].tier === 'advanced' ? 'b-orange' : 'b-teal') }, CM.Company.STARTER_META[id].tier === 'advanced' ? '进阶' : '入门') : null),
             isLocked ? h('span', { class: 'tag bad' }, '未解锁') : (n ? h('span', { class: 'msel-prog' }, ic('save', 12), n + ' 个进度') : null))));
       items[id] = it; list.appendChild(it);
@@ -239,12 +240,21 @@
         h('div', { class: 'msel-facts' }, [
           ['战役定位', smeta.tier === 'advanced' ? '进阶（五线）' : '入门（小线网）'],
           ['建议难度', DIFF ? DIFF.get(smeta.difficultyKey).name : '标准运营'],
+          ['第一份合同', '新增 ' + (CM.Company.STARTER_CONTRACT ? CM.Company.STARTER_CONTRACT.addStations : 3) + ' 站 → 公司池 +3 亿'],
           ['初始解锁', '五张战役图默认解锁'],
           ['发展方向', '用公司池解锁其余 49 城'],
         ].map(function (f) { return h('div', null, h('span', null, f[0]), h('b', null, f[1])); })),
       ], 'intro') : null;
+      const traitBlock = mp.trait ? block('star', 'b-violet', '城市特性', [
+        h('p', { class: 'msel-intro' }, mp.trait.desc),
+        h('div', { class: 'msel-facts' }, [
+          ['机制', mp.trait.name],
+          ['效果', mp.trait.fx],
+        ].map(function (f) { return h('div', null, h('span', null, f[0]), h('b', null, f[1])); })),
+      ], 'intro') : null;
       const scrollKids = [hero];
       if (campaignBlock) scrollKids.push(campaignBlock);
+      if (traitBlock) scrollKids.push(traitBlock);
       scrollKids.push(
         block('info', 'b-blue', '城市概况', [h('p', { class: 'msel-intro' }, mp.intro || mp.desc), facts], 'intro'),
         block('sparkle', 'b-violet', '地图特色', feats),

@@ -44,6 +44,13 @@
     // 城市经济：只在真实城市启用；没有专门参数的真实地图使用通用参数（'auto'），教程等虚构地图不启用
     cfg.macro = m.kind === 'real' ? (m.cfg.macro || 'auto') : null;
     m.cfg = cfg;
+    // 轻量城市特性：只挂 54 座 2025 城市；基底五图与教程不受影响。
+    m.trait = (CM.CITY_TRAITS && CM.CITY_TRAITS[m.id]) || null;
+    if (m.trait && m.trait.reward && m.trait.reward !== 1) {
+      m.cfg.economy = Object.assign({}, m.cfg.economy, {
+        rewardScale: (m.cfg.economy.rewardScale || 1) * m.trait.reward,
+      });
+    }
     MAPS[m.id] = m;
   }
   // 地图数据指纹：格网、要素数量与名称表（用于存档识别与诊断；内容修订须同时提高 mapVersion）

@@ -132,6 +132,7 @@
           h('b', null, r.mp.name || r.id),
           h('div', { class: 'tiny muted' },
             (CO().STARTER_META[r.id] ? (CO().STARTER_META[r.id].tier === 'advanced' ? '进阶 · ' : '入门 · ') + CO().STARTER_META[r.id].trait + ' · ' : '') +
+            (r.mp.trait ? r.mp.trait.name + ' · ' : '') +
             (r.mp.region || '') + ' · ' + (r.mp.tags || []).join(' · ') +
             (r.unlocked ? ' · 标准启动金 ' + U.fmtMoney(std) : ' · 解锁费 ' + U.fmtMoney(r.fee)))),
         h('span', { class: 'co-fee num' }, r.unlocked ? '已解锁' : U.fmtMoney(r.fee)),
@@ -224,6 +225,26 @@
       U.fmtMoney(CO().poolOf(co)) + '）；分部每月按上月经营现金流的 ' + Math.round(CO().REMIT_RATE * 100) + '% 上缴进公司池。' +
       (isCampaign ? '解锁新地图从公司池扣费；已解锁城市可以随时开始新的经营挑战。'
         : '旧公司保留全地图权限；新战役会从四张入门图和一张进阶图开始锁图。')));
+
+    if (isCampaign) {
+      const ct = CO().contractOf(co, g);
+      if (ct) {
+        const startName = (mapOf(ct.starterMapId) || {}).name || ct.starterMapId;
+        const txt = ct.done
+          ? '第一份公司合同已完成：公司池 +' + U.fmtMoney(ct.reward) + '。'
+          : (g && g.mapId === ct.starterMapId
+            ? '第一份公司合同：在「' + startName + '」新增 ' + CO().STARTER_CONTRACT.addStations +
+              ' 站（' + ct.stations + ' / ' + ct.target + '），完成后公司池 +' + U.fmtMoney(ct.reward) + '。'
+            : '第一份公司合同：回到起点城「' + startName + '」后查看进度；完成后公司池 +' + U.fmtMoney(ct.reward) + '。');
+        el.appendChild(this.callout(ct.done ? 'good' : 'info', 'star', txt));
+      }
+      const rp = CO().remitPreview(g);
+      if (rp) {
+        el.appendChild(this.callout(rp.can > 0 ? 'good' : 'warn', 'bank',
+          '下次月结预计上缴 ' + U.fmtMoney(rp.can) + '。' + rp.reason +
+          (rp.net > 0 ? ' 上月经营现金流 ' + U.fmtMoney(rp.net) + '，保留 2 个月运营现金 ' + U.fmtMoney(rp.reserve) + '。' : '')));
+      }
+    }
 
     const sec1 = h('div', { class: 'co-sec' });
     sec1.appendChild(h('div', { class: 'co-sh' }, h('b', null, '分部（' + co.branches.length + '）')));

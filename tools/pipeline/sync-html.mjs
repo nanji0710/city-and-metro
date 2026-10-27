@@ -5,8 +5,9 @@
 //   1) 基底 geo_<id>.js —— 只往 CM.GEOS / CM.GEO 挂数据，无依赖
 //   2) geo.js           —— 定义 CM.Geo（enc/dec/init），data_*.js 里的 enc 要用它
 //   3) 所有 data_*.js   —— 往 CM.MAP_LIST 里 push 地图
-//   4) maps.js          —— 读取 CM.MAP_LIST 与 CM.MAP_GEO 建立 CM.MAPS
-// 所以这里按「基底 geo_* → geo → data_* → maps」四段拼，maps.js 保持在最后。
+//   4) city_traits.js   —— 给 54 城挂轻量特性（必须在 maps.js 之前）
+//   5) maps.js          —— 读取 CM.MAP_LIST 与 CM.MAP_GEO 建立 CM.MAPS
+// 所以这里按「基底 geo_* → geo → data_* → city_traits → maps」拼接，maps.js 保持在最后。
 //
 // 54 座城市的 geo_<id>.js 不再写进 HTML：它们由 maps.js 的 CM.loadGeo()
 // 在选图/进入地图时动态插入 <script>，避免首屏同步下载 30 MB 底图。
@@ -33,6 +34,7 @@ const block = [
   ...geoFiles.map(line),
   line('geo.js'),
   ...dataFiles.map(line),
+  line('city_traits.js'),
   line('maps.js'),
   END,
 ].join('\n')

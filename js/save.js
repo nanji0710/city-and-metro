@@ -140,6 +140,16 @@
     const g = Save.list(mapId)[0];
     return g ? g.slots[0] : null;
   };
+  /* 地图指纹校验。geo 尚未懒加载时 parseEnvelope 无法重算完整指纹，
+   * 先放行；CM.loadGame 在底图加载完成后会再调用一次这个函数。 */
+  Save.mapMismatch = function (payload) {
+    const meta = payload && payload.meta;
+    const mp = meta && CM.MAPS && CM.MAPS[meta.map || 'gz'];
+    if (!meta || !mp || !mp.geo || !meta.mapFp || !mp.fp) return null;
+    if (meta.mapFp === mp.fp) return null;
+    return '存档与当前「' + (mp.name || mp.id) + '」地图数据不一致（地图指纹不同）。请使用对应版本的地图存档，或先导出旧档再更新游戏。';
+  };
+
   Save.parseEnvelope = function (text) {
     let env;
     try { env = JSON.parse(text); } catch (e) { throw new Error('文件不是有效的存档（JSON 解析失败）'); }
@@ -163,6 +173,8 @@
       if (!mp.migrate) throw new Error('「' + mp.name + '」地图数据已从第 ' + mv + ' 版更新到第 ' + mp.mapVersion + ' 版，且没有可用的迁移方法');
       try { mp.migrate(payload, mv); payload.meta.mapVersion = mp.mapVersion; } catch (e) { throw new Error('存档迁移失败（' + (e && e.message || e) + '），原存档未改动'); }
     }
+    const mapBad = Save.mapMismatch(payload);
+    if (mapBad) throw new Error(mapBad);
     for (const k of ['pop', 'jobs', 'bh', 'taken', 'lu', 'street', 'urbanYear']) {
       const a = payload.city[k];
       if (!a || !a.b || a.n !== mp.cfg.W * mp.cfg.H) throw new Error('城市数据不完整或尺寸不符');
@@ -223,24 +235,32 @@
   Save.remove = function (slotId) {
     const idx = readIndex();
     const meta = idx.slots[slotId];
-    if (!meta) return;
+    if (!meta) return { ok: false, error: '存档不存在' };
     delete idx.slots[slotId];
     if (!Object.values(idx.slots).some(function (s) { return s.gameId === meta.gameId; })) delete idx.games[meta.gameId];
-    writeIndex(idx);
+    try { writeIndex(idx); }
+    catch (e) { return { ok: false, error: errMsg(e) }; }
     store.del(meta.key, meta.store);
+    return { ok: true };
   };
   Save.removeGame = function (gameId) {
     const idx = readIndex();
-    for (const s of Object.values(idx.slots)) if (s.gameId === gameId) { delete idx.slots[s.slotId]; store.del(s.key, s.store); }
+    const gone = [];
+    for (const s of Object.values(idx.slots)) if (s.gameId === gameId) { gone.push(s); delete idx.slots[s.slotId]; }
     delete idx.games[gameId];
-    writeIndex(idx);
+    try { writeIndex(idx); }
+    catch (e) { return { ok: false, error: errMsg(e) }; }
+    for (const s of gone) store.del(s.key, s.store);
+    return { ok: true };
   };
   Save.rename = function (gameId, name) {
     const idx = readIndex();
-    if (!idx.games[gameId]) return;
+    if (!idx.games[gameId]) return { ok: false, error: '进度不存在' };
     idx.games[gameId].name = name;
     for (const s of Object.values(idx.slots)) if (s.gameId === gameId) s.name = name;
-    writeIndex(idx);
+    try { writeIndex(idx); }
+    catch (e) { return { ok: false, error: errMsg(e) }; }
+    return { ok: true };
   };
   Save.fileName = function (meta) {
     const d = meta.date || [0, 0];
