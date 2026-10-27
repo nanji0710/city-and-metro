@@ -132,7 +132,7 @@
      * 战役锁图：经营挑战只能从唯一入门图温州开始，其余 53 城必须由公司池解锁。
      * 自由建造与教程不受影响；旧公司（没有 campaign）视为 legacy 全解锁。
      */
-    if (opts.mode === 'challenge' && CM.Company && !opts.tutorial) {
+    if (opts.mode === 'challenge' && CM.Company) {
       let co = CM.Company.active();
       const camp = co ? CM.Company.campaignOf(co) : null;
       if (co && camp && !camp.legacy && !CM.Company.canStartMap(co, mp.id, 'challenge')) {

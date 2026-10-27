@@ -1,148 +1,67 @@
 'use strict';
-// 新手教程（青湾地图）：左上角的引导卡片按步骤给出目标与操作说明，自动检测完成情况；
-// 相关按钮闪烁提示，地图上高亮目标位置。进度随存档保存，可跳过任意一步。
+/* 新手教程（温州）：不再使用独立青湾地图。
+ * 教程只引导温州战役的前 7 步：看线网 → 扩建 3 站 → 第一份合同 → 公司池 → 全国地图。
+ * 旧青湾教程存档仍保留，但不再挂新教程；地图也仍在 CM.MAPS 中供旧档读取。 */
 (function (CM) {
-  const U = CM.U, h = U.h, M = CM.Metro;
+  const U = CM.U, h = U.h;
   const ic = function (n, s) { return CM.icon(n, s); };
   const snd = function (n) { if (CM.Sound) CM.Sound.play(n); };
   let ui = null, g = null, el = null, idx = -1, ctx = {}, doneAt = 0, target = null, mini = false, lastCheck = 0;
 
-  const place = function (name) { const p = CM.DATA.places.find(function (q) { return q[0] === name; }); return p ? { x: p[1], y: p[2] } : { x: 0, y: 0 }; };
   const absMin = function (c) { return (U.ymIndex(c.y, c.m) * 31 + c.d) * 1440 + c.minute; };
-  const nets = function () { return g.draft ? [g.draft.net, g.net] : [g.net]; };
-  const near = function (net, p, r) { for (const id in net.stations) { const s = net.stations[id]; if (U.dist(s.x, s.y, p.x, p.y) <= r) return id; } return null; };
-  const lineStations = function (net, lid) { const tp = M.lineTopo(net, lid); return (tp.stations || []).map(function (sid) { return net.stations[sid]; }).filter(Boolean); };
-  const NORTH = ['oldtown', 'xiguan', 'dongguan', 'beizhan', 'eastind'], SOUTH = ['nanan', 'tech'];
-  const regionId = function (s) { const rg = g.city.regionAt(s.x, s.y); return rg ? rg.id : ''; };
+  const stationCount = function () { return Object.keys((g && g.net && g.net.stations) || {}).length; };
+  const campaignDone = function () {
+    const co = CM.Company && CM.Company.active();
+    if (!co || !co.campaign) return;
+    const fresh = CM.Company.fresh(co) || co;
+    if (fresh.campaign) {
+      fresh.campaign.tutorialDone = true;
+      if (CM.Company.save) CM.Company.save(fresh);
+    }
+  };
 
-  // 步骤：title 目标、body 说明、hint 小提示、target 闪烁的按钮、hl 地图高亮、check 完成条件、manual 需点击按钮继续
+  // 步骤：manual 需按钮继续；final 完成后进入全国图。
   const STEPS = [
-    { id: 'intro', title: '欢迎来到青湾', manual: '开始教程',
-      body: '青湾是一座约 42 万人的小城，青江从城中穿过，城市还没有地铁。接下来用 15 个小任务带你学会规划地铁：每完成一步会自动进入下一步，也可以随时跳过。' },
-    { id: 'move', title: '移动地图',
-      body: '按住左键拖动地图平移，滚动滚轮缩放（也可以用 + − 键）。按 T 在 2D 平面与 2.5D 立体之间切换。',
-      hint: '试着拖动地图，再缩放一下。',
+    { id: 'intro', title: '欢迎来到温州', manual: '开始新手战役',
+      body: '温州是公司接手的第一个城市：1 号线已经有 4 座车站，但城市还没有真正扩张。接下来用 6 个小目标学会扩建、第一份公司合同和全国地图。教程可以随时跳过。' },
+    { id: 'move', title: '先熟悉地图',
+      body: '按住左键拖动地图，滚轮缩放。按 T 可以在 2D 与 2.5D 之间切换。',
+      hint: '试着拖动或缩放一下。',
       enter: function () { const c = ui.R.cam; ctx.cam0 = { x: c.cx, y: c.cy, z: c.zoom }; },
       check: function () { const c = ui.R.cam, c0 = ctx.cam0; return U.dist(c.cx, c.cy, c0.x, c0.y) > 3 || Math.abs(Math.log(c.zoom / c0.z)) > 0.25; } },
-    { id: 'pop', title: '看懂城市：人口密度',
-      body: '左侧是分析图层。点击「人口密度」图层：颜色越深人口越多。钟楼一带的老城最密集，这里最需要地铁。',
-      target: function () { return ui.dockBtns.pop; },
-      check: function () { return ui.layer === 'pop'; } },
-    { id: 'station', title: '建第一座车站',
-      body: '点击底部的「建站」工具（或按 B），在地图上高亮的钟楼一带点击，放置第一座车站。新车站会自动采用附近的地名。',
-      hint: '再次点击图层按钮可以关闭图层。',
-      target: function () { return ui.tools.tool === 'station' ? null : ui.tbtns.station; },
-      hl: function () { const p = place('钟楼'); return { kind: 'circle', x: p.x, y: p.y, r: 2.2, lx: p.x, ly: p.y - 2.2, label: '在这里建站' }; },
-      enter: function () { const p = place('钟楼'); ui.R.flyTo(p.x, p.y + 1, Math.max(ui.R.cam.zoom, 22)); },
-      check: function () { const p = place('钟楼'); return nets().some(function (n) { return !!near(n, p, 2.4); }); } },
-    { id: 'line', title: '画第一条线路',
-      body: '选择「绘线」工具（或按 L），从钟楼站出发，依次点击空地放置车站，一直连到北面的青湾火车站。右键或按 Enter 结束绘制。',
-      hint: '至少 4 座车站；站距 500–1000 m（2–4 格）比较合适。',
-      target: function () { return ui.tools.tool === 'line' ? null : ui.tbtns.line; },
-      hl: function () { const a = place('钟楼'), b = place('青湾站'); return { kind: 'multi', items: [{ kind: 'circle', x: a.x, y: a.y, r: 2.2, lx: a.x, ly: a.y - 2.2, label: '起点：钟楼' }, { kind: 'circle', x: b.x, y: b.y, r: 2.2, lx: b.x, ly: b.y - 2.2, label: '终点：青湾站' }] }; },
-      enter: function () { const a = place('钟楼'), b = place('青湾站'); ui.fitBox(Math.min(a.x, b.x) - 3, Math.min(a.y, b.y) - 3, Math.max(a.x, b.x) + 3, Math.max(a.y, b.y) + 3, 24); },
+    { id: 'line', title: '看看已有的 1 号线',
+      body: '点击地图上已有的 1 号线，右侧会显示这条线的车站、发车间隔与客流。以后新建的线路也会在这里管理。',
+      hint: '先把鼠标移到橙色线路上，再点击。',
+      check: function () { return ui.topIs && ui.topIs(['line']); } },
+    { id: 'build', title: '为温州扩建 3 座车站',
+      body: '用底部「建站」或「绘线」工具，在 1 号线附近新增 3 座车站并确认建设。扩建 3 站后会触发公司给温州的第一份合同。',
+      hint: '不要拆掉原有车站；目标是新增 3 站。',
+      target: function () { return ui.tbtns && ui.tbtns.station; },
+      enter: function () { if (g.tutorial && g.tutorial.buildBase == null) g.tutorial.buildBase = stationCount(); ctx.base = (g.tutorial && g.tutorial.buildBase) || stationCount(); },
       check: function () {
-        const a = place('钟楼'), b = place('青湾站');
-        return nets().some(function (n) {
-          for (const lid in n.lines) { const ss = lineStations(n, lid); if (ss.length >= 4 && ss.some(function (s) { return U.dist(s.x, s.y, a.x, a.y) <= 2.4; }) && ss.some(function (s) { return U.dist(s.x, s.y, b.x, b.y) <= 2.4; })) return true; }
-          return false;
-        });
-      } },
-    { id: 'confirm', title: '确认建设',
-      body: '底部的草案栏显示了本次修改的费用与冲突，点「草案」可以查看预测客流。确认无误后点击「确认建设」（或 Ctrl+Enter），线路立即开通。',
-      hint: '草案可以随时撤销（Ctrl+Z）或放弃，确认前不会产生费用。',
-      target: function () { return ui.draftbar.querySelector('.btn.primary'); },
-      check: function () { for (const lid in g.net.lines) if (lineStations(g.net, lid).length >= 4) return g.compiled.routes.length > 0; return false; } },
-    { id: 'run', title: '让时间走起来',
-      body: '按空格或点击 ▶ 开始，再试试 3× 速度。发车间隔先由系统按站距与客流自动排定，早高峰（7–9 点）乘客最多；想自己调可以在「运营」里接管。',
-      hint: '让游戏时间走过 3 小时。',
-      target: function () { return g.speed > 0 ? (g.speed === 1 ? ui.tbtns.s2 : null) : ui.tbtns.pause; },
-      enter: function () { if (g.tutorial.runT0 == null) g.tutorial.runT0 = absMin(g.clock); ctx.t0 = g.tutorial.runT0; },   // 计时起点随进度保存，读档后不重新计时
-      check: function () { return absMin(g.clock) - ctx.t0 >= 180; } },
-    { id: 'inspect', title: '查看车站与线路',
-      body: '点击一座车站，右侧会显示它的进出站客流、高峰负荷与换乘情况；点击线路则可以看到发车间隔、运行列车数与断面客流。',
-      check: function () { return ui.topIs(['station', 'line']); } },
-    { id: 'river', title: '跨过青江',
-      body: '青江南岸的「南岸新区」正在发展。延长 1 号线（选中线路后拖动端点的「+」）或新建一条线路，跨过青江在南岸设站，再确认建设。',
-      hint: '跨江段建成高架就是桥梁，建成地下就是隧道，可在选项条中选择。',
-      hl: function () { const k = g.city.regions.findIndex(function (r) { return r.id === 'nanan'; }); const rg = g.city.regions[k]; return k >= 0 ? { kind: 'region', region: k, lx: rg.cx, ly: rg.cy, label: '南岸新区' } : null; },
-      enter: function () { ui.fitBox(10, 12, 30, 30, 18); },
-      check: function () {
-        for (const lid in g.net.lines) {
-          const ss = lineStations(g.net, lid), ids = ss.map(regionId);
-          if (ids.some(function (r) { return NORTH.indexOf(r) >= 0; }) && ids.some(function (r) { return SOUTH.indexOf(r) >= 0; })) return true;
+        const ct = CM.Company && CM.Company.contractOf ? CM.Company.contractOf(CM.Company.active(), g) : null;
+        const targetN = ct ? ct.target : (ctx.base || stationCount()) + 3;
+        if (stationCount() >= targetN) {
+          if (CM.Company && CM.Company.checkStarterContract) CM.Company.checkStarterContract(g);
+          return true;
         }
         return false;
       } },
-    { id: 'xfer', title: '建一座换乘站',
-      body: '再画一条新线路，让它经过已有线路的某座车站（绘线时点击那座车站即可接入），形成换乘站。换乘站会显示 ⇄ 换乘标志。',
-      hint: '从空地开始绘制新线路，中途点击已有车站；完成后确认建设。',
-      check: function () { for (const id in g.net.stations) if (M.stationLines(g.net, id).length >= 2) return true; return false; } },
-    { id: 'layers', title: '看看地铁的影响',
-      body: '打开「道路拥堵」或「出行方向」图层：地铁开通后，沿线道路会更畅通；出行方向箭头中间的蓝色部分是乘地铁的比例。',
-      target: function () { return ui.layer === 'cong' || ui.layer === 'flow' ? null : ui.dockBtns.cong; },
-      check: function () { return ui.layer === 'cong' || ui.layer === 'flow'; } },
-    { id: 'follow', title: '跟随一列列车',
-      body: '点击地图上正在行驶的列车，镜头会自动跟随它驶过城区、青江与高架桥。按 H 隐藏界面欣赏画面，按 Esc 退出跟随。',
-      hint: '列车只在运营时间（06:00–24:00）行驶；游戏暂停时列车停在原地。',
-      enter: function () { if (ui.layer !== 'none') ui.setLayer('none'); },
-      check: function () { return !!g.tutorial.followed; } },   // 按本进度判定，不受其他进度的跟随影响
-    { id: 'netmap', title: '线路示意图',
-      body: '按 K 或点击左侧的「线路示意图」：换乘站标志与地图一致，可以平滑缩放，也可以导出 PNG 图片。',
-      target: function () { return CM.Follow && CM.Follow.active() ? null : ui.tbtns.netmap; },
-      check: function () { return !!(CM.NetMap && CM.NetMap.isOpen()); } },
-    // ── 以下三步是本作独有的玩法（基底没有人员、排班、事故）────────────────
-    { id: 'staff', title: '雇一个人帮你',
-      body: '地铁可以无人运营，但事故只能你亲手处置。点顶栏的「人员」，在人才市场雇一名线长 —— 线长管着的那条线，出了事会自动处置，代价是更贵、更慢。',
-      hint: '人员按日结算工资：雇之前先想清楚这条线一天能挣多少。',
-      target: function () { return ui.hbtns && ui.hbtns.staff ? ui.hbtns.staff : null; },
-      check: function () { return !!(g.staff && g.staff.hired.length > 0); } },
-    { id: 'ops', title: '自己排一条线的班',
-      body: '点顶栏的「排班」：默认班次是引擎按客流自动配的，你可以接管任意一条线，自己定高峰/平峰的间隔与调度策略。间隔越密车越挤不上去的人越少，但车公里成本也越高 —— 没有「最优解」按钮，盈亏全看你怎么排。',
-      hint: '先按「交给你排班」，再拖一下高峰间隔的滑块。',
-      target: function () { return ui.hbtns && ui.hbtns.ops ? ui.hbtns.ops : null; },
-      check: function () { for (const lid in g.net.lines) if (g.net.lines[lid].ops) return true; return false; } },
-    { id: 'incident', title: '处置一起事故',
-      body: '线路开通后事故是常态。这一起是教程替你造的：顶栏「人员」上有红点，左下角有提示条。去「人员 → 最近的事故」点「处置」—— 不处置的话，第二天会按放弃结算，满意度与运力都要吃双倍损失。',
-      hint: '处置要花钱，但不处置赔得更多。',
-      enter: function () {
-        // 教程期强制造一起事故（文档里写明的教学期做法）：
-        // 事故是概率事件，不主动造的话 20 分钟的教程里大概率一次都遇不上，
-        // 而它恰恰是唯一「玩家必须亲手点」的玩法 —— 没教过就等于没做。
-        if (!CM.Incidents || !g.compiled || !g.compiled.routes.length) return;
-        // 已经有一条待处置的就不再造：玩家可能来回翻步骤，每翻一次加一起会变成刷钱刷满意度
-        if ((g.lastIncidents || []).some(function (r) { return !r.handled && String(r.id).indexOf('tut_') === 0; })) return;
-        const rt = g.compiled.routes[0];
-        const I = CM.Incidents;
-        const lv = I.LEVEL_BY_LV[2];
-        const cost = I.repairCostFor(lv, rt.stIdx.length, false);
-        g.lastIncidents = (g.lastIncidents || []).concat([{
-          id: 'tut_' + Date.now(), lv: lv.lv, key: lv.key,
-          title: 'L' + lv.lv + ' · ' + lv.name + '（' + rt.line.name + '）',
-          desc: lv.desc, routeId: rt.id, lineId: rt.lineId, lineName: rt.line.name,
-          minutes: lv.minutes[1], satHit: lv.satHit, capLoss: lv.capLoss,
-          cost: cost, auto: false, handled: false, day: g.clock.d,
-        }]);
-        g.syncDisruptions();
-        if (ui.updateTop) ui.updateTop();
-        if (ui.toast) ui.toast('L2 · 区间中断 · 待处置（' + U.fmtMoney(cost) + '）', 'bad',
-          { label: '去处置', fn: function () { ui.openTop('staff'); } });
-      },
-      target: function () { return ui.hbtns && ui.hbtns.staff ? ui.hbtns.staff : null; },
-      check: function () {
-        // 只认「玩家亲手处置过的」：不处置的话，第二天 sweep() 会把它按 ignore 结算并标成 handled，
-        // 若只判 !handled，玩家什么都不做也会莫名其妙通过这一步。
-        const list = g.lastIncidents || [];
-        return list.some(function (r) { return r.handled && r.mode === 'manual'; });
-      } },
-    // 经济小知识（可跳过、可回看，不计入 15 个任务；青湾为自由建造，不实际发行债券）
-    { id: 'money', title: '小知识：经营挑战的财政', info: true,
-      body: '正式城市的「经营挑战」要自己管钱：每月有政府拨款与票款，建设和运营都要花钱；资金紧张时可以发行地方债或城投债，借来的钱只能用于地铁建设，每年付息、到期还本。四档难度只调你控制不了的那部分（起始资金、拨款、客流、事故、造价），不会偷偷乘在你的运营成本上。',
-      hint: '点「图文说明」查看详细介绍与操作方法；之后也可以在「菜单 → 操作说明」中回看。' },
-    { id: 'done', title: '教程完成！', final: true,
-      body: '你已经学会了移动地图、读图层、建站绘线、确认建设、跨江与换乘、查看客流、跟随列车、线路示意图，还试了本作独有的三件事：雇人、自己排班、处置事故。可以继续在青湾自由建设，也可以去正式城市开一局经营挑战 —— 那里有真实线网、四档难度、政府拨款与债券。' },
+    { id: 'company', title: '第一份合同与公司池',
+      body: '打开顶栏「公司」：温州的第一份合同已完成，公司池获得 +7 亿。公司池是解锁下一座城市的钱，也是分部破产时最后的救援金。',
+      hint: '公司池现在应该足够解锁一座小型城市。',
+      target: function () { return ui.hbtns && ui.hbtns.company; },
+      check: function () { return ui.topIs && ui.topIs(['company']); } },
+    { id: 'run', title: '让时间走起来',
+      body: '关闭公司面板，按空格或点击 ▶ 让温州开始运营。时间会按月推进，公司池也会按分部的经营现金流继续变化。',
+      hint: '让游戏时间走过 3 小时；之后随时可以回到全国地图。',
+      target: function () { return g.speed > 0 ? (g.speed === 1 ? ui.tbtns.s2 : null) : ui.tbtns.pause; },
+      enter: function () { if (g.tutorial.runT0 == null) g.tutorial.runT0 = absMin(g.clock); ctx.t0 = g.tutorial.runT0; },
+      check: function () { return absMin(g.clock) - (ctx.t0 || 0) >= 180; } },
+    { id: 'done', title: '去全国地图', final: true,
+      body: '温州已经跑起来了。现在打开全国地图：温州是绿色已进驻，其他 53 城还是灰色锁定；用公司池选择下一座城市，继续扩张。' },
   ];
-  const TASKS = STEPS.filter(function (s) { return !s.manual && !s.final && !s.info; }).length;   // 不含欢迎、小知识与完成
+  const TASKS = STEPS.filter(function (s) { return !s.manual && !s.final; }).length;
 
   function setTarget(t) {
     if (target === t) return;
@@ -150,21 +69,25 @@
     target = t || null;
     if (target) target.classList.add('coach-target');
   }
-  function applyHL(st) {
-    const R = ui.R;
-    if (R.hl && R.hl.tutorial) R.setHighlight(null);
-    const spec = st.hl ? st.hl() : null;
-    if (spec) R.setHighlight(Object.assign({ dur: 1e9, tutorial: true }, spec));
+  function applyHL() { /* 温州教程不需要地图高亮；保留接口给旧步骤结构 */ }
+  function openAtlas() {
+    if (CM.Atlas) {
+      setTimeout(function () { CM.Atlas.open({ select: g && g.mapId }); }, 260);
+      return true;
+    }
+    if (ui && ui.showMapSelect) { setTimeout(function () { ui.showMapSelect(); }, 260); return true; }
+    return false;
   }
   function go(i) {
     idx = U.clamp(i, 0, STEPS.length - 1);
+    if (!g.tutorial) g.tutorial = { step: 0, done: [] };
     g.tutorial.step = idx;
     doneAt = 0; ctx = {};
     const st = STEPS[idx];
     if (st.enter) st.enter();
     applyHL(st);
     if (st.final) { g.tutorial.complete = true; snd('fanfare'); }
-    ui.markUnsaved(); ui.scheduleAutosave();
+    if (ui) { ui.markUnsaved(); ui.scheduleAutosave && ui.scheduleAutosave(); }
     render();
   }
   function complete() {
@@ -175,6 +98,13 @@
     snd('good');
     render();
   }
+  function finish() {
+    if (g && g.tutorial) { g.tutorial.complete = true; g.tutorial.step = STEPS.length - 1; }
+    campaignDone();
+    if (ui) { ui.markUnsaved(); ui.doAutosave && ui.doAutosave(true); }
+    Tutorial.detach();
+    openAtlas();
+  }
   function render() {
     if (!el) return;
     const st = STEPS[idx], n = idx, ok = !!doneAt;
@@ -183,7 +113,7 @@
     const pct = Math.round(Math.min(n, TASKS + 1) / (TASKS + 1) * 100);
     const head = h('div', { class: 'co-head' },
       h('span', { class: 'co-badge' }, ic('help', 14), '新手教程'),
-      h('span', { class: 'co-step' }, st.final ? '全部完成' : (st.info ? '小知识 · 可跳过' : (n === 0 ? '共 ' + TASKS + ' 个任务' : '任务 ' + n + ' / ' + TASKS))),
+      h('span', { class: 'co-step' }, st.final ? '全部完成' : (n === 0 ? '共 ' + TASKS + ' 个任务' : '任务 ' + n + ' / ' + TASKS)),
       h('span', { class: 'grow' }),
       h('button', { class: 'iconbtn', 'data-tip': mini ? '展开' : '收起', onclick: function () { mini = !mini; render(); } }, ic(mini ? 'expand' : 'minus')));
     el.append(head, h('div', { class: 'co-bar' }, h('i', { style: { width: pct + '%' } })));
@@ -194,14 +124,13 @@
     const acts = h('div', { class: 'co-acts' });
     if (st.final) {
       acts.append(
-        h('button', { class: 'btn sm ghost', onclick: function () { ui.showEconGuide(); } }, '回看财政知识'),
-        h('button', { class: 'btn sm', onclick: function () { Tutorial.detach(); ui.toast('教程已完成，可以继续在青湾自由建设', 'good'); } }, '继续在青湾建设'),
-        h('button', { class: 'btn sm primary', onclick: function () { ui.backToMenu(function () { ui.showMapSelect('gz'); }); } }, '去广州开始游戏', ic('chev', 14)));
-    } else if (st.info) {
-      acts.append(h('button', { class: 'btn sm ghost', onclick: function () { go(idx - 1); } }, '上一步'), h('span', { class: 'grow' }), h('button', { class: 'btn sm ghost', onclick: function () { go(idx + 1); } }, '跳过'),
-        h('button', { class: 'btn sm primary', onclick: function () { ui.showEconGuide(function () { if (STEPS[idx] === st) go(idx + 1); }); } }, '图文说明', ic('chev', 14)));
+        h('button', { class: 'btn sm ghost', onclick: function () { Tutorial.detach(true); } }, '稍后再说'),
+        h('span', { class: 'grow' }),
+        h('button', { class: 'btn sm primary', onclick: finish }, '进入全国地图', ic('chev', 14)));
     } else if (st.manual) {
-      acts.append(h('button', { class: 'btn sm ghost', onclick: function () { Tutorial.detach(true); } }, '退出教程'), h('span', { class: 'grow' }), h('button', { class: 'btn sm primary', onclick: function () { go(idx + 1); } }, st.manual, ic('chev', 14)));
+      acts.append(h('button', { class: 'btn sm ghost', onclick: function () { Tutorial.detach(true); } }, '跳过教程'),
+        h('span', { class: 'grow' }),
+        h('button', { class: 'btn sm primary', onclick: function () { go(idx + 1); } }, st.manual, ic('chev', 14)));
     } else {
       acts.append.apply(acts, [
         h('button', { class: 'btn sm ghost', disabled: idx <= 1 ? true : null, onclick: function () { go(idx - 1); } }, '上一步'),
@@ -212,7 +141,6 @@
     el.appendChild(acts);
     syncLayout();
   }
-  // 引导卡片与图层图例共用左上角：图例排在卡片下方
   function syncLayout() {
     if (!el) return;
     requestAnimationFrame(function () { if (el) document.documentElement.style.setProperty('--coach-h', el.offsetHeight + 'px'); });
@@ -221,14 +149,15 @@
   const Tutorial = {
     attach: function (u, game) {
       ui = u; g = game;
-      if (!g.tutorial) return;
+      if (!g || !g.tutorial) return;
       Tutorial.detach();
       ui = u; g = game;
-      // 1.7 前完成的存档：完成步序号为 STEPS.length - 2。
-      if (g.tutorial.complete && g.tutorial.step >= STEPS.length - 2) {
-        ui.toast('教程已完成，可以继续在青湾自由建设', 'info');
+      // 旧青湾教程：保留旧存档可读，不再挂新步骤。
+      if (g.mapId === 'tutorial') {
+        if (g.tutorial) { g.tutorial.complete = true; g.tutorial.step = STEPS.length - 1; }
         return;
       }
+      if (g.tutorial.complete) return;
       el = h('aside', { id: 'coach' });
       document.getElementById('app').appendChild(el);
       document.body.classList.add('has-coach');
@@ -236,22 +165,24 @@
       mini = false;
       go(g.tutorial.step || 0);
     },
-    // quit：玩家主动退出教程（保留城市，可继续自由建设）
     detach: function (quit) {
-      if (quit && g && g.tutorial) { g.tutorial.complete = true; g.tutorial.step = STEPS.length - 1; if (ui) { ui.markUnsaved(); ui.toast('已退出教程，可以继续在青湾自由建设', 'info'); } }
+      if (quit && g && g.tutorial) {
+        g.tutorial.complete = true; g.tutorial.step = STEPS.length - 1;
+        campaignDone();
+        if (ui) { ui.markUnsaved(); ui.doAutosave && ui.doAutosave(true); ui.toast('已跳过教程，正在打开全国地图', 'info'); }
+      }
       setTarget(null);
-      if (ui && ui.R.hl && ui.R.hl.tutorial) ui.R.setHighlight(null);
       if (el) { el.remove(); el = null; }
       document.body.classList.remove('has-coach');
       if (ui && ui.placeFeed) ui.placeFeed();
       idx = -1;
+      if (quit) openAtlas();
     },
     active: function () { return !!el; },
     tick: function () {
       if (!el || !g || CM.game !== g || idx < 0) return;
       const st = STEPS[idx];
       const now = performance.now();
-      // 目标按钮闪烁（打开全屏界面时暂停）
       setTarget(!doneAt && st.target && !ui.blocking() ? st.target() : null);
       if (doneAt) { if (now - doneAt > 1400) go(idx + 1); return; }
       if (!st.check || now - lastCheck < 250) return;

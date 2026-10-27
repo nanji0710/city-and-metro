@@ -203,6 +203,7 @@
       unlocked: STARTERS.concat(homeMapId ? [homeMapId] : []).filter(function (v, i, a) { return a.indexOf(v) === i; }),
       legacy: false,
       bankrupt: false,
+      tutorialDone: false,
       ym: { y: homeStart.y, m: homeStart.m },
       createdAt: nowIso(),
     } : null;
@@ -383,14 +384,16 @@
     const fee = Company.unlockFee(mapId);
     if ((co.pool || 0) < fee) return { ok: false, error: '公司池不足（解锁费 ' + U.fmtMoney(fee) + '）' };
     co.pool = (co.pool || 0) - fee;
-    co.campaign = {
-      version: 1,
+    // 必须保留 campaign 的 ym / contract / tutorialDone，否则解锁一次新城就会把
+    // 公司月份、第一份合同和教程完成状态全部重置。
+    co.campaign = Object.assign({}, camp, {
+      version: camp.version || 1,
       starterMapId: camp.starterMapId || co.home || null,
-      unlocked: camp.unlocked.concat([mapId]),
+      unlocked: (camp.unlocked || []).concat([mapId]),
       legacy: false,
       bankrupt: false,
       createdAt: camp.createdAt || nowIso(),
-    };
+    });
     co.updatedAt = nowIso();
     const r = Company.commit(c, co);
     return r.ok ? { ok: true, fee: fee, company: co } : { ok: false, error: r.error || '写入失败' };

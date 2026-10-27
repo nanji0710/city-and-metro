@@ -74,8 +74,9 @@
   // 会让玩家以为其中一张是残缺的；台北与东京也不在中国地铁线网的取材范围里。
   // 这五张仍保留在 MAPS 中——广州是开局背景与默认地图（CM.mapId='gz'），
   // 删掉会让 js/main.js 的开场预览与存档回退无图可用。
-  const HIDDEN_MAPS = ['gz', 'hz', 'hk', 'tp', 'tk'];
-  const mapOrder = ['tutorial'];
+  // 旧青湾教程地图保留给历史存档，但不再出现在新地图列表。
+  const HIDDEN_MAPS = ['gz', 'hz', 'hk', 'tp', 'tk', 'tutorial'];
+  const mapOrder = ['wenzhou'];
   for (const id of Object.keys(MAPS)) if (mapOrder.indexOf(id) < 0 && HIDDEN_MAPS.indexOf(id) < 0) mapOrder.push(id);
   const mapRank = new Map(mapOrder.map(function (id, i) { return [id, i]; }));
   CM.MAP_ORDER = mapOrder.filter(function (id) { return MAPS[id]; }).sort(function (a, b) {

@@ -93,6 +93,8 @@
     staffBtn.appendChild(this.staffCnt);
     // 排班（本作独有）：发车间隔与调度策略是玩家自己定的，入口必须常驻且好找
     const opsBtn = hb('ops', 'clock', '排班 · 发车间隔与调度策略', function () { self.openTop('ops'); });
+    // 全国战略地图：直接切换到任意分部，或在局内查看全国扩张。
+    const atlasBtn = hb('atlas', 'map', '全国战略地图 · 选择分部', function () { if (CM.Atlas) CM.Atlas.open(); }, 'M');
     // 公司（本作独有）：多城扩张的总账，金库与分部都在这里
     const companyBtn = hb('company', 'globe', '公司 · 多城分部与金库', function () { self.openTop('company'); });
     this.top = h('header', { id: 'hudTop', class: 'hud hidden' },
@@ -111,6 +113,7 @@
         taskBtn,
         staffBtn,
         opsBtn,
+        atlasBtn,
         companyBtn,
         hb('stats', 'chart', '城市统计', function () { self.openStats(); }, 'G'),
         hb('theme', 'moon', '深色模式', function () { self.toggleTheme(); }, 'N'),
