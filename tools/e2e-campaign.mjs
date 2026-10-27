@@ -300,17 +300,31 @@ const imported = jp(await evalJs(`(() => {
 check('公司记录可以导入还原', imported.ok === true && imported.imported === 1 && imported.replaced === 1, imported)
 check('导入不会改变当前局公司归属', imported.beforeId === imported.afterId && imported.branches === 2, imported)
 
-// 8. 选图页锁态
+// 8. 旧选图页兼容：局内打开后返回必须回到当前分部
 const msel = jp(await evalJs(`(async () => {
+  const latest = CM.Save.latest('ezhou');
+  if (!latest) return JSON.stringify({ err: 'NO-EZHOU-SAVE' });
+  await CM.Save.load(latest.slotId).then(p => CM.loadGame(p));
+  for (let i = 0; i < 150 && (!CM.game || CM.game.mapId !== 'ezhou' || CM.game.pending); i++) await new Promise(r => setTimeout(r, 100));
+  await new Promise(r => setTimeout(r, 500));
+  const beforeMap = CM.game && CM.game.mapId;
   CM.ui.showMapSelect('ezhou');
   await new Promise(r => setTimeout(r, 800));
   const items = Array.from(document.querySelectorAll('.msel-item'));
   const ezhou = items.find(x => x.dataset.id === 'ezhou');
-  return JSON.stringify({ locked: items.filter(x => x.classList.contains('locked')).length,
-    ezhouLocked: ezhou ? ezhou.classList.contains('locked') : null });
+  const backBtn = document.querySelector('.msel-head .iconbtn');
+  const tip = backBtn ? backBtn.getAttribute('data-tip') : '';
+  if (backBtn) backBtn.click();
+  await new Promise(r => setTimeout(r, 400));
+  return JSON.stringify({ beforeMap: beforeMap, afterMap: CM.game && CM.game.mapId,
+    locked: items.filter(x => x.classList.contains('locked')).length,
+    ezhouLocked: ezhou ? ezhou.classList.contains('locked') : null,
+    backTip: tip, screenHidden: document.getElementById('screen').classList.contains('hidden') });
 })()`))
 check('选图页仍有锁定地图', msel.locked > 0, msel)
 check('已解锁的鄂州不再是锁定态', msel.ezhouLocked === false, msel)
+check('旧选图页返回当前分部', msel.beforeMap === 'ezhou' && msel.afterMap === 'ezhou' &&
+  msel.screenHidden === true && msel.backTip === '返回当前分部', msel)
 check('全程 0 console error', consoleErrors.length === 0, consoleErrors.slice(0, 3))
 
 console.log('\\n' + pass + ' 通过 / ' + fail + ' 失败')

@@ -73,7 +73,9 @@
     if (selId) { F.q = ''; F.region = 'all'; }
     const theme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
     const regions = REGION_ORDER.filter(function (r) { return all.some(function (id) { return CM.MAPS[id].region === r; }); });
-    const back = function () { self.showStart(); };
+    // 旧选图页已不再作为战役主入口；如果在局内被打开，返回必须回到当前分部，
+    // 不能把玩家丢回主菜单造成“半局游戏 + 半个主菜单”的混合界面。
+    const back = function () { if (CM.game) self.closeScreen(); else self.showStart(); };
     // 54 城底图按选图懒加载：列表先显示占位图，选中某城后再载入真实缩略图。
     const thumbSrc = function (id) { return CM.mapThumb(id, theme) || (CM.mapThumbPlaceholder ? CM.mapThumbPlaceholder(id, theme) : ''); };
     const thumbEls = {};
@@ -293,7 +295,7 @@
     };
 
     const left = h('div', { class: 'msel-left' },
-      h('div', { class: 'msel-head' }, h('button', { class: 'iconbtn', 'data-tip': '返回主菜单', 'data-key': 'Esc', onclick: back }, ic('back')), h('h2', null, '选择地图'), h('span', { class: 'grow' }), count),
+      h('div', { class: 'msel-head' }, h('button', { class: 'iconbtn', 'data-tip': CM.game ? '返回当前分部' : '返回主菜单', 'data-key': 'Esc', onclick: back }, ic('back')), h('h2', null, '选择地图'), h('span', { class: 'grow' }), count),
       h('div', { class: 'msel-filterbox' }, h('div', { class: 'msel-search' }, ic('search', 16), search, clear), filters),
       h('div', { class: 'msel-lh' }, ic('map', 14), '地图', h('span', { class: 'tiny muted' }, '由易到难 · ↑↓ 切换 · Enter 开始')),
       list,

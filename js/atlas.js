@@ -290,7 +290,6 @@
           }, t);
         })),
       h('button', { class: 'atlas-hbtn', onclick: function () { A.reset(); } }, '全国', ic('expand', 14)),
-      h('button', { class: 'atlas-hbtn', onclick: function () { A.close(); CM.ui.showMapSelect(); } }, '地图列表', ic('map', 14)),
       h('button', { class: 'iconbtn', 'aria-label': '关闭全国地图', onclick: function () { A.close(); } }, ic('close')));
   }
 
