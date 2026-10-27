@@ -229,6 +229,79 @@
       (isCampaign ? '解锁新地图从公司池扣费；已解锁城市可以随时开始新的经营挑战。'
         : '旧公司保留全地图权限；新战役只开放入门图温州，其余 53 城靠公司池解锁。')));
 
+    // 公司记录备份：只导出公司账本，城市存档仍走存档管理。
+    const file = h('input', {
+      type: 'file', accept: '.json,application/json', style: { display: 'none' },
+      onchange: function () {
+        const f = file.files && file.files[0];
+        if (!f) return;
+        const reader = new FileReader();
+        reader.onload = function () {
+          const r = CO().importData(reader.result, { replace: true });
+          if (!r.ok) { self.toast(r.error || '导入失败', 'bad'); return; }
+          self.toast('已导入 ' + r.imported + ' 家公司记录' + (r.replaced ? '（覆盖 ' + r.replaced + ' 条）' : ''), 'good');
+          self.rerenderPage();
+        };
+        reader.onerror = function () { self.toast('读取公司记录文件失败', 'bad'); };
+        reader.readAsText(f);
+        file.value = '';
+      },
+    });
+    const backupRow = h('div', { class: 'row', style: { gap: '6px', margin: '0 0 8px' } },
+      h('button', {
+        class: 'btn sm',
+        onclick: function () {
+          const r = CO().exportData();
+          if (!r.ok) { self.toast(r.error || '导出失败', 'bad'); return; }
+          self.toast('已导出 ' + r.count + ' 家公司记录', 'good');
+        },
+      }, '导出公司记录'),
+      h('button', { class: 'btn sm', onclick: function () { file.click(); } }, '导入公司记录'),
+      file);
+    if (CM.Atlas) backupRow.appendChild(h('button', {
+      class: 'btn sm primary',
+      onclick: function () { CM.Atlas.open({ select: g ? g.mapId : null }); },
+    }, '打开全国战略地图'));
+    el.appendChild(backupRow);
+
+    // 全公司月报：把每个分部最近 12 个月的真实现金流和上缴横向汇总。
+    const clock = isCampaign ? CO().campaignClock(co) : null;
+    const rows = co.branches.map(function (b) {
+      const profits = (b.profits || []).slice().sort(function (a, c) { return a.ym - c.ym; });
+      const lastProfit = profits[profits.length - 1] || null;
+      const last = b.lastRemit || null;
+      const totalPaid = profits.reduce(function (a, p) { return a + (p.paid || 0); }, 0);
+      const totalNet = profits.reduce(function (a, p) { return a + (p.net || 0); }, 0);
+      return {
+        b: b, last: last, lastProfit: lastProfit, totalPaid: totalPaid, totalNet: totalNet,
+        name: (mapOf(b.mapId) || {}).name || b.mapId,
+      };
+    }).sort(function (a, c) { return c.totalPaid - a.totalPaid; });
+    const companyPaid = rows.reduce(function (a, r) { return a + r.totalPaid; }, 0);
+    const companyNet = rows.reduce(function (a, r) { return a + r.totalNet; }, 0);
+    const report = h('div', { class: 'co-sec co-report' },
+      h('div', { class: 'co-sh' },
+        h('b', null, '全公司月报（近 12 个月）'),
+        h('span', { class: 'tiny muted' }, clock ? '公司月份 ' + clock.y + '年' + clock.m + '月 · 上缴按经营现金流的 ' + Math.round(CO().REMIT_RATE * 100) + '%' : '旧公司不使用统一战役月份')),
+      h('div', { class: 'co-report-table' },
+        h('div', { class: 'cr head' },
+          h('span', null, '分部'), h('span', null, '状态'), h('span', null, '上次结算'),
+          h('span', null, '上月现金流'), h('span', null, '上次上缴'), h('span', null, '近12月上缴')),
+        rows.map(function (r) {
+          const lastYm = r.last ? r.last.y + '年' + r.last.m + '月' : '—';
+          const net = r.lastProfit ? U.fmtMoney(r.lastProfit.net) : '—';
+          const paid = r.last ? U.fmtMoney(r.last.amount) : '—';
+          return h('div', { class: 'cr' + (r.b.failed ? ' bad' : '') },
+            h('span', null, r.name), h('span', null, r.b.failed ? '停运' : '运营'),
+            h('span', null, lastYm), h('span', null, net), h('span', null, paid),
+            h('span', null, U.fmtMoney(r.totalPaid)));
+        }),
+        h('div', { class: 'cr total' },
+          h('span', null, '全公司'), h('span', null, ''),
+          h('span', null, ''), h('span', null, U.fmtMoney(companyNet)),
+          h('span', null, ''), h('span', null, U.fmtMoney(companyPaid)))));
+    el.appendChild(report);
+
     if (isCampaign) {
       const ct = CO().contractOf(co, g);
       if (ct) {
@@ -340,6 +413,11 @@
     this.confirm('开始 ' + (mp.name || mapId),
       '从公司池划出 ' + U.fmtMoney(start) + ' 作为「' + (mp.name || mapId) +
       '」的启动金；之后可随时向当前分部追加注资。', '开始经营', function () {
+      // 统一走 Atlas 的开城事务：预加载底图 → 创建城市 → 成功后扣池/登记分部。
+      if (CM.Atlas && CM.Atlas._newBranch) {
+        CM.Atlas._newBranch(mapId);
+        return;
+      }
       if (g && CM.Save) CM.Save.save(g, 'auto');
       const fresh = CO().get(co.id);
       const before = fresh.pool || 0;

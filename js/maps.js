@@ -60,10 +60,26 @@
     const G = m.geo || {};
     return U.fnv([m.id, m.cfg.W, m.cfg.H, (G.water || []).length, (G.roads || []).length, (G.names || []).length, (m.data.regions || []).map(function (r) { return r.id; }).join(',')].join('|'));
   };
+  // 内容指纹：开局线网、城市特性、锚点、设施和历史事件。
+  // 旧存档没有 contentFp 时继续兼容；新档会带上，之后内容变化会明确拒绝载入。
+  const contentFp = function (m) {
+    const d = m.data || {};
+    const events = (d.events || []).map(function (e) { return [e.y, e.m || 0, e.id || e.title || '', e.desc || '']; });
+    return U.fnv([
+      m.id,
+      m.mapVersion || 1,
+      JSON.stringify(d.initialNetwork || null),
+      JSON.stringify(m.trait || null),
+      JSON.stringify(d.anchors || []),
+      JSON.stringify(d.facilities || []),
+      JSON.stringify(events),
+    ].join('|'));
+  };
   for (const id in MAPS) {
     const m = MAPS[id];
     m.mapVersion = m.mapVersion || 1;
     m.fp = mapFp(m);
+    m.contentFp = contentFp(m);
   }
   CM.MAPS = MAPS;
   // 选择列表由易到难；同难度保留既有城市顺序，新地图按登记顺序接在同档末尾。

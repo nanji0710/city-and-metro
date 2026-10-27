@@ -90,7 +90,7 @@
     ui.openScreen(CM.U.h('div', { class: 'card' }, CM.U.h('h2', null, what + '失败'), CM.U.h('div', { class: 'callout bad' }, String(e && e.message || e)),
       CM.U.h('div', { class: 'modal-actions' }, CM.U.h('button', { class: 'btn primary', onclick: function () { if (CM.game) ui.closeScreen(); else ui.showStart(); } }, '确定'))));
   }
-  function start(g, isNew) {
+  function start(g, isNew, opts) {
     if (CM.Soundscape) CM.Soundscape.reset();
     if (CM.Follow) CM.Follow.stop(true);
     if (CM.Tutorial) CM.Tutorial.detach();
@@ -103,6 +103,12 @@
     const mp = CM.curMap(), cam = mp.cam || { cx: CFG.W / 2, cy: CFG.H / 2, zoom: 18 };
     R.cam.cx = cam.cx; R.cam.cy = cam.cy; R.cam.zoom = R.cam.tz = cam.zoom; R.cam.view = 1; R.cam.t = 1; R.cam.under = R.cam.tu = 0; R.cam.anchor = null; R.cam.fly = null;
     g.setSpeed(0);
+    // 开城事务：游戏已经创建成功后，才登记分部并扣公司池；失败直接退出这局，
+    // 不留下「扣了钱但没有城市」的空分部。
+    if (opts && opts.onStart) {
+      try { opts.onStart(g); }
+      catch (e) { fail(e, '登记新分部'); return; }
+    }
     if (g.tutorial && CM.Tutorial) {
       if (isNew) ui.doAutosave(); else ui.markSaved(g, Date.now());
       CM.Tutorial.attach(ui, g);
@@ -135,11 +141,11 @@
     if (opts.mode === 'challenge' && CM.Company) {
       let co = CM.Company.active();
       const camp = co ? CM.Company.campaignOf(co) : null;
-      if (co && camp && !camp.legacy && !CM.Company.canStartMap(co, mp.id, 'challenge')) {
+      if (co && camp && !camp.legacy && !opts.atlasTx && !CM.Company.canStartMap(co, mp.id, 'challenge')) {
         fail(new Error('这座城市尚未解锁。请先在公司面板用公司池解锁「' + (mp.name || mp.id) + '」。'), '开始战役');
         return;
       }
-      if (co && camp && !camp.legacy && !opts.companyBranch) {
+      if (co && camp && !camp.legacy && !opts.companyBranch && !opts.atlasTx) {
         const b = CM.Company.branchOf(co, mp.id);
         if (!b && !CM.Company.isStarter(mp.id)) {
           fail(new Error('新分部请从公司面板开始，并由公司池支付启动金。'), '开始战役');
@@ -172,7 +178,7 @@
     ui.showLoading('正在生成 ' + mp.cfg.START.y + ' 年的' + mp.data.city + '，并计算居民出行…');
     const boot = function () {
       setTimeout(function () {
-        try { CM.useMap(mp.id); start(CM.Game.create(opts), true); } catch (e) { CM.useMap(CM.game ? CM.game.mapId : 'gz'); fail(e, '创建新游戏'); }
+        try { CM.useMap(mp.id); start(CM.Game.create(opts), true, opts); } catch (e) { CM.useMap(CM.game ? CM.game.mapId : 'gz'); fail(e, '创建新游戏'); }
       }, 60);
     };
     // 54 城底图按选图懒加载；基底图 / 教程地图已同步加载，Promise 立即完成。

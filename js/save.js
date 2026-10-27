@@ -145,9 +145,15 @@
   Save.mapMismatch = function (payload) {
     const meta = payload && payload.meta;
     const mp = meta && CM.MAPS && CM.MAPS[meta.map || 'gz'];
-    if (!meta || !mp || !mp.geo || !meta.mapFp || !mp.fp) return null;
-    if (meta.mapFp === mp.fp) return null;
-    return '存档与当前「' + (mp.name || mp.id) + '」地图数据不一致（地图指纹不同）。请使用对应版本的地图存档，或先导出旧档再更新游戏。';
+    if (!meta || !mp) return null;
+    if (mp.geo && meta.mapFp && mp.fp && meta.mapFp !== mp.fp) {
+      return '存档与当前「' + (mp.name || mp.id) + '」底图不一致（地图指纹不同）。请使用对应版本的地图存档，或先导出旧档再更新游戏。';
+    }
+    // 内容指纹是新增字段；旧档没有时继续兼容。有内容指纹后，开局线网/特性/锚点变化也会拒绝旧档。
+    if (meta.contentFp && mp.contentFp && meta.contentFp !== mp.contentFp) {
+      return '存档与当前「' + (mp.name || mp.id) + '」玩法数据不一致（开局线网、特性或锚点已更新）。请使用对应版本的地图存档，或先导出旧档再更新游戏。';
+    }
+    return null;
   };
 
   Save.parseEnvelope = function (text) {

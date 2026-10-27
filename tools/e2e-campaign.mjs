@@ -113,18 +113,22 @@ check('只有一张入门图默认解锁', Array.isArray(started.unlocked) && st
 check('鄂州默认锁定', started.ezhou === false, started)
 check('对局内 HUD 显示第一份合同', started.goal === true && started.goalText.indexOf('/') >= 0, started)
 
-// 2b. 地图指纹不一致的存档必须拒绝
+// 2b. 地图指纹与内容指纹不一致的存档必须拒绝
 const fpGuard = jp(await evalJs(`(() => {
-  const env = CM.Save.envelope(CM.game);
-  const payload = JSON.parse(env.body);
-  payload.meta.mapFp = 'tampered-map-fingerprint';
-  const body = JSON.stringify(payload);
-  const bad = Object.assign({}, env, { body: body, checksum: CM.U.fnv(body) });
-  let message = '';
-  try { CM.Save.parseEnvelope(JSON.stringify(bad)); } catch (e) { message = e.message || String(e); }
-  return JSON.stringify({ blocked: message.indexOf('地图数据不一致') >= 0, message: message });
+  const makeBad = (field) => {
+    const env = CM.Save.envelope(CM.game);
+    const payload = JSON.parse(env.body);
+    payload.meta[field] = 'tampered-' + field;
+    const body = JSON.stringify(payload);
+    const bad = Object.assign({}, env, { body: body, checksum: CM.U.fnv(body) });
+    let message = '';
+    try { CM.Save.parseEnvelope(JSON.stringify(bad)); } catch (e) { message = e.message || String(e); }
+    return message;
+  };
+  return JSON.stringify({ map: makeBad('mapFp'), content: makeBad('contentFp') });
 })()`))
-check('地图指纹不一致的存档会被拒绝', fpGuard.blocked === true, fpGuard)
+check('地图底图指纹不一致的存档会被拒绝', fpGuard.map.indexOf('底图不一致') >= 0, fpGuard)
+check('地图内容指纹不一致的存档会被拒绝', fpGuard.content.indexOf('玩法数据不一致') >= 0, fpGuard)
 
 // 3. 公司面板：51 个未进驻城市，鄂州显示解锁
 const panel = jp(await evalJs(`(async () => {
@@ -137,12 +141,18 @@ const panel = jp(await evalJs(`(async () => {
     btn: ezhou ? (ezhou.querySelector('button') || {}).innerText || '' : '',
     poolText: pageText.indexOf('公司池') >= 0,
     preview: pageText.indexOf('下次月结预计上缴') >= 0,
-    contract: pageText.indexOf('第一份公司合同') >= 0 });
+    contract: pageText.indexOf('第一份公司合同') >= 0,
+    report: pageText.indexOf('全公司月报') >= 0 && pageText.indexOf('近 12 个月') >= 0,
+    backup: pageText.indexOf('导出公司记录') >= 0 && pageText.indexOf('导入公司记录') >= 0,
+    atlasEntry: pageText.indexOf('打开全国战略地图') >= 0 });
 })()`))
 check('公司面板出现地图解锁列表', panel.rows === 53 && panel.hasAomen === true && panel.poolText === true, panel)
 check('5 亿公司池不足以解锁 8 亿城市并支付启动金', panel.btn.indexOf('不够') >= 0, panel)
 check('公司面板显示月结预计上缴', panel.preview === true, panel)
 check('公司面板显示第一份公司合同', panel.contract === true, panel)
+check('公司面板显示全公司月报', panel.report === true, panel)
+check('公司面板提供公司记录备份', panel.backup === true, panel)
+check('公司面板提供全国地图统一入口', panel.atlasEntry === true, panel)
 
 // 4. 补足公司池后解锁鄂州
 const unlocked = jp(await evalJs(`(async () => {
@@ -201,13 +211,23 @@ const settledA = jp(await evalJs(`(async () => {
   if (!a || !a.slotId) return JSON.stringify({ err: 'NO-A-SLOT' });
   if (!g.startJump(2)) return JSON.stringify({ err: 'BUSY' });
   while (g.jumping) await new Promise(r => setTimeout(r, 100));
-  for (let i = 0; i < 150 && (CM.Company.settling || CM.Company._settleTimer); i++) await new Promise(r => setTimeout(r, 100));
+  let sawProgress = false, progressText = '';
+  for (let i = 0; i < 600 && (CM.Company.settling || CM.Company._settleTimer); i++) {
+    const el = document.querySelector('#settle-progress');
+    if (el && !el.classList.contains('hidden')) { sawProgress = true; progressText = el.innerText.slice(0, 100); }
+    await new Promise(r => setTimeout(r, 50));
+  }
+  await new Promise(r => setTimeout(r, 1500));
   const p = await CM.Save.load(a.slotId);
   const coNow = CM.Company.active();
   return JSON.stringify({ active: [g.clock.y, g.clock.m], a: [p.clock.y, p.clock.m],
-    last: CM.Company.branchOf(coNow, 'wenzhou').lastRemit || null, campaign: CM.Company.campaignClock(coNow) });
+    last: CM.Company.branchOf(coNow, 'wenzhou').lastRemit || null, campaign: CM.Company.campaignClock(coNow),
+    progress: sawProgress, progressText: progressText, err: CM.Company.lastSettleError || null, settling: CM.Company.settling,
+    slots: CM.Save.list('wenzhou')[0] ? CM.Save.list('wenzhou')[0].slots.map(s => ({ id: s.slotId, date: s.date, at: s.savedAt })) : [],
+    slotId: a.slotId });
 })()`))
 check('其它分部在后台真实补结算', settledA.active[0] === settledA.a[0] && settledA.active[1] === settledA.a[1], settledA)
+check('后台结算显示实时进度条', settledA.progress === true, settledA)
 
 // 5b. 已有分部从选图页重开时，不能重新领难度标准 30 亿
 const replay = jp(await evalJs(`(async () => {
@@ -265,6 +285,20 @@ const persist = jp(await evalJs(`(() => {
 })()`))
 check('刷新后公司记录仍在', persist.co && persist.n === 2 && persist.pool === 25000, persist)
 check('刷新后解锁状态仍在', persist.unlocked === true, persist)
+
+// 7b. 公司记录导入：同 id 备份还原，且不打断当前局的 company 归属
+const imported = jp(await evalJs(`(() => {
+  const co = CM.Company.active();
+  const beforeId = co.id;
+  const data = { type: 'city-metro-company', version: 1, gameVersion: CM.CFG.GAME_VERSION,
+    exportedAt: new Date().toISOString(), activeId: co.id, companies: [co] };
+  const r = CM.Company.importData(JSON.stringify(data), { replace: true });
+  const now = CM.Company.active();
+  return JSON.stringify({ ok: r.ok, imported: r.imported, replaced: r.replaced,
+    beforeId: beforeId, afterId: now.id, branches: now.branches.length, pool: now.pool });
+})()`))
+check('公司记录可以导入还原', imported.ok === true && imported.imported === 1 && imported.replaced === 1, imported)
+check('导入不会改变当前局公司归属', imported.beforeId === imported.afterId && imported.branches === 2, imported)
 
 // 8. 选图页锁态
 const msel = jp(await evalJs(`(async () => {

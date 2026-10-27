@@ -9,6 +9,7 @@
     game: null, prevSpeed: 0, speedSet: false, sel: null, hover: null,
     cam: { x: 0, y: 0, zoom: 1 }, base: 1, dpr: 1,
     hits: [], raf: 0, lastCard: 0, lastRender: 0, drag: null, last: null,
+    filters: { q: '', province: 'all', status: 'all' }, filterBar: null, count: null,
   };
   const DATA = function () { return CM.CHINA_ATLAS || { cities: [], provinces: [] }; };
   const clamp = function (v, a, b) { return Math.max(a, Math.min(b, v)); };
@@ -127,6 +128,19 @@
     return out;
   }
 
+  function visibleCities() {
+    const q = (A.filters.q || '').trim().toLowerCase();
+    return DATA().cities.filter(function (c) {
+      const st = stateOf(c.id), mp = cityMeta(c.id) || {};
+      if (A.filters.province !== 'all' && c.province !== A.filters.province) return false;
+      if (A.filters.status !== 'all' && st !== A.filters.status) return false;
+      if (!q) return true;
+      const trait = mp.trait ? (mp.trait.name + ' ' + (mp.trait.fx || '')) : '';
+      const anchors = mp.data && mp.data.anchors ? mp.data.anchors.map(function (a) { return a.name; }).join(' ') : '';
+      return [c.name, c.id, c.province, trait, anchors].join(' ').toLowerCase().indexOf(q) >= 0;
+    });
+  }
+
   function render() {
     if (!A.cv || !A.ctx) return;
     const ctx = A.ctx, dpr = A.dpr, vw = A.cv.clientWidth, vh = A.cv.clientHeight;
@@ -161,7 +175,8 @@
     }
     // 城市点 / 聚合
     A.hits = [];
-    const list = DATA().cities;
+    const list = visibleCities();
+    if (A.count) A.count.textContent = list.length + ' / ' + DATA().cities.length + ' 城';
     for (const item of clusters(list)) {
       const isW = item.kind === 'city' && item.city.id === 'wenzhou';
       const selected = item.kind === 'city' && item.city.id === A.sel;
@@ -280,6 +295,33 @@
   }
 
 
+  function makeFilterBar() {
+    const provinces = Array.from(new Set(DATA().cities.map(function (c) { return c.province; })))
+      .sort(function (a, b) { return a.localeCompare(b, 'zh-Hans-CN'); });
+    const input = h('input', {
+      class: 'atlas-search', type: 'search', placeholder: '搜索城市 / 特性 / 锚点', value: A.filters.q,
+      oninput: function () { A.filters.q = input.value; if (A.sel && !visibleCities().some(function (c) { return c.id === A.sel; })) { A.sel = null; updateCard(); } render(); },
+    });
+    // 阻止搜索框里的 +/-/方向键传给全国图快捷键。
+    input.addEventListener('keydown', function (e) { e.stopPropagation(); if (e.key === 'Enter') { e.preventDefault(); const list = visibleCities(); if (list.length) { A.sel = list[0].id; updateCard(); centerCity(list[0].id, 3.2); } } });
+    const sel = h('select', { class: 'atlas-select', 'aria-label': '按省份筛选', onchange: function () { A.filters.province = sel.value; if (A.sel && !visibleCities().some(function (c) { return c.id === A.sel; })) { A.sel = null; updateCard(); } render(); } },
+      h('option', { value: 'all' }, '全部省份'),
+      provinces.map(function (p) { return h('option', { value: p, selected: A.filters.province === p ? true : null }, p); }));
+    const states = [['all', '全部状态'], ['current', '当前经营'], ['owned', '已进驻'], ['unlocked', '已解锁'], ['failed', '已停运'], ['starter', '新手城市'], ['locked', '未解锁']];
+    const st = h('select', { class: 'atlas-select', 'aria-label': '按状态筛选', onchange: function () { A.filters.status = st.value; if (A.sel && !visibleCities().some(function (c) { return c.id === A.sel; })) { A.sel = null; updateCard(); } render(); } },
+      states.map(function (x) { return h('option', { value: x[0], selected: A.filters.status === x[0] ? true : null }, x[1]); }));
+    A.count = h('span', { class: 'atlas-count' }, '');
+    return h('div', { class: 'atlas-filter' },
+      input, sel, st,
+      h('button', {
+        class: 'atlas-hbtn', onclick: function () {
+          const id = (CM.game && CM.game.mapId) || (CM.Company && CM.Company.STARTERS[0]);
+          if (!id) return;
+          A.sel = id; updateCard(); centerCity(id, 3.2);
+        },
+      }, '定位当前'), A.count);
+  }
+
   function centerCity(id, z) {
     const c = DATA().cities.find(function (x) { return x.id === id; }); if (!c) return;
     A.cam.x = project(c.lon, c.lat).x; A.cam.y = project(c.lon, c.lat).y;
@@ -363,9 +405,10 @@
     const cv = h('canvas', { class: 'atlas-canvas' });
     A.cv = cv; A.ctx = cv.getContext('2d');
     A.head = h('div', { class: 'atlas-head' });
+    A.filterBar = makeFilterBar();
     A.card = h('div', { class: 'atlas-card hidden' });
-    const hint = h('div', { class: 'atlas-hint' }, '拖动平移 · 滚轮缩放 · 点击城市');
-    A.el = h('div', { id: 'atlas' }, cv, A.head, A.card, hint);
+    const hint = h('div', { class: 'atlas-hint' }, '拖动平移 · 滚轮缩放 · 点击城市 · Enter 选中搜索结果');
+    A.el = h('div', { id: 'atlas' }, cv, A.head, A.filterBar, A.card, hint);
     document.body.appendChild(A.el);
     document.body.classList.add('atlas-open');
     resize(); bind(); updateHead(); updateCard();
@@ -389,7 +432,7 @@
     A.last = { x: A.cam.x, y: A.cam.y, zoom: A.cam.zoom };
     const g = A.game;
     if (g && g.speed === 0 && A.prevSpeed > 0 && !A.speedSet && g.setSpeed) g.setSpeed(A.prevSpeed);
-    A.el = null; A.cv = null; A.ctx = null; A.head = null; A.card = null;
+    A.el = null; A.cv = null; A.ctx = null; A.head = null; A.card = null; A.filterBar = null; A.count = null;
   };
 
   A._toast = function (t, k) {
@@ -399,29 +442,43 @@
     setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 2600);
   };
   A._prepare = function (fn) {
-    if (A.game && CM.ui) CM.ui.setSpeed(0);
-    const p = (A.game && CM.ui && CM.ui.doAutosave && !CM.ui.isSaved()) ? CM.ui.doAutosave(true) : Promise.resolve({ ok: true });
+    // 从公司面板直接开城时 Atlas 并没有打开，此时必须保存 CM.game 而不是 A.game。
+    const g = A.game || CM.game;
+    if (g && CM.ui) CM.ui.setSpeed(0);
+    const p = (g && CM.ui && CM.ui.doAutosave && !CM.ui.isSaved()) ? CM.ui.doAutosave(true) : Promise.resolve({ ok: true });
     return p.then(function (r) { if (r && r.ok === false) { A._toast('当前进度保存失败，未切换城市', 'bad'); return; } A.close(); fn(); });
   };
 
   A._newBranch = function (id) {
     const co = companyOf(); if (!co) return A._toast('还没有公司', 'warn');
     const mp = cityMeta(id) || {}, start = CM.Company.startFundsFor(id);
-    if ((co.pool || 0) < start) return A._toast('公司池不足：开城需要 ' + money(start) + '（可用 ' + money(co.pool || 0) + '）', 'warn');
-    const fresh = CM.Company.get(co.id);
-    const before = fresh.pool || 0;
-    fresh.pool = before - start;
-    const saved = CM.Company.save(fresh);
-    if (!saved.ok) return A._toast(saved.error || '公司池写入失败', 'bad');
-    const ab = CM.Company.addBranch(fresh, { mapId: id, name: (mp.name || id) + '分部', funds: start });
-    if (!ab.ok) { fresh.pool = before; CM.Company.save(fresh); return A._toast(ab.error || '分部登记失败', 'bad'); }
-    A._prepare(function () {
-      CM.newGame({
-        map: id, mode: 'challenge',
-        difficulty: CM.Difficulty ? CM.Difficulty.DEFAULT_KEY : 'normal',
-        name: '经营挑战 · ' + (mp.name || id),
-        company: { id: co.id, name: co.name }, startFunds: start, companyBranch: true,
+    const fee = CM.Company.isUnlocked(co, id) ? 0 : CM.Company.unlockFee(id);
+    const need = fee + start;
+    if ((co.pool || 0) < need) {
+      return A._toast('公司池不足：解锁 + 启动金共需 ' + money(need) + '（可用 ' + money(co.pool || 0) + '）', 'warn');
+    }
+    // 先预加载底图；底图失败时不扣池、不登记分部。
+    const preload = CM.loadGeo ? CM.loadGeo(id) : Promise.resolve();
+    preload.then(function () {
+      A._prepare(function () {
+        CM.newGame({
+          map: id, mode: 'challenge',
+          difficulty: CM.Difficulty ? CM.Difficulty.DEFAULT_KEY : 'normal',
+          name: '经营挑战 · ' + (mp.name || id),
+          company: { id: co.id, name: co.name }, startFunds: start, companyBranch: true, atlasTx: true,
+          onStart: function (g) {
+            // 城市已经创建成功；现在才扣公司池并登记分部。
+            const r = CM.Company.openBranch(co, id, { startFunds: start });
+            if (!r.ok) {
+              if (CM.ui) CM.ui.toast(r.error || '开城失败', 'bad');
+              CM.endGame();
+              throw new Error(r.error || '开城失败');
+            }
+          },
+        });
       });
+    }, function (e) {
+      A._toast('底图加载失败：' + (e && e.message || e), 'bad');
     });
   };
 
@@ -454,9 +511,7 @@
     if (st === 'unlocked') return A._newBranch(id);
     const fee = CM.Company.unlockFee(id), start = CM.Company.startFundsFor(id);
     if ((co.pool || 0) < fee + start) return A._toast('公司池不足：解锁 + 启动金共需 ' + money(fee + start) + '（可用 ' + money(co.pool || 0) + '）', 'warn');
-    const r = CM.Company.unlockMap(co, id);
-    if (!r.ok) return A._toast(r.error || '解锁失败', 'bad');
-    A._toast('已解锁「' + ((cityMeta(id) || {}).name || id) + '」', 'good');
+    // 解锁和开城合并为一次事务：城市创建成功后才扣费/登记。
     A._newBranch(id);
   };
 

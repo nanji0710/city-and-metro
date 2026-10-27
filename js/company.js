@@ -298,8 +298,27 @@
       });
       if (!list.length) return { ok: true, changed: 0, target: clock };
       const prevSpeed = g.speed;
+      const total = list.length;
+      let done = 0;
+      const tick = function () { return new Promise(function (r) { setTimeout(r, 0); }); };
+      // 分批推进一个分部的跳月：每 14ms 让出一次主线程，让进度条实时刷新。
+      const runJump = function (ga, months, label) {
+        if (!ga.startJump(months)) return Promise.reject(new Error('分部正在结算，无法启动跳月'));
+        return new Promise(function (resolve, reject) {
+          const step = function () {
+            if (!ga.jumping) { resolve(); return; }
+            try {
+              ga.stepJump();
+              if (CM.SettleUI) CM.SettleUI.update(done + (ga.jumping ? (ga.jumping.progress || 0) : 1), total, label);
+              setTimeout(step, 0);
+            } catch (e) { reject(e); }
+          };
+          step();
+        });
+      };
       g.speed = 0;
       Company.settling = true;
+      if (CM.SettleUI) CM.SettleUI.show(total);
       let changed = 0, failed = 0;
       let p = Promise.resolve();
       list.forEach(function (b) {
@@ -312,29 +331,51 @@
             return load.then(function () {
               CM.useMap(b.mapId);
               const ga = CM.Game.restore(payload);
-              ga.startJump(months);
-              let n = 0;
-              while (ga.jumping && n++ < 6000) ga.stepJump();
-              const saveP = CM.Save.save(ga, 'auto', { slotId: b.slotId, label: '自动存档' });
-              CM.useMap(activeMap);
-              if (ga.econ && ga.econ.failed) {
-                failed++;
-                Company.updateBranch(co0, b.mapId, { failed: true });
-              }
-              changed++;
-              return saveP;
+              const label = '正在结算 ' + ((CM.MAPS[b.mapId] && CM.MAPS[b.mapId].name) || b.mapId);
+              return runJump(ga, months, label).then(function () {
+                return CM.Save.save(ga, 'auto', { slotId: b.slotId, label: '自动存档' }).then(function (saved) {
+                  if (!saved || !saved.ok) throw new Error((saved && saved.error) || '分部存档写回失败');
+                  CM.useMap(activeMap);
+                  if (ga.econ && ga.econ.failed) {
+                    failed++;
+                    Company.updateBranch(co0, b.mapId, { failed: true });
+                  }
+                  changed++;
+                  return { ok: true };
+                });
+              });
             });
           });
         }).catch(function (e) {
+          Company.lastSettleError = (e && e.message) || String(e);
           console.warn('分部结算跳过：' + b.mapId, e);
+        }).then(function () {
+          done++;
+          if (CM.SettleUI) CM.SettleUI.update(done, total,
+            '正在结算 ' + ((CM.MAPS[b.mapId] && CM.MAPS[b.mapId].name) || b.mapId));
+          // 每完成一个分部让出一次主线程，进度条才能真正绘制。
+          return tick();
         });
       });
       return p.then(function () {
-        return { ok: true, changed: changed, failed: failed, target: clock };
-      }).finally(function () {
+        if (CM.SettleUI) {
+          CM.SettleUI.update(total, total, null, true);
+          CM.SettleUI.hide(900);
+        }
+        // 100% 显示完再恢复当前局速度，避免玩家看到“月结已经完成但时间又跳了”。
+        const resume = function () {
+          Company.settling = false;
+          try { CM.useMap(activeMap); } catch (e) { /* 地图恢复失败时保留当前图 */ }
+          g.speed = prevSpeed;
+        };
+        if (CM.SettleUI) setTimeout(resume, 720); else resume();
+        return { ok: true, changed: changed, failed: failed, target: clock, total: total };
+      }).catch(function (e) {
         Company.settling = false;
-        try { CM.useMap(activeMap); } catch (e) { /* 地图恢复失败时保留当前图 */ }
+        try { CM.useMap(activeMap); } catch (e2) { /* noop */ }
         g.speed = prevSpeed;
+        if (CM.SettleUI) CM.SettleUI.hide(0);
+        throw e;
       });
     });
   };
@@ -406,6 +447,77 @@
     return writeAll(list) ? { ok: true } : { ok: false, error: '写入失败' };
   };
 
+  /* 导出 / 导入公司记录：只带公司账本，不带城市存档。
+   * 城市存档体积大且有自己的导出入口；这里解决“清浏览器数据丢战役进度”。 */
+  Company.exportData = function () {
+    const list = Company.all();
+    if (!list.length) return { ok: false, error: '还没有可导出的公司记录' };
+    const data = {
+      type: 'city-metro-company',
+      version: 1,
+      gameVersion: CFG.GAME_VERSION,
+      exportedAt: nowIso(),
+      activeId: Company.activeId(),
+      companies: list,
+    };
+    if (CM.Save && CM.Save.download) {
+      CM.Save.download(JSON.stringify(data), '城市与地铁_公司记录_' + nowIso().slice(0, 10) + '.cmcompany.json');
+      return { ok: true, count: list.length };
+    }
+    return { ok: false, error: '当前环境不支持下载' };
+  };
+
+  Company.importData = function (text, opts) {
+    let raw;
+    try { raw = JSON.parse(String(text || '')); }
+    catch (e) { return { ok: false, error: '文件不是有效 JSON' }; }
+    if (!raw || raw.type !== 'city-metro-company') return { ok: false, error: '这不是公司记录文件' };
+    if (raw.version !== 1) return { ok: false, error: '公司记录版本不支持' };
+    const arr = Array.isArray(raw.companies) ? raw.companies : [];
+    if (!arr.length) return { ok: false, error: '文件里没有公司记录' };
+    const clean = {};
+    for (const src of arr) {
+      if (!src || typeof src.id !== 'string' || !src.id) return { ok: false, error: '公司记录缺少 id' };
+      const co = JSON.parse(JSON.stringify(src));
+      co.id = src.id;
+      co.name = String(co.name || '城轨公司');
+      co.pool = typeof co.pool === 'number' && isFinite(co.pool) ? Math.max(0, Math.round(co.pool)) : 0;
+      co.branches = Array.isArray(co.branches) ? co.branches.filter(function (b) {
+        return b && typeof b.mapId === 'string' && CM.MAPS[b.mapId];
+      }).map(function (b) {
+        return {
+          mapId: b.mapId,
+          name: String(b.name || ((CM.MAPS[b.mapId] && CM.MAPS[b.mapId].name) || b.mapId) + '分部'),
+          joinedAt: b.joinedAt || null,
+          funds: typeof b.funds === 'number' && isFinite(b.funds) ? Math.max(0, Math.round(b.funds)) : 0,
+          slotId: typeof b.slotId === 'string' ? b.slotId : null,
+          failed: !!b.failed,
+          lastRemit: b.lastRemit || null,
+          lastOps: typeof b.lastOps === 'number' ? b.lastOps : 0,
+          profits: Array.isArray(b.profits) ? b.profits.filter(function (p) { return p && typeof p.ym === 'number'; }) : [],
+          injects: Array.isArray(b.injects) ? b.injects.filter(function (p) { return p && typeof p.ym === 'number'; }) : [],
+        };
+      }) : [];
+      if (co.campaign && typeof co.campaign === 'object') {
+        co.campaign = JSON.parse(JSON.stringify(co.campaign));
+        if (Array.isArray(co.campaign.unlocked)) co.campaign.unlocked = co.campaign.unlocked.filter(function (id) { return CM.MAPS[id]; });
+      }
+      co.createdAt = co.createdAt || nowIso();
+      co.updatedAt = nowIso();
+      clean[co.id] = co;
+    }
+    const old = readAll();
+    const conflicts = Object.keys(clean).filter(function (id) { return !!old[id]; });
+    if (conflicts.length && opts && opts.replace === false) return { ok: false, error: '存在同名公司 id：' + conflicts.join(', ') };
+    const merged = Object.assign({}, old, clean);
+    if (!writeAll(merged)) return { ok: false, error: '写入失败：浏览器存储不可用（无痕模式或空间已满）' };
+    const activeId = raw.activeId && clean[raw.activeId] ? raw.activeId : Object.keys(clean)[0];
+    // 正在玩的局不能被导入文件悄悄切走公司；导入只还原账本，不改变当前局归属。
+    const playingId = CM.game && CM.game.company && CM.game.company.id;
+    if (!playingId || !Company.get(playingId)) Company.setActive(activeId);
+    return { ok: true, imported: Object.keys(clean).length, replaced: conflicts.length, activeId: activeId };
+  };
+
   /* 当前正在玩的那家公司。存一个「活跃 id」，让刷新页面后还能回到同一家公司。 */
   const ACTIVE = CFG.saves.prefix + 'companyActive';
   Company.activeId = function () {
@@ -451,6 +563,43 @@
     const pb = Company.branchOf(c, payerMapId);
     if (!pb) return 0;
     return (typeof pb.funds === 'number' ? pb.funds : 0) + Company.poolOf(c);
+  };
+
+  /* 原子开城：一次写入完成「解锁（若需要）+ 扣启动金 + 登记分部」。
+   * 只应在城市 Game 创建成功之后调用；任何一步失败都不留半成品分部。 */
+  Company.openBranch = function (c, mapId, opts) {
+    const co = Company.fresh(c);
+    if (!co) return { ok: false, error: '公司不存在' };
+    const mp = CM.MAPS && CM.MAPS[mapId];
+    if (!mp || mp.tutorial || mp.kind === 'fictional') return { ok: false, error: '这张地图不能开分部' };
+    if (Company.branchOf(co, mapId)) return { ok: false, error: '这座城市已经登记为分部' };
+    const camp = Company.campaignOf(co);
+    if (!camp || camp.legacy) return { ok: false, error: '旧公司不参与战役开城' };
+    const fee = Company.isUnlocked(co, mapId) ? 0 : Company.unlockFee(mapId);
+    const start = opts && typeof opts.startFunds === 'number' ? Math.max(0, Math.round(opts.startFunds)) : Company.startFundsFor(mapId);
+    const need = fee + start;
+    if ((co.pool || 0) < need) return { ok: false, error: '公司池不足（需要 ' + U.fmtMoney(need) + '）' };
+    co.pool = (co.pool || 0) - need;
+    if (fee > 0) {
+      co.campaign = Object.assign({}, camp, {
+        unlocked: (camp.unlocked || []).concat([mapId]),
+        legacy: false,
+        bankrupt: false,
+      });
+    }
+    const b = {
+      mapId: mapId,
+      name: (mp.name || mapId) + '分部',
+      joinedAt: nowIso(),
+      funds: start,
+      slotId: null,
+      failed: false,
+    };
+    co.branches.push(b);
+    co.updatedAt = nowIso();
+    const r = Company.commit(c, co);
+    if (!r.ok) return { ok: false, error: r.error || '公司记录写入失败' };
+    return { ok: true, branch: b, fee: fee, start: start, pool: co.pool };
   };
 
   Company.addBranch = function (c, br) {
