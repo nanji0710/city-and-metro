@@ -60,11 +60,54 @@
     return s === 'current' ? '当前经营' : s === 'owned' ? '已进驻' : s === 'failed' ? '已停运' :
       s === 'unlocked' ? '已解锁' : s === 'starter' ? '新手城市' : '未解锁';
   }
-  function statusColor(id) {
-    const s = stateOf(id);
-    return s === 'current' ? '#2fd1bf' : s === 'owned' ? '#4f8bff' : s === 'unlocked' ? '#7b8cff' :
-      s === 'failed' ? '#ff5d6c' : s === 'starter' ? '#f5c451' : '#6f7c8c';
+  function isDarkTheme() { return document.documentElement.dataset.theme === 'dark'; }
+
+  function mapTheme() {
+    const dark = isDarkTheme();
+    return {
+      dark: dark,
+      bg0: dark ? '#111a28' : '#f5f8fc',
+      bg1: dark ? '#1d2a3d' : '#e8eff7',
+      glow: dark ? 'rgba(106,166,230,.10)' : 'rgba(47,111,168,.07)',
+      grid: dark ? 'rgba(154,181,212,.08)' : 'rgba(43,84,128,.08)',
+      landA: dark ? 'rgba(47,70,101,.90)' : 'rgba(227,239,249,.94)',
+      landB: dark ? 'rgba(37,56,83,.88)' : 'rgba(208,226,241,.94)',
+      line: dark ? 'rgba(154,181,212,.38)' : 'rgba(43,84,128,.28)',
+      coast: dark ? 'rgba(196,220,246,.62)' : 'rgba(27,54,92,.38)',
+      label: dark ? 'rgba(229,236,246,.88)' : 'rgba(23,38,61,.80)',
+      selectedLabel: dark ? '#d9fff9' : '#0f5a53',
+      cluster: dark ? 'rgba(106,166,230,.94)' : 'rgba(47,111,168,.94)',
+      clusterText: '#fff',
+      pointStroke: dark ? 'rgba(9,16,27,.92)' : 'rgba(255,255,255,.94)',
+    };
   }
+
+  // 状态色板：地图点、图例、筛选菜单共用一套，浅色/深色各一组。
+  const STATUS_COLORS = {
+    current: ['#188a7c', '#3fc1b0'],
+    owned: ['#2f6fa8', '#6aa6e6'],
+    unlocked: ['#7367ee', '#9d92ff'],
+    failed: ['#d83a3a', '#ff7070'],
+    starter: ['#d99a00', '#f0b33c'],
+    locked: ['#98a6b8', '#66768e'],
+  };
+  function statusColorOf(s, dark) {
+    const c = STATUS_COLORS[s] || STATUS_COLORS.locked;
+    return (dark == null ? isDarkTheme() : dark) ? c[1] : c[0];
+  }
+  function statusColor(id) { return statusColorOf(stateOf(id), isDarkTheme()); }
+
+  /* 顶栏同一时间只留一个浮层：搜索建议和两个下拉互相排斥，避免面板叠在一起 */
+  const popClosers = [];
+  function closePops(keep) {
+    popClosers.forEach(function (fn) { if (fn !== keep) { try { fn(); } catch (e) { /* 已销毁 */ } } });
+  }
+  function unpop(fn) {
+    const i = popClosers.indexOf(fn);
+    if (i >= 0) popClosers.splice(i, 1);
+  }
+
+  function statusClass(id) { return 'st-' + stateOf(id); }
 
   function resize() {
     if (!A.cv) return;
@@ -128,82 +171,122 @@
     return out;
   }
 
+  // 城市是否命中一组筛选条件。抽出来是为了让下拉菜单能算「换到这一项会剩几座城」。
+  function matchCity(c, f) {
+    const st = stateOf(c.id), mp = cityMeta(c.id) || {};
+    if (f.province !== 'all' && c.province !== f.province) return false;
+    if (f.status !== 'all' && st !== f.status) return false;
+    const q = (f.q || '').trim().toLowerCase();
+    if (!q) return true;
+    const trait = mp.trait ? (mp.trait.name + ' ' + (mp.trait.fx || '')) : '';
+    const anchors = mp.data && mp.data.anchors ? mp.data.anchors.map(function (a) { return a.name; }).join(' ') : '';
+    return [c.name, c.id, c.province, trait, anchors].join(' ').toLowerCase().indexOf(q) >= 0;
+  }
   function visibleCities() {
+    return DATA().cities.filter(function (c) { return matchCity(c, A.filters); });
+  }
+  function countWith(over) {
+    const f = { q: A.filters.q, province: A.filters.province, status: A.filters.status };
+    for (const k in over) f[k] = over[k];
+    return DATA().cities.filter(function (c) { return matchCity(c, f); }).length;
+  }
+  // 搜索结果：前缀命中优先，其次短名优先，避免「广州」被「广州南」之类挤走。
+  function searchMatches(limit) {
     const q = (A.filters.q || '').trim().toLowerCase();
-    return DATA().cities.filter(function (c) {
-      const st = stateOf(c.id), mp = cityMeta(c.id) || {};
-      if (A.filters.province !== 'all' && c.province !== A.filters.province) return false;
-      if (A.filters.status !== 'all' && st !== A.filters.status) return false;
-      if (!q) return true;
-      const trait = mp.trait ? (mp.trait.name + ' ' + (mp.trait.fx || '')) : '';
-      const anchors = mp.data && mp.data.anchors ? mp.data.anchors.map(function (a) { return a.name; }).join(' ') : '';
-      return [c.name, c.id, c.province, trait, anchors].join(' ').toLowerCase().indexOf(q) >= 0;
-    });
+    if (!q) return [];
+    return visibleCities().slice().sort(function (a, b) {
+      const an = a.name.toLowerCase(), bn = b.name.toLowerCase();
+      const ap = an.indexOf(q) === 0 ? 0 : 1, bp = bn.indexOf(q) === 0 ? 0 : 1;
+      return ap - bp || an.length - bn.length || an.localeCompare(bn, 'zh-Hans-CN');
+    }).slice(0, limit);
+  }
+  function paintCount(n) {
+    if (!A.count || A.count._n === n) return;
+    A.count._n = n;
+    A.count.textContent = '';
+    A.count.append(h('b', null, String(n)), h('span', null, '/ ' + DATA().cities.length + ' 城'));
   }
 
   function render() {
     if (!A.cv || !A.ctx) return;
     const ctx = A.ctx, dpr = A.dpr, vw = A.cv.clientWidth, vh = A.cv.clientHeight;
+    const T = mapTheme();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, vw, vh);
     const g = ctx.createLinearGradient(0, 0, 0, vh);
-    g.addColorStop(0, '#0f1825'); g.addColorStop(1, '#182334');
+    g.addColorStop(0, T.bg0); g.addColorStop(1, T.bg1);
     ctx.fillStyle = g; ctx.fillRect(0, 0, vw, vh);
+    // 主题一致的环境光，让地图不是一块孤立的深蓝画布。
+    const glow = ctx.createRadialGradient(vw * .72, vh * .22, 0, vw * .72, vh * .22, Math.max(vw, vh) * .72);
+    glow.addColorStop(0, T.glow); glow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = glow; ctx.fillRect(0, 0, vw, vh);
     // 经纬网
-    ctx.strokeStyle = 'rgba(125,150,180,.08)'; ctx.lineWidth = 1;
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1;
     for (let lon = 75; lon <= 135; lon += 5) {
-      const p = project(lon, 36), q = project(lon, 18);
-      const a = toScreen(p), b = toScreen(q);
+      const a = toScreen(project(lon, 36)), b = toScreen(project(lon, 18));
       ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
     }
     for (let lat = 20; lat <= 50; lat += 5) {
-      const p = project(73, lat), q = project(135, lat);
-      const a = toScreen(p), b = toScreen(q);
+      const a = toScreen(project(73, lat)), b = toScreen(project(135, lat));
       ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
     }
-    // 省级区：战略层只画轮廓和浅填充
+    // 省级区：浅色下是纸面地图，深色下是指挥台底图。
     const sc = mapScale(), sx = vw / 2, sy = vh / 2;
     let pi = 0;
+    ctx.lineJoin = 'round';
     for (const prov of DATA().provinces) {
       pi++;
-      ctx.fillStyle = pi % 2 ? 'rgba(53,76,102,.62)' : 'rgba(47,68,92,.62)';
-      ctx.strokeStyle = 'rgba(155,192,220,.36)'; ctx.lineWidth = 0.75;
+      ctx.fillStyle = pi % 2 ? T.landA : T.landB;
       for (const ring of prov.rings) {
         drawPath(ctx, ring, sx, sy, sc);
-        ctx.fill(); ctx.stroke();
+        ctx.fill(); ctx.strokeStyle = T.line; ctx.lineWidth = .8; ctx.stroke();
       }
     }
+    // 海岸轮廓略强，让中国轮廓在浅色主题里也能立住。
+    ctx.strokeStyle = T.coast; ctx.lineWidth = 1.15;
+    for (const prov of DATA().provinces) for (const ring of prov.rings) { drawPath(ctx, ring, sx, sy, sc); ctx.stroke(); }
     // 城市点 / 聚合
     A.hits = [];
     const list = visibleCities();
-    if (A.count) A.count.textContent = list.length + ' / ' + DATA().cities.length + ' 城';
+    if (A.count) paintCount(list.length);
     for (const item of clusters(list)) {
       const isW = item.kind === 'city' && item.city.id === 'wenzhou';
       const selected = item.kind === 'city' && item.city.id === A.sel;
       if (item.kind === 'cluster') {
+        ctx.beginPath(); ctx.arc(item.x, item.y, 21, 0, Math.PI * 2);
+        ctx.fillStyle = isDarkTheme() ? 'rgba(106,166,230,.10)' : 'rgba(47,111,168,.09)'; ctx.fill();
         ctx.beginPath(); ctx.arc(item.x, item.y, 13, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(79,139,255,.9)'; ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,.7)'; ctx.lineWidth = 1.5; ctx.stroke();
-        ctx.fillStyle = '#fff'; ctx.font = '600 10px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText(String(item.n), item.x, item.y + 0.5);
+        ctx.fillStyle = T.cluster; ctx.fill();
+        ctx.strokeStyle = T.pointStroke; ctx.lineWidth = 1.4; ctx.stroke();
+        ctx.fillStyle = T.clusterText; ctx.font = '650 10px ' + (CM.CFG.font || 'system-ui, sans-serif');
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(String(item.n), item.x, item.y + .5);
         A.hits.push({ kind: 'cluster', x: item.x, y: item.y, r: 16, cities: item.cities });
         continue;
       }
       const c = item.city, s = stateOf(c.id), col = statusColor(c.id);
       if (selected || isW) {
-        ctx.beginPath(); ctx.arc(item.x, item.y, selected ? 13 : 9, 0, Math.PI * 2);
-        ctx.fillStyle = selected ? 'rgba(47,209,191,.18)' : 'rgba(245,196,81,.16)'; ctx.fill();
+        ctx.beginPath(); ctx.arc(item.x, item.y, selected ? 17 : 13, 0, Math.PI * 2);
+        ctx.fillStyle = selected
+          ? (isDarkTheme() ? 'rgba(63,193,176,.20)' : 'rgba(42,157,143,.16)')
+          : (isDarkTheme() ? 'rgba(240,179,60,.16)' : 'rgba(217,154,0,.12)');
+        ctx.fill();
       }
-      ctx.beginPath(); ctx.arc(item.x, item.y, selected ? 5.5 : (s === 'locked' ? 3.2 : 4.2), 0, Math.PI * 2);
+      ctx.beginPath(); ctx.arc(item.x, item.y, selected ? 8 : (s === 'locked' ? 3.8 : 5), 0, Math.PI * 2);
       ctx.fillStyle = col; ctx.fill();
-      ctx.strokeStyle = 'rgba(8,16,26,.9)'; ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.strokeStyle = T.pointStroke; ctx.lineWidth = selected ? 2 : 1.4; ctx.stroke();
+      if (selected) {
+        ctx.beginPath(); ctx.arc(item.x, item.y, 12, 0, Math.PI * 2);
+        ctx.strokeStyle = col; ctx.lineWidth = 1; ctx.stroke();
+      }
       const showLabel = selected || isW || (A.cam.zoom >= 2.15) || s === 'current';
       if (showLabel) {
-        ctx.fillStyle = selected ? '#d8fffb' : 'rgba(222,235,248,.9)'; ctx.font = (selected ? '600 12px' : '600 10px') + ' system-ui, sans-serif';
+        ctx.fillStyle = selected ? T.selectedLabel : T.label;
+        ctx.font = (selected ? '700 12px' : '600 10px') + ' ' + (CM.CFG.font || 'system-ui, sans-serif');
         ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-        ctx.fillText(c.name, item.x + 9, item.y);
+        ctx.fillText(c.name, item.x + 10, item.y);
       }
-      A.hits.push({ kind: 'city', x: item.x, y: item.y, r: selected ? 16 : 11, id: c.id });
+      A.hits.push({ kind: 'city', x: item.x, y: item.y, r: selected ? 18 : 12, id: c.id });
     }
   }
 
@@ -211,7 +294,8 @@
   function money(v) { return U.fmtMoney(v || 0); }
   function cardStatus(id) {
     const co = companyOf(), b = branchOf(co, id), st = stateOf(id), mp = cityMeta(id) || {};
-    const fee = co ? CM.Company.unlockFee(id) : 0;
+    // 已解锁的城市再进城只花启动金，不再收解锁费；只有 locked 才把解锁费算进成本。
+    const fee = co && st === 'locked' ? CM.Company.unlockFee(id) : 0;
     const start = co ? CM.Company.startFundsFor(id) : 0;
     const current = CM.game && CM.game.mapId === id;
     const rows = [];
@@ -252,17 +336,35 @@
     if (!A.sel) { A.card.classList.add('hidden'); return; }
     const id = A.sel, c = DATA().cities.find(function (x) { return x.id === id; });
     if (!c) return;
-    const st = cardStatus(id);
+    const st = cardStatus(id), mp = cityMeta(id) || {};
     A.card.innerHTML = '';
-    const close = h('button', { class: 'iconbtn', 'aria-label': '关闭城市卡片', onclick: function () { A.sel = null; A.updateCard(); } }, ic('close'));
+    const close = h('button', { class: 'iconbtn sm', 'aria-label': '关闭城市卡片', onclick: function () { A.sel = null; A.updateCard(); } }, ic('close'));
     A.card.append(h('div', { class: 'atlas-card-h' },
-      h('div', { class: 'grow' }, h('b', null, c.name), h('div', { class: 'tiny muted' }, (c.province || '') + ' · ' + statusText(id))), close));
+      h('div', { class: 'atlas-card-title' },
+        h('span', { class: 'atlas-status ' + statusClass(id) }, statusText(id)),
+        h('b', null, c.name),
+        h('small', null, c.province || '')),
+      close));
+    const body = h('div', { class: 'atlas-card-body' });
+    const tags = h('div', { class: 'atlas-tags' });
+    if (mp.trait) tags.append(h('span', { class: 'atlas-tag trait' }, mp.trait.name));
+    if (mp.data && mp.data.anchors) mp.data.anchors.forEach(function (a) { tags.append(h('span', { class: 'atlas-tag anchor' }, a.name)); });
+    if (tags.children.length) body.appendChild(tags);
     const kv = h('div', { class: 'atlas-kv' });
-    for (const r of st.rows) kv.appendChild(h('div', null, h('span', null, r[0]), h('b', null, r[1])));
-    A.card.appendChild(kv);
+    st.rows.forEach(function (r) { kv.appendChild(h('div', null, h('span', null, r[0]), h('b', null, String(r[1])))); });
+    body.appendChild(kv);
+    if (st.b && st.b.lastRemit) {
+      body.appendChild(h('div', { class: 'atlas-note' },
+        '上次真实月结：' + st.b.lastRemit.y + '年' + st.b.lastRemit.m + '月'));
+    }
+    if (!st.b && (st.fee || st.start)) {
+      body.appendChild(h('div', { class: 'atlas-cost' },
+        h('span', null, '开城成本'), h('b', null, money(st.fee + st.start))));
+    }
+    A.card.appendChild(body);
     A.card.appendChild(h('div', { class: 'atlas-card-actions' },
       h('button', {
-        class: 'btn primary sm', disabled: st.disabled ? true : null, 'data-tip': st.tip,
+        class: 'btn primary sm fill', disabled: st.disabled ? true : null, 'data-tip': st.tip,
         onclick: function () { if (!st.disabled) A.enter(id); },
       }, st.button, ic('chev', 14)),
       h('button', {
@@ -275,50 +377,312 @@
     if (!A.head) return;
     const co = companyOf();
     const g = CM.game;
-    const date = g ? (g.clock.y + '年' + g.clock.m + '月') :
-      (co && CM.Company.campaignClock(co) ? (function (c) { return c.y + '年' + c.m + '月'; })(CM.Company.campaignClock(co)) : '—');
+    const clock = co ? CM.Company.campaignClock(co) : null;
+    const date = g ? (g.clock.y + '年' + g.clock.m + '月') : (clock ? clock.y + '年' + clock.m + '月' : '—');
     A.head.innerHTML = '';
     A.head.append(
-      h('div', { class: 'atlas-title' }, h('b', null, '全国战略地图'), h('span', { class: 'tiny muted' }, co ? '公司池 ' + money(CM.Company.poolOf(co)) + ' · ' + date : '从温州开始你的城轨公司')),
-      h('div', { class: 'grow' }),
-      h('div', { class: 'atlas-speed' },
-        ['暂停', '1×', '3×', '8×'].map(function (t, i) {
-          return h('button', {
-            class: 'atlas-sp' + (g && g.speed === i ? ' on' : ''),
-            disabled: !g,
-            onclick: function () { if (!g) return; A.speedSet = true; CM.ui.setSpeed(i); A.updateHead(); },
-          }, t);
-        })),
-      h('button', { class: 'atlas-hbtn', onclick: function () { A.reset(); } }, '全国', ic('expand', 14)),
-      h('button', { class: 'iconbtn', 'aria-label': '关闭全国地图', onclick: function () { A.close(); } }, ic('close')));
+      h('div', { class: 'atlas-brand' },
+        h('span', { class: 'atlas-brand-ico' }, ic('globe', 17)),
+        h('div', { class: 'atlas-title' },
+          h('b', null, '全国战略地图'),
+          h('span', null, co ? co.name : '从温州开始你的城轨公司'))),
+      h('div', { class: 'atlas-stats' },
+        h('div', { class: 'atlas-stat' }, h('span', null, '公司池'), h('b', null, co ? money(CM.Company.poolOf(co)) : '—')),
+        h('div', { class: 'atlas-stat' }, h('span', null, '月份'), h('b', null, date)),
+        h('div', { class: 'atlas-stat' }, h('span', null, '分部'), h('b', null, co ? co.branches.length + ' 城' : '—'))));
+    if (A.speedBtns) {
+      A.speedBtns.forEach(function (b, i) {
+        b.classList.toggle('on', !!g && g.speed === i);
+        b.disabled = !g;
+      });
+    }
   }
 
+
+  /* ---------------- 筛选控件 ---------------- */
+  /* 自绘下拉：原生 <select> 的选项面板由系统绘制，深色主题里是一块突兀的白，
+     也显示不了状态色与数量。这里整套重做，键盘 / 鼠标 / 触屏行为全部收在页面内。 */
+  function makeDropdown(o) {
+    const lb = h('span', { class: 'atlas-dd-lb' });
+    const menu = h('div', { class: 'atlas-dd-menu', role: 'listbox', 'aria-label': o.aria });
+    const root = h('div', {
+      class: 'atlas-dd' + (o.align === 'end' ? ' end' : ''), role: 'button', tabindex: '0',
+      'aria-haspopup': 'listbox', 'aria-expanded': 'false', 'aria-label': o.aria,
+    }, lb, h('span', { class: 'atlas-dd-chev' }, ic('chev', 15)), menu);
+    let isOpen = false, active = 0, items = [];
+
+    function paint() {
+      const cur = o.options().filter(function (x) { return x.v === o.get(); })[0];
+      lb.textContent = cur ? cur.label : o.aria;
+      root.classList.toggle('filtered', o.get() !== 'all');
+    }
+    function build() {
+      menu.textContent = ''; items = []; active = 0;
+      o.options().forEach(function (x, i) {
+        const el = h('button', {
+          class: 'atlas-opt' + (x.v === o.get() ? ' sel' : ''), type: 'button',
+          role: 'option', 'aria-selected': x.v === o.get() ? 'true' : 'false',
+          onclick: function () { pick(i); },
+          onpointerdown: function (e) { e.preventDefault(); },   // 保住焦点，避免 focusout 先一步关掉面板
+          onpointerenter: function () { setActive(i, false); },
+        },
+          x.color ? h('i', { class: 'atlas-opt-dot', style: { background: x.color } }) : null,
+          h('span', { class: 'atlas-opt-t' }, x.label),
+          x.count == null ? null : h('span', { class: 'atlas-opt-n' }, String(x.count)),
+          h('span', { class: 'atlas-opt-ck' }, ic('check', 13)));
+        items.push(el); menu.appendChild(el);
+      });
+    }
+    function setActive(i, scroll) {
+      if (!items.length) return;
+      active = (i + items.length) % items.length;
+      items.forEach(function (el, k) { el.classList.toggle('on', k === active); });
+      if (scroll) items[active].scrollIntoView({ block: 'nearest' });
+    }
+    function show() {
+      if (isOpen) return;
+      closePops(hide);
+      build();
+      isOpen = true;
+      root.classList.add('open');
+      root.setAttribute('aria-expanded', 'true');
+      const cur = o.options().map(function (x) { return x.v; }).indexOf(o.get());
+      setActive(cur < 0 ? 0 : cur, true);
+    }
+    function hide() {
+      if (!isOpen) return;
+      isOpen = false;
+      root.classList.remove('open');
+      root.setAttribute('aria-expanded', 'false');
+      items.forEach(function (el) { el.classList.remove('on'); });
+    }
+    function pick(i) {
+      const x = o.options()[i];
+      if (!x) return;
+      hide(); o.onPick(x.v); paint(); root.focus();
+    }
+
+    root.addEventListener('click', function (e) {
+      if (e.target.closest('.atlas-opt')) return;   // 选项自己的 click 已经处理
+      if (isOpen) hide(); else show();
+    });
+    root.addEventListener('keydown', function (e) {
+      const k = e.key;
+      e.stopPropagation();   // 全国图的方向键平移 / Esc 关图不能吃掉下拉里的按键
+      if (k === 'Escape') { e.preventDefault(); hide(); return; }
+      if (k === 'Tab') { hide(); return; }
+      if (!isOpen) {
+        if (k === 'Enter' || k === ' ' || k === 'ArrowDown' || k === 'ArrowUp') {
+          e.preventDefault(); show();
+          if (k === 'ArrowUp') setActive(active - 1, true);
+        }
+        return;
+      }
+      if (k === 'ArrowDown' || k === 'ArrowUp') { e.preventDefault(); setActive(active + (k === 'ArrowDown' ? 1 : -1), true); return; }
+      if (k === 'Home' || k === 'End') { e.preventDefault(); setActive(k === 'Home' ? 0 : items.length - 1, true); return; }
+      if (k === 'Enter' || k === ' ') { e.preventDefault(); pick(active); }
+    });
+    root.addEventListener('focusout', function (e) {
+      if (!root.contains(e.relatedTarget)) hide();
+    });
+    popClosers.push(hide);
+    paint();
+    return { root: root, sync: paint, dispose: function () { unpop(hide); hide(); } };
+  }
+
+  /* 搜索框：图标 + 内联清除 + 快捷键提示，聚焦后给出可键盘选择的城市建议。 */
+  function makeSearch() {
+    const input = h('input', {
+      class: 'atlas-search-in', type: 'search', placeholder: '搜索城市 / 特性 / 锚点',
+      value: A.filters.q || '', autocomplete: 'off', spellcheck: 'false',
+      role: 'combobox', 'aria-label': '搜索城市', 'aria-autocomplete': 'list',
+      'aria-controls': 'atlas-sug', 'aria-expanded': 'false',
+    });
+    const clear = h('button', {
+      class: 'atlas-clear', type: 'button', 'aria-label': '清除搜索', tabindex: '-1',
+      onpointerdown: function (e) { e.preventDefault(); },
+      onclick: function () { input.value = ''; onInput(); input.focus(); },
+    }, ic('close', 14));
+    const root = h('div', { class: 'atlas-search' },
+      h('span', { class: 'atlas-search-ico' }, ic('search', 16)), input, clear,
+      h('kbd', { class: 'atlas-kbd', 'aria-hidden': 'true' }, '/'));
+    const sug = h('div', { class: 'atlas-sug', id: 'atlas-sug', role: 'listbox', 'aria-label': '搜索结果' });
+    let items = [], active = -1;
+    syncChrome();   // 上次关闭时保留的筛选词也要让清除按钮 / kbd 提示对上
+
+    function syncChrome() { root.classList.toggle('has-q', !!input.value.trim()); }
+    function closeSug() {
+      sug.classList.remove('open');
+      input.setAttribute('aria-expanded', 'false');
+      input.removeAttribute('aria-activedescendant');
+      items = []; active = -1;
+    }
+    function setActive(i, scroll) {
+      if (!items.length) { active = -1; return; }
+      active = (i + items.length) % items.length;
+      items.forEach(function (el, k) { el.classList.toggle('on', k === active); });
+      input.setAttribute('aria-activedescendant', items[active].id);
+      if (scroll) items[active].scrollIntoView({ block: 'nearest' });
+    }
+    function choose(id) {
+      A.sel = id; updateCard(); centerCity(id, 3.2);
+      closeSug();
+    }
+    function refresh() {
+      sug.textContent = ''; items = []; active = -1;
+      if (document.activeElement !== input) { closeSug(); return; }
+      closePops(closeSug);
+      const q = (A.filters.q || '').trim();
+      if (!q) {
+        // 聚焦但还没输入：说明能搜什么，而不是弹一块空面板。
+        sug.appendChild(h('div', { class: 'atlas-sug-head' }, '搜索城市 / 特性 / 城市锚点'));
+        sug.appendChild(h('div', { class: 'atlas-sug-hint' },
+          '当前筛选下共 ' + visibleCities().length + ' 座城市。输入关键词后可用 ↑↓ 选择，Enter 定位。'));
+        sug.classList.add('open');
+        input.setAttribute('aria-expanded', 'true');
+        return;
+      }
+      const total = visibleCities().length, list = searchMatches(8);
+      if (!list.length) {
+        sug.appendChild(h('div', { class: 'atlas-sug-empty' },
+          h('b', null, '没有匹配「' + q + '」的城市'),
+          h('span', null, '换个关键词，或把省份 / 状态筛选放宽')));
+        sug.classList.add('open');
+        input.setAttribute('aria-expanded', 'true');
+        return;
+      }
+      sug.appendChild(h('div', { class: 'atlas-sug-head' },
+        '匹配 ' + total + ' 座城市', h('span', null, '↑↓ 选择 · Enter 定位')));
+      list.forEach(function (c, i) {
+        const mp = cityMeta(c.id) || {}, col = statusColor(c.id);
+        const el = h('button', {
+          class: 'atlas-sug-item', type: 'button', role: 'option', id: 'atlas-sug-' + i,
+          'data-id': c.id, 'aria-selected': 'false',
+          onpointerdown: function (e) { e.preventDefault(); },
+          onclick: function () { choose(c.id); input.focus(); },
+          onpointerenter: function () { setActive(i, false); },
+        },
+          h('i', { class: 'atlas-sug-dot', style: { background: col } }),
+          h('span', { class: 'atlas-sug-name' }, c.name),
+          h('span', { class: 'atlas-sug-meta' },
+            [c.province, mp.trait ? mp.trait.name : ''].filter(Boolean).join(' · ')),
+          h('span', { class: 'atlas-sug-st', style: { color: col } }, statusText(c.id)));
+        items.push(el); sug.appendChild(el);
+      });
+      sug.classList.add('open');
+      input.setAttribute('aria-expanded', 'true');
+    }
+
+    function onInput() {
+      A.filters.q = input.value;
+      syncChrome();
+      refresh();
+      if (A.sel && !visibleCities().some(function (c) { return c.id === A.sel; })) { A.sel = null; updateCard(); }
+      render();
+    }
+
+    input.addEventListener('input', onInput);
+    input.addEventListener('focus', refresh);
+    input.addEventListener('click', function () { if (!sug.classList.contains('open')) refresh(); });
+    input.addEventListener('focusout', function (e) {
+      if (!root.contains(e.relatedTarget)) closeSug();
+    });
+    input.addEventListener('keydown', function (e) {
+      // 输入框里的方向键 / ± / Esc 不能传给全国图快捷键。
+      e.stopPropagation();
+      const k = e.key, open = sug.classList.contains('open');
+      if (k === 'ArrowDown' || k === 'ArrowUp') {
+        e.preventDefault();
+        if (!open) { refresh(); if (items.length) setActive(k === 'ArrowDown' ? 0 : items.length - 1, true); return; }
+        const next = active < 0 ? (k === 'ArrowDown' ? 0 : items.length - 1)
+          : active + (k === 'ArrowDown' ? 1 : -1);
+        setActive(next, true);
+        return;
+      }
+      if (k === 'Enter') {
+        e.preventDefault();
+        if (!(A.filters.q || '').trim()) return;
+        let id = (active >= 0 && items[active]) ? items[active].getAttribute('data-id') : null;
+        if (!id) { const one = searchMatches(1); id = one.length ? one[0].id : null; }
+        if (id) choose(id);
+        return;
+      }
+      if (k === 'Escape') {
+        if (open) { e.preventDefault(); closeSug(); return; }
+        if (input.value) { e.preventDefault(); input.value = ''; onInput(); }
+        return;
+      }
+      if (k === 'Tab') closeSug();
+    });
+
+    syncChrome();
+    popClosers.push(closeSug);
+    return { root: root, input: input, sug: sug, dispose: function () { unpop(closeSug); closeSug(); } };
+  }
 
   function makeFilterBar() {
     const provinces = Array.from(new Set(DATA().cities.map(function (c) { return c.province; })))
       .sort(function (a, b) { return a.localeCompare(b, 'zh-Hans-CN'); });
-    const input = h('input', {
-      class: 'atlas-search', type: 'search', placeholder: '搜索城市 / 特性 / 锚点', value: A.filters.q,
-      oninput: function () { A.filters.q = input.value; if (A.sel && !visibleCities().some(function (c) { return c.id === A.sel; })) { A.sel = null; updateCard(); } render(); },
-    });
-    // 阻止搜索框里的 +/-/方向键传给全国图快捷键。
-    input.addEventListener('keydown', function (e) { e.stopPropagation(); if (e.key === 'Enter') { e.preventDefault(); const list = visibleCities(); if (list.length) { A.sel = list[0].id; updateCard(); centerCity(list[0].id, 3.2); } } });
-    const sel = h('select', { class: 'atlas-select', 'aria-label': '按省份筛选', onchange: function () { A.filters.province = sel.value; if (A.sel && !visibleCities().some(function (c) { return c.id === A.sel; })) { A.sel = null; updateCard(); } render(); } },
-      h('option', { value: 'all' }, '全部省份'),
-      provinces.map(function (p) { return h('option', { value: p, selected: A.filters.province === p ? true : null }, p); }));
     const states = [['all', '全部状态'], ['current', '当前经营'], ['owned', '已进驻'], ['unlocked', '已解锁'], ['failed', '已停运'], ['starter', '新手城市'], ['locked', '未解锁']];
-    const st = h('select', { class: 'atlas-select', 'aria-label': '按状态筛选', onchange: function () { A.filters.status = st.value; if (A.sel && !visibleCities().some(function (c) { return c.id === A.sel; })) { A.sel = null; updateCard(); } render(); } },
-      states.map(function (x) { return h('option', { value: x[0], selected: A.filters.status === x[0] ? true : null }, x[1]); }));
-    A.count = h('span', { class: 'atlas-count' }, '');
-    return h('div', { class: 'atlas-filter' },
-      input, sel, st,
+    const search = makeSearch();
+    A.search = search.input;
+
+    function applyFilter() {
+      if (A.sel && !visibleCities().some(function (c) { return c.id === A.sel; })) { A.sel = null; updateCard(); }
+      render();
+    }
+    const provDD = makeDropdown({
+      aria: '按省份筛选', align: '', get: function () { return A.filters.province; },
+      options: function () {
+        return [{ v: 'all', label: '全部省份', count: countWith({ province: 'all' }) }]
+          .concat(provinces.map(function (p) { return { v: p, label: p, count: countWith({ province: p }) }; }));
+      },
+      onPick: function (v) { A.filters.province = v; applyFilter(); },
+    });
+    const statDD = makeDropdown({
+      aria: '按状态筛选', align: 'end', get: function () { return A.filters.status; },
+      options: function () {
+        return states.map(function (x) {
+          return {
+            v: x[0], label: x[1], count: countWith({ status: x[0] }),
+            color: x[0] === 'all' ? null : statusColorOf(x[0]),
+          };
+        });
+      },
+      onPick: function (v) { A.filters.status = v; applyFilter(); },
+    });
+    A.count = h('span', { class: 'atlas-count', title: '当前筛选命中的城市 / 全国城市总数' });
+    A.pops = A.pops || [];
+    A.pops.push(search.dispose, provDD.dispose, statDD.dispose);
+    // 计数跟在下拉后面，靠右的剩余空间由它吃掉，窄屏时也不会把控件挤成两行。
+    return h('div', { class: 'atlas-filter', role: 'search' },
+      search.root, provDD.root, statDD.root, A.count, search.sug);
+  }
+
+  function locateCurrent() {
+    const id = (CM.game && CM.game.mapId) || (CM.Company && CM.Company.STARTERS[0]);
+    if (!id) return;
+    A.sel = id; updateCard(); centerCity(id, 3.2);
+  }
+
+  /* 右侧动作区：倍速 / 定位 / 全国视野 / 关闭。整条顶栏只有头部会定时重建，
+     这里建一次就够，倍速的选中态由 updateHead 同步。 */
+  function makeTail() {
+    const g = CM.game;
+    A.speedBtns = ['暂停', '1×', '3×', '8×'].map(function (t, i) {
+      return h('button', {
+        class: 'atlas-sp' + (g && g.speed === i ? ' on' : ''), disabled: !g,
+        onclick: function () { if (!g) return; A.speedSet = true; CM.ui.setSpeed(i); A.updateHead(); },
+      }, t);
+    });
+    return h('div', { class: 'atlas-tail' },
+      h('div', { class: 'atlas-speed', role: 'group', 'aria-label': '时间速度' }, A.speedBtns),
       h('button', {
-        class: 'atlas-hbtn', onclick: function () {
-          const id = (CM.game && CM.game.mapId) || (CM.Company && CM.Company.STARTERS[0]);
-          if (!id) return;
-          A.sel = id; updateCard(); centerCity(id, 3.2);
-        },
-      }, '定位当前'), A.count);
+        class: 'atlas-icobtn', title: '定位当前城市', 'aria-label': '定位当前城市',
+        onclick: locateCurrent,
+      }, ic('locate', 16)),
+      h('button', { class: 'atlas-hbtn', onclick: function () { reset(); } }, '全国视野', ic('expand', 14)),
+      h('button', { class: 'iconbtn', 'aria-label': '关闭全国地图', onclick: function () { A.close(); } }, ic('close')));
   }
 
   function centerCity(id, z) {
@@ -373,6 +737,10 @@
       zoomAt(e.clientX, e.clientY, f);
     };
     const onKey = function (e) {
+      if (e.key === '/' && A.search && document.activeElement !== A.search) {
+        if (e.metaKey || e.ctrlKey || e.altKey) return;
+        e.preventDefault(); A.search.focus(); A.search.select(); return;
+      }
       if (e.key === 'Escape') { if (A.sel) { A.sel = null; A.updateCard(); render(); } else A.close(); return; }
       if (e.key === '+' || e.key === '=') { zoomAt(innerWidth / 2, innerHeight / 2, 1.25); e.preventDefault(); }
       if (e.key === '-' || e.key === '_') { zoomAt(innerWidth / 2, innerHeight / 2, 0.8); e.preventDefault(); }
@@ -404,10 +772,20 @@
     const cv = h('canvas', { class: 'atlas-canvas' });
     A.cv = cv; A.ctx = cv.getContext('2d');
     A.head = h('div', { class: 'atlas-head' });
+    A.pops = [];
     A.filterBar = makeFilterBar();
+    A.tail = makeTail();
     A.card = h('div', { class: 'atlas-card hidden' });
-    const hint = h('div', { class: 'atlas-hint' }, '拖动平移 · 滚轮缩放 · 点击城市 · Enter 选中搜索结果');
-    A.el = h('div', { id: 'atlas' }, cv, A.head, A.filterBar, A.card, hint);
+    const bar = h('div', { class: 'atlas-bar' }, A.head, A.filterBar, A.tail);
+    const statuses = [['current', '当前'], ['owned', '已进驻'], ['unlocked', '已解锁'], ['failed', '停运'], ['starter', '新手'], ['locked', '未解锁']];
+    A.legend = h('div', { class: 'atlas-legend', 'aria-hidden': 'true' },
+      statuses.map(function (s) {
+        return h('span', null, h('i', { style: { background: statusColorOf(s[0]) } }), s[1]);
+      }));
+    const hint = h('div', { class: 'atlas-foot' },
+      h('div', { class: 'atlas-hint' }, '拖动平移 · 滚轮缩放 · 点击城市 · 按 / 搜索，Enter 定位'),
+      h('div', { class: 'atlas-coord' }, '战略视图 · 不加载城市底图'));
+    A.el = h('div', { id: 'atlas' }, cv, bar, A.card, A.legend, hint);
     document.body.appendChild(A.el);
     document.body.classList.add('atlas-open');
     resize(); bind(); updateHead(); updateCard();
@@ -426,12 +804,13 @@
     A.isOpen = false;
     if (A.raf) cancelAnimationFrame(A.raf);
     if (A._unbind) A._unbind();
+    if (A.pops) { A.pops.forEach(function (fn) { try { fn(); } catch (e) { /* 关窗时不再抛错 */ } }); A.pops = []; }
     if (A.el) A.el.remove();
     document.body.classList.remove('atlas-open');
     A.last = { x: A.cam.x, y: A.cam.y, zoom: A.cam.zoom };
     const g = A.game;
     if (g && g.speed === 0 && A.prevSpeed > 0 && !A.speedSet && g.setSpeed) g.setSpeed(A.prevSpeed);
-    A.el = null; A.cv = null; A.ctx = null; A.head = null; A.card = null; A.filterBar = null; A.count = null;
+    A.el = null; A.cv = null; A.ctx = null; A.head = null; A.card = null; A.filterBar = null; A.count = null; A.legend = null; A.search = null; A.tail = null; A.speedBtns = null;
   };
 
   A._toast = function (t, k) {

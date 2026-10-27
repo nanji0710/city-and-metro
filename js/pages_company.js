@@ -282,24 +282,25 @@
     const report = h('div', { class: 'co-sec co-report' },
       h('div', { class: 'co-sh' },
         h('b', null, '全公司月报（近 12 个月）'),
-        h('span', { class: 'tiny muted' }, clock ? '公司月份 ' + clock.y + '年' + clock.m + '月 · 上缴按经营现金流的 ' + Math.round(CO().REMIT_RATE * 100) + '%' : '旧公司不使用统一战役月份')),
+        h('span', { class: 'tiny muted' }, clock ? '公司月份 ' + clock.y + '年' + clock.m + '月 · 上缴 = 经营现金流 × ' + Math.round(CO().REMIT_RATE * 100) + '%' : '旧公司不使用统一战役月份')),
       h('div', { class: 'co-report-table' },
         h('div', { class: 'cr head' },
-          h('span', null, '分部'), h('span', null, '状态'), h('span', null, '上次结算'),
+          h('span', null, '分部'), h('span', null, '上次结算'),
           h('span', null, '上月现金流'), h('span', null, '上次上缴'), h('span', null, '近12月上缴')),
         rows.map(function (r) {
           const lastYm = r.last ? r.last.y + '年' + r.last.m + '月' : '—';
           const net = r.lastProfit ? U.fmtMoney(r.lastProfit.net) : '—';
           const paid = r.last ? U.fmtMoney(r.last.amount) : '—';
           return h('div', { class: 'cr' + (r.b.failed ? ' bad' : '') },
-            h('span', null, r.name), h('span', null, r.b.failed ? '停运' : '运营'),
-            h('span', null, lastYm), h('span', null, net), h('span', null, paid),
+            h('span', { class: 'cr-name', title: r.name }, r.name),
+            h('span', { title: r.b.failed ? '上次结算 ' + lastYm : null }, r.b.failed ? '已停运' : lastYm),
+            h('span', null, net), h('span', null, paid),
             h('span', null, U.fmtMoney(r.totalPaid)));
         }),
         h('div', { class: 'cr total' },
           h('span', null, '全公司'), h('span', null, ''),
-          h('span', null, ''), h('span', null, U.fmtMoney(companyNet)),
-          h('span', null, ''), h('span', null, U.fmtMoney(companyPaid)))));
+          h('span', null, U.fmtMoney(companyNet)), h('span', null, ''),
+          h('span', null, U.fmtMoney(companyPaid)))));
     el.appendChild(report);
 
     if (isCampaign) {
