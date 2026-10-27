@@ -27,18 +27,13 @@
   /* 旧版公司的进驻费（legacy 兼容）。战役模式不再走这条路，改用公司池解锁费。 */
   const ACCESS_FEE = { 1: 30000, 2: 80000, 3: 160000, 4: 280000 };
 
-  /* 战役模式：4 张入门图 + 1 张进阶图。
-   * 入门图用小线网练手；进阶图用 5 线网络考验多线经营。
-   * difficultyKey 只是建议难度，玩家仍可在选图页手动改档。
-   * 其余 49 张真实城市默认锁定，由公司池购买解锁。
+  /* 战役模式：只保留一张入门图。
+   * 温州是唯一的初始地图；其余 53 张真实城市（含广州）全部锁定，
+   * 必须靠局内经营赚出的公司池解锁。
    * 自由建造模式不受这里影响。 */
-  const STARTERS = ['wenzhou', 'luoyang', 'wuhu', 'lanzhou', 'guangzhou'];
+  const STARTERS = ['wenzhou'];
   const STARTER_META = {
-    wenzhou: { tier: 'entry', difficultyKey: 'easy', trait: '浙南首段', desc: '只接管一条真实线路的前 4 站，适合第一次熟悉排班、票款与公司账。' },
-    luoyang: { tier: 'entry', difficultyKey: 'easy', trait: '古都首段', desc: '只接管一条真实线路的前 4 站，剩余线网由你从零扩展。' },
-    wuhu: { tier: 'entry', difficultyKey: 'easy', trait: '江城首段', desc: '只接管一条真实线路的前 4 站，规模很小，重点练低成本运营。' },
-    lanzhou: { tier: 'entry', difficultyKey: 'easy', trait: '河谷首段', desc: '只接管一条真实线路的前 4 站，在地形约束下补齐第一批线路。' },
-    guangzhou: { tier: 'advanced', difficultyKey: 'hard', trait: '珠水多中心', desc: '五线七十站的进阶起点，多中心通勤和跨江组织同时上强度。' },
+    wenzhou: { tier: 'entry', difficultyKey: 'easy', trait: '浙南首段', desc: '只接管一条真实线路的前 4 站，适合第一次熟悉排班、票款与公司账；其余城市都要靠公司池解锁。' },
   };
 
   /* 解锁费（万元）：最低 8 亿，最高 20 亿；不按“进驻费”重复收。 */
@@ -105,6 +100,8 @@
   Company.START_FUNDS = START_FUNDS;
   Company.CAMPAIGN_POOL = CAMPAIGN_POOL;
   Company.STARTER_CONTRACT = STARTER_CONTRACT;
+  Company.settling = false;
+  Company._settleTimer = null;
 
   Company.accessFee = function (mapId) {
     const mp = CM.MAPS && CM.MAPS[mapId];
@@ -199,12 +196,14 @@
   };
 
   Company.create = function (name, homeMapId, opts) {
+    const homeStart = (CM.MAPS[homeMapId] && CM.MAPS[homeMapId].cfg.START) || CM.CFG.START;
     const campaign = opts && opts.campaign ? {
       version: 1,
       starterMapId: homeMapId,
       unlocked: STARTERS.concat(homeMapId ? [homeMapId] : []).filter(function (v, i, a) { return a.indexOf(v) === i; }),
       legacy: false,
       bankrupt: false,
+      ym: { y: homeStart.y, m: homeStart.m },
       createdAt: nowIso(),
     } : null;
     const c = {
@@ -224,9 +223,9 @@
     return r.ok ? { ok: true, company: c } : r;
   };
 
-  /* 战役入口：只能从五张战役图（4 入门 + 1 进阶）开始。旧公司（没有 campaign）走 legacy，不锁图。 */
+  /* 战役入口：只能从唯一入门图温州开始。旧公司（没有 campaign）走 legacy，不锁图。 */
   Company.startCampaign = function (name, starterMapId) {
-    if (!Company.isStarter(starterMapId)) return { ok: false, error: '战役只能从五张战役地图开始' };
+    if (!Company.isStarter(starterMapId)) return { ok: false, error: '战役只能从入门图温州开始' };
     return Company.create(name, starterMapId, { campaign: true, pool: CAMPAIGN_POOL });
   };
 
@@ -236,6 +235,107 @@
     if (!c) return null;
     if (c.campaign) return c.campaign;
     return { version: 0, legacy: true, unlocked: CM.MAP_ORDER ? CM.MAP_ORDER.slice() : [], bankrupt: false };
+  };
+
+  /* 战役统一月份。所有分部的后台补结算都以这个月份为目标；
+   * 旧战役没有 ym 时退回入门地图起始年月。 */
+  Company.campaignClock = function (c) {
+    const camp = Company.campaignOf(c);
+    if (!camp || camp.legacy) return null;
+    if (camp.ym && typeof camp.ym.y === 'number' && typeof camp.ym.m === 'number') return { y: camp.ym.y, m: camp.ym.m };
+    const mp = CM.MAPS[camp.starterMapId];
+    const st = (mp && mp.cfg.START) || CM.CFG.START;
+    return { y: st.y, m: st.m };
+  };
+
+  /* 当前活跃分部跨月时推进战役月份。只前进，不回退。 */
+  Company.noteMonth = function (c, y, m) {
+    const co = Company.fresh(c) || c;
+    const camp = Company.campaignOf(co);
+    if (!camp || camp.legacy) return;
+    const target = y * 12 + m;
+    const clock = Company.campaignClock(co);
+    const cur = clock ? clock.y * 12 + clock.m : 0;
+    if (target <= cur) return;
+    camp.ym = { y: y, m: m };
+    co.updatedAt = nowIso();
+    Company.commit(c, co);
+  };
+
+  /* 打开公司面板 / 当前分部月结后调用。真正的重活在 settleInactive 里，
+   * 这里只负责避开正在跳月或正在结算的时间点。 */
+  Company.queueSettle = function (g) {
+    if (!g || !g.company || Company.settling || Company._settleTimer) return;
+    const co = Company.active();
+    const camp = co ? Company.campaignOf(co) : null;
+    if (!camp || camp.legacy) return;
+    Company._settleTimer = setTimeout(function () {
+      Company._settleTimer = null;
+      if (!g || !g.company || Company.settling) return;
+      if (g.jumping || g.pending) { Company.queueSettle(g); return; }
+      const p = Company.settleInactive(g);
+      if (p && p.catch) p.catch(function (e) { console.warn('后台分部结算失败', e); });
+    }, 120);
+  };
+
+  /* 后台补结算：对每个落后于战役月份的分部，恢复它的存档，按真实月结推进，
+   * 写回它自己的存档，然后恢复当前地图。整个过程暂停当前局的时钟。
+   * 这是“真实经营”，不是按最近一个月估算。 */
+  Company.settleInactive = function (g) {
+    return Promise.resolve().then(function () {
+      const co0 = Company.active();
+      if (!co0 || !g || !g.company || g.company.id !== co0.id) return { ok: false, skipped: true };
+      const camp = Company.campaignOf(co0);
+      if (!camp || camp.legacy) return { ok: false, skipped: true };
+      if (Company.settling) return { ok: false, skipped: true };
+      const clock = Company.campaignClock(co0) || { y: g.clock.y, m: g.clock.m };
+      const targetYm = clock.y * 12 + clock.m;
+      const activeMap = g.mapId;
+      const co = Company.fresh(co0) || co0;
+      const list = (co.branches || []).filter(function (b) {
+        return b && b.slotId && !b.failed && b.mapId !== activeMap;
+      });
+      if (!list.length) return { ok: true, changed: 0, target: clock };
+      const prevSpeed = g.speed;
+      g.speed = 0;
+      Company.settling = true;
+      let changed = 0, failed = 0;
+      let p = Promise.resolve();
+      list.forEach(function (b) {
+        p = p.then(function () {
+          return CM.Save.load(b.slotId).then(function (payload) {
+            const from = payload && payload.clock ? payload.clock.y * 12 + payload.clock.m : targetYm;
+            const months = targetYm - from;
+            if (months <= 0) return null;
+            const load = (CM.MAPS[b.mapId] && !CM.MAPS[b.mapId].geo && CM.loadGeo) ? CM.loadGeo(b.mapId) : Promise.resolve();
+            return load.then(function () {
+              CM.useMap(b.mapId);
+              const ga = CM.Game.restore(payload);
+              ga.startJump(months);
+              let n = 0;
+              while (ga.jumping && n++ < 6000) ga.stepJump();
+              const saveP = CM.Save.save(ga, 'auto', { slotId: b.slotId, label: '自动存档' });
+              CM.useMap(activeMap);
+              if (ga.econ && ga.econ.failed) {
+                failed++;
+                Company.updateBranch(co0, b.mapId, { failed: true });
+              }
+              changed++;
+              return saveP;
+            });
+          });
+        }).catch(function (e) {
+          console.warn('分部结算跳过：' + b.mapId, e);
+        });
+      });
+      return p.then(function () {
+        return { ok: true, changed: changed, failed: failed, target: clock };
+      }).finally(function () {
+        Company.settling = false;
+        try { CM.useMap(activeMap); } catch (e) { /* 地图恢复失败时保留当前图 */ }
+        g.speed = prevSpeed;
+      });
+    });
   };
 
   Company.isUnlocked = function (c, mapId) {
@@ -248,7 +348,7 @@
   };
 
   /* 地图是否可以开始：自由模式永远可以；经营挑战必须已解锁。
-   * 没有公司时只允许五张战役图，用来创建战役。 */
+   * 没有公司时只允许入门图温州，用来创建战役。 */
   Company.canStartMap = function (c, mapId, mode) {
     const mp = CM.MAPS && CM.MAPS[mapId];
     if (!mp) return false;

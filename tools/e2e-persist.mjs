@@ -109,6 +109,11 @@ async function main() {
     await evalJs(`(() => {
       try { localStorage.removeItem('cm1.companies'); } catch (e) {}
       try { localStorage.removeItem('cm1.companyActive'); } catch (e) {}
+      // 持久化测试要直接开广州；用旧版全解锁公司绕过唯一入门图限制。
+      if (CM.Company) {
+        const seed = CM.Company.create('持久化旧公司', 'guangzhou');
+        if (seed.ok) CM.Company.setActive(seed.company.id);
+      }
       return 'CLEAN';
     })()`)
 

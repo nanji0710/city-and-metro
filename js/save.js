@@ -97,7 +97,7 @@
       date: [game.clock.y, game.clock.m, game.clock.d], stations: game.compiled.stations.length, funds: game.econ.isFree() ? null : game.econ.funds };
     return queueWrite(function () {
       const idx = readIndex(); let slotId = opts.slotId;
-      if (kind === 'auto') {
+      if (kind === 'auto' && !slotId) {
         const a1 = idx.slots[snap.id + '.a1'], a2 = idx.slots[snap.id + '.a2'];
         slotId = !a1 ? snap.id + '.a1' : (!a2 ? snap.id + '.a2' : (a1.savedAt <= a2.savedAt ? snap.id + '.a1' : snap.id + '.a2'));
       } else if (!slotId || !idx.slots[slotId]) {

@@ -408,7 +408,7 @@ async function buildCity(id) {
    * - 其余 49 城仍取 4 条线。
    */
   const ADVANCED_STARTER_LINES = { guangzhou: 5 }
-  const ENTRY_STARTER_SEGMENTS = { wenzhou: 4, luoyang: 4, wuhu: 4, lanzhou: 4 }
+  const ENTRY_STARTER_SEGMENTS = { wenzhou: 4 }
   const starterSegment = ENTRY_STARTER_SEGMENTS[city.id]
   const maxLines = starterSegment
     ? 1

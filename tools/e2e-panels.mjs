@@ -88,6 +88,11 @@ async function main() {
 
   await evalJs(`(async () => {
     localStorage.clear();
+    // 面板体检要直接开广州；用旧版全解锁公司绕过唯一入门图限制。
+    if (CM.Company) {
+      const seed = CM.Company.create('面板旧公司', 'guangzhou');
+      if (seed.ok) CM.Company.setActive(seed.company.id);
+    }
     CM.newGame({ map: 'guangzhou', mode: 'challenge', difficulty: 'normal', name: '面板体检' });
     for (let i = 0; i < 150 && !CM.game; i++) await new Promise(r => setTimeout(r, 100));
     const g = CM.game;
@@ -95,7 +100,6 @@ async function main() {
     try { CM.ui.closeScreen(); } catch (e) {}
     try { CM.ui.closePanel(true); } catch (e) {}
     for (let k = 0; k < 3; k++) { const c = g.staff.market[k]; if (c) g.staff.hire(c.id, null, g.econ); }
-    if (CM.Company && !CM.Company.active()) { try { CM.Company.create('体检公司', 'guangzhou'); } catch (e) {} }
     g.invalidateStaff && g.invalidateStaff(); g.rev++;
     return 'ready';
   })()`)

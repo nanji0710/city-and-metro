@@ -49,7 +49,7 @@
     g.seed = opts.seed || (CFG.START.y * 10000 + 101);
     if (opts.tutorial) g.tutorial = { step: 0, done: [], started: Date.now() };
     g.createdAt = Date.now();
-    g.clock = Object.assign({}, CFG.START);
+    g.clock = Object.assign({}, CFG.START, opts.startClock || {});
     g.city = new CM.City();
     g.city.generate(g.seed, g.clock.y);
     g.model = new CM.Model(g.city);
@@ -359,8 +359,13 @@
      * 放在拨款与债券之后 —— 只有把本月所有收入与固定支出都记完，「本月净利」才是真的，
      * 否则会出现「刚拨下来还没还利息就被抽走 35%」这种账面对不上的情况。
      */
-    if (this.company && CM.Company) CM.Company.remit(this, y, m);
-    if (this.company && CM.Company) CM.Company.checkStarterContract(this);
+    if (this.company && CM.Company) {
+      CM.Company.remit(this, y, m);
+      CM.Company.checkStarterContract(this);
+      const co = CM.Company.active();
+      if (co) CM.Company.noteMonth(co, y, m);
+      CM.Company.queueSettle(this);
+    }
     this.recordHistory();
     if (CM.Milestones) CM.Milestones.onMonth(this);
     if (this.draft) {

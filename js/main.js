@@ -129,7 +129,7 @@
     if (CM.Soundscape) CM.Soundscape.reset();
     const mp = CM.MAPS[opts.map] || CM.MAPS.gz;
     /*
-     * 战役锁图：经营挑战只能从五张战役图开始，其余城市必须由公司池解锁。
+     * 战役锁图：经营挑战只能从唯一入门图温州开始，其余 53 城必须由公司池解锁。
      * 自由建造与教程不受影响；旧公司（没有 campaign）视为 legacy 全解锁。
      */
     if (opts.mode === 'challenge' && CM.Company && !opts.tutorial) {
@@ -154,7 +154,7 @@
       }
       if (!co) {
         if (!CM.Company.isStarter(mp.id)) {
-          fail(new Error('战役只能从五张战役地图开始；其他城市需要先解锁。'), '开始战役');
+          fail(new Error('战役只能从入门图温州开始；其他城市需要先用公司池解锁。'), '开始战役');
           return;
         }
         const r = CM.Company.startCampaign('城轨公司 · ' + (mp.data.city || mp.name || mp.id), mp.id);
@@ -163,6 +163,11 @@
         CM.Company.setActive(co.id);
       }
       opts.company = { id: co.id, name: co.name };
+      // 新分部跟随公司当前年月，而不是每座城都从 2025 年重开。
+      if (!opts.startClock) {
+        const clk = CM.Company.campaignClock(co);
+        if (clk) opts.startClock = { y: clk.y, m: clk.m, d: 1, minute: 360 };
+      }
     }
     ui.showLoading('正在生成 ' + mp.cfg.START.y + ' 年的' + mp.data.city + '，并计算居民出行…');
     const boot = function () {

@@ -1,5 +1,5 @@
 /**
- * 战役端到端核查：五张战役图（4 入门 + 1 进阶） → 锁图 → 公司池解锁 → 进入新城 → 注资。
+ * 战役端到端核查：唯一入门图温州 → 锁图 → 公司池解锁 → 进入新城 → 后台补结算 → 注资。
  * 旧版全解锁公司的接入费链路仍由 e2e-company.mjs 覆盖。
  */
 import { spawn } from 'node:child_process'
@@ -80,19 +80,19 @@ await boot()
 await evalJs(`(() => { try { localStorage.removeItem('cm1.companies'); localStorage.removeItem('cm1.companyActive'); } catch (e) {} return 1; })()`)
 await boot()
 
-// 1. 无公司时只有五张战役图 + 教程可开局
+// 1. 无公司时只有入门图温州 + 教程可开局
 const pre = jp(await evalJs(`(() => {
   const co = CM.Company.active();
   const locked = CM.MAP_ORDER.filter(id => !CM.Company.canStartMap(co, id, 'challenge'));
   return JSON.stringify({ co: !!co, starters: CM.Company.STARTERS.length,
     locked: locked.length, freeBeijing: CM.Company.canStartMap(co, 'beijing', 'free') });
 })()`))
-check('无公司时战役只开放五张战役图', pre.co === false && pre.starters === 5 && pre.locked === 49, pre)
+check('无公司时战役只开放入门图温州', pre.co === false && pre.starters === 1 && pre.locked === 53, pre)
 check('自由建造仍可选择未解锁城市', pre.freeBeijing === true, pre)
 
-// 2. 从广州开始战役
+// 2. 从唯一入门图温州开始战役
 const started = jp(await evalJs(`(async () => {
-  CM.newGame({ map: 'guangzhou', mode: 'challenge', difficulty: 'normal', name: '战役核查' });
+  CM.newGame({ map: 'wenzhou', mode: 'challenge', difficulty: 'easy', name: '战役核查' });
   for (let i = 0; i < 160 && !CM.game; i++) await new Promise(r => setTimeout(r, 100));
   const g = CM.game;
   for (let i = 0; i < 100 && (!g.city.roadGroups || !g.city.roadGroups.length || g.pending); i++) await new Promise(r => setTimeout(r, 200));
@@ -106,10 +106,10 @@ const started = jp(await evalJs(`(async () => {
     unlocked: co.campaign.unlocked, ezhou: CM.Company.canStartMap(co, 'ezhou', 'challenge'),
     goal: !!goal && !goal.classList.contains('hidden'), goalText: goal ? goal.innerText.trim() : '' });
 })()`))
-check('广州战役开局成功', started.map === 'guangzhou' && started.lines === 5, started)
+check('温州战役开局成功', started.map === 'wenzhou' && started.lines === 1, started)
 check('战役公司初始池 5 亿', started.pool === 50000, started)
-check('开局城市自动登记为分部', Array.isArray(started.branches) && started.branches[0] === 'guangzhou', started)
-check('五张战役图默认解锁', Array.isArray(started.unlocked) && started.unlocked.length === 5, started)
+check('开局城市自动登记为分部', Array.isArray(started.branches) && started.branches[0] === 'wenzhou', started)
+check('只有一张入门图默认解锁', Array.isArray(started.unlocked) && started.unlocked.length === 1 && started.unlocked[0] === 'wenzhou', started)
 check('鄂州默认锁定', started.ezhou === false, started)
 check('对局内 HUD 显示第一份合同', started.goal === true && started.goalText.indexOf('/') >= 0, started)
 
@@ -193,17 +193,34 @@ check('新城仍带公司身份', !!(started2.company && started2.company.id), s
 check('新图启动金来自公司池 2 亿', started2.funds === 20000 && started2.pool === 0, started2)
 check('新城登记为第二分部', Array.isArray(started2.branches) && started2.branches.length === 2, started2)
 
+// 5a. B 分部推进两个月，A 分部必须真实补结算到同一公司月份
+const settledA = jp(await evalJs(`(async () => {
+  const co = CM.Company.active();
+  const a = CM.Company.branchOf(co, 'wenzhou');
+  const g = CM.game;
+  if (!a || !a.slotId) return JSON.stringify({ err: 'NO-A-SLOT' });
+  if (!g.startJump(2)) return JSON.stringify({ err: 'BUSY' });
+  while (g.jumping) await new Promise(r => setTimeout(r, 100));
+  for (let i = 0; i < 150 && (CM.Company.settling || CM.Company._settleTimer); i++) await new Promise(r => setTimeout(r, 100));
+  const p = await CM.Save.load(a.slotId);
+  const coNow = CM.Company.active();
+  return JSON.stringify({ active: [g.clock.y, g.clock.m], a: [p.clock.y, p.clock.m],
+    last: CM.Company.branchOf(coNow, 'wenzhou').lastRemit || null, campaign: CM.Company.campaignClock(coNow) });
+})()`))
+check('其它分部在后台真实补结算', settledA.active[0] === settledA.a[0] && settledA.active[1] === settledA.a[1], settledA)
+
 // 5b. 已有分部从选图页重开时，不能重新领难度标准 30 亿
 const replay = jp(await evalJs(`(async () => {
   const old = CM.game;
+  const expect = Math.round(CM.Company.branchOf(CM.Company.active(), 'ezhou').funds || 0);
   CM.newGame({ map: 'ezhou', mode: 'challenge', difficulty: 'normal', name: '重开核查' });
   for (let i = 0; i < 200 && (!CM.game || CM.game === old); i++) await new Promise(r => setTimeout(r, 100));
   const g = CM.game;
   for (let i = 0; i < 100 && (!g.city.roadGroups || !g.city.roadGroups.length || g.pending); i++) await new Promise(r => setTimeout(r, 200));
   await new Promise(r => setTimeout(r, 800));
-  return JSON.stringify({ funds: Math.round(g.econ.funds), pool: CM.Company.poolOf(CM.Company.active()) });
+  return JSON.stringify({ funds: Math.round(g.econ.funds), expect: expect, pool: CM.Company.poolOf(CM.Company.active()) });
 })()`))
-check('已有分部重开不会白拿 30 亿', replay.funds === 20000 && replay.pool === 0, replay)
+check('已有分部重开不会白拿 30 亿', replay.funds === replay.expect && replay.funds < 300000 && replay.pool === 0, replay)
 
 // 6. 注资：人为把公司池补到 3 亿，紧急救援额度 2 亿
 const injected = jp(await evalJs(`(async () => {

@@ -227,7 +227,7 @@
       '每家分部都是一局完整的地图，各存各的档。金库 = 各分部账面现金 + 公司自有资金（' +
       U.fmtMoney(CO().poolOf(co)) + '）；分部每月按上月经营现金流的 ' + Math.round(CO().REMIT_RATE * 100) + '% 上缴进公司池。' +
       (isCampaign ? '解锁新地图从公司池扣费；已解锁城市可以随时开始新的经营挑战。'
-        : '旧公司保留全地图权限；新战役会从四张入门图和一张进阶图开始锁图。')));
+        : '旧公司保留全地图权限；新战役只开放入门图温州，其余 53 城靠公司池解锁。')));
 
     if (isCampaign) {
       const ct = CO().contractOf(co, g);
@@ -250,7 +250,9 @@
     }
 
     const sec1 = h('div', { class: 'co-sec' });
-    sec1.appendChild(h('div', { class: 'co-sh' }, h('b', null, '分部（' + co.branches.length + '）')));
+    sec1.appendChild(h('div', { class: 'co-sh' },
+      h('b', null, '分部（' + co.branches.length + '）'),
+      h('span', { class: 'tiny muted' }, isCampaign ? '月结后自动补结算其它分部 · 上次上缴为真实记录' : '')));
     if (!co.branches.length) sec1.appendChild(h('div', { class: 'note' }, '还没有分部。当前这一局会在第一次自动保存时自动登记。'));
     for (const b of co.branches) {
       sec1.appendChild(branchCard(self, co, b, !!(g && g.mapId === b.mapId && cur)));
@@ -277,7 +279,7 @@
         '分部每月把上月经营现金流的 ' + Math.round(CO().REMIT_RATE * 100) + '% 划进公司池，70% 留在本地；本地现金不能跨城使用。',
         h('br'),
         isCampaign ? '公司池可以解锁新地图，也可以注资当前分部；解锁费 8/10/15/20 亿，按城市档位。'
-          : '旧公司保留全地图权限；新战役会从四张入门图和一张进阶图开始锁图。',
+          : '旧公司保留全地图权限；新战役只开放入门图温州，其余 53 城靠公司池解锁。',
         h('br'),
         '一座城市破产不会拖垮公司，但那个分部就停运了；公司池和本地账都空了，才是真正的战役破产。',
         h('br'),

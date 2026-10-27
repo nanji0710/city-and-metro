@@ -63,7 +63,7 @@
     const self = this;
     const co = CM.Company ? CM.Company.active() : null;
     const locked = function (id) { return CM.Company ? !CM.Company.canStartMap(co, id, 'challenge') : false; };
-    // 战役模式下把已解锁的入门图排在前面；锁定的 49 城放在后面，避免新玩家一进来先看到一屏“未解锁”。
+    // 战役模式下把唯一解锁的入门图排在前面；其余锁定城市放在后面，避免新玩家一进来先看到一屏“未解锁”。
     const all = CM.MAP_ORDER.slice().sort(function (a, b) {
       const la = locked(a) ? 1 : 0, lb = locked(b) ? 1 : 0;
       return la - lb;
@@ -249,8 +249,8 @@
           ['建议难度', DIFF ? DIFF.get(smeta.difficultyKey).name : '标准运营'],
           ['第一份合同', '新增 ' + (CM.Company.STARTER_CONTRACT ? CM.Company.STARTER_CONTRACT.addStations : 3) +
             ' 站 → 公司池 +' + U.fmtMoney(CM.Company.STARTER_CONTRACT ? CM.Company.STARTER_CONTRACT.reward : 70000)],
-          ['初始解锁', '五张战役图默认解锁'],
-          ['发展方向', '用公司池解锁其余 49 城'],
+          ['初始解锁', '仅入门图温州默认解锁'],
+          ['发展方向', '用公司池解锁其余 53 城'],
         ].map(function (f) { return h('div', null, h('span', null, f[0]), h('b', null, f[1])); })),
       ], 'intro') : null;
       const traitBlock = mp.trait ? block('star', 'b-violet', '城市特性', [
@@ -283,7 +283,7 @@
     const pick = function (id, quiet) {
       if (sel === id) { ensureGeo(id); return; }
       sel = id; if (!quiet) snd('soft');
-      // 战役图带建议难度：入门图默认见习、进阶图默认白手起家；
+      // 唯一入门图默认见习难度；玩家手动改过难度后不再自动覆盖。
       // 玩家手动改过难度后不再自动覆盖。
       const smeta = CM.Company ? CM.Company.STARTER_META[id] : null;
       if (smeta && smeta.difficultyKey && !self._diffKeyManual && DIFF) self._diffKey = smeta.difficultyKey;
