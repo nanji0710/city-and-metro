@@ -193,6 +193,18 @@ check('新城仍带公司身份', !!(started2.company && started2.company.id), s
 check('新图启动金来自公司池 2 亿', started2.funds === 20000 && started2.pool === 0, started2)
 check('新城登记为第二分部', Array.isArray(started2.branches) && started2.branches.length === 2, started2)
 
+// 5b. 已有分部从选图页重开时，不能重新领难度标准 30 亿
+const replay = jp(await evalJs(`(async () => {
+  const old = CM.game;
+  CM.newGame({ map: 'ezhou', mode: 'challenge', difficulty: 'normal', name: '重开核查' });
+  for (let i = 0; i < 200 && (!CM.game || CM.game === old); i++) await new Promise(r => setTimeout(r, 100));
+  const g = CM.game;
+  for (let i = 0; i < 100 && (!g.city.roadGroups || !g.city.roadGroups.length || g.pending); i++) await new Promise(r => setTimeout(r, 200));
+  await new Promise(r => setTimeout(r, 800));
+  return JSON.stringify({ funds: Math.round(g.econ.funds), pool: CM.Company.poolOf(CM.Company.active()) });
+})()`))
+check('已有分部重开不会白拿 30 亿', replay.funds === 20000 && replay.pool === 0, replay)
+
 // 6. 注资：人为把公司池补到 3 亿，紧急救援额度 2 亿
 const injected = jp(await evalJs(`(async () => {
   const co = CM.Company.active();

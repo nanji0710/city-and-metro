@@ -139,9 +139,18 @@
         fail(new Error('这座城市尚未解锁。请先在公司面板用公司池解锁「' + (mp.name || mp.id) + '」。'), '开始战役');
         return;
       }
-      if (co && camp && !camp.legacy && !opts.companyBranch && !CM.Company.branchOf(co, mp.id) && !CM.Company.isStarter(mp.id)) {
-        fail(new Error('新分部请从公司面板开始，并由公司池支付启动金。'), '开始战役');
-        return;
+      if (co && camp && !camp.legacy && !opts.companyBranch) {
+        const b = CM.Company.branchOf(co, mp.id);
+        if (!b && !CM.Company.isStarter(mp.id)) {
+          fail(new Error('新分部请从公司面板开始，并由公司池支付启动金。'), '开始战役');
+          return;
+        }
+        /* 已有分部从选图页开“新局”时，不能重新领一份难度标准启动金。
+         * 用该分部当前账面资金作为起点；否则 2 亿公司启动金可以被 30 亿白拿绕过。 */
+        if (b) {
+          opts.startFunds = Math.max(0, b.funds || 0);
+          opts.companyBranch = true;
+        }
       }
       if (!co) {
         if (!CM.Company.isStarter(mp.id)) {
