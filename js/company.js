@@ -59,17 +59,42 @@
     return n;
   }
 
+  /* 单站综合造价（万元/站）：地面 / 高架 / 地下各按 1/3 的「混合打法」，
+   * 站间距按 1.4 km 计，再乘本地价格指数。用于把验收线标定到「启动金付得起」。
+   * 2025 年基准约 3.8 亿/站：地面约 1.3 亿、高架约 2.5 亿、地下约 5.7 亿。 */
+  function stationUnitCost(mapId) {
+    const mp = CM.MAPS && CM.MAPS[mapId];
+    const cfg = (mp && mp.cfg) || {};
+    const base = cfg.econBase != null ? cfg.econBase : (CM.CFG.econBase || 1990);
+    const year = (cfg.START && cfg.START.y) || 2025;
+    const ci = U.priceIndex(year, CM.CFG.cost.inflation, base);
+    const C = CM.CFG.cost;
+    const station = (C.station.surface.M + C.station.elevated.M + C.station.underground.M) / 3;
+    const track = (C.trackPerKm.surface + C.trackPerKm.elevated + C.trackPerKm.underground) / 3 * 1.4;
+    return (station + track) * ci;
+  }
+
   /* ---------------- 分部验收：解锁下一城的核心门槛 ----------------
    * 钱不是解锁的主门槛：把本城线网从开局规模建到「+ΔN 站」即验收通过，
    * 总部发放验收奖金进公司池，同时解锁资格 +1。
-   * ΔN 按该城完整真实线网规模自标定（20%，夹在 6~20 站）：
-   * 温州 36 站 → +7；北京 542 站 → +20；30 站小城 → +6。
-   * 覆盖率在大小图幅城市之间不可比（实测温州 20 站仅 10%、鄂州 30 站 44%），
-   * 站数增量才是公平、可读、可标定的「建设完全」目标。 */
+   *
+   * ΔN 同时受两个上限约束（取较小者）：
+   *  1) 设计目标：完整真实线网的 20%（温州 36 站 → 7）；
+   *  2) 支付能力：市政府启动金 × 1.3 ÷ 混合单站造价，至少 3 站、至多 12 站。
+   * 实测默认地下 M 站综合约 6.7 亿/站，若按「20% 完整线网」硬性要求，
+   * 鄂州第 6 站就要 40 亿，而启动金只有 8 亿 —— 变成一道算术题。
+   * 因此按启动金能负担的规模标定；想建得更快可以继续扩建，验收只要求达到目标。 */
   function acceptDelta(mapId) {
     const mp = CM.MAPS && CM.MAPS[mapId];
     const full = mp && mp.fullNet && mp.fullNet.stations ? mp.fullNet.stations : 0;
-    return U.clamp(Math.round(full * 0.2) || 6, 6, 20);
+    const pctTarget = Math.round(full * 0.2) || 6;                       // 设计目标
+    // 入门城不吃市政府启动金，而是难度标准开局资金（30 亿）—— 预算单独算，
+    // 让温州保持「建到 11 站」的教学节奏。
+    const seed = Company.isStarter(mapId) ? (CM.CFG.economy.startFunds || 300000) : Company.startFundsFor(mapId);
+    // 预算 = 启动金 + 前两段合同奖励（约 0.24×）+ 一年经营结余（约 0.2×）≈ 1.45×
+    const budget = seed * 1.45;
+    const afford = Math.round(budget / stationUnitCost(mapId));           // 支付能力
+    return U.clamp(Math.min(pctTarget, afford), 3, 12);
   }
 
   function contractOfCampaign(camp) {
@@ -122,6 +147,7 @@
   Company._settleTimer = null;
 
   /* ---- 分部验收 API（定义在 Company 声明之后） ---- */
+  Company.stationUnitCost = stationUnitCost;
   Company.acceptDelta = acceptDelta;
   Company.acceptNeed = function (mapId) { return initialStations(mapId) + acceptDelta(mapId); };
   /* 验收奖金：按该城启动金的 40%，量级 2.4~4.8 亿/城。

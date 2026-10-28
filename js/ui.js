@@ -522,7 +522,7 @@
         tx = ct.stations + ' / ' + ct.target + ' 站';
         tip = '第一份公司合同：在「' + ((CM.MAPS[g.mapId] && CM.MAPS[g.mapId].name) || g.mapId) +
           '」新增 ' + CM.Company.STARTER_CONTRACT.addStations + ' 站，完成后公司池 +' +
-          U.fmtMoney(ct.reward) + '。点击查看公司面板';
+          U.fmtMoney(ct.reward) + '；外围用地面/高架比地下省得多。点击查看公司面板';
       } else if (co && CM.Company.cityContractOf) {
         // 每城 3~5 段的阶段合同：站数段把本城建到验收线，末段收拾满意度。
         const cc = CM.Company.cityContractOf(co, g.mapId);
@@ -532,7 +532,7 @@
             const have = Object.keys(g.net.stations).length;
             tx = '阶段 ' + (cc.idx + 1) + '/' + cc.stages.length + ' · ' + Math.min(have, cc.cur.target) + ' / ' + cc.cur.target + ' 站';
             tip = '总部阶段合同：把线网建到 ' + cc.cur.target + ' 站，完成奖励 ' +
-              U.fmtMoney(cc.cur.reward) + '（发到本城）。点击查看公司面板';
+              U.fmtMoney(cc.cur.reward) + '（发到本城）；外围用地面/高架比地下省得多。点击查看公司面板';
           } else {
             tx = '阶段 ' + (cc.idx + 1) + '/' + cc.stages.length + ' · 满意度 ' + cc.satMonths + ' / ' + cc.cur.months + ' 月';
             tip = '总部阶段合同：满意度保持 ' + cc.cur.target + ' 以上连续 ' + cc.cur.months +

@@ -334,11 +334,11 @@
       // 验收进度：当前局知道实际站数；其它分部只显示目标（后台月结时会自动补验收）。
       const acc = CM.Company.acceptState(co, id, current ? Object.keys(CM.game.net.stations).length : null);
       if (acc.done) rows.push(['验收', '已通过 · 奖金 ' + money(acc.rec.reward)]);
-      else rows.push(['验收目标', (acc.have != null ? acc.have + ' / ' : '达标 ') + acc.need + ' 站']);
+      else rows.push(['验收目标', (acc.have != null ? acc.have + ' / ' : '达标 ') + acc.need + ' 站 · 外围地面/高架省']);
     } else if (st === 'locked') {
       rows.push(['开通费', money(fee)]);
       rows.push(['启动金', money(start) + '（市政府资本金）']);
-      if (co) rows.push(['验收目标', '线网达 ' + CM.Company.acceptNeed(id) + ' 站']);
+      if (co) rows.push(['验收目标', '线网达 ' + CM.Company.acceptNeed(id) + ' 站 · 外围地面/高架省']);
     } else if (st === 'unlocked') {
       rows.push(['开城启动金', money(start) + '（市政府资本金）']);
     } else if (st === 'starter') {

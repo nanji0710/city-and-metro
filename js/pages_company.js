@@ -141,7 +141,7 @@
             (CO().STARTER_META[r.id] ? (CO().STARTER_META[r.id].tier === 'advanced' ? '进阶 · ' : '入门 · ') + CO().STARTER_META[r.id].trait + ' · ' : '') +
             (r.mp.trait ? r.mp.trait.name + ' · ' : '') +
             (r.mp.region || '') + ' · ' + (r.mp.tags || []).join(' · ') +
-            (r.unlocked ? ' · 启动金 ' + U.fmtMoney(r.start) : ' · 开通费 ' + U.fmtMoney(r.fee) + ' · 验收目标 ' + r.need + ' 站'))),
+            (r.unlocked ? ' · 启动金 ' + U.fmtMoney(r.start) : ' · 开通费 ' + U.fmtMoney(r.fee) + ' · 验收目标 ' + r.need + ' 站（外围地面/高架省）'))),
         h('span', { class: 'co-fee num' }, r.unlocked ? '启动金 ' + U.fmtMoney(r.start) : U.fmtMoney(r.fee)),
         h('button', {
           class: 'btn sm' + (!short ? ' primary' : ''),
@@ -324,7 +324,7 @@
         if (cc && cc.cur) {
           const txt = cc.cur.goal === 'stations'
             ? '「' + ((mapOf(g.mapId) || {}).name || g.mapId) + '」阶段合同 ' + (cc.idx + 1) + '/' + cc.stages.length +
-              '：线网建到 ' + cc.cur.target + ' 站，完成奖励 ' + U.fmtMoney(cc.cur.reward) + '（发到本城）。'
+              '：线网建到 ' + cc.cur.target + ' 站，完成奖励 ' + U.fmtMoney(cc.cur.reward) + '（发到本城）；外围用地面/高架比地下省。'
             : '「' + ((mapOf(g.mapId) || {}).name || g.mapId) + '」阶段合同 ' + (cc.idx + 1) + '/' + cc.stages.length +
               '：满意度 ≥ ' + cc.cur.target + ' 连续 ' + cc.cur.months + ' 个月（当前 ' + cc.satMonths + '），完成奖励 ' + U.fmtMoney(cc.cur.reward) + '。';
           el.appendChild(this.callout('info', 'flag', txt));
@@ -471,7 +471,8 @@
     }
     this.confirm('解锁 ' + (mp ? mp.name : mapId),
       '从公司池支付开通费 ' + U.fmtMoney(fee) + '，取得「' + (mp ? mp.name : mapId) +
-      '」的经营权；开城时市政府注入 ' + U.fmtMoney(start) + ' 启动金。把线网建到验收目标（' + CO().acceptNeed(mapId) + ' 站）可获验收奖金并解锁下一城。',
+      '」的经营权；开城时市政府注入 ' + U.fmtMoney(start) + ' 启动金。把线网建到验收目标（' + CO().acceptNeed(mapId) + ' 站）可获验收奖金并解锁下一城。' +
+      '外围用地面/高架比地下省 3~5 倍，验收线就是按这种打法标定的。',
       '确认解锁', function () {
         const r = CO().unlockMap(co, mapId);
         if (!r.ok) { this.toast(r.error || '解锁失败', 'bad'); return; }

@@ -34,7 +34,7 @@
       hint: '先把鼠标移到橙色线路上，再点击。',
       check: function () { return ui.topIs && ui.topIs(['line']); } },
     { id: 'build', title: '为温州扩建 3 座车站',
-      body: '用底部「建站」或「绘线」工具，在 1 号线附近新增 3 座车站并确认建设。扩建 3 站后会触发公司给温州的第一份合同。',
+      body: '用底部「建站」或「绘线」工具，在 1 号线附近新增 3 座车站并确认建设。扩建 3 站后会触发公司给温州的第一份合同。外围用地面/高架比地下便宜 3~5 倍；站太挤会掉满意度，扩建时顺手把发车间隔调开。',
       hint: '不要拆掉原有车站；目标是新增 3 站。',
       target: function () { return ui.tbtns && ui.tbtns.station; },
       enter: function () { if (g.tutorial && g.tutorial.buildBase == null) g.tutorial.buildBase = stationCount(); ctx.base = (g.tutorial && g.tutorial.buildBase) || stationCount(); },

@@ -277,6 +277,20 @@ check('末段站数目标等于验收线', !chain.err && chain.r !== undefined, 
 check('建到第 1 段目标奖励发到本城现金', chain.r && chain.r.advanced === true &&
   chain.r.reward === chain.gained && chain.idx === 1, chain)
 
+// 5a-1. 验收线按支付能力标定：ΔN × 混合单站造价 不超过启动金预算（至少保留 3 站下限）
+const afford = jp(await evalJs(`(() => {
+  const cities = ['ezhou', 'guangzhou', 'beijing', 'wuhu', 'qingyuan'];
+  return JSON.stringify(cities.map(function (id) {
+    const d = CM.Company.acceptDelta(id);
+    const unit = CM.Company.stationUnitCost(id);
+    const budget = CM.Company.startFundsFor(id) * 1.45;
+    const cap = Math.max(3, Math.ceil(budget / unit));
+    return { id: id, delta: d, cap: cap, cost: Math.round(d * unit), budget: Math.round(budget), ok: d <= cap };
+  }));
+})()`))
+check('新城的验收线在启动金支付能力内', Array.isArray(afford) && afford.length === 5 && afford.every(x => x.ok), afford)
+check('温州入门城仍保持 11 站教学节奏', contract.need === 11, contract)
+
 // 5a. B 分部推进两个月，A 分部必须真实补结算到同一公司月份
 const settledA = jp(await evalJs(`(async () => {
   const co = CM.Company.active();
