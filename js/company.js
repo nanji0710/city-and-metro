@@ -41,9 +41,10 @@
    * 不是钱；新城的建设资金由市政府资本金注入（见 START_FUNDS）。 */
   const OPEN_FEE = { 1: 5000, 2: 8000, 3: 12000, 4: 16000 };
   /* 新分部启动金（万元）：市政府资本金注入，**不从公司池出**。
-   * 量级约为基底 30 亿标准开局的 1/5 ~ 2/5，保证新城开局就能真正开工建线；
+   * 量级约为基底 30 亿标准开局的 27%~50%：8 亿能立刻开工
+   * （地下小站 1.5 亿 + 地面线约 0.6 亿/km），15 亿够大型城市先铺一条完整线；
    * 公司池只在注资 / 救援 / 开通费时出钱。 */
-  const START_FUNDS = { 1: 60000, 2: 80000, 3: 100000, 4: 120000 };
+  const START_FUNDS = { 1: 80000, 2: 100000, 3: 120000, 4: 150000 };
   const CAMPAIGN_POOL = 50000;   // 公司开办资金 5 亿
 
   /* 战役第一份公司合同：在起点城新增 3 站，公司池一次性奖励 7 亿。 */
@@ -128,6 +129,97 @@
    * 但不存在「月入四五千万」的印钞机。 */
   Company.acceptReward = function (mapId) { return Math.round(Company.startFundsFor(mapId) * 0.4); };
 
+  /* ---------------- 每城阶段性合同（3~5 段） ----------------
+   * 给每座分部城市一条确定性的合同链：2~4 个站数阶段 + 1 个满意度阶段。
+   * - 站数阶段把「开局 → 验收线」切成几段，段数随城市规模自标定：
+   *   ΔN ≤ 7 站切 2 段（共 3 段合同），≤ 12 站切 3 段（4 段），更大切 4 段（5 段）；
+   * - 最后一站数段恰好等于验收线，和验收互为印证；
+   * - 满意度阶段要求连续 2 个账期 ≥ 60，逼玩家在扩张后回头收拾服务水平；
+   * - 奖励按启动金比例逐段递增（0.10/0.14/0.18/0.22/0.30×启动金），
+   *   **发到本城分部现金** —— 玩家赚钱的第一用途是把本城建完，不进公司池。 */
+  function cityChain(mapId) {
+    const start = Company.startFundsFor(mapId);
+    const init = initialStations(mapId);
+    const dN = acceptDelta(mapId);
+    const k = dN <= 7 ? 2 : (dN <= 12 ? 3 : 4);
+    const stages = [];
+    for (let i = 1; i <= k; i++) {
+      stages.push({
+        goal: 'stations',
+        target: init + Math.ceil(dN * i / k),
+        reward: Math.round(start * (0.06 + 0.04 * i)),
+      });
+    }
+    stages.push({ goal: 'sat', target: 60, months: 2, reward: Math.round(start * 0.3) });
+    return stages;
+  }
+  Company.cityChain = cityChain;
+  /* 当前城合同进度：只存进度（idx / satMonths），阶段表确定性重算，旧档零迁移。 */
+  Company.cityContractOf = function (c, mapId) {
+    const camp = Company.campaignOf(c);
+    if (!camp || camp.legacy) return null;
+    if (!Company.branchOf(c, mapId) || Company.isStarter(mapId)) return null;
+    const prog = (camp.cityContracts || {})[mapId] || { idx: 0, satMonths: 0, paid: 0 };
+    const stages = cityChain(mapId);
+    const idx = Math.min(prog.idx || 0, stages.length);
+    return {
+      idx: idx, stages: stages, done: idx >= stages.length,
+      cur: idx < stages.length ? stages[idx] : null,
+      satMonths: prog.satMonths || 0, paid: prog.paid || 0,
+    };
+  };
+  /* 月度检查：当前局（或后台补结算的分部局）达到阶段目标 → 奖励发到本城现金、进度 +1。
+   * 未达标 / 无变化时不写盘。 */
+  Company.checkCityContract = function (g) {
+    if (!g || !g.company || !g.net || g.econ.isFree()) return null;
+    const c0 = Company.get(g.company.id);
+    if (!c0) return null;
+    const camp = Company.campaignOf(c0);
+    if (!camp || camp.legacy) return null;
+    if (Company.isStarter(g.mapId)) return null;
+    if (!Company.branchOf(c0, g.mapId)) return null;
+    const co = Company.fresh(c0) || c0;
+    const campNow = Company.campaignOf(co);
+    const maps = Object.assign({}, campNow.cityContracts || {});
+    const p = Object.assign({ idx: 0, satMonths: 0, paid: 0 }, maps[g.mapId] || {});
+    const stages = cityChain(g.mapId);
+    if (p.idx >= stages.length) return null;
+    const st = stages[p.idx];
+    let advanced = false, note = null;
+    if (st.goal === 'stations') {
+      const have = Object.keys(g.net.stations || {}).length;
+      if (have < st.target) return { ok: false, goal: st, have: have };
+      advanced = true;
+      note = '线网达到 ' + have + ' 站';
+    } else {
+      const satOk = g.econ.sat >= st.target;
+      const months = satOk ? (p.satMonths || 0) + 1 : 0;
+      if (!satOk && !(p.satMonths || 0)) return null;   // 连续计数没有变化，不写盘
+      p.satMonths = months;
+      if (months >= st.months) { advanced = true; note = '满意度连续 ' + months + ' 个月 ≥ ' + st.target; }
+      else note = '满意度达标 ' + months + ' / ' + st.months + ' 个月';
+    }
+    if (advanced) {
+      p.idx = p.idx + 1;
+      p.satMonths = 0;
+      p.paid = (p.paid || 0) + st.reward;
+      g.econ.income('reward', st.reward);
+      g.econ.log('reward', st.reward, 'gen', '总部阶段合同奖励（' + (p.idx) + '/' + stages.length + '）', { y: g.clock.y, m: g.clock.m, d: 1 });
+    }
+    maps[g.mapId] = p;
+    co.campaign = Object.assign({}, campNow, { cityContracts: maps });
+    co.updatedAt = nowIso();
+    const r = Company.commit(c0, co);
+    if (!r.ok) return { ok: false, error: r.error };
+    if (advanced) {
+      const name = (CM.MAPS[g.mapId] && CM.MAPS[g.mapId].name) || g.mapId;
+      const msg = '「' + name + '」阶段合同 ' + p.idx + '/' + stages.length + ' 完成：本城 +' + U.fmtMoney(st.reward);
+      if (g.logEvent) g.logEvent({ tag: '公司', title: msg, desc: note });
+      if (g.emit) g.emit('toast', { kind: 'good', text: msg });
+    }
+    return { ok: true, advanced: advanced, stage: st, reward: advanced ? st.reward : 0, idx: p.idx, total: stages.length };
+  };
+
   Company.acceptedOf = function (c) {
     const camp = Company.campaignOf(c);
     if (!camp || camp.legacy || !camp.accepted || typeof camp.accepted !== 'object') return {};
@@ -141,14 +233,14 @@
     return { done: !!rec, rec: rec, need: Company.acceptNeed(mapId), have: have, delta: acceptDelta(mapId), reward: Company.acceptReward(mapId) };
   };
   Company.acceptedCount = function (c) { return Object.keys(Company.acceptedOf(c)).length; };
-  /* 解锁资格：每个已验收分部 +1；完成第一份公司合同再 +1（保证新手先学会建设再扩张）。
+  /* 解锁资格：每座分部城市「建到验收目标」时 +1，一张地图最多给一次；
+   * 第一份合同只发钱不发资格 —— 资格必须靠建设挣来。
    * 已开成分部数（不含入门城）必须小于资格数才能再开新城。 */
   Company.openQuota = function (c) {
     const co = Company.fresh(c) || c;
     const camp = Company.campaignOf(co);
     if (!camp || camp.legacy) return Infinity;
-    const contractDone = !!(camp.contract && camp.contract.done);
-    return Company.acceptedCount(co) + (contractDone ? 1 : 0);
+    return Company.acceptedCount(co);
   };
   Company.canOpenMore = function (c) {
     const co = Company.fresh(c) || c;
@@ -431,8 +523,9 @@
               const ga = CM.Game.restore(payload);
               const label = '正在结算 ' + ((CM.MAPS[b.mapId] && CM.MAPS[b.mapId].name) || b.mapId);
               return runJump(ga, months, label).then(function () {
-                // 后台分部补结算完成时同步做验收检查：站数达标就发验收奖金、解锁资格 +1。
+                // 后台分部补结算完成时同步做验收与阶段合同检查。
                 try { if (Company.checkAcceptance) Company.checkAcceptance(ga); } catch (eAcc) { console.warn('分部验收检查失败：' + b.mapId, eAcc); }
+                try { if (Company.checkCityContract) Company.checkCityContract(ga); } catch (eCon) { console.warn('分部阶段合同检查失败：' + b.mapId, eCon); }
                 return CM.Save.save(ga, 'auto', { slotId: b.slotId, label: '自动存档' }).then(function (saved) {
                   if (!saved || !saved.ok) throw new Error((saved && saved.error) || '分部存档写回失败');
                   CM.useMap(activeMap);
@@ -527,7 +620,7 @@
     }
     if (camp.unlocked.indexOf(mapId) >= 0) return { ok: false, error: '这座城市已经解锁' };
     if (!Company.canOpenMore(co)) {
-      return { ok: false, error: '解锁资格不足：先完成第一份合同，或把已进驻城市建到验收目标（已验收 ' + Company.acceptedCount(co) + ' 个）' };
+      return { ok: false, error: '解锁资格不足：把已进驻城市建到验收目标即得资格，每图一次（已验收 ' + Company.acceptedCount(co) + ' 个，还差 ' + Math.max(1, (co.branches || []).length - Company.acceptedCount(co)) + ' 个）' };
     }
     const fee = Company.unlockFee(mapId);
     if ((co.pool || 0) < fee) return { ok: false, error: '公司池不足（开通费 ' + U.fmtMoney(fee) + '）' };
@@ -687,7 +780,7 @@
     const start = opts && typeof opts.startFunds === 'number' ? Math.max(0, Math.round(opts.startFunds)) : Company.startFundsFor(mapId);
     // 未解锁城市：先过「解锁资格」门槛，公司池只付开通费；启动金是市政府资本金，不走池。
     if (fee > 0 && !Company.canStartMap(co, mapId, 'challenge')) {
-      return { ok: false, error: '解锁资格不足：先完成第一份合同，或把已进驻城市建到验收目标（已验收 ' + Company.acceptedCount(co) + ' 个）' };
+      return { ok: false, error: '解锁资格不足：把已进驻城市建到验收目标即得资格，每图一次（已验收 ' + Company.acceptedCount(co) + ' 个）' };
     }
     if ((co.pool || 0) < fee) return { ok: false, error: '公司池不足（开通费 ' + U.fmtMoney(fee) + '）' };
     co.pool = (co.pool || 0) - fee;

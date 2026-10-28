@@ -188,9 +188,9 @@ const contract = jp(await evalJs(`(async () => {
     need: CM.Company.acceptNeed('wenzhou'), stations: Object.keys(g.net.stations).length });
 })()`))
 check('第一份合同完成奖励 7 亿进池', contract.contract && contract.contract.ok === true && contract.contract.reward === 70000, contract)
-check('温州线网达 11 站触发验收（奖金 3.2 亿进池）', contract.accept && contract.accept.ok === true &&
-  contract.accept.reward === 32000 && contract.accept.have === 11 && contract.accept.need === 11, contract)
-check('验收后解锁资格为 2', contract.quota === 2 && contract.canEzhou === true, contract)
+check('温州线网达 11 站触发验收（奖金 4 亿进池）', contract.accept && contract.accept.ok === true &&
+  contract.accept.reward === 40000 && contract.accept.have === 11 && contract.accept.need === 11, contract)
+check('验收后解锁资格为 1（合同不发资格，每图一次）', contract.quota === 1 && contract.canEzhou === true, contract)
 
 // 4b. 从公司面板解锁鄂州：资格已够，公司池只付 0.5 亿开通费
 const unlocked = jp(await evalJs(`(async () => {
@@ -211,7 +211,7 @@ const unlocked = jp(await evalJs(`(async () => {
     unlocked: CM.Company.isUnlocked(co, 'ezhou'), can: CM.Company.canStartMap(co, 'ezhou', 'challenge') });
 })()`))
 check('解锁确认框说明开通费与市政府启动金', unlocked.fee === true && unlocked.capital === true, unlocked)
-check('解锁后公司池只扣 0.5 亿开通费（合同+验收后为 14.7 亿）', unlocked.pool === 147000, unlocked)
+check('解锁后公司池只扣 0.5 亿开通费（合同+验收后为 16 亿）', unlocked.pool === 155000, unlocked)
 check('鄂州变为已解锁', unlocked.unlocked === true && unlocked.can === true, unlocked)
 
 // 5. 从公司面板开始鄂州；启动金 6 亿由市政府资本金注入（不从池扣）
@@ -236,8 +236,46 @@ const started2 = jp(await evalJs(`(async () => {
 })()`))
 check('解锁后可从公司面板开始新城', started2.map === 'ezhou', started2)
 check('新城仍带公司身份', !!(started2.company && started2.company.id), started2)
-check('启动金 6 亿由市政府注入（池不扣）', started2.funds === 60000 && started2.pool === 147000, started2)
+check('启动金 8 亿由市政府注入（池不扣）', started2.funds === 80000 && started2.pool === 155000, started2)
 check('新城登记为第二分部', Array.isArray(started2.branches) && started2.branches.length === 2, started2)
+
+// 5a-0. 鄂州阶段合同链：3~5 段，建到第 1 段目标 → 奖励发到本城现金
+const chain = jp(await evalJs(`(async () => {
+  const g = CM.game;
+  if (!g || g.mapId !== 'ezhou') return JSON.stringify({ err: 'NOT-EZHOU' });
+  const co = CM.Company.active();
+  const cc = CM.Company.cityContractOf(co, 'ezhou');
+  if (!cc || !cc.cur) return JSON.stringify({ err: 'NO-CHAIN', cc: cc });
+  if (cc.stages.length < 3 || cc.stages.length > 5) return JSON.stringify({ err: 'BAD-LEN', n: cc.stages.length });
+  const last = cc.stages[cc.stages.length - 1];
+  if (last.goal !== 'sat' || last.months !== 2) return JSON.stringify({ err: 'BAD-TAIL', last: last });
+  if (cc.stages[cc.stages.length - 2].goal !== 'stations' ||
+      cc.stages[cc.stages.length - 2].target !== CM.Company.acceptNeed('ezhou')) {
+    return JSON.stringify({ err: 'TAIL-NOT-ACCEPT', prev: cc.stages[cc.stages.length - 2] });
+  }
+  const M = CM.Metro, U0 = CM.U;
+  const lineId = Object.keys(g.net.lines)[0];
+  const need = cc.cur.target - Object.keys(g.net.stations).length;
+  const er = g.edit((net) => {
+    for (let k = 0; k < need; k++) {
+      let near = null, nd = -1;
+      for (const sid0 in net.stations) { const s = net.stations[sid0]; const d = U0.dist(64, 64, s.x, s.y); if (d > nd) { nd = d; near = sid0; } }
+      const sid = M.addStation(net, 62 + k * 3, 60, { size: 'S', type: 'surface' }, g.city);
+      const r = M.addSegment(net, lineId, near, sid, [], 'surface');
+      if (r && r.error) throw new Error(r.error);
+    }
+  });
+  if (er && er.error) return JSON.stringify({ err: 'EDIT ' + er.error });
+  g.net = JSON.parse(JSON.stringify(g.draft.net)); g.draft = null;
+  const funds0 = Math.round(g.econ.funds);
+  const r = CM.Company.checkCityContract(g);
+  return JSON.stringify({ stages: cc.stages.length, target: cc.cur.target, r: r,
+    gained: Math.round(g.econ.funds) - funds0, idx: CM.Company.cityContractOf(CM.Company.get(co.id), 'ezhou').idx });
+})()`))
+check('鄂州阶段合同链为 3~5 段且末段是满意度', chain.stages >= 3 && !chain.err, chain)
+check('末段站数目标等于验收线', !chain.err && chain.r !== undefined, chain)
+check('建到第 1 段目标奖励发到本城现金', chain.r && chain.r.advanced === true &&
+  chain.r.reward === chain.gained && chain.idx === 1, chain)
 
 // 5a. B 分部推进两个月，A 分部必须真实补结算到同一公司月份
 const settledA = jp(await evalJs(`(async () => {

@@ -48,7 +48,7 @@
         return false;
       } },
     { id: 'company', title: '第一份合同与公司池',
-      body: '打开顶栏「公司」：温州的第一份合同已完成，公司池获得 +7 亿。合同还给你 +1 解锁资格；之后每把一座城市建到验收目标，资格再 +1。',
+      body: '打开顶栏「公司」：温州的第一份合同已完成，公司池获得 +7 亿。资格要靠建设挣：把温州线网建到验收目标（11 站）就拿到第 1 个解锁资格，之后每座城各给一次。',
       hint: '公司面板里可以看到每座城市的验收目标。',
       target: function () { return ui.hbtns && ui.hbtns.company; },
       check: function () { return ui.topIs && ui.topIs(['company']); } },

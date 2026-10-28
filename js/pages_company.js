@@ -131,7 +131,7 @@
       // 未解锁城市：资格是「验收数 + 第一份合同」；钱只出小额开通费。
       const short = r.unlocked ? false : (!r.eligible || pool < r.fee);
       const tip = r.unlocked ? '启动金由市政府资本金注入，开一局新的经营挑战'
-        : (!r.eligible ? '解锁资格不足：完成第一份合同，或把已进驻城市建到验收目标（已验收 ' + CO().acceptedCount(co) + ' 个）'
+        : (!r.eligible ? '解锁资格不足：把已进驻城市建到验收目标即得资格，每图一次（已验收 ' + CO().acceptedCount(co) + ' 个）'
           : (pool < r.fee ? '公司池还差 ' + U.fmtMoney(r.fee - pool) : '支付开通费 ' + U.fmtMoney(r.fee) + ' 解锁；启动金由市政府注入'));
       const row = h('div', { class: 'co-jrow' + (short ? ' short' : ''), 'data-map': r.id },
         h('span', { class: 'dot', style: { background: r.unlocked ? 'var(--good)' : (r.eligible ? 'var(--accent)' : 'var(--faint)') } }),
@@ -318,6 +318,18 @@
             : '第一份公司合同：回到起点城「' + startName + '」后查看进度；完成后公司池 +' + U.fmtMoney(ct.reward) + '。');
         el.appendChild(this.callout(ct.done ? 'good' : 'info', 'star', txt));
       }
+      // 本城阶段合同链（每城 3~5 段）：只显示当前正在经营的分部进度。
+      if (g && CM.Company.cityContractOf) {
+        const cc = CO().cityContractOf(co, g.mapId);
+        if (cc && cc.cur) {
+          const txt = cc.cur.goal === 'stations'
+            ? '「' + ((mapOf(g.mapId) || {}).name || g.mapId) + '」阶段合同 ' + (cc.idx + 1) + '/' + cc.stages.length +
+              '：线网建到 ' + cc.cur.target + ' 站，完成奖励 ' + U.fmtMoney(cc.cur.reward) + '（发到本城）。'
+            : '「' + ((mapOf(g.mapId) || {}).name || g.mapId) + '」阶段合同 ' + (cc.idx + 1) + '/' + cc.stages.length +
+              '：满意度 ≥ ' + cc.cur.target + ' 连续 ' + cc.cur.months + ' 个月（当前 ' + cc.satMonths + '），完成奖励 ' + U.fmtMoney(cc.cur.reward) + '。';
+          el.appendChild(this.callout('info', 'flag', txt));
+        }
+      }
       const rp = CO().remitPreview(g);
       if (rp) {
         el.appendChild(this.callout(rp.can > 0 ? 'good' : 'warn', 'bank',
@@ -450,7 +462,7 @@
     if (!co) { this.toast('还没有公司', 'warn'); return; }
     const mp = mapOf(mapId), fee = CO().unlockFee(mapId), start = CO().startFundsFor(mapId);
     if (!CO().canStartMap(co, mapId, 'challenge')) {
-      this.toast('解锁资格不足：完成第一份合同，或把已进驻城市建到验收目标（已验收 ' + CO().acceptedCount(co) + ' 个）', 'warn');
+      this.toast('解锁资格不足：把已进驻城市建到验收目标即得资格，每图一次（已验收 ' + CO().acceptedCount(co) + ' 个）', 'warn');
       return;
     }
     if ((co.pool || 0) < fee) {

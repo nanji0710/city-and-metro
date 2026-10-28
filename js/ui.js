@@ -72,7 +72,7 @@
     this.goalTx = h('span', { class: 'goal-tx' }, '');
     this.goalPill = h('button', {
       class: 'goalpill hidden', type: 'button',
-      'aria-label': '第一份公司合同进度',
+      'aria-label': '公司合同进度',
       onclick: function () { self.openTop('company'); },
     }, ic('flag'), this.goalTx);
     this.tbtns = {};
@@ -459,22 +459,57 @@
     c.sat.v.innerHTML = Math.round(sat) + ' ' + trend(sat, prev && prev.sat, true);
     const sk = sat >= 60 ? 'smile' : (sat >= 40 ? 'meh' : 'frown');
     if (c.sat.ico !== sk) { c.sat.ico = sk; c.sat.badge.className = 'badge ' + (sk === 'smile' ? 'b-green' : (sk === 'meh' ? 'b-orange' : 'b-red')); c.sat.badge.innerHTML = ''; c.sat.badge.appendChild(ic(sk)); }
+    // 满意度反馈（本作独有）：下滑原因直接写进胶囊提示，不用翻详情页才知道发生了什么。
+    // 1 秒节流，与合同目标胶囊同频。
+    const sf = g.econ.satFactors;
+    if (sf && performance.now() - (this._satTipT || 0) > 1000) {
+      this._satTipT = performance.now();
+      const negs = sf.factors.filter(function (f) { return f.v < -0.4; })
+        .sort(function (a, b) { return a.v - b.v; }).slice(0, 2);
+      const d = g.econ.lastDay || {};
+      let tip = '满意度 ' + Math.round(sat) + '（趋向 ' + Math.round(sf.target) + '）';
+      if (sf.target < sat - 2 || sat < 45) tip += ' · 下滑中';
+      if (d.crowdShare > 0.12) tip += '；车厢拥挤 ' + U.fmtPct(d.crowdShare, 0) + '，加车或拉大间隔可缓解';
+      if (negs.length) tip += '；主因：' + negs.map(function (f) { return f.label.split('（')[0] + ' ' + U.fmtSigned(f.v, 1); }).join('、');
+      tip += '。点击查看构成因素';
+      if (c.sat.el.getAttribute('data-tip') !== tip) c.sat.el.setAttribute('data-tip', tip);
+    }
     const n = g.tasks.active.length;
     this.taskCnt.textContent = n; this.taskCnt.style.display = n ? '' : 'none';
-    // 第一份公司合同：对局内常驻目标，避免玩家不知道为什么要扩建。
+    // 公司合同目标：对局内常驻胶囊，避免玩家不知道该干什么。
+    // 优先级：温州第一份合同 > 本城阶段合同链 > 隐藏。
     // Company.active() 会读 localStorage，这里最多 1 秒刷新一次，不跟着 4Hz HUD 跑。
     if (this.goalPill && CM.Company && performance.now() - (this._goalT || 0) > 1000) {
       this._goalT = performance.now();
       const co = CM.Company.active();
       const ct = co ? CM.Company.contractOf(co, g) : null;
-      const show = !!(ct && !ct.done && g.mapId === ct.starterMapId && ct.stations != null);
-      this.goalPill.classList.toggle('hidden', !show);
-      if (show) {
-        const tx = ct.stations + ' / ' + ct.target + ' 站';
-        if (this.goalTx.textContent !== tx) this.goalTx.textContent = tx;
-        const tip = '第一份公司合同：在「' + ((CM.MAPS[g.mapId] && CM.MAPS[g.mapId].name) || g.mapId) +
+      const showStart = !!(ct && !ct.done && g.mapId === ct.starterMapId && ct.stations != null);
+      let show = showStart, tx = '', tip = '';
+      if (showStart) {
+        tx = ct.stations + ' / ' + ct.target + ' 站';
+        tip = '第一份公司合同：在「' + ((CM.MAPS[g.mapId] && CM.MAPS[g.mapId].name) || g.mapId) +
           '」新增 ' + CM.Company.STARTER_CONTRACT.addStations + ' 站，完成后公司池 +' +
           U.fmtMoney(ct.reward) + '。点击查看公司面板';
+      } else if (co && CM.Company.cityContractOf) {
+        // 每城 3~5 段的阶段合同：站数段把本城建到验收线，末段收拾满意度。
+        const cc = CM.Company.cityContractOf(co, g.mapId);
+        if (cc && cc.cur) {
+          show = true;
+          if (cc.cur.goal === 'stations') {
+            const have = Object.keys(g.net.stations).length;
+            tx = '阶段 ' + (cc.idx + 1) + '/' + cc.stages.length + ' · ' + Math.min(have, cc.cur.target) + ' / ' + cc.cur.target + ' 站';
+            tip = '总部阶段合同：把线网建到 ' + cc.cur.target + ' 站，完成奖励 ' +
+              U.fmtMoney(cc.cur.reward) + '（发到本城）。点击查看公司面板';
+          } else {
+            tx = '阶段 ' + (cc.idx + 1) + '/' + cc.stages.length + ' · 满意度 ' + cc.satMonths + ' / ' + cc.cur.months + ' 月';
+            tip = '总部阶段合同：满意度保持 ' + cc.cur.target + ' 以上连续 ' + cc.cur.months +
+              ' 个月，完成奖励 ' + U.fmtMoney(cc.cur.reward) + '（发到本城）。点击查看公司面板';
+          }
+        }
+      }
+      this.goalPill.classList.toggle('hidden', !show);
+      if (show) {
+        if (this.goalTx.textContent !== tx) this.goalTx.textContent = tx;
         if (this.goalPill.getAttribute('data-tip') !== tip) this.goalPill.setAttribute('data-tip', tip);
       }
     }
