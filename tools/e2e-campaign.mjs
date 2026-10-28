@@ -178,55 +178,25 @@ const contract = jp(await evalJs(`(async () => {
   const e1 = addStations(3);
   if (e1) return JSON.stringify({ err: 'EDIT1 ' + e1 });
   const cr = CM.Company.checkStarterContract(g);
-  // 验收看覆盖率：在人口最密的未覆盖小区补 6 站，推进 2 个游戏日让模型重算
-  const dense = function (n) {
-    for (let k = 0; k < n; k++) {
-      let best = -1, bestPop = -1;
-      const W = g.city.W, cellM = CM.CFG.CELL_M || 460;
-      for (let z = 0; z < g.model.zoneCells.length; z++) {
-        for (const c of g.model.zoneCells[z]) {
-          const pop = g.city.pop[c] || 0;
-          if (pop <= 0 || pop <= bestPop) continue;
-          const x = (c % W) + 0.5, y = ((c / W) | 0) + 0.5;
-          let far = true;
-          for (const sid in g.net.stations) { const s = g.net.stations[sid]; if (CM.U.dist(x, y, s.x, s.y) * cellM < 1600) { far = false; break; } }
-          if (far) { best = c; bestPop = pop; }
-        }
-      }
-      if (best < 0) return 'no-cell';
-      const x = (best % W) + 0.5, y = ((best / W) | 0) + 0.5;
-      const er2 = g.edit((net) => {
-        const sid = CM.Metro.addStation(net, x, y, { size: 'M', type: 'surface' }, g.city);
-        let near = null, nd = 1e9;
-        for (const s2 in net.stations) { const s = net.stations[s2]; if (sid === s2) continue; const d = CM.U.dist(x, y, s.x, s.y); if (d < nd) { nd = d; near = s2; } }
-        CM.Metro.addSegment(net, lineId, near, sid, [], 'surface');
-      });
-      if (er2 && er2.error) return er2.error;
-      g.net = JSON.parse(JSON.stringify(g.draft.net)); g.draft = null;
-      g.netVersion++; g.rev++;
-      g.compiled = CM.Metro.compile(g.net, g.city);
-      g.model.setNetwork(g.compiled);
-    }
-    return null;
-  };
-  const e2 = dense(6);
-  if (e2) return JSON.stringify({ err: 'EDIT2 ' + e2 });
-  const dt = 1 / 12, per = 24 * 12;
-  for (let i = 0; i < 2 * per; i++) g.update(dt);
-  const cov = (g.model.daily && g.model.daily.coverage) || 0;
+  // 覆盖率验收：真实建到 70% 需要很长一局，这里直接注入模型覆盖率，
+  // 验证「70% 门槛 + 每 2% 加 1 亿 + 手动解锁」这条规则本身。
+  g.model.daily = g.model.daily || {};
+  g.model.daily.ready = true;
+  g.model.daily.coverage = 0.76;
   const acc = CM.Company.checkAcceptance(g);
   const co = CM.Company.active();
+  const st = CM.Company.acceptState(co, 'wenzhou', 0.76);
   return JSON.stringify({ contract: cr, accept: acc, pool: co.pool, quota: CM.Company.openQuota(co),
     canEzhou: CM.Company.canStartMap(co, 'ezhou', 'challenge'),
-    target: CM.Company.acceptTarget('wenzhou'), base: CM.Company.acceptBase('wenzhou'),
-    coverage: cov, stations: Object.keys(g.net.stations).length });
+    threshold: CM.Company.UNLOCK_COVER, coverage: 0.76,
+    seedBonus: CM.Company.seedBonus(0.76), seedPreview: CM.Company.baseSeed('ezhou') + CM.Company.seedBonus(0.76),
+    reachable: st.reachable, bonus: st.bonus });
 })()`))
 check('第一份合同完成奖励 7 亿进池', contract.contract && contract.contract.ok === true && contract.contract.reward === 70000, contract)
-check('温州覆盖率达标触发验收（奖金 4 亿进池）', contract.accept && contract.accept.ok === true &&
-  contract.accept.reward === 40000 && contract.coverage >= contract.target, contract)
-check('温州验收目标按 4 站开局覆盖率标定（约 7.5%）', contract.base > 0.03 && contract.base < 0.04 &&
-  contract.target > 0.07 && contract.target < 0.08, contract)
-check('验收后解锁资格为 1（合同不发资格，每图一次）', contract.quota === 1 && contract.canEzhou === true, contract)
+check('覆盖率达到 70% 门槛才算有解锁机会', contract.accept && contract.accept.ok === true &&
+  contract.threshold === 0.7 && contract.reachable === true && contract.coverage >= contract.threshold, contract)
+check('每多 2% 覆盖率新分部启动金 +1 亿（76% → +3 亿）', contract.seedBonus === 30000 && contract.bonus === 30000, contract)
+check('解锁资格为 1（每座分部只能贡献一次解锁）', contract.quota === 1 && contract.canEzhou === true, contract)
 
 // 4b. 从公司面板解锁鄂州：资格已够，公司池只付 0.5 亿开通费
 const unlocked = jp(await evalJs(`(async () => {
@@ -243,12 +213,35 @@ const unlocked = jp(await evalJs(`(async () => {
   okBtn.click();
   await new Promise(r => setTimeout(r, 700));
   const co = CM.Company.active();
-  return JSON.stringify({ fee: txt.indexOf('开通费') >= 0, capital: txt.indexOf('市政府') >= 0, pool: co.pool,
+  return JSON.stringify({ fee: txt.indexOf('开通费') >= 0, capital: txt.indexOf('市政府') >= 0,
+    bonus: txt.indexOf('加成') >= 0, pool: co.pool,
+    seed: CM.Company.seedFor(co, 'ezhou'), base: CM.Company.startFundsFor('ezhou'),
+    used: (CM.Company.campaignOf(co).unlockUses || {}).wenzhou || null,
     unlocked: CM.Company.isUnlocked(co, 'ezhou'), can: CM.Company.canStartMap(co, 'ezhou', 'challenge') });
 })()`))
-check('解锁确认框说明开通费与市政府启动金', unlocked.fee === true && unlocked.capital === true, unlocked)
-check('解锁后公司池只扣 0.5 亿开通费（合同+验收后为 16 亿）', unlocked.pool === 155000, unlocked)
+check('解锁确认框说明启动金加成与市政府注入', unlocked.fee === true && unlocked.capital === true && unlocked.bonus === true, unlocked)
+check('解锁时按 76% 覆盖率结算启动金 11 亿（8 亿 + 3 亿）', unlocked.seed === 110000 && unlocked.base === 80000, unlocked)
+check('解锁后公司池只扣 0.5 亿开通费（合同 7 亿 + 初始 5 亿）', unlocked.pool === 115000, unlocked)
+check('温州这次解锁机会已被用掉', unlocked.used === 'ezhou', unlocked)
 check('鄂州变为已解锁', unlocked.unlocked === true && unlocked.can === true, unlocked)
+
+// 4c. 解锁后温州再涨覆盖率：已结算的鄂州启动金不能变，且温州不再提供解锁机会
+const afterUnlock = jp(await evalJs(`(async () => {
+  const co = CM.Company.active();
+  const g = CM.game;
+  g.model.daily.ready = true;
+  g.model.daily.coverage = 0.92;
+  CM.Company.checkAcceptance(g);
+  const co2 = CM.Company.active();
+  return JSON.stringify({
+    seed: CM.Company.seedFor(co2, 'ezhou'),
+    bonusNow: CM.Company.seedBonus(0.92),
+    sources: CM.Company.unlockSources(co2).map(s => s.mapId),
+    quota: CM.Company.openQuota(co2),
+  });
+})()`))
+check('解锁后再涨覆盖率不会改变已结算的启动金', afterUnlock.seed === 110000 && afterUnlock.bonusNow === 110000, afterUnlock)
+check('已用过的分部不再提供解锁机会', afterUnlock.sources.indexOf('wenzhou') < 0 && afterUnlock.quota === 0, afterUnlock)
 
 // 5. 从公司面板开始鄂州；启动金 6 亿由市政府资本金注入（不从池扣）
 const started2 = jp(await evalJs(`(async () => {
@@ -272,7 +265,7 @@ const started2 = jp(await evalJs(`(async () => {
 })()`))
 check('解锁后可从公司面板开始新城', started2.map === 'ezhou', started2)
 check('新城仍带公司身份', !!(started2.company && started2.company.id), started2)
-check('启动金 8 亿由市政府注入（池不扣）', started2.funds === 80000 && started2.pool === 155000, started2)
+check('启动金按解锁时结算的 11 亿注入（池不扣）', started2.funds === 110000 && started2.pool === 115000, started2)
 check('新城登记为第二分部', Array.isArray(started2.branches) && started2.branches.length === 2, started2)
 
 // 5a-0. 鄂州阶段合同链：3~5 段，建到第 1 段目标 → 奖励发到本城现金
@@ -313,22 +306,26 @@ check('末段站数目标等于「开局 4 站 + ΔN」', !chain.err && chain.r 
 check('建到第 1 段目标奖励发到本城现金', chain.r && chain.r.advanced === true &&
   chain.r.reward === chain.gained && chain.idx === 1, chain)
 
-// 5a-1. 各城统一 4 站开局；验收目标按该城 4 站开局的真实覆盖率标定
+// 5a-1. 各城统一 4 站开局；解锁门槛固定 70%，启动金每 2% 加 1 亿
 const cover = jp(await evalJs(`(() => {
   const cities = ['ezhou', 'guangzhou', 'beijing', 'wuhu', 'qingyuan', 'ziyang'];
-  return JSON.stringify(cities.map(function (id) {
+  const rows = cities.map(function (id) {
     const mp = CM.MAPS[id];
     const init = (mp.data.initialNetwork.lines || []).reduce(function (a, l) { return a + (l.stations || []).length; }, 0);
     return {
       id: id, init: init, version: mp.mapVersion,
-      base: CM.Company.acceptBase(id), target: CM.Company.acceptTarget(id),
+      target: CM.Company.acceptTarget(id), base: CM.Company.baseSeed(id),
       // 线路本身不足 4 站的城市（如清远全城只有 3 站）按实际站数开局
-      ok: init >= 3 && init <= 4 && mp.mapVersion === 2 && CM.Company.acceptTarget(id) > CM.Company.acceptBase(id),
+      ok: init >= 3 && init <= 4 && mp.mapVersion === 2,
     };
-  }));
+  });
+  return JSON.stringify({ rows: rows, threshold: CM.Company.UNLOCK_COVER,
+    b72: CM.Company.seedBonus(0.72), b70: CM.Company.seedBonus(0.70), b100: CM.Company.seedBonus(1.0),
+    step: CM.Company.SEED_STEP, per: CM.Company.SEED_STEP_BONUS });
 })()`))
-check('所有城市开局都是 1 条线 ≤4 站（mapVersion 2）', Array.isArray(cover) && cover.every(x => x.ok), cover)
-check('验收目标按各城实际覆盖率标定且高于接管值', cover.every(x => x.target > x.base && x.target <= 0.45), cover)
+check('所有城市开局都是 1 条线 ≤4 站（mapVersion 2）', Array.isArray(cover.rows) && cover.rows.every(x => x.ok), cover.rows)
+check('解锁门槛固定 70%', cover.threshold === 0.7 && cover.rows.every(x => x.target === 0.7), cover)
+check('启动金加成：70% 为 0 / 72% 加 1 亿 / 100% 加 15 亿', cover.b70 === 0 && cover.b72 === 10000 && cover.b100 === 150000 && cover.step === 0.02, cover)
 
 // 5a. B 分部推进两个月，A 分部必须真实补结算到同一公司月份
 const settledA = jp(await evalJs(`(async () => {

@@ -328,20 +328,34 @@
       rows.push(['公司池', money(CM.Company.poolOf(co))]);
       rows.push(['当前月份', (function () { const c = CM.Company.campaignClock(co); return c ? c.y + '年' + c.m + '月' : '—'; })()]);
     }
+    // 当前局的实时覆盖率优先于月度快照（只有正在玩的那座城市有实时值）
+    const liveFor = function (mapId) {
+      const g = CM.game;
+      const d = g && g.mapId === mapId && g.model && g.model.daily;
+      return d && d.ready && typeof d.coverage === 'number' ? d.coverage : null;
+    };
+    const gNow = CM.game;
+    const threshold = CM.Company.UNLOCK_COVER;
     if (b) {
       rows.push(['分部现金', money(b.funds)]);
       rows.push(['上次上缴', b.lastRemit ? b.lastRemit.y + '年' + b.lastRemit.m + '月 · ' + money(b.lastRemit.amount) : '—']);
-      // 验收进度：当前局知道实际站数；其它分部只显示目标（后台月结时会自动补验收）。
-      const daily = (current && CM.game && CM.game.model && CM.game.model.daily) || null;
-      const acc = CM.Company.acceptState(co, id, daily && daily.ready ? daily.coverage : null);
-      if (acc.done) rows.push(['验收', '已通过 · 奖金 ' + money(acc.rec.reward)]);
-      else rows.push(['验收覆盖', (acc.current != null ? U.fmtPct(acc.current, 1) + ' / ' : '目标 ') + U.fmtPct(acc.target, 1)]);
+      const acc = CM.Company.acceptState(co, id, liveFor(id));
+      rows.push(['覆盖', acc.current != null ? U.fmtPct(acc.current, 1) : '—']);
+      rows.push(['解锁门槛', '≥ ' + U.fmtPct(threshold, 0) + ' · ' + (acc.reachable ? '已达标' : '未达标')]);
+      if (acc.usedBy) rows.push(['解锁', '已用于解锁「' + ((CM.MAPS[acc.usedBy] || {}).name || acc.usedBy) + '」']);
+      else if (acc.reachable) rows.push(['启动金加成', '+' + money(acc.bonus) + '（每 +2% 加 1 亿）']);
     } else if (st === 'locked') {
       rows.push(['开通费', money(fee)]);
-      rows.push(['启动金', money(start) + '（市政府资本金）']);
-      if (co) rows.push(['验收目标', '覆盖率 ≥ ' + U.fmtPct(CM.Company.acceptTarget(id), 1) + '（接管时约 ' + U.fmtPct(CM.Company.acceptBase(id), 1) + '）']);
+      const src = co ? CM.Company.pickUnlockSource(co, { sourceMapId: gNow && gNow.mapId, sourceCover: liveFor(gNow && gNow.mapId) }) : null;
+      const seed = start + (src ? src.bonus : 0);
+      rows.push(['启动金', money(seed) + (src && src.bonus > 0 ? '（基础 ' + money(start) + ' + 加成 ' + money(src.bonus) + '）' : '（市政府资本金）')]);
+      const srcs = co ? CM.Company.unlockSources(co) : [];
+      let best = srcs[0] || null;
+      if (best) { const lv = liveFor(best.mapId); if (lv != null) best = Object.assign({}, best, { cover: lv }); }
+      if (co) rows.push(['解锁条件', '任一分部覆盖率 ≥ ' + U.fmtPct(threshold, 0) +
+        (best ? '（最高「' + ((CM.MAPS[best.mapId] || {}).name || best.mapId) + '」' + U.fmtPct(best.cover, 1) + '）' : '（暂无分部达标）')]);
     } else if (st === 'unlocked') {
-      rows.push(['开城启动金', money(start) + '（市政府资本金）']);
+      rows.push(['开城启动金', money(CM.Company.seedFor(co, id)) + '（解锁时已结算）']);
     } else if (st === 'starter') {
       rows.push(['第一份合同', '新增 3 站 → 公司池 +7 亿']);
     }
@@ -352,15 +366,22 @@
     } else if (current) { button = '返回当前城市'; tip = '关闭全国地图，继续经营当前城市'; }
     else if (st === 'current') { button = '返回城市'; }
     else if (b) { button = b.failed ? '读取存档' : '切换到这座城市'; tip = b.slotId ? '载入该分部存档' : '该分部还没有存档'; disabled = !b.slotId && !b.failed; }
-    else if (st === 'unlocked') { button = '进入城市'; tip = '启动金 ' + money(start) + ' 由市政府资本金注入，不从公司池扣'; }
-    else if (!CM.Company.canStartMap(co, id, 'challenge')) {
-      button = '解锁并进入';
-      tip = '解锁资格不足：把已进驻城市建到验收目标即得资格，每图一次（已验收 ' + CM.Company.acceptedCount(co) + ' 个）';
-      disabled = true;
-    } else if ((co.pool || 0) < fee) {
-      button = '解锁并进入'; tip = '公司池不足开通费 ' + money(fee) + '（可用 ' + money(co.pool || 0) + '）'; disabled = true;
-    } else {
-      button = '解锁并进入'; tip = '开通费 ' + money(fee) + ' 从公司池支付；启动金由市政府注入';
+    else if (st === 'unlocked') { button = '进入城市'; tip = '启动金 ' + money(CM.Company.seedFor(co, id)) + ' 已在解锁时结算，由市政府资本金注入'; }
+    else {
+      const src = CM.Company.pickUnlockSource(co, { sourceMapId: gNow && gNow.mapId, sourceCover: liveFor(gNow && gNow.mapId) });
+      if (!src) {
+        button = '解锁并进入';
+        tip = '解锁资格不足：需要一座分部覆盖率 ≥ ' + U.fmtPct(threshold, 0) + '（在已进驻城市里把线网建到 70% 以上）';
+        disabled = true;
+      } else if ((co.pool || 0) < fee) {
+        button = '解锁并进入'; tip = '公司池不足开通费 ' + money(fee) + '（可用 ' + money(co.pool || 0) + '）'; disabled = true;
+      } else {
+        const seed = start + src.bonus;
+        button = '解锁并进入';
+        tip = '用「' + ((CM.MAPS[src.mapId] || {}).name || src.mapId) + '」' + U.fmtPct(src.cover, 1) +
+          ' 覆盖率解锁：开通费 ' + money(fee) + '，启动金 ' + money(seed) +
+          '（基础 ' + money(start) + (src.bonus > 0 ? ' + 加成 ' + money(src.bonus) : '') + '）；解锁后再涨覆盖率不会改变这次启动金';
+      }
     }
     return { rows, button, tip, disabled, start, fee, b, co, current };
   }
@@ -877,12 +898,18 @@
 
   A._newBranch = function (id) {
     const co = companyOf(); if (!co) return A._toast('还没有公司', 'warn');
-    const mp = cityMeta(id) || {}, start = CM.Company.startFundsFor(id);
+    const mp = cityMeta(id) || {};
     const locked = !CM.Company.isUnlocked(co, id);
     const fee = locked ? CM.Company.unlockFee(id) : 0;
-    if (locked && !CM.Company.canStartMap(co, id, 'challenge')) {
-      return A._toast('解锁资格不足：把已进驻城市建到验收目标即得资格，每图一次（已验收 ' + CM.Company.acceptedCount(co) + ' 个）', 'warn');
+    const gNow = CM.game;
+    const gDaily = gNow && gNow.model && gNow.model.daily;
+    const liveCover = gDaily && gDaily.ready ? gDaily.coverage : null;
+    const src = locked ? CM.Company.pickUnlockSource(co, { sourceMapId: gNow && gNow.mapId, sourceCover: liveCover }) : null;
+    if (locked && !src) {
+      return A._toast('解锁资格不足：需要一座分部的覆盖率 ≥ ' + U.fmtPct(CM.Company.UNLOCK_COVER, 0) +
+        '（把已进驻城市的线网建到 70% 以上）', 'warn');
     }
+    const start = locked ? (CM.Company.startFundsFor(id) + src.bonus) : CM.Company.seedFor(co, id);
     if ((co.pool || 0) < fee) {
       return A._toast('公司池不足：开通费需 ' + money(fee) + '（可用 ' + money(co.pool || 0) + '）', 'warn');
     }
@@ -939,7 +966,7 @@
     }
     if (st === 'unlocked') return A._newBranch(id);
     const fee = CM.Company.unlockFee(id);
-    if (!CM.Company.canStartMap(co, id, 'challenge')) return A._toast('解锁资格不足：把已进驻城市建到验收目标即得资格，每图一次（已验收 ' + CM.Company.acceptedCount(co) + ' 个）', 'warn');
+    if (!CM.Company.canStartMap(co, id, 'challenge')) return A._toast('解锁资格不足：需要一座分部覆盖率 ≥ ' + U.fmtPct(CM.Company.UNLOCK_COVER, 0) + '（每座分部只能贡献一次解锁）', 'warn');
     if ((co.pool || 0) < fee) return A._toast('公司池不足：开通费需 ' + money(fee) + '（可用 ' + money(co.pool || 0) + '）', 'warn');
     // 解锁和开城合并为一次事务：城市创建成功后才扣开通费/登记；启动金由市政府注入。
     A._newBranch(id);

@@ -108,16 +108,24 @@
     const wrap = h('div', { class: 'co-join' });
     const camp = CO().campaignOf(co) || { unlocked: [] };
     const rows = [], hidden = CM.HIDDEN_MAPS || [];
+    // 解锁来源：当前正在经营的城市（覆盖率实时值），或覆盖率最高、还没用掉的分部
+    const gNow = CM.game;
+    const gDaily = gNow && gNow.model && gNow.model.daily;
+    const liveCover = gDaily && gDaily.ready ? gDaily.coverage : null;
+    const src = CO().pickUnlockSource(co, { sourceMapId: gNow && gNow.mapId, sourceCover: liveCover });
     for (const id in CM.MAPS) {
       const mp = CM.MAPS[id];
       if (mp.tutorial || mp.kind === 'fictional' || hidden.indexOf(id) >= 0) continue;
       if (CO().branchOf(co, id)) continue;
+      const unlocked = CO().isUnlocked(co, id);
+      const base = CO().startFundsFor(id);
       rows.push({
-        id: id, mp: mp, fee: CO().unlockFee(id), start: CO().startFundsFor(id),
-        unlocked: CO().isUnlocked(co, id),
+        id: id, mp: mp, fee: CO().unlockFee(id), base: base,
+        start: unlocked ? CO().seedFor(co, id) : base + (src ? src.bonus : 0),
+        bonus: unlocked ? 0 : (src ? src.bonus : 0),
+        unlocked: unlocked,
         eligible: CO().canStartMap(co, id, 'challenge'),
-        target: CO().acceptTarget(id),
-        base: CO().acceptBase(id),
+        threshold: CO().UNLOCK_COVER,
       });
     }
     rows.sort(function (a, b) {
@@ -129,11 +137,15 @@
     }
     for (const r of rows) {
       const pool = co.pool || 0;
-      // 未解锁城市：资格是「验收数 + 第一份合同」；钱只出小额开通费。
+      // 未解锁城市：需要任一已进驻分部覆盖率 ≥70%；公司池只出小额开通费。
       const short = r.unlocked ? false : (!r.eligible || pool < r.fee);
-      const tip = r.unlocked ? '启动金由市政府资本金注入，开一局新的经营挑战'
-        : (!r.eligible ? '解锁资格不足：把已进驻城市建到验收目标即得资格，每图一次（已验收 ' + CO().acceptedCount(co) + ' 个）'
-          : (pool < r.fee ? '公司池还差 ' + U.fmtMoney(r.fee - pool) : '支付开通费 ' + U.fmtMoney(r.fee) + ' 解锁；启动金由市政府注入'));
+      const tip = r.unlocked
+        ? '启动金 ' + U.fmtMoney(r.start) + ' 已在解锁时结算，由市政府资本金注入'
+        : (!r.eligible ? '解锁资格不足：需要一座分部覆盖率 ≥ ' + U.fmtPct(r.threshold, 0) + '（把已进驻城市的线网建到 70% 以上）'
+          : (pool < r.fee ? '公司池还差 ' + U.fmtMoney(r.fee - pool)
+            : '开通费 ' + U.fmtMoney(r.fee) + '；启动金 ' + U.fmtMoney(r.start) +
+              (r.bonus > 0 ? '（基础 ' + U.fmtMoney(r.base) + ' + 覆盖率加成 ' + U.fmtMoney(r.bonus) + '）' : '') +
+              '；解锁后再涨覆盖率不会改变这次启动金'));
       const row = h('div', { class: 'co-jrow' + (short ? ' short' : ''), 'data-map': r.id },
         h('span', { class: 'dot', style: { background: r.unlocked ? 'var(--good)' : (r.eligible ? 'var(--accent)' : 'var(--faint)') } }),
         h('div', { class: 'grow' },
@@ -142,7 +154,7 @@
             (CO().STARTER_META[r.id] ? (CO().STARTER_META[r.id].tier === 'advanced' ? '进阶 · ' : '入门 · ') + CO().STARTER_META[r.id].trait + ' · ' : '') +
             (r.mp.trait ? r.mp.trait.name + ' · ' : '') +
             (r.mp.region || '') + ' · ' + (r.mp.tags || []).join(' · ') +
-            (r.unlocked ? ' · 启动金 ' + U.fmtMoney(r.start) : ' · 开通费 ' + U.fmtMoney(r.fee) + ' · 验收覆盖 ≥ ' + U.fmtPct(r.target, 1)))),
+            (r.unlocked ? ' · 启动金 ' + U.fmtMoney(r.start) : ' · 开通费 ' + U.fmtMoney(r.fee) + ' · 需覆盖率 ≥ ' + U.fmtPct(r.threshold, 0)))),
         h('span', { class: 'co-fee num' }, r.unlocked ? '启动金 ' + U.fmtMoney(r.start) : U.fmtMoney(r.fee)),
         h('button', {
           class: 'btn sm' + (!short ? ' primary' : ''),
@@ -331,16 +343,27 @@
           el.appendChild(this.callout('info', 'flag', txt));
         }
       }
-      // 本城验收进度：覆盖率（以该城 4 站开局的真实覆盖率为基准）
+      // 本城覆盖率与解锁机会：70% 才可解锁；每多 5% 新分部启动金 +1 亿；
+      // 解锁那一刻结算并锁定，之后再涨覆盖率不再改变已结算的启动金。
       if (g && CM.Company.acceptState) {
         const daily = g.model && g.model.daily;
         const acc = CO().acceptState(co, g.mapId, daily && daily.ready ? daily.coverage : null);
-        const txt = acc.done
-          ? '「' + ((mapOf(g.mapId) || {}).name || g.mapId) + '」已通过分部验收（覆盖率 ' + U.fmtPct(acc.rec.coverage, 1) + '）。'
-          : '「' + ((mapOf(g.mapId) || {}).name || g.mapId) + '」验收：覆盖率 ' +
-            (acc.current != null ? U.fmtPct(acc.current, 1) + ' / ' : '目标 ') + U.fmtPct(acc.target, 1) +
-            '（接管时 ' + U.fmtPct(acc.base, 1) + '）；达标后公司池 +' + U.fmtMoney(acc.reward) + '，解锁资格 +1。';
-        el.appendChild(this.callout(acc.done ? 'good' : 'info', 'target', txt));
+        const nm = (mapOf(g.mapId) || {}).name || g.mapId;
+        let txt;
+        if (acc.usedBy) {
+          txt = '「' + nm + '」覆盖率 ' + (acc.current != null ? U.fmtPct(acc.current, 1) : '—') +
+            '：已用于解锁「' + ((mapOf(acc.usedBy) || {}).name || acc.usedBy) + '」，之后再涨覆盖率不再增加启动金。';
+        } else if (acc.reachable) {
+          txt = '「' + nm + '」覆盖率 ' + U.fmtPct(acc.current, 1) + ' ≥ ' + U.fmtPct(acc.threshold, 0) +
+            '：可解锁下一城，新分部启动金 +' + U.fmtMoney(acc.bonus) + '（每 +2% 加 1 亿）；' +
+            '在解锁那一刻结算，之后不再变化。';
+        } else {
+          txt = '「' + nm + '」覆盖率 ' + (acc.current != null ? U.fmtPct(acc.current, 1) : '—') + ' / ' +
+            U.fmtPct(acc.threshold, 0) + '；再提升 ' +
+            (acc.current != null ? U.fmtPct(Math.max(0, acc.threshold - acc.current), 1) : '—') +
+            ' 就能解锁下一城（当前预计启动金 +' + U.fmtMoney(acc.bonus) + '）。';
+        }
+        el.appendChild(this.callout(acc.reachable && !acc.usedBy ? 'good' : 'info', 'target', txt));
       }
       const rp = CO().remitPreview(g);
       if (rp) {
@@ -379,8 +402,8 @@
         h('br'),
         '分部每月把上月净结余（含拨款结余）的 ' + Math.round(CO().REMIT_RATE * 100) + '% 划进公司池，80% 留在本地；本地现金不能跨城使用。',
         h('br'),
-        isCampaign ? '解锁新城市的门槛是「分部验收」：把线网建到验收目标（开局规模 + 20% 完整线网，6~20 站），总部发验收奖金并 +1 解锁资格；公司池只付 0.5~1.6 亿开通费，启动金由市政府注入。'
-          : '旧公司保留全地图权限；新战役只开放入门图温州，其余城市靠验收解锁。',
+        isCampaign ? '解锁新城市要看覆盖率：任一已进驻分部的人口覆盖率达到 70% 才有 1 次解锁机会；每再多 2%，新分部启动金 +1 亿（解锁那一刻结算，之后不再变化）。公司池只付 0.5~1.6 亿开通费。'
+          : '旧公司保留全地图权限；新战役只开放入门图温州，其余城市靠覆盖率解锁。',
         h('br'),
         '一座城市破产不会拖垮公司，但那个分部就停运了；公司池和本地账都空了，才是真正的战役破产。',
         h('br'),
@@ -432,11 +455,11 @@
     if (CO().branchOf(co, mapId)) { this.toast('这座城市已经登记为分部', 'info'); return; }
     const mp = mapOf(mapId);
     if (!mp) { this.toast('地图不存在', 'bad'); return; }
-    const start = CO().startFundsFor(mapId);
+    const start = CO().seedFor(co, mapId);
     const g = this.g();
     this.confirm('开始 ' + (mp.name || mapId),
       '市政府以资本金注入 ' + U.fmtMoney(start) + ' 作为「' + (mp.name || mapId) +
-      '」的启动金（不从公司池扣）；把线网建到验收目标还能给公司池挣验收奖金。', '开始经营', function () {
+      '」的启动金（解锁时已结算，不从公司池扣）。', '开始经营', function () {
       // 统一走 Atlas 的开城事务：预加载底图 → 创建城市 → 成功后扣池/登记分部。
       if (CM.Atlas && CM.Atlas._newBranch) {
         CM.Atlas._newBranch(mapId);
@@ -468,29 +491,36 @@
     }, false, 'play');
   };
 
-  /* 战役：支付开通费解锁新城市。门槛是「解锁资格」，钱只出小额开通费。 */
+  /* 战役：解锁新城市。门槛是「某个已进驻分部的覆盖率 ≥70%」，
+   * 解锁时按来源分部当时的覆盖率结算新分部启动金（每 +2% 加 1 亿），之后不再变化。 */
   UI.prototype.companyUnlock = function (mapId) {
     const co = CO().active();
     if (!co) { this.toast('还没有公司', 'warn'); return; }
-    const mp = mapOf(mapId), fee = CO().unlockFee(mapId), start = CO().startFundsFor(mapId);
-    if (!CO().canStartMap(co, mapId, 'challenge')) {
-      this.toast('解锁资格不足：把已进驻城市建到验收目标即得资格，每图一次（已验收 ' + CO().acceptedCount(co) + ' 个）', 'warn');
+    const mp = mapOf(mapId), fee = CO().unlockFee(mapId), base = CO().startFundsFor(mapId);
+    const g = this.g();
+    const gd = g && g.model && g.model.daily;
+    const liveCover = gd && gd.ready ? gd.coverage : null;
+    const src = CO().pickUnlockSource(co, { sourceMapId: g && g.mapId, sourceCover: liveCover });
+    if (!src) {
+      this.toast('解锁资格不足：需要一座分部覆盖率 ≥ ' + U.fmtPct(CO().UNLOCK_COVER, 0) + '（把本城线网建到 70% 以上）', 'warn');
       return;
     }
     if ((co.pool || 0) < fee) {
       this.toast('公司池不足：开通费需 ' + U.fmtMoney(fee) + '（可用 ' + U.fmtMoney(co.pool || 0) + '）', 'warn');
       return;
     }
+    const seed = base + src.bonus;
+    const srcName = (mapOf(src.mapId) || {}).name || src.mapId;
     this.confirm('解锁 ' + (mp ? mp.name : mapId),
-      '从公司池支付开通费 ' + U.fmtMoney(fee) + '，取得「' + (mp ? mp.name : mapId) +
-      '」的经营权；开城时市政府注入 ' + U.fmtMoney(start) + ' 启动金。把这城的覆盖率从接管时的 ' +
-      U.fmtPct(CO().acceptBase(mapId), 1) + ' 做到 ' + U.fmtPct(CO().acceptTarget(mapId), 1) +
-      ' 可获验收奖金并解锁下一城。外围用地面/高架比地下省 3~5 倍。',
+      '用「' + srcName + '」的覆盖率 ' + U.fmtPct(src.cover, 1) + ' 解锁：开通费 ' + U.fmtMoney(fee) +
+      '（公司池），新分部启动金 ' + U.fmtMoney(seed) + '（基础 ' + U.fmtMoney(base) +
+      (src.bonus > 0 ? ' + 覆盖率加成 ' + U.fmtMoney(src.bonus) : '') +
+      '，由市政府资本金注入）。解锁后「' + srcName + '」再提高覆盖率也不会改变这次的启动金。',
       '确认解锁', function () {
-        const r = CO().unlockMap(co, mapId);
+        const r = CO().unlockMap(co, mapId, { sourceMapId: src.mapId, sourceCover: src.cover });
         if (!r.ok) { this.toast(r.error || '解锁失败', 'bad'); return; }
         snd('build');
-        this.toast('已解锁「' + (mp ? mp.name : mapId) + '」', 'good');
+        this.toast('已解锁「' + (mp ? mp.name : mapId) + '」，启动金 ' + U.fmtMoney(r.seed), 'good');
         this.rerenderPage();
       }.bind(this), false, 'map');
   };

@@ -48,8 +48,8 @@
         return false;
       } },
     { id: 'company', title: '第一份合同与公司池',
-      body: '打开顶栏「公司」：温州的第一份合同已完成，公司池获得 +7 亿。资格要靠建设挣：把温州的覆盖率做到验收目标（4 站开局约 3.5%，目标约 7.5%）就拿到第 1 个解锁资格，之后每座城各给一次。',
-      hint: '公司面板里可以看到每座城市的验收目标。',
+      body: '打开顶栏「公司」：温州的第一份合同已完成，公司池获得 +7 亿。解锁要靠覆盖率：把温州的人口覆盖率做到 70% 才拿到 1 次解锁机会；每再多 2%，下一座城的启动金 +1 亿。',
+      hint: '公司面板里能看到当前覆盖率和预计启动金加成。',
       target: function () { return ui.hbtns && ui.hbtns.company; },
       check: function () { return ui.topIs && ui.topIs(['company']); } },
     { id: 'run', title: '让时间走起来',
@@ -59,7 +59,7 @@
       enter: function () { if (g.tutorial.runT0 == null) g.tutorial.runT0 = absMin(g.clock); ctx.t0 = g.tutorial.runT0; },
       check: function () { return absMin(g.clock) - (ctx.t0 || 0) >= 180; } },
     { id: 'done', title: '去全国地图', final: true,
-      body: '温州已经跑起来了。打开全国地图：绿色是已进驻，灰色城市要先「验收解锁」——把温州覆盖率做到目标，就能解锁下一座城。' },
+      body: '温州已经跑起来了。打开全国地图：绿色是已进驻，灰色城市要先「解锁」——把温州覆盖率做到 70%，就能手动解锁下一座城，覆盖率越高启动金越多。' },
   ];
   const TASKS = STEPS.filter(function (s) { return !s.manual && !s.final; }).length;
 

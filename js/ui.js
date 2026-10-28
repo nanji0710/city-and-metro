@@ -107,7 +107,18 @@
       h('div', { class: 'spacer' }),
       h('div', { class: 'cluster glass metrics' },
         pill('money', '资金', 'coin', 'b-gold'), pill('econ', '经济增长', 'trend', 'b-violet', 'opt2'), pill('pop', '人口', 'people', 'b-blue', 'opt2'), pill('share', '地铁分担率', 'metro', 'b-teal', 'opt3'),
-        pill('cong', '拥堵指数', 'car', 'b-orange', 'opt5'), pill('sat', '满意度', 'smile', 'b-green', 'opt4')),
+        pill('cong', '拥堵指数', 'car', 'b-orange', 'opt5'), pill('sat', '满意度', 'smile', 'b-green', 'opt4'),
+        (function () {
+          // 覆盖率：解锁新城与启动金加成的唯一依据，点开公司面板看详情。
+          const badge = h('span', { class: 'badge b-slate' }, ic('target'));
+          const v = h('span', { class: 'v' }, '—'), k = h('span', { class: 'k' }, '地铁覆盖率');
+          const b = h('button', {
+            class: 'pill opt3', 'data-tip': '人口覆盖率 · 点击查看公司面板',
+            onclick: function () { self.openTop('company'); },
+          }, badge, h('span', { class: 'tx' }, k, v));
+          self.pills.cover = { el: b, v: v, k: k, badge: badge };
+          return b;
+        })()),
       h('div', { class: 'cluster glass actions' },
         hb('search', 'search', '搜索车站、线路、道路、区域', function () { self.openSearch(); }, '/'),
         taskBtn,
@@ -268,7 +279,7 @@
       top.classList.add(c);
     }
     if (!m || !m.clientWidth) return;
-    for (const k of ['econ', 'sat', 'share', 'pop', 'cong']) {
+    for (const k of ['econ', 'sat', 'share', 'pop', 'cong', 'cover']) {
       if (m.scrollWidth <= m.clientWidth + 1) break;
       const el = this.pills[k].el; if (getComputedStyle(el).display !== 'none') el.classList.add('squeezed');
     }
@@ -506,6 +517,26 @@
       if (negs.length) tip += '；主因：' + negs.map(function (f) { return f.label.split('（')[0] + ' ' + U.fmtSigned(f.v, 1); }).join('、');
       tip += '。点击查看构成因素';
       if (c.sat.el.getAttribute('data-tip') !== tip) c.sat.el.setAttribute('data-tip', tip);
+    }
+    // 覆盖率：解锁下一城的唯一依据；达到 70% 后每 +2% 新分部启动金 +1 亿。
+    if (c.cover && CM.Company) {
+      const dv = g.model && g.model.daily;
+      const cov = dv && dv.ready && typeof dv.coverage === 'number' ? dv.coverage : null;
+      c.cover.v.innerHTML = cov == null ? '—' : U.fmtPct(cov, 1);
+      if (performance.now() - (this._covTipT || 0) > 1000) {
+        this._covTipT = performance.now();
+        const co = CM.Company.active();
+        const st = co ? CM.Company.acceptState(co, g.mapId, cov) : null;
+        let tip = cov == null ? '覆盖率会在首个完整账期后显示' :
+          '人口覆盖率 ' + U.fmtPct(cov, 1) + '（解锁门槛 ' + U.fmtPct(CM.Company.UNLOCK_COVER, 0) + '）';
+        if (st) {
+          if (st.usedBy) tip += '；本城已用于解锁「' + ((CM.MAPS[st.usedBy] || {}).name || st.usedBy) + '」，再涨不再增加启动金';
+          else if (st.reachable) tip += '；可解锁下一城，当前启动金加成 +' + U.fmtMoney(st.bonus) + '（每 +2% 加 1 亿）';
+          else tip += '；还差 ' + U.fmtPct(Math.max(0, st.threshold - (cov || 0)), 1) + ' 才能解锁下一城';
+        }
+        tip += '。点击查看公司面板';
+        if (c.cover.el.getAttribute('data-tip') !== tip) c.cover.el.setAttribute('data-tip', tip);
+      }
     }
     const n = g.tasks.active.length;
     this.taskCnt.textContent = n; this.taskCnt.style.display = n ? '' : 'none';

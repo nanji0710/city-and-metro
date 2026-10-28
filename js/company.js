@@ -50,6 +50,22 @@
   /* 战役第一份公司合同：在起点城新增 3 站，公司池一次性奖励 7 亿。 */
   const STARTER_CONTRACT = { addStations: 3, reward: 70000 };
 
+  /* 解锁与启动金加成（v3.10）：
+   * - 任一已进驻分部的「地铁人口覆盖率」达到 70%，该分部才提供 1 次解锁机会；
+   * - 覆盖率每再多 2 个百分点，新分部启动金 +1 亿；
+   * - 加成在玩家**手动解锁的那一刻**按来源分部当时的覆盖率结算并写入公司记录，
+   *   之后来源分部再涨覆盖率也不会改已解锁城市的启动金。 */
+  const UNLOCK_COVER = 0.70;
+  const SEED_STEP = 0.02;
+  const SEED_STEP_BONUS = 10000;   // 万元，即 1 亿
+
+  /* 启动金加成（万元）：70% 为 0，72% 为 1 亿，74% 为 2 亿，…… 100% 为 15 亿。 */
+  function seedBonus(cover) {
+    if (typeof cover !== 'number' || !isFinite(cover)) return 0;
+    const steps = Math.floor((cover - UNLOCK_COVER) / SEED_STEP + 1e-9);
+    return steps > 0 ? steps * SEED_STEP_BONUS : 0;
+  }
+
   function initialStations(mapId) {
     const mp = CM.MAPS && CM.MAPS[mapId];
     const net = mp && mp.data && mp.data.initialNetwork;
@@ -75,16 +91,11 @@
   }
 
   /* ---------------- 分部验收：覆盖率门槛 ----------------
-   * 每座城市都从「一条真实线路的前 4 站」接手（coverBase 就是这 4 站在
-   * 真实步行网络下覆盖的人口比例，由 tools/pipeline/cover-base.mjs 逐城量出）。
-   * 验收目标 = 接管覆盖率 × 1.8，或 +4 个百分点，取较大者，上限 45%：
-   *   - 底子厚的城市（如资阳 16.8%）要求做到 20.8%，靠加密线网；
-   *   - 底子薄的大城市（如深圳 0.1%）要求做到 4.1%，靠把线伸进人口密集区。
-   * 这样「每个分部的验收标准按分部实际情况划定」，且和站数无关。 */
-  function coverTarget(base) {
-    const b = (typeof base === 'number' && base > 0) ? base : 0.05;
-    return Math.min(0.45, Math.max(b * 1.8, b + 0.04));
-  }
+   * 每座城市都从「一条真实线路的前 4 站」接手（coverBase 是这 4 站在
+   * 真实步行网络下覆盖的人口比例，由 tools/pipeline/cover-base.mjs 逐城量出，仅作展示）。
+   * v3.10 起解锁门槛统一为 70%：任一已进驻分部覆盖率达到 70%，才能手动解锁下一城；
+   * 每再多 2 个百分点，新分部启动金 +1 亿，解锁那一刻结算并锁定。 */
+  function coverTarget() { return UNLOCK_COVER; }
 
   /* 阶段合同用的「建议扩建站数」：按启动金支付能力标定（与验收无关，只决定合同分段）。 */
   function acceptDelta(mapId) {
@@ -149,29 +160,34 @@
   Company.settling = false;
   Company._settleTimer = null;
 
-  /* ---- 分部验收 API（定义在 Company 声明之后） ---- */
+  /* ---- 分部验收 / 解锁 API（定义在 Company 声明之后） ---- */
   Company.stationUnitCost = stationUnitCost;
   Company.acceptDelta = acceptDelta;
   Company.coverTarget = coverTarget;
-  /* 验收覆盖率目标：以该城 4 站开局的真实覆盖率为基准（data_cities 的 coverBase）。 */
-  Company.acceptTarget = function (mapId) {
-    const mp = CM.MAPS && CM.MAPS[mapId];
-    return coverTarget(mp && mp.coverBase);
-  };
+  Company.UNLOCK_COVER = UNLOCK_COVER;
+  Company.SEED_STEP = SEED_STEP;
+  Company.SEED_STEP_BONUS = SEED_STEP_BONUS;
+  Company.seedBonus = seedBonus;
+  /* 兼容旧调用：解锁定为固定 70%，不再按每城基线浮动。 */
+  Company.acceptTarget = function () { return UNLOCK_COVER; };
   Company.acceptBase = function (mapId) {
     const mp = CM.MAPS && CM.MAPS[mapId];
     return (mp && typeof mp.coverBase === 'number' && mp.coverBase > 0) ? mp.coverBase : 0.05;
   };
-  /* 验收奖金：按该城启动金的 40%，量级 2.4~4.8 亿/城。
-   * 与开通费（0.5~1.6 亿）大致相抵后小幅为正 —— 公司池随战役进度缓慢变厚，
-   * 但不存在「月入四五千万」的印钞机。 */
-  Company.acceptReward = function (mapId) { return Math.round(Company.startFundsFor(mapId) * 0.4); };
+  /* 基础启动金（按城市档位），加成在解锁时另行结算。 */
+  Company.baseSeed = function (mapId) { return Company.startFundsFor(mapId); };
+  /* 某座已解锁/已开城城市的实际启动金：解锁时已写入就按写入值，否则按基础值。 */
+  Company.seedFor = function (c, mapId) {
+    const camp = Company.campaignOf(c);
+    const saved = camp && camp.seeds && camp.seeds[mapId];
+    return typeof saved === 'number' ? saved : Company.startFundsFor(mapId);
+  };
 
   /* ---------------- 每城阶段性合同（3~5 段） ----------------
    * 给每座分部城市一条确定性的合同链：2~4 个站数阶段 + 1 个满意度阶段。
    * - 站数阶段按「启动金付得起的扩建规模」（acceptDelta）切成几段：
    *   ΔN ≤ 7 站切 2 段（共 3 段合同），≤ 12 站切 3 段（4 段），更大切 4 段（5 段）；
-   * - 验收另外看覆盖率（见 acceptTarget），两者是不同指标：合同奖励本地建设，验收发解锁资格；
+   * - 验收看 70% 覆盖率（见 UNLOCK_COVER），与合同是不同指标：合同奖励本地建设，覆盖率换解锁机会与启动金加成；
    * - 满意度阶段要求连续 2 个账期 ≥ 60，逼玩家在扩张后回头收拾服务水平；
    * - 奖励按启动金比例逐段递增（0.10/0.14/0.18/0.22/0.30×启动金），
    *   **发到本城分部现金** —— 玩家赚钱的第一用途是把本城建完，不进公司池。 */
@@ -258,31 +274,87 @@
     return { ok: true, advanced: advanced, stage: st, reward: advanced ? st.reward : 0, idx: p.idx, total: stages.length };
   };
 
-  Company.acceptedOf = function (c) {
+  /* ---- 覆盖率与解锁机会 ---- */
+  Company.coversOf = function (c) {
     const camp = Company.campaignOf(c);
-    if (!camp || camp.legacy || !camp.accepted || typeof camp.accepted !== 'object') return {};
-    return camp.accepted;
+    if (!camp || camp.legacy || !camp.covers || typeof camp.covers !== 'object') return {};
+    return camp.covers;
   };
-  /* 验收状态：done=是否已验收；base=接管时覆盖率；target=验收覆盖率；current=当前覆盖率（仅当前局知道） */
+  /* 某分部的最近一次记录覆盖率；当前正在经营的城市用实时值覆盖（由 UI 传入）。 */
+  Company.coverOf = function (c, mapId) {
+    const v = Company.coversOf(c)[mapId];
+    return (typeof v === 'number' && isFinite(v)) ? v : null;
+  };
+  /* 每次月结记录一次覆盖率：当前局与后台补结算的分部都走这里。
+   * 只在跨过 70% 时提示一次，不做任何自动解锁 —— 解锁必须玩家手动确认。 */
+  Company.checkAcceptance = function (g) {
+    if (!g || !g.company || !g.net || g.econ.isFree()) return null;
+    const c0 = Company.get(g.company.id);
+    if (!c0) return null;
+    const camp = Company.campaignOf(c0);
+    if (!camp || camp.legacy || !Company.branchOf(c0, g.mapId)) return null;
+    const daily = (g.model && g.model.daily) || null;
+    const cur = daily && daily.ready && typeof daily.coverage === 'number' ? daily.coverage : null;
+    if (cur == null) return null;
+    const co = Company.fresh(c0) || c0;
+    const campNow = Company.campaignOf(co);
+    const covers = Object.assign({}, campNow.covers || {});
+    const prev = typeof covers[g.mapId] === 'number' ? covers[g.mapId] : null;
+    covers[g.mapId] = cur;
+    co.campaign = Object.assign({}, campNow, { covers: covers });
+    co.branches = (co.branches || []).map(function (b) { return b.mapId === g.mapId ? Object.assign({}, b, { cover: cur }) : b; });
+    co.updatedAt = nowIso();
+    const r = Company.commit(c0, co);
+    if (!r.ok) return { ok: false, error: r.error };
+    if (prev == null && cur >= UNLOCK_COVER) {
+      const name = (CM.MAPS[g.mapId] && CM.MAPS[g.mapId].name) || g.mapId;
+      const msg = '「' + name + '」覆盖率达到 ' + U.fmtPct(cur, 1) + '：现在可以解锁下一座城市';
+      if (g.logEvent) g.logEvent({ tag: '公司', title: msg, desc: '解锁门槛 ' + U.fmtPct(UNLOCK_COVER, 0) + '；覆盖率越高，新分部启动金越高（每 +5% 加 1 亿）' });
+      if (g.emit) g.emit('toast', { kind: 'good', text: msg });
+    }
+    return { ok: true, mapId: g.mapId, coverage: cur, bonus: seedBonus(cur) };
+  };
+  /* 可用解锁来源：覆盖率 ≥70% 且还没被用于解锁的分部，按覆盖率从高到低。
+   * 每个分部只能贡献一次解锁；解锁后来源记入 campaign.unlockUses。 */
+  Company.unlockSources = function (c) {
+    const co = Company.fresh(c) || c;
+    const camp = Company.campaignOf(co);
+    if (!camp || camp.legacy) return [];
+    const uses = camp.unlockUses || {};
+    const out = [];
+    for (const b of (co.branches || [])) {
+      if (uses[b.mapId]) continue;
+      const cov = Company.coverOf(co, b.mapId);
+      if (cov != null && cov + 1e-9 >= UNLOCK_COVER) out.push({ mapId: b.mapId, cover: cov, bonus: seedBonus(cov) });
+    }
+    out.sort(function (a, b) { return b.cover - a.cover; });
+    return out;
+  };
+  /* 覆盖率状态（UI 用）：当前值、门槛、是否达标、是否已用于解锁、加成与预计启动金。 */
   Company.acceptState = function (c, mapId, curCover) {
-    const rec = Company.acceptedOf(c)[mapId] || null;
-    const base = Company.acceptBase(mapId);
+    const co = Company.fresh(c) || c;
+    const camp = Company.campaignOf(co);
+    const cov = typeof curCover === 'number' ? curCover : Company.coverOf(co, mapId);
+    const uses = (camp && camp.unlockUses) || {};
+    const seeds = (camp && camp.seeds) || {};
     return {
-      done: !!rec, rec: rec,
-      base: base, target: coverTarget(base),
-      current: typeof curCover === 'number' ? curCover : (rec && typeof rec.coverage === 'number' ? rec.coverage : null),
-      reward: Company.acceptReward(mapId),
+      mapId: mapId,
+      current: cov,
+      threshold: UNLOCK_COVER,
+      reachable: cov != null && cov + 1e-9 >= UNLOCK_COVER,
+      usedBy: uses[mapId] || null,
+      bonus: seedBonus(cov),
+      base: Company.acceptBase(mapId),
+      lockedSeed: typeof seeds[mapId] === 'number' ? seeds[mapId] : null,
     };
   };
-  Company.acceptedCount = function (c) { return Object.keys(Company.acceptedOf(c)).length; };
-  /* 解锁资格：每座分部城市「建到验收目标」时 +1，一张地图最多给一次；
-   * 第一份合同只发钱不发资格 —— 资格必须靠建设挣来。
-   * 已开成分部数（不含入门城）必须小于资格数才能再开新城。 */
+  Company.acceptedCount = function (c) { return Company.unlockSources(c).length; };
+  /* 解锁资格 = 还没被用掉的、覆盖率达标的来源分部数。 */
   Company.openQuota = function (c) {
     const co = Company.fresh(c) || c;
     const camp = Company.campaignOf(co);
     if (!camp || camp.legacy) return Infinity;
-    return Company.acceptedCount(co);
+    return Company.unlockSources(co).length;
   };
   Company.canOpenMore = function (c) {
     const co = Company.fresh(c) || c;
@@ -346,49 +418,6 @@
     if (g.logEvent) g.logEvent({ tag: '公司', title: msg, desc: '在「' + (CM.MAPS[g.mapId] && CM.MAPS[g.mapId].name || g.mapId) + '」新增 ' + STARTER_CONTRACT.addStations + ' 站' });
     if (g.emit) g.emit('toast', { kind: 'good', text: msg });
     return { ok: true, reward: ct.reward, pool: Company.poolOf(c) };
-  };
-
-  /* 月度验收检查：本城线网达到「开局 + ΔN」站且尚未验收 → 记验收、发奖金进池。
-   * 在月结钩子（当前局）与后台分部补结算完成后都会被调用；
-   * 用 g.company 定位公司记录，当前局与后台局都走同一套口径。 */
-  Company.checkAcceptance = function (g) {
-    if (!g || !g.company || !g.net || g.econ.isFree()) return null;
-    const c0 = Company.get(g.company.id);
-    if (!c0) return null;
-    const camp = Company.campaignOf(c0);
-    if (!camp || camp.legacy) return null;
-    const b = Company.branchOf(c0, g.mapId);
-    if (!b) return null;
-    if (Company.acceptedOf(c0)[g.mapId]) return null;
-    const target = Company.acceptTarget(g.mapId);
-    // 覆盖率来自交通模型（步行 15 分钟可达地铁的人口占比）；模型没就绪时等下一个账期。
-    const daily = (g.model && g.model.daily) || null;
-    const cur = daily && daily.ready && typeof daily.coverage === 'number' ? daily.coverage : null;
-    if (cur == null) return null;
-    if (cur + 1e-9 < target) return { ok: false, target: target, current: cur };
-    const co = Company.fresh(c0) || c0;
-    const campNow = Company.campaignOf(co);
-    const reward = Company.acceptReward(g.mapId);
-    const accepted = Object.assign({}, campNow.accepted || {});
-    accepted[g.mapId] = { y: g.clock.y, m: g.clock.m, reward: reward, coverage: cur };
-    co.campaign = Object.assign({}, campNow, {
-      version: campNow.version || 1,
-      starterMapId: campNow.starterMapId || co.home || null,
-      unlocked: campNow.unlocked || [],
-      accepted: accepted,
-      legacy: false,
-      bankrupt: false,
-      createdAt: campNow.createdAt || nowIso(),
-    });
-    co.pool = Company.poolOf(co) + reward;
-    co.updatedAt = nowIso();
-    const r = Company.commit(c0, co);
-    if (!r.ok) return { ok: false, error: r.error };
-    const name = (CM.MAPS[g.mapId] && CM.MAPS[g.mapId].name) || g.mapId;
-    const msg = '「' + name + '」分部验收通过：公司池 +' + U.fmtMoney(reward);
-    if (g.logEvent) g.logEvent({ tag: '公司', title: msg, desc: '覆盖率 ' + U.fmtPct(cur, 1) + '（验收目标 ' + U.fmtPct(target, 1) + '），解锁资格 +1' });
-    if (g.emit) g.emit('toast', { kind: 'good', text: msg });
-    return { ok: true, mapId: g.mapId, reward: reward, pool: co.pool, target: target, current: cur };
   };
 
   Company.all = function () {
@@ -653,9 +682,32 @@
     return (c.pool || 0) < 20000;
   };
 
-  /* 解锁新城市：门槛是「解锁资格」（分部验收 + 第一份合同），
-   * 公司池只付一次性开通费（0.5~1.6 亿）。 */
-  Company.unlockMap = function (c, mapId) {
+  /* 解锁新城市：必须有「覆盖率 ≥70% 且还没用掉」的来源分部；
+   * 解锁时按来源分部当时的覆盖率结算新分部启动金并写入公司记录，
+   * 之后来源分部再涨覆盖率也不会改变这次已结算的启动金。
+   *
+   * opts.sourceMapId：指定用哪座城市解锁（默认取覆盖率最高、未使用的分部）
+   * opts.sourceCover：来源城市的实时覆盖率（当前局的 UI 传入，避免用旧快照） */
+  function pickSource(co, opts) {
+    const list = Company.unlockSources(co);
+    if (!list.length) return null;
+    const want = opts && opts.sourceMapId;
+    if (want) {
+      const hit = list.find(function (s) { return s.mapId === want; });
+      if (hit) {
+        const live = opts && typeof opts.sourceCover === 'number' ? opts.sourceCover : null;
+        return Object.assign({}, hit, { cover: live != null ? live : hit.cover, bonus: seedBonus(live != null ? live : hit.cover) });
+      }
+      return null;
+    }
+    const top = Object.assign({}, list[0]);
+    const live = opts && typeof opts.sourceCover === 'number' ? opts.sourceCover : null;
+    if (live != null) { top.cover = live; top.bonus = seedBonus(live); }
+    return top;
+  }
+  Company.pickUnlockSource = function (c, opts) { return pickSource(Company.fresh(c) || c, opts); };
+
+  Company.unlockMap = function (c, mapId, opts) {
     const co = Company.fresh(c);
     if (!co) return { ok: false, error: '公司不存在' };
     const camp = Company.campaignOf(co);
@@ -664,26 +716,40 @@
       return { ok: false, error: '这张地图不能解锁' };
     }
     if (camp.unlocked.indexOf(mapId) >= 0) return { ok: false, error: '这座城市已经解锁' };
-    if (!Company.canOpenMore(co)) {
-      return { ok: false, error: '解锁资格不足：把已进驻城市建到验收目标即得资格，每图一次（已验收 ' + Company.acceptedCount(co) + ' 个，还差 ' + Math.max(1, (co.branches || []).length - Company.acceptedCount(co)) + ' 个）' };
+    const src = pickSource(co, opts);
+    if (!src) {
+      const best = (co.branches || []).map(function (b) {
+        const v = Company.coverOf(co, b.mapId);
+        return { mapId: b.mapId, cover: v };
+      }).sort(function (a, b) { return (b.cover || 0) - (a.cover || 0); })[0];
+      return {
+        ok: false,
+        error: '解锁资格不足：需要一座分部的覆盖率 ≥ ' + U.fmtPct(UNLOCK_COVER, 0) +
+          (best && best.cover != null ? '（当前最高「' + ((CM.MAPS[best.mapId] && CM.MAPS[best.mapId].name) || best.mapId) + '」' + U.fmtPct(best.cover, 1) + '）' : ''),
+      };
     }
     const fee = Company.unlockFee(mapId);
     if ((co.pool || 0) < fee) return { ok: false, error: '公司池不足（开通费 ' + U.fmtMoney(fee) + '）' };
     co.pool = (co.pool || 0) - fee;
-    // 必须保留 campaign 的 ym / contract / accepted / tutorialDone，否则解锁一次新城
-    // 就会把公司月份、合同、验收记录和教程完成状态全部重置。
+    const seed = Company.startFundsFor(mapId) + src.bonus;
+    // 必须保留 campaign 的 ym / contract / covers / tutorialDone，否则解锁一次新城
+    // 就会把公司月份、合同、覆盖率快照和教程完成状态全部重置。
     co.campaign = Object.assign({}, camp, {
       version: camp.version || 1,
       starterMapId: camp.starterMapId || co.home || null,
       unlocked: (camp.unlocked || []).concat([mapId]),
-      accepted: camp.accepted || {},
+      covers: camp.covers || {},
+      seeds: Object.assign({}, camp.seeds || {}, (function () { const o = {}; o[mapId] = seed; return o; })()),
+      unlockUses: Object.assign({}, camp.unlockUses || {}, (function () { const o = {}; o[src.mapId] = mapId; return o; })()),
       legacy: false,
       bankrupt: false,
       createdAt: camp.createdAt || nowIso(),
     });
     co.updatedAt = nowIso();
     const r = Company.commit(c, co);
-    return r.ok ? { ok: true, fee: fee, company: co } : { ok: false, error: r.error || '写入失败' };
+    return r.ok
+      ? { ok: true, fee: fee, seed: seed, source: src.mapId, sourceCover: src.cover, bonus: src.bonus, company: co }
+      : { ok: false, error: r.error || '写入失败' };
   };
 
   Company.remove = function (id) {
@@ -822,17 +888,24 @@
     const camp = Company.campaignOf(co);
     if (!camp || camp.legacy) return { ok: false, error: '旧公司不参与战役开城' };
     const fee = Company.isUnlocked(co, mapId) ? 0 : Company.unlockFee(mapId);
-    const start = opts && typeof opts.startFunds === 'number' ? Math.max(0, Math.round(opts.startFunds)) : Company.startFundsFor(mapId);
-    // 未解锁城市：先过「解锁资格」门槛，公司池只付开通费；启动金是市政府资本金，不走池。
-    if (fee > 0 && !Company.canStartMap(co, mapId, 'challenge')) {
-      return { ok: false, error: '解锁资格不足：把已进驻城市建到验收目标即得资格，每图一次（已验收 ' + Company.acceptedCount(co) + ' 个）' };
+    let src = null;
+    if (fee > 0) {
+      src = pickSource(co, opts);
+      if (!src) {
+        return { ok: false, error: '解锁资格不足：需要一座分部覆盖率 ≥ ' + U.fmtPct(UNLOCK_COVER, 0) };
+      }
     }
+    const start = opts && typeof opts.startFunds === 'number'
+      ? Math.max(0, Math.round(opts.startFunds))
+      : (fee > 0 ? (Company.startFundsFor(mapId) + src.bonus) : Company.seedFor(co, mapId));
     if ((co.pool || 0) < fee) return { ok: false, error: '公司池不足（开通费 ' + U.fmtMoney(fee) + '）' };
     co.pool = (co.pool || 0) - fee;
     if (fee > 0) {
       co.campaign = Object.assign({}, camp, {
         unlocked: (camp.unlocked || []).concat([mapId]),
-        accepted: camp.accepted || {},
+        covers: camp.covers || {},
+        seeds: Object.assign({}, camp.seeds || {}, (function () { const o = {}; o[mapId] = start; return o; })()),
+        unlockUses: Object.assign({}, camp.unlockUses || {}, (function () { const o = {}; o[src.mapId] = mapId; return o; })()),
         legacy: false,
         bankrupt: false,
       });
