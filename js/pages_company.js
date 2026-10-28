@@ -116,7 +116,8 @@
         id: id, mp: mp, fee: CO().unlockFee(id), start: CO().startFundsFor(id),
         unlocked: CO().isUnlocked(co, id),
         eligible: CO().canStartMap(co, id, 'challenge'),
-        need: CO().acceptNeed(id),
+        target: CO().acceptTarget(id),
+        base: CO().acceptBase(id),
       });
     }
     rows.sort(function (a, b) {
@@ -141,7 +142,7 @@
             (CO().STARTER_META[r.id] ? (CO().STARTER_META[r.id].tier === 'advanced' ? '进阶 · ' : '入门 · ') + CO().STARTER_META[r.id].trait + ' · ' : '') +
             (r.mp.trait ? r.mp.trait.name + ' · ' : '') +
             (r.mp.region || '') + ' · ' + (r.mp.tags || []).join(' · ') +
-            (r.unlocked ? ' · 启动金 ' + U.fmtMoney(r.start) : ' · 开通费 ' + U.fmtMoney(r.fee) + ' · 验收目标 ' + r.need + ' 站（外围地面/高架省）'))),
+            (r.unlocked ? ' · 启动金 ' + U.fmtMoney(r.start) : ' · 开通费 ' + U.fmtMoney(r.fee) + ' · 验收覆盖 ≥ ' + U.fmtPct(r.target, 1)))),
         h('span', { class: 'co-fee num' }, r.unlocked ? '启动金 ' + U.fmtMoney(r.start) : U.fmtMoney(r.fee)),
         h('button', {
           class: 'btn sm' + (!short ? ' primary' : ''),
@@ -330,6 +331,17 @@
           el.appendChild(this.callout('info', 'flag', txt));
         }
       }
+      // 本城验收进度：覆盖率（以该城 4 站开局的真实覆盖率为基准）
+      if (g && CM.Company.acceptState) {
+        const daily = g.model && g.model.daily;
+        const acc = CO().acceptState(co, g.mapId, daily && daily.ready ? daily.coverage : null);
+        const txt = acc.done
+          ? '「' + ((mapOf(g.mapId) || {}).name || g.mapId) + '」已通过分部验收（覆盖率 ' + U.fmtPct(acc.rec.coverage, 1) + '）。'
+          : '「' + ((mapOf(g.mapId) || {}).name || g.mapId) + '」验收：覆盖率 ' +
+            (acc.current != null ? U.fmtPct(acc.current, 1) + ' / ' : '目标 ') + U.fmtPct(acc.target, 1) +
+            '（接管时 ' + U.fmtPct(acc.base, 1) + '）；达标后公司池 +' + U.fmtMoney(acc.reward) + '，解锁资格 +1。';
+        el.appendChild(this.callout(acc.done ? 'good' : 'info', 'target', txt));
+      }
       const rp = CO().remitPreview(g);
       if (rp) {
         el.appendChild(this.callout(rp.can > 0 ? 'good' : 'warn', 'bank',
@@ -471,8 +483,9 @@
     }
     this.confirm('解锁 ' + (mp ? mp.name : mapId),
       '从公司池支付开通费 ' + U.fmtMoney(fee) + '，取得「' + (mp ? mp.name : mapId) +
-      '」的经营权；开城时市政府注入 ' + U.fmtMoney(start) + ' 启动金。把线网建到验收目标（' + CO().acceptNeed(mapId) + ' 站）可获验收奖金并解锁下一城。' +
-      '外围用地面/高架比地下省 3~5 倍，验收线就是按这种打法标定的。',
+      '」的经营权；开城时市政府注入 ' + U.fmtMoney(start) + ' 启动金。把这城的覆盖率从接管时的 ' +
+      U.fmtPct(CO().acceptBase(mapId), 1) + ' 做到 ' + U.fmtPct(CO().acceptTarget(mapId), 1) +
+      ' 可获验收奖金并解锁下一城。外围用地面/高架比地下省 3~5 倍。',
       '确认解锁', function () {
         const r = CO().unlockMap(co, mapId);
         if (!r.ok) { this.toast(r.error || '解锁失败', 'bad'); return; }

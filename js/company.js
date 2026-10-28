@@ -74,16 +74,19 @@
     return (station + track) * ci;
   }
 
-  /* ---------------- 分部验收：解锁下一城的核心门槛 ----------------
-   * 钱不是解锁的主门槛：把本城线网从开局规模建到「+ΔN 站」即验收通过，
-   * 总部发放验收奖金进公司池，同时解锁资格 +1。
-   *
-   * ΔN 同时受两个上限约束（取较小者）：
-   *  1) 设计目标：完整真实线网的 20%（温州 36 站 → 7）；
-   *  2) 支付能力：市政府启动金 × 1.3 ÷ 混合单站造价，至少 3 站、至多 12 站。
-   * 实测默认地下 M 站综合约 6.7 亿/站，若按「20% 完整线网」硬性要求，
-   * 鄂州第 6 站就要 40 亿，而启动金只有 8 亿 —— 变成一道算术题。
-   * 因此按启动金能负担的规模标定；想建得更快可以继续扩建，验收只要求达到目标。 */
+  /* ---------------- 分部验收：覆盖率门槛 ----------------
+   * 每座城市都从「一条真实线路的前 4 站」接手（coverBase 就是这 4 站在
+   * 真实步行网络下覆盖的人口比例，由 tools/pipeline/cover-base.mjs 逐城量出）。
+   * 验收目标 = 接管覆盖率 × 1.8，或 +4 个百分点，取较大者，上限 45%：
+   *   - 底子厚的城市（如资阳 16.8%）要求做到 20.8%，靠加密线网；
+   *   - 底子薄的大城市（如深圳 0.1%）要求做到 4.1%，靠把线伸进人口密集区。
+   * 这样「每个分部的验收标准按分部实际情况划定」，且和站数无关。 */
+  function coverTarget(base) {
+    const b = (typeof base === 'number' && base > 0) ? base : 0.05;
+    return Math.min(0.45, Math.max(b * 1.8, b + 0.04));
+  }
+
+  /* 阶段合同用的「建议扩建站数」：按启动金支付能力标定（与验收无关，只决定合同分段）。 */
   function acceptDelta(mapId) {
     const mp = CM.MAPS && CM.MAPS[mapId];
     const full = mp && mp.fullNet && mp.fullNet.stations ? mp.fullNet.stations : 0;
@@ -149,7 +152,16 @@
   /* ---- 分部验收 API（定义在 Company 声明之后） ---- */
   Company.stationUnitCost = stationUnitCost;
   Company.acceptDelta = acceptDelta;
-  Company.acceptNeed = function (mapId) { return initialStations(mapId) + acceptDelta(mapId); };
+  Company.coverTarget = coverTarget;
+  /* 验收覆盖率目标：以该城 4 站开局的真实覆盖率为基准（data_cities 的 coverBase）。 */
+  Company.acceptTarget = function (mapId) {
+    const mp = CM.MAPS && CM.MAPS[mapId];
+    return coverTarget(mp && mp.coverBase);
+  };
+  Company.acceptBase = function (mapId) {
+    const mp = CM.MAPS && CM.MAPS[mapId];
+    return (mp && typeof mp.coverBase === 'number' && mp.coverBase > 0) ? mp.coverBase : 0.05;
+  };
   /* 验收奖金：按该城启动金的 40%，量级 2.4~4.8 亿/城。
    * 与开通费（0.5~1.6 亿）大致相抵后小幅为正 —— 公司池随战役进度缓慢变厚，
    * 但不存在「月入四五千万」的印钞机。 */
@@ -157,9 +169,9 @@
 
   /* ---------------- 每城阶段性合同（3~5 段） ----------------
    * 给每座分部城市一条确定性的合同链：2~4 个站数阶段 + 1 个满意度阶段。
-   * - 站数阶段把「开局 → 验收线」切成几段，段数随城市规模自标定：
+   * - 站数阶段按「启动金付得起的扩建规模」（acceptDelta）切成几段：
    *   ΔN ≤ 7 站切 2 段（共 3 段合同），≤ 12 站切 3 段（4 段），更大切 4 段（5 段）；
-   * - 最后一站数段恰好等于验收线，和验收互为印证；
+   * - 验收另外看覆盖率（见 acceptTarget），两者是不同指标：合同奖励本地建设，验收发解锁资格；
    * - 满意度阶段要求连续 2 个账期 ≥ 60，逼玩家在扩张后回头收拾服务水平；
    * - 奖励按启动金比例逐段递增（0.10/0.14/0.18/0.22/0.30×启动金），
    *   **发到本城分部现金** —— 玩家赚钱的第一用途是把本城建完，不进公司池。 */
@@ -251,12 +263,16 @@
     if (!camp || camp.legacy || !camp.accepted || typeof camp.accepted !== 'object') return {};
     return camp.accepted;
   };
-  /* 验收状态：done=是否已验收；need=目标站数；have=当前站数（仅当前局或已记录时知道） */
-  Company.acceptState = function (c, mapId, stationCount) {
+  /* 验收状态：done=是否已验收；base=接管时覆盖率；target=验收覆盖率；current=当前覆盖率（仅当前局知道） */
+  Company.acceptState = function (c, mapId, curCover) {
     const rec = Company.acceptedOf(c)[mapId] || null;
-    const b = Company.branchOf(c, mapId);
-    const have = typeof stationCount === 'number' ? stationCount : (rec ? rec.stations : null);
-    return { done: !!rec, rec: rec, need: Company.acceptNeed(mapId), have: have, delta: acceptDelta(mapId), reward: Company.acceptReward(mapId) };
+    const base = Company.acceptBase(mapId);
+    return {
+      done: !!rec, rec: rec,
+      base: base, target: coverTarget(base),
+      current: typeof curCover === 'number' ? curCover : (rec && typeof rec.coverage === 'number' ? rec.coverage : null),
+      reward: Company.acceptReward(mapId),
+    };
   };
   Company.acceptedCount = function (c) { return Object.keys(Company.acceptedOf(c)).length; };
   /* 解锁资格：每座分部城市「建到验收目标」时 +1，一张地图最多给一次；
@@ -344,14 +360,17 @@
     const b = Company.branchOf(c0, g.mapId);
     if (!b) return null;
     if (Company.acceptedOf(c0)[g.mapId]) return null;
-    const need = Company.acceptNeed(g.mapId);
-    const have = Object.keys(g.net.stations || {}).length;
-    if (have < need) return { ok: false, need: need, have: have };
+    const target = Company.acceptTarget(g.mapId);
+    // 覆盖率来自交通模型（步行 15 分钟可达地铁的人口占比）；模型没就绪时等下一个账期。
+    const daily = (g.model && g.model.daily) || null;
+    const cur = daily && daily.ready && typeof daily.coverage === 'number' ? daily.coverage : null;
+    if (cur == null) return null;
+    if (cur + 1e-9 < target) return { ok: false, target: target, current: cur };
     const co = Company.fresh(c0) || c0;
     const campNow = Company.campaignOf(co);
     const reward = Company.acceptReward(g.mapId);
     const accepted = Object.assign({}, campNow.accepted || {});
-    accepted[g.mapId] = { y: g.clock.y, m: g.clock.m, reward: reward, stations: have };
+    accepted[g.mapId] = { y: g.clock.y, m: g.clock.m, reward: reward, coverage: cur };
     co.campaign = Object.assign({}, campNow, {
       version: campNow.version || 1,
       starterMapId: campNow.starterMapId || co.home || null,
@@ -367,9 +386,9 @@
     if (!r.ok) return { ok: false, error: r.error };
     const name = (CM.MAPS[g.mapId] && CM.MAPS[g.mapId].name) || g.mapId;
     const msg = '「' + name + '」分部验收通过：公司池 +' + U.fmtMoney(reward);
-    if (g.logEvent) g.logEvent({ tag: '公司', title: msg, desc: '线网达到 ' + have + ' 站（验收目标 ' + need + '），解锁资格 +1' });
+    if (g.logEvent) g.logEvent({ tag: '公司', title: msg, desc: '覆盖率 ' + U.fmtPct(cur, 1) + '（验收目标 ' + U.fmtPct(target, 1) + '），解锁资格 +1' });
     if (g.emit) g.emit('toast', { kind: 'good', text: msg });
-    return { ok: true, mapId: g.mapId, reward: reward, pool: co.pool, need: need, have: have };
+    return { ok: true, mapId: g.mapId, reward: reward, pool: co.pool, target: target, current: cur };
   };
 
   Company.all = function () {

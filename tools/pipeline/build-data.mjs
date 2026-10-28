@@ -22,6 +22,14 @@
 // 时间：所有城市统一 2025 年开局（用户要求「只需要当前年代」）。
 
 import { readFile, writeFile, readdir } from 'node:fs/promises'
+import { readFileSync } from 'node:fs'
+
+/* 开局覆盖率基准：由 tools/pipeline/cover-base.mjs 用真实引擎逐城量出。
+ * 验收目标以它为分母（见 company.js 的 coverTarget），缺测时退回 5%。 */
+const COVER_BASES = (() => {
+  try { return JSON.parse(readFileSync(new URL('../src/cover_bases.json', import.meta.url), 'utf8')) }
+  catch (e) { return {} }
+})()
 import { existsSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -387,33 +395,29 @@ async function buildCity(id) {
   ]
 
   /*
-   * 开局既有线网：把我们抓到的真实地铁线路原样放进去。
+   * 开局既有线网：v3.9.0 起所有城市统一为「一条真实线路的前 4 站」。
    *
    * 为什么必须有：参考项目里只有东京有 initialNetwork，其余地图都是「从零画第一笔」。
    * 但我们的核心资产就是 54 城的真实线网 —— 开局给玩家一座已经有地铁的城市，
    * 他接手的是「怎么把这个已经存在的网络经营好」，而不是在一张白纸上重画广州。
-   * 这也和用户原始需求里「以真实城市的地铁线路图为素材来源」直接对应。
    *
-   * 只取前 MAX_INIT_LINES 条、每条最多 MAX_INIT_ST 站：
-   * 站太多会让开局就背上一整张网的运营成本，玩家第一周就破产，反而失去可玩性。
+   * 只取站数最多的一条线、最多 4 站（线路不足 4 站按实际站数）：
+   * 站太多会让开局就背上一整张网的运营成本，也失去「把本城线网建起来」的成长感。
+   * 完整线网规模仍写入 fullNet，只用于展示与难度参考。
    * 站台规模按真实站是否换乘站推断（换乘站用 L，其余 M），
    * 这决定开局能开多大的编组 —— 玩家要扩编组就得先花钱扩站台。
    */
-  const MAX_INIT_LINES = 4
-  const MAX_INIT_ST = 14
+  /* v3.9.0：所有地图统一「一条真实线路的前 4 站」，不再给 4 条完整线。 */
+  const MAX_INIT_LINES = 1
+  const MAX_INIT_ST = 4
   /*
    * 战役入门/进阶图：
    * - 四张入门图不带走两条完整既有线，只保留一条真实线路的前 4 站，开局更像“接管一小段”；
    * - 进阶图广州仍取 5 条线；
    * - 其余 49 城仍取 4 条线。
    */
-  const ADVANCED_STARTER_LINES = { guangzhou: 5 }
-  const ENTRY_STARTER_SEGMENTS = { wenzhou: 4 }
-  const starterSegment = ENTRY_STARTER_SEGMENTS[city.id]
-  const maxLines = starterSegment
-    ? 1
-    : Math.max(1, Math.min(6, ADVANCED_STARTER_LINES[city.id] || MAX_INIT_LINES))
-  const maxStations = starterSegment || MAX_INIT_ST
+  const maxLines = MAX_INIT_LINES
+  const maxStations = MAX_INIT_ST
   const initLines = []
   const rawLines = (city.lines || [])
     .slice()
@@ -656,6 +660,7 @@ function emit(b) {
     `    tagline: ${JSON.stringify(`${m.lines} 条线、${m.stations} 座站的现状网络，等你重排`)} ,`,
     `    difficulty: ${TIER_DIFF[m.tier]},`,
     `    fullNet: {"lines":${m.lines},"stations":${m.stations},"km":${Math.round(m.lengthKm)}},`,
+    `    coverBase: ${COVER_BASES[b.id] != null ? COVER_BASES[b.id] : 0.05},`,
     `    tags: ${JSON.stringify([TIER_NAME[m.tier], `${m.stations} 站`, `${Math.round(m.lengthKm)} km`])},`,
     `    intro: ${JSON.stringify(`${START_YEAR} 年的${b.city}已经有 ${m.lines} 条地铁线、${m.stations} 座车站。你要在这张真实的城市底图上重新规划线路、加密网络、控制成本。`)},`,
     `    features: ${JSON.stringify([
@@ -667,7 +672,7 @@ function emit(b) {
     `    facts: ${JSON.stringify(facts)},`,
     `    modes: ['challenge', 'free'],`,
     `    kind: 'real',`,
-    `    mapVersion: 1,`,
+    `    mapVersion: 2,`,
     `    scenario: ${JSON.stringify(`${b.id}-${START_YEAR}`)},`,
     `    cam: ${JSON.stringify(m.cam)},`,
     `    cfg: ${JSON.stringify(b.cfg)},`,

@@ -23,18 +23,18 @@
   // 步骤：manual 需按钮继续；final 完成后进入全国图。
   const STEPS = [
     { id: 'intro', title: '欢迎来到温州', manual: '开始新手战役',
-      body: '温州是公司接手的第一个城市：1 号线已经有 4 座车站，但城市还没有真正扩张。接下来用 6 个小目标学会扩建、第一份公司合同和全国地图。教程可以随时跳过。' },
+      body: '温州是公司接手的第一个城市：只有一条真实线路的前 4 站，城市还没有真正扩张。接下来用 6 个小目标学会扩建、第一份公司合同和全国地图。教程可以随时跳过。' },
     { id: 'move', title: '先熟悉地图',
       body: '按住左键拖动地图，滚轮缩放。按 T 可以在 2D 与 2.5D 之间切换。',
       hint: '试着拖动或缩放一下。',
       enter: function () { const c = ui.R.cam; ctx.cam0 = { x: c.cx, y: c.cy, z: c.zoom }; },
       check: function () { const c = ui.R.cam, c0 = ctx.cam0; return U.dist(c.cx, c.cy, c0.x, c0.y) > 3 || Math.abs(Math.log(c.zoom / c0.z)) > 0.25; } },
-    { id: 'line', title: '看看已有的 1 号线',
-      body: '点击地图上已有的 1 号线，右侧会显示这条线的车站、发车间隔与客流。以后新建的线路也会在这里管理。',
+    { id: 'line', title: '看看接手的线路',
+      body: '点击地图上已有的线路，右侧会显示这条线的车站、发车间隔与客流。以后新建的线路也会在这里管理。',
       hint: '先把鼠标移到橙色线路上，再点击。',
       check: function () { return ui.topIs && ui.topIs(['line']); } },
     { id: 'build', title: '为温州扩建 3 座车站',
-      body: '用底部「建站」或「绘线」工具，在 1 号线附近新增 3 座车站并确认建设。扩建 3 站后会触发公司给温州的第一份合同。外围用地面/高架比地下便宜 3~5 倍；站太挤会掉满意度，扩建时顺手把发车间隔调开。',
+      body: '用底部「建站」或「绘线」工具，在既有线路附近新增 3 座车站并确认建设。扩建 3 站后会触发公司给温州的第一份合同。外围用地面/高架比地下便宜 3~5 倍；站太挤会掉满意度，扩建时顺手把发车间隔调开。',
       hint: '不要拆掉原有车站；目标是新增 3 站。',
       target: function () { return ui.tbtns && ui.tbtns.station; },
       enter: function () { if (g.tutorial && g.tutorial.buildBase == null) g.tutorial.buildBase = stationCount(); ctx.base = (g.tutorial && g.tutorial.buildBase) || stationCount(); },
@@ -48,7 +48,7 @@
         return false;
       } },
     { id: 'company', title: '第一份合同与公司池',
-      body: '打开顶栏「公司」：温州的第一份合同已完成，公司池获得 +7 亿。资格要靠建设挣：把温州线网建到验收目标（11 站）就拿到第 1 个解锁资格，之后每座城各给一次。',
+      body: '打开顶栏「公司」：温州的第一份合同已完成，公司池获得 +7 亿。资格要靠建设挣：把温州的覆盖率做到验收目标（4 站开局约 3.5%，目标约 7.5%）就拿到第 1 个解锁资格，之后每座城各给一次。',
       hint: '公司面板里可以看到每座城市的验收目标。',
       target: function () { return ui.hbtns && ui.hbtns.company; },
       check: function () { return ui.topIs && ui.topIs(['company']); } },
@@ -59,7 +59,7 @@
       enter: function () { if (g.tutorial.runT0 == null) g.tutorial.runT0 = absMin(g.clock); ctx.t0 = g.tutorial.runT0; },
       check: function () { return absMin(g.clock) - (ctx.t0 || 0) >= 180; } },
     { id: 'done', title: '去全国地图', final: true,
-      body: '温州已经跑起来了。打开全国地图：绿色是已进驻，灰色城市要先「验收解锁」——把温州线网再建到目标站数，就能解锁下一座城。' },
+      body: '温州已经跑起来了。打开全国地图：绿色是已进驻，灰色城市要先「验收解锁」——把温州覆盖率做到目标，就能解锁下一座城。' },
   ];
   const TASKS = STEPS.filter(function (s) { return !s.manual && !s.final; }).length;
 

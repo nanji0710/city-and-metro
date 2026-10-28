@@ -178,18 +178,54 @@ const contract = jp(await evalJs(`(async () => {
   const e1 = addStations(3);
   if (e1) return JSON.stringify({ err: 'EDIT1 ' + e1 });
   const cr = CM.Company.checkStarterContract(g);
-  // 温州验收：7 → 11 站（开局 4 + Δ7，36 站 × 20%）
-  const e2 = addStations(4);
+  // 验收看覆盖率：在人口最密的未覆盖小区补 6 站，推进 2 个游戏日让模型重算
+  const dense = function (n) {
+    for (let k = 0; k < n; k++) {
+      let best = -1, bestPop = -1;
+      const W = g.city.W, cellM = CM.CFG.CELL_M || 460;
+      for (let z = 0; z < g.model.zoneCells.length; z++) {
+        for (const c of g.model.zoneCells[z]) {
+          const pop = g.city.pop[c] || 0;
+          if (pop <= 0 || pop <= bestPop) continue;
+          const x = (c % W) + 0.5, y = ((c / W) | 0) + 0.5;
+          let far = true;
+          for (const sid in g.net.stations) { const s = g.net.stations[sid]; if (CM.U.dist(x, y, s.x, s.y) * cellM < 1600) { far = false; break; } }
+          if (far) { best = c; bestPop = pop; }
+        }
+      }
+      if (best < 0) return 'no-cell';
+      const x = (best % W) + 0.5, y = ((best / W) | 0) + 0.5;
+      const er2 = g.edit((net) => {
+        const sid = CM.Metro.addStation(net, x, y, { size: 'M', type: 'surface' }, g.city);
+        let near = null, nd = 1e9;
+        for (const s2 in net.stations) { const s = net.stations[s2]; if (sid === s2) continue; const d = CM.U.dist(x, y, s.x, s.y); if (d < nd) { nd = d; near = s2; } }
+        CM.Metro.addSegment(net, lineId, near, sid, [], 'surface');
+      });
+      if (er2 && er2.error) return er2.error;
+      g.net = JSON.parse(JSON.stringify(g.draft.net)); g.draft = null;
+      g.netVersion++; g.rev++;
+      g.compiled = CM.Metro.compile(g.net, g.city);
+      g.model.setNetwork(g.compiled);
+    }
+    return null;
+  };
+  const e2 = dense(6);
   if (e2) return JSON.stringify({ err: 'EDIT2 ' + e2 });
+  const dt = 1 / 12, per = 24 * 12;
+  for (let i = 0; i < 2 * per; i++) g.update(dt);
+  const cov = (g.model.daily && g.model.daily.coverage) || 0;
   const acc = CM.Company.checkAcceptance(g);
   const co = CM.Company.active();
   return JSON.stringify({ contract: cr, accept: acc, pool: co.pool, quota: CM.Company.openQuota(co),
     canEzhou: CM.Company.canStartMap(co, 'ezhou', 'challenge'),
-    need: CM.Company.acceptNeed('wenzhou'), stations: Object.keys(g.net.stations).length });
+    target: CM.Company.acceptTarget('wenzhou'), base: CM.Company.acceptBase('wenzhou'),
+    coverage: cov, stations: Object.keys(g.net.stations).length });
 })()`))
 check('第一份合同完成奖励 7 亿进池', contract.contract && contract.contract.ok === true && contract.contract.reward === 70000, contract)
-check('温州线网达 11 站触发验收（奖金 4 亿进池）', contract.accept && contract.accept.ok === true &&
-  contract.accept.reward === 40000 && contract.accept.have === 11 && contract.accept.need === 11, contract)
+check('温州覆盖率达标触发验收（奖金 4 亿进池）', contract.accept && contract.accept.ok === true &&
+  contract.accept.reward === 40000 && contract.coverage >= contract.target, contract)
+check('温州验收目标按 4 站开局覆盖率标定（约 7.5%）', contract.base > 0.03 && contract.base < 0.04 &&
+  contract.target > 0.07 && contract.target < 0.08, contract)
 check('验收后解锁资格为 1（合同不发资格，每图一次）', contract.quota === 1 && contract.canEzhou === true, contract)
 
 // 4b. 从公司面板解锁鄂州：资格已够，公司池只付 0.5 亿开通费
@@ -250,8 +286,8 @@ const chain = jp(await evalJs(`(async () => {
   const last = cc.stages[cc.stages.length - 1];
   if (last.goal !== 'sat' || last.months !== 2) return JSON.stringify({ err: 'BAD-TAIL', last: last });
   if (cc.stages[cc.stages.length - 2].goal !== 'stations' ||
-      cc.stages[cc.stages.length - 2].target !== CM.Company.acceptNeed('ezhou')) {
-    return JSON.stringify({ err: 'TAIL-NOT-ACCEPT', prev: cc.stages[cc.stages.length - 2] });
+      cc.stages[cc.stages.length - 2].target !== 4 + CM.Company.acceptDelta('ezhou')) {
+    return JSON.stringify({ err: 'TAIL-NOT-DELTA', prev: cc.stages[cc.stages.length - 2] });
   }
   const M = CM.Metro, U0 = CM.U;
   const lineId = Object.keys(g.net.lines)[0];
@@ -273,23 +309,26 @@ const chain = jp(await evalJs(`(async () => {
     gained: Math.round(g.econ.funds) - funds0, idx: CM.Company.cityContractOf(CM.Company.get(co.id), 'ezhou').idx });
 })()`))
 check('鄂州阶段合同链为 3~5 段且末段是满意度', chain.stages >= 3 && !chain.err, chain)
-check('末段站数目标等于验收线', !chain.err && chain.r !== undefined, chain)
+check('末段站数目标等于「开局 4 站 + ΔN」', !chain.err && chain.r !== undefined, chain)
 check('建到第 1 段目标奖励发到本城现金', chain.r && chain.r.advanced === true &&
   chain.r.reward === chain.gained && chain.idx === 1, chain)
 
-// 5a-1. 验收线按支付能力标定：ΔN × 混合单站造价 不超过启动金预算（至少保留 3 站下限）
-const afford = jp(await evalJs(`(() => {
-  const cities = ['ezhou', 'guangzhou', 'beijing', 'wuhu', 'qingyuan'];
+// 5a-1. 各城统一 4 站开局；验收目标按该城 4 站开局的真实覆盖率标定
+const cover = jp(await evalJs(`(() => {
+  const cities = ['ezhou', 'guangzhou', 'beijing', 'wuhu', 'qingyuan', 'ziyang'];
   return JSON.stringify(cities.map(function (id) {
-    const d = CM.Company.acceptDelta(id);
-    const unit = CM.Company.stationUnitCost(id);
-    const budget = CM.Company.startFundsFor(id) * 1.45;
-    const cap = Math.max(3, Math.ceil(budget / unit));
-    return { id: id, delta: d, cap: cap, cost: Math.round(d * unit), budget: Math.round(budget), ok: d <= cap };
+    const mp = CM.MAPS[id];
+    const init = (mp.data.initialNetwork.lines || []).reduce(function (a, l) { return a + (l.stations || []).length; }, 0);
+    return {
+      id: id, init: init, version: mp.mapVersion,
+      base: CM.Company.acceptBase(id), target: CM.Company.acceptTarget(id),
+      // 线路本身不足 4 站的城市（如清远全城只有 3 站）按实际站数开局
+      ok: init >= 3 && init <= 4 && mp.mapVersion === 2 && CM.Company.acceptTarget(id) > CM.Company.acceptBase(id),
+    };
   }));
 })()`))
-check('新城的验收线在启动金支付能力内', Array.isArray(afford) && afford.length === 5 && afford.every(x => x.ok), afford)
-check('温州入门城仍保持 11 站教学节奏', contract.need === 11, contract)
+check('所有城市开局都是 1 条线 ≤4 站（mapVersion 2）', Array.isArray(cover) && cover.every(x => x.ok), cover)
+check('验收目标按各城实际覆盖率标定且高于接管值', cover.every(x => x.target > x.base && x.target <= 0.45), cover)
 
 // 5a. B 分部推进两个月，A 分部必须真实补结算到同一公司月份
 const settledA = jp(await evalJs(`(async () => {

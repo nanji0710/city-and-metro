@@ -149,9 +149,14 @@
     if (mp.geo && meta.mapFp && mp.fp && meta.mapFp !== mp.fp) {
       return '存档与当前「' + (mp.name || mp.id) + '」底图不一致（地图指纹不同）。请使用对应版本的地图存档，或先导出旧档再更新游戏。';
     }
-    // 内容指纹是新增字段；旧档没有时继续兼容。有内容指纹后，开局线网/特性/锚点变化也会拒绝旧档。
+    // 内容指纹是新增字段；旧档没有时继续兼容。
+    // 数据版本（mapVersion）比当前地图旧的存档：开局线网等已变，但存档自带完整线网，
+    // 载入后按存档继续即可，不拒绝 —— v3.9.0 把开局统一成「1 线 4 站」时靠这条保住旧进度。
     if (meta.contentFp && mp.contentFp && meta.contentFp !== mp.contentFp) {
-      return '存档与当前「' + (mp.name || mp.id) + '」玩法数据不一致（开局线网、特性或锚点已更新）。请使用对应版本的地图存档，或先导出旧档再更新游戏。';
+      const saveV = meta.mapVersion || 1, mapV = mp.mapVersion || 1;
+      if (saveV >= mapV) {
+        return '存档与当前「' + (mp.name || mp.id) + '」玩法数据不一致（开局线网、特性或锚点已更新）。请使用对应版本的地图存档，或先导出旧档再更新游戏。';
+      }
     }
     return null;
   };

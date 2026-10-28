@@ -332,13 +332,14 @@
       rows.push(['分部现金', money(b.funds)]);
       rows.push(['上次上缴', b.lastRemit ? b.lastRemit.y + '年' + b.lastRemit.m + '月 · ' + money(b.lastRemit.amount) : '—']);
       // 验收进度：当前局知道实际站数；其它分部只显示目标（后台月结时会自动补验收）。
-      const acc = CM.Company.acceptState(co, id, current ? Object.keys(CM.game.net.stations).length : null);
+      const daily = (current && CM.game && CM.game.model && CM.game.model.daily) || null;
+      const acc = CM.Company.acceptState(co, id, daily && daily.ready ? daily.coverage : null);
       if (acc.done) rows.push(['验收', '已通过 · 奖金 ' + money(acc.rec.reward)]);
-      else rows.push(['验收目标', (acc.have != null ? acc.have + ' / ' : '达标 ') + acc.need + ' 站 · 外围地面/高架省']);
+      else rows.push(['验收覆盖', (acc.current != null ? U.fmtPct(acc.current, 1) + ' / ' : '目标 ') + U.fmtPct(acc.target, 1)]);
     } else if (st === 'locked') {
       rows.push(['开通费', money(fee)]);
       rows.push(['启动金', money(start) + '（市政府资本金）']);
-      if (co) rows.push(['验收目标', '线网达 ' + CM.Company.acceptNeed(id) + ' 站 · 外围地面/高架省']);
+      if (co) rows.push(['验收目标', '覆盖率 ≥ ' + U.fmtPct(CM.Company.acceptTarget(id), 1) + '（接管时约 ' + U.fmtPct(CM.Company.acceptBase(id), 1) + '）']);
     } else if (st === 'unlocked') {
       rows.push(['开城启动金', money(start) + '（市政府资本金）']);
     } else if (st === 'starter') {
