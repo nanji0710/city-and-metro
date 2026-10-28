@@ -62,7 +62,12 @@
   UI.prototype.showMapSelect = function (selId) {
     const self = this;
     const co = CM.Company ? CM.Company.active() : null;
-    const locked = function (id) { return CM.Company ? !CM.Company.canStartMap(co, id, 'challenge') : false; };
+    // 锁定显示：没资格（canStartMap=false）或「有资格但还没解锁」（要付开通费）都算锁定。
+    const locked = function (id) {
+      if (!CM.Company) return false;
+      if (!CM.Company.canStartMap(co, id, 'challenge')) return true;
+      return !!(co && !CM.Company.isUnlocked(co, id));
+    };
     // 战役模式下把唯一解锁的入门图排在前面；其余锁定城市放在后面，避免新玩家一进来先看到一屏“未解锁”。
     const all = CM.MAP_ORDER.slice().sort(function (a, b) {
       const la = locked(a) ? 1 : 0, lb = locked(b) ? 1 : 0;
@@ -178,12 +183,12 @@
       const start = function (mode) {
         if (mode === 'challenge' && isLocked) {
           const fee = CM.Company ? CM.Company.unlockFee(sel) : 0;
-          self.toast('「' + (mp.name || sel) + '」尚未解锁；需在公司面板用公司池支付 ' + U.fmtMoney(fee) + ' 解锁费。', 'warn');
+          self.toast('「' + (mp.name || sel) + '」尚未解锁：先完成分部验收拿到解锁资格，再在公司面板支付 ' + U.fmtMoney(fee) + ' 开通费。', 'warn');
           return;
         }
         if (mode === 'challenge' && co && CM.Company && !CM.Company.isStarter(sel) &&
           CM.Company.isUnlocked(co, sel) && !CM.Company.branchOf(co, sel)) {
-          self.toast('新分部请从公司面板开始，并由公司池支付启动金。', 'warn');
+          self.toast('新分部请从公司面板或全国地图开始；启动金由市政府资本金注入。', 'warn');
           return;
         }
         snd('build');
@@ -222,16 +227,19 @@
       if (!mp.tutorial && isLocked) {
         const fee = CM.Company ? CM.Company.unlockFee(sel) : 0;
         const pool = co ? (co.pool || 0) : 0;
+        const eligible = co && CM.Company.canStartMap(co, sel, 'challenge');
+        const need = CM.Company && CM.Company.acceptNeed ? CM.Company.acceptNeed(sel) : 0;
         acts.appendChild(h('div', { class: 'note msel-lock-note' },
-          ic('lock', 14), ' 未解锁 · 解锁费 ' + U.fmtMoney(fee) +
-          '；公司池 ' + U.fmtMoney(pool) +
-          (co ? '。进入任意已解锁城市后，在公司面板解锁。' : '。先选择一张战役图开始战役。')));
+          ic('lock', 14), ' ' + (eligible
+            ? '已具备解锁资格 · 开通费 ' + U.fmtMoney(fee) + '（公司池 ' + U.fmtMoney(pool) + '）；解锁后开城时市政府注入启动金。'
+            : '未解锁 · 门槛是分部验收（线网达 ' + need + ' 站）+ 开通费 ' + U.fmtMoney(fee) + '；公司池 ' + U.fmtMoney(pool) +
+              (co ? '。进入任意已进驻城市后，在公司面板解锁。' : '。先选择一张战役图开始战役。'))));
       }
       if (mp.tutorial) acts.appendChild(modeBtn('free', 'play', 'b-teal', '开始教程', '从头开始 15 个引导任务（约 20 分钟，不限资金）', true));
       else {
         const dk = diffKey();
         acts.appendChild(modeBtn('challenge', 'trophy', 'b-gold', '经营挑战',
-          isLocked ? '未解锁 · 解锁费 ' + U.fmtMoney(CM.Company ? CM.Company.unlockFee(sel) : 0) :
+          isLocked ? '未解锁 · 需分部验收 + 开通费 ' + U.fmtMoney(CM.Company ? CM.Company.unlockFee(sel) : 0) :
             '新游戏 · 初始资金 ' + U.fmtMoney(DIFF ? DIFF.startFundsOf(dk) : mp.cfg.economy.startFunds, undefined, mp.cfg.money) + '（' + (DIFF ? DIFF.get(dk).name : '标准') + '），拨款随城市经济变化',
           !isLocked));
         acts.appendChild(modeBtn('free', 'sparkle', 'b-teal', '自由建造', '新游戏 · 资金不限，任务仅供参考', false));

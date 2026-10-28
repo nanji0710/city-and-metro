@@ -48,18 +48,18 @@
         return false;
       } },
     { id: 'company', title: '第一份合同与公司池',
-      body: '打开顶栏「公司」：温州的第一份合同已完成，公司池获得 +7 亿。公司池是解锁下一座城市的钱，也是分部破产时最后的救援金。',
-      hint: '公司池现在应该足够解锁一座小型城市。',
+      body: '打开顶栏「公司」：温州的第一份合同已完成，公司池获得 +7 亿。合同还给你 +1 解锁资格；之后每把一座城市建到验收目标，资格再 +1。',
+      hint: '公司面板里可以看到每座城市的验收目标。',
       target: function () { return ui.hbtns && ui.hbtns.company; },
       check: function () { return ui.topIs && ui.topIs(['company']); } },
     { id: 'run', title: '让时间走起来',
-      body: '关闭公司面板，按空格或点击 ▶ 让温州开始运营。时间会按月推进，公司池也会按分部的经营现金流继续变化。',
+      body: '关闭公司面板，按空格或点击 ▶ 让温州开始运营。时间会按月推进，公司池也会按分部的净结余继续变化。',
       hint: '让游戏时间走过 3 小时；之后随时可以回到全国地图。',
       target: function () { return g.speed > 0 ? (g.speed === 1 ? ui.tbtns.s2 : null) : ui.tbtns.pause; },
       enter: function () { if (g.tutorial.runT0 == null) g.tutorial.runT0 = absMin(g.clock); ctx.t0 = g.tutorial.runT0; },
       check: function () { return absMin(g.clock) - (ctx.t0 || 0) >= 180; } },
     { id: 'done', title: '去全国地图', final: true,
-      body: '温州已经跑起来了。现在打开全国地图：温州是绿色已进驻，其他 53 城还是灰色锁定；用公司池选择下一座城市，继续扩张。' },
+      body: '温州已经跑起来了。打开全国地图：绿色是已进驻，灰色城市要先「验收解锁」——把温州线网再建到目标站数，就能解锁下一座城。' },
   ];
   const TASKS = STEPS.filter(function (s) { return !s.manual && !s.final; }).length;
 

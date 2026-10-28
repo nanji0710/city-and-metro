@@ -59,19 +59,22 @@ const atlas = JSON.parse(await evalJs(`(async () => {
   const btn = Array.from(document.querySelectorAll('#atlas button')).find(b => (b.innerText || '').includes('开始新手战役'));
   out.btn = !!btn;
   out.filter = !!document.querySelector('.atlas-filter');
-  out.provinces = (document.querySelector('.atlas-select[aria-label="按省份筛选"]') || { options: [] }).options.length;
-  const search = document.querySelector('.atlas-search');
+  out.provDD = !!document.querySelector('.atlas-dd[aria-label="按省份筛选"]');
+  out.statusDD = !!document.querySelector('.atlas-dd[aria-label="按状态筛选"]');
+  out.provinces = new Set((CM.CHINA_ATLAS.cities).map(c => c.province)).size;
+  const search = document.querySelector('.atlas-search-in');
   if (search) {
     search.value = '温州';
     search.dispatchEvent(new Event('input', { bubbles: true }));
     a.render();
+    out.q = a.filters.q;
     out.searchHits = (a.hits || []).filter(h => h.kind === 'city').length;
     search.value = '';
     search.dispatchEvent(new Event('input', { bubbles: true }));
     a.render();
   }
-  const locate = Array.from(document.querySelectorAll('#atlas button')).find(b => (b.innerText || '').includes('定位当前'));
-  out.locate = !!locate;
+  out.locate = !!document.querySelector('#atlas button[aria-label="定位当前城市"]');
+  out.count = !!document.querySelector('.atlas-count');
   return JSON.stringify(out);
 })()`))
 ok('全国图加载 54 城', atlas.cities === 54, atlas.cities)
@@ -80,8 +83,9 @@ ok('Wenzhou 初始选中且画布可点击', atlas.sel === 'wenzhou' && atlas.ca
 ok('低缩放启用聚合', atlas.lowCluster === true, atlas)
 ok('高缩放拆分为城市点', atlas.highCity === true, atlas)
 ok('城市卡片提供开始新手战役', atlas.btn === true && atlas.card.indexOf('开始新手战役') >= 0, atlas.card.slice(0, 120))
-ok('全国图提供搜索/省份筛选/定位', atlas.filter === true && atlas.provinces > 1 && atlas.locate === true, atlas)
-ok('全国图搜索能定位温州', atlas.searchHits === 1, atlas.searchHits)
+ok('全国图提供搜索/省份/状态筛选/定位', atlas.filter === true && atlas.provDD === true && atlas.statusDD === true &&
+  atlas.provinces > 1 && atlas.locate === true && atlas.count === true, atlas)
+ok('全国图搜索能定位温州', atlas.q === '温州' && atlas.searchHits === 1, atlas)
 
 const started = JSON.parse(await evalJs(`(async () => {
   const a = CM.Atlas;

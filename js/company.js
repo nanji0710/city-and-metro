@@ -24,7 +24,7 @@
   const KEY = CFG.saves.prefix + 'companies';
   const VER = 1;
 
-  /* 旧版公司的进驻费（legacy 兼容）。战役模式不再走这条路，改用公司池解锁费。 */
+  /* 旧版公司的进驻费（legacy 兼容）。战役模式不再走这条路，改用解锁资格 + 开通费。 */
   const ACCESS_FEE = { 1: 30000, 2: 80000, 3: 160000, 4: 280000 };
 
   /* 战役模式：只保留一张入门图。
@@ -36,12 +36,14 @@
     wenzhou: { tier: 'entry', difficultyKey: 'easy', trait: '浙南首段', desc: '只接管一条真实线路的前 4 站，适合第一次熟悉排班、票款与公司账；其余城市都要靠公司池解锁。' },
   };
 
-  /* 解锁费（万元）：最低 8 亿，最高 20 亿；不按“进驻费”重复收。 */
-  const UNLOCK_FEE = { 1: 80000, 2: 100000, 3: 150000, 4: 200000 };
-  /* 新分部启动金（万元）：由公司池出，不再使用难度标准 30 亿。
-   * 第一张图解锁 + 启动 = 10 亿；5 亿初始池 + 7 亿合同 = 12 亿，
-   * 首次扩张后仍留 2 亿作为紧急救援余量。 */
-  const START_FUNDS = { 1: 20000, 2: 30000, 3: 40000, 4: 50000 };
+  /* 开通费（万元）：公司中标新城市经营权时缴给集团的一次性开办费，从公司池出。
+   * 只承担「资格」成本，量级刻意压低 —— 解锁的真正门槛是分部验收（见 acceptDelta），
+   * 不是钱；新城的建设资金由市政府资本金注入（见 START_FUNDS）。 */
+  const OPEN_FEE = { 1: 5000, 2: 8000, 3: 12000, 4: 16000 };
+  /* 新分部启动金（万元）：市政府资本金注入，**不从公司池出**。
+   * 量级约为基底 30 亿标准开局的 1/5 ~ 2/5，保证新城开局就能真正开工建线；
+   * 公司池只在注资 / 救援 / 开通费时出钱。 */
+  const START_FUNDS = { 1: 60000, 2: 80000, 3: 100000, 4: 120000 };
   const CAMPAIGN_POOL = 50000;   // 公司开办资金 5 亿
 
   /* 战役第一份公司合同：在起点城新增 3 站，公司池一次性奖励 7 亿。 */
@@ -56,6 +58,19 @@
     return n;
   }
 
+  /* ---------------- 分部验收：解锁下一城的核心门槛 ----------------
+   * 钱不是解锁的主门槛：把本城线网从开局规模建到「+ΔN 站」即验收通过，
+   * 总部发放验收奖金进公司池，同时解锁资格 +1。
+   * ΔN 按该城完整真实线网规模自标定（20%，夹在 6~20 站）：
+   * 温州 36 站 → +7；北京 542 站 → +20；30 站小城 → +6。
+   * 覆盖率在大小图幅城市之间不可比（实测温州 20 站仅 10%、鄂州 30 站 44%），
+   * 站数增量才是公平、可读、可标定的「建设完全」目标。 */
+  function acceptDelta(mapId) {
+    const mp = CM.MAPS && CM.MAPS[mapId];
+    const full = mp && mp.fullNet && mp.fullNet.stations ? mp.fullNet.stations : 0;
+    return U.clamp(Math.round(full * 0.2) || 6, 6, 20);
+  }
+
   function contractOfCampaign(camp) {
     if (!camp || camp.legacy) return null;
     if (camp.contract) return camp.contract;
@@ -67,9 +82,11 @@
   }
 
   /* 分部每月往金库上缴的比例。
-   * 30% 归公司，70% 留在本地；本地现金只能用于当前地图。
-   * 上缴按“上月已封账经营现金流”计算，见 remit()。 */
-  const REMIT_RATE = 0.30;
+   * 20% 归公司，80% 留在本地 —— 玩家赚钱的第一用途是把本城线网建完，
+   * 上缴只是涓流。口径改为「上月已封账净结余」（拨款 + 票款 + 奖励 − 运营 − 债务）：
+   * 本模型的票款天然覆盖不了运营（补贴在拨款里），旧口径只算经营现金流
+   * 会让上缴恒为 0，公司池没有任何活水。 */
+  const REMIT_RATE = 0.20;
 
   function readAll() {
     let raw = null;
@@ -96,12 +113,50 @@
   Company.REMIT_RATE = REMIT_RATE;
   Company.STARTERS = STARTERS.slice();
   Company.STARTER_META = STARTER_META;
-  Company.UNLOCK_FEE = UNLOCK_FEE;
+  Company.OPEN_FEE = OPEN_FEE;
   Company.START_FUNDS = START_FUNDS;
   Company.CAMPAIGN_POOL = CAMPAIGN_POOL;
   Company.STARTER_CONTRACT = STARTER_CONTRACT;
   Company.settling = false;
   Company._settleTimer = null;
+
+  /* ---- 分部验收 API（定义在 Company 声明之后） ---- */
+  Company.acceptDelta = acceptDelta;
+  Company.acceptNeed = function (mapId) { return initialStations(mapId) + acceptDelta(mapId); };
+  /* 验收奖金：按该城启动金的 40%，量级 2.4~4.8 亿/城。
+   * 与开通费（0.5~1.6 亿）大致相抵后小幅为正 —— 公司池随战役进度缓慢变厚，
+   * 但不存在「月入四五千万」的印钞机。 */
+  Company.acceptReward = function (mapId) { return Math.round(Company.startFundsFor(mapId) * 0.4); };
+
+  Company.acceptedOf = function (c) {
+    const camp = Company.campaignOf(c);
+    if (!camp || camp.legacy || !camp.accepted || typeof camp.accepted !== 'object') return {};
+    return camp.accepted;
+  };
+  /* 验收状态：done=是否已验收；need=目标站数；have=当前站数（仅当前局或已记录时知道） */
+  Company.acceptState = function (c, mapId, stationCount) {
+    const rec = Company.acceptedOf(c)[mapId] || null;
+    const b = Company.branchOf(c, mapId);
+    const have = typeof stationCount === 'number' ? stationCount : (rec ? rec.stations : null);
+    return { done: !!rec, rec: rec, need: Company.acceptNeed(mapId), have: have, delta: acceptDelta(mapId), reward: Company.acceptReward(mapId) };
+  };
+  Company.acceptedCount = function (c) { return Object.keys(Company.acceptedOf(c)).length; };
+  /* 解锁资格：每个已验收分部 +1；完成第一份公司合同再 +1（保证新手先学会建设再扩张）。
+   * 已开成分部数（不含入门城）必须小于资格数才能再开新城。 */
+  Company.openQuota = function (c) {
+    const co = Company.fresh(c) || c;
+    const camp = Company.campaignOf(co);
+    if (!camp || camp.legacy) return Infinity;
+    const contractDone = !!(camp.contract && camp.contract.done);
+    return Company.acceptedCount(co) + (contractDone ? 1 : 0);
+  };
+  Company.canOpenMore = function (c) {
+    const co = Company.fresh(c) || c;
+    const camp = Company.campaignOf(co);
+    if (!camp || camp.legacy) return true;
+    const opened = Math.max(0, (co.branches || []).length - 1);   // 不含入门城
+    return opened < Company.openQuota(co);
+  };
 
   Company.accessFee = function (mapId) {
     const mp = CM.MAPS && CM.MAPS[mapId];
@@ -109,11 +164,13 @@
     return ACCESS_FEE[d] || ACCESS_FEE[2];
   };
 
+  /* 开通费（原「解锁费」）：公司池支付的一次性开办费，量级 0.5~1.6 亿。 */
   Company.unlockFee = function (mapId) {
     const mp = CM.MAPS && CM.MAPS[mapId];
     const d = mp ? (mp.difficulty || 2) : 2;
-    return UNLOCK_FEE[d] || UNLOCK_FEE[2];
+    return OPEN_FEE[d] || OPEN_FEE[2];
   };
+  /* 启动金：市政府资本金注入，不再从公司池出。 */
   Company.startFundsFor = function (mapId) {
     const mp = CM.MAPS && CM.MAPS[mapId];
     const d = mp ? (mp.difficulty || 2) : 2;
@@ -155,6 +212,46 @@
     if (g.logEvent) g.logEvent({ tag: '公司', title: msg, desc: '在「' + (CM.MAPS[g.mapId] && CM.MAPS[g.mapId].name || g.mapId) + '」新增 ' + STARTER_CONTRACT.addStations + ' 站' });
     if (g.emit) g.emit('toast', { kind: 'good', text: msg });
     return { ok: true, reward: ct.reward, pool: Company.poolOf(c) };
+  };
+
+  /* 月度验收检查：本城线网达到「开局 + ΔN」站且尚未验收 → 记验收、发奖金进池。
+   * 在月结钩子（当前局）与后台分部补结算完成后都会被调用；
+   * 用 g.company 定位公司记录，当前局与后台局都走同一套口径。 */
+  Company.checkAcceptance = function (g) {
+    if (!g || !g.company || !g.net || g.econ.isFree()) return null;
+    const c0 = Company.get(g.company.id);
+    if (!c0) return null;
+    const camp = Company.campaignOf(c0);
+    if (!camp || camp.legacy) return null;
+    const b = Company.branchOf(c0, g.mapId);
+    if (!b) return null;
+    if (Company.acceptedOf(c0)[g.mapId]) return null;
+    const need = Company.acceptNeed(g.mapId);
+    const have = Object.keys(g.net.stations || {}).length;
+    if (have < need) return { ok: false, need: need, have: have };
+    const co = Company.fresh(c0) || c0;
+    const campNow = Company.campaignOf(co);
+    const reward = Company.acceptReward(g.mapId);
+    const accepted = Object.assign({}, campNow.accepted || {});
+    accepted[g.mapId] = { y: g.clock.y, m: g.clock.m, reward: reward, stations: have };
+    co.campaign = Object.assign({}, campNow, {
+      version: campNow.version || 1,
+      starterMapId: campNow.starterMapId || co.home || null,
+      unlocked: campNow.unlocked || [],
+      accepted: accepted,
+      legacy: false,
+      bankrupt: false,
+      createdAt: campNow.createdAt || nowIso(),
+    });
+    co.pool = Company.poolOf(co) + reward;
+    co.updatedAt = nowIso();
+    const r = Company.commit(c0, co);
+    if (!r.ok) return { ok: false, error: r.error };
+    const name = (CM.MAPS[g.mapId] && CM.MAPS[g.mapId].name) || g.mapId;
+    const msg = '「' + name + '」分部验收通过：公司池 +' + U.fmtMoney(reward);
+    if (g.logEvent) g.logEvent({ tag: '公司', title: msg, desc: '线网达到 ' + have + ' 站（验收目标 ' + need + '），解锁资格 +1' });
+    if (g.emit) g.emit('toast', { kind: 'good', text: msg });
+    return { ok: true, mapId: g.mapId, reward: reward, pool: co.pool, need: need, have: have };
   };
 
   Company.all = function () {
@@ -201,6 +298,7 @@
       version: 1,
       starterMapId: homeMapId,
       unlocked: STARTERS.concat(homeMapId ? [homeMapId] : []).filter(function (v, i, a) { return a.indexOf(v) === i; }),
+      accepted: {},
       legacy: false,
       bankrupt: false,
       tutorialDone: false,
@@ -333,6 +431,8 @@
               const ga = CM.Game.restore(payload);
               const label = '正在结算 ' + ((CM.MAPS[b.mapId] && CM.MAPS[b.mapId].name) || b.mapId);
               return runJump(ga, months, label).then(function () {
+                // 后台分部补结算完成时同步做验收检查：站数达标就发验收奖金、解锁资格 +1。
+                try { if (Company.checkAcceptance) Company.checkAcceptance(ga); } catch (eAcc) { console.warn('分部验收检查失败：' + b.mapId, eAcc); }
                 return CM.Save.save(ga, 'auto', { slotId: b.slotId, label: '自动存档' }).then(function (saved) {
                   if (!saved || !saved.ok) throw new Error((saved && saved.error) || '分部存档写回失败');
                   CM.useMap(activeMap);
@@ -389,7 +489,7 @@
     return camp.unlocked.indexOf(mapId) >= 0;
   };
 
-  /* 地图是否可以开始：自由模式永远可以；经营挑战必须已解锁。
+  /* 地图是否可以开始：自由模式永远可以；经营挑战必须已解锁或有解锁资格。
    * 没有公司时只允许入门图温州，用来创建战役。 */
   Company.canStartMap = function (c, mapId, mode) {
     const mp = CM.MAPS && CM.MAPS[mapId];
@@ -398,7 +498,9 @@
     if (!c) return STARTERS.indexOf(mapId) >= 0;
     const camp = Company.campaignOf(c);
     if (!camp || camp.legacy) return true;
-    return camp.unlocked.indexOf(mapId) >= 0 || STARTERS.indexOf(mapId) >= 0;
+    if (camp.unlocked.indexOf(mapId) >= 0 || STARTERS.indexOf(mapId) >= 0) return true;
+    // 未解锁城市：门槛是「解锁资格」（分部验收 + 第一份合同），不是钱。
+    return Company.canOpenMore(c);
   };
 
   /* 战役级破产：所有已解锁地图都已有分部且全部停运，公司池又低于最低救援额。
@@ -413,6 +515,8 @@
     return (c.pool || 0) < 20000;
   };
 
+  /* 解锁新城市：门槛是「解锁资格」（分部验收 + 第一份合同），
+   * 公司池只付一次性开通费（0.5~1.6 亿）。 */
   Company.unlockMap = function (c, mapId) {
     const co = Company.fresh(c);
     if (!co) return { ok: false, error: '公司不存在' };
@@ -422,15 +526,19 @@
       return { ok: false, error: '这张地图不能解锁' };
     }
     if (camp.unlocked.indexOf(mapId) >= 0) return { ok: false, error: '这座城市已经解锁' };
+    if (!Company.canOpenMore(co)) {
+      return { ok: false, error: '解锁资格不足：先完成第一份合同，或把已进驻城市建到验收目标（已验收 ' + Company.acceptedCount(co) + ' 个）' };
+    }
     const fee = Company.unlockFee(mapId);
-    if ((co.pool || 0) < fee) return { ok: false, error: '公司池不足（解锁费 ' + U.fmtMoney(fee) + '）' };
+    if ((co.pool || 0) < fee) return { ok: false, error: '公司池不足（开通费 ' + U.fmtMoney(fee) + '）' };
     co.pool = (co.pool || 0) - fee;
-    // 必须保留 campaign 的 ym / contract / tutorialDone，否则解锁一次新城就会把
-    // 公司月份、第一份合同和教程完成状态全部重置。
+    // 必须保留 campaign 的 ym / contract / accepted / tutorialDone，否则解锁一次新城
+    // 就会把公司月份、合同、验收记录和教程完成状态全部重置。
     co.campaign = Object.assign({}, camp, {
       version: camp.version || 1,
       starterMapId: camp.starterMapId || co.home || null,
       unlocked: (camp.unlocked || []).concat([mapId]),
+      accepted: camp.accepted || {},
       legacy: false,
       bankrupt: false,
       createdAt: camp.createdAt || nowIso(),
@@ -577,12 +685,16 @@
     if (!camp || camp.legacy) return { ok: false, error: '旧公司不参与战役开城' };
     const fee = Company.isUnlocked(co, mapId) ? 0 : Company.unlockFee(mapId);
     const start = opts && typeof opts.startFunds === 'number' ? Math.max(0, Math.round(opts.startFunds)) : Company.startFundsFor(mapId);
-    const need = fee + start;
-    if ((co.pool || 0) < need) return { ok: false, error: '公司池不足（需要 ' + U.fmtMoney(need) + '）' };
-    co.pool = (co.pool || 0) - need;
+    // 未解锁城市：先过「解锁资格」门槛，公司池只付开通费；启动金是市政府资本金，不走池。
+    if (fee > 0 && !Company.canStartMap(co, mapId, 'challenge')) {
+      return { ok: false, error: '解锁资格不足：先完成第一份合同，或把已进驻城市建到验收目标（已验收 ' + Company.acceptedCount(co) + ' 个）' };
+    }
+    if ((co.pool || 0) < fee) return { ok: false, error: '公司池不足（开通费 ' + U.fmtMoney(fee) + '）' };
+    co.pool = (co.pool || 0) - fee;
     if (fee > 0) {
       co.campaign = Object.assign({}, camp, {
         unlocked: (camp.unlocked || []).concat([mapId]),
+        accepted: camp.accepted || {},
         legacy: false,
         bankrupt: false,
       });
@@ -689,15 +801,14 @@
     if (!b) return null;
     if (g.econ.isFree()) return null;
 
-    /* 30% 分成口径：上月已封账的**经营现金流**，不是会计净利。
-     * - 不含财政拨款：地方补贴留在本地；
-     * - 不含建设/改造支出：扩张期不把公司池抽干；
-     * - 保留 2 个月运营成本作为本地安全垫。
-     * 这样既能给公司池稳定收入，也不会把正在扩张的分部抽成负现金。 */
+    /* 20% 分成口径：上月已封账的**净结余**（拨款 + 票款 + 奖励 − 运营 − 利息 − 本金 − 罚款）。
+     * 旧口径只算经营现金流，但本模型的票款天然覆盖不了运营（补贴在拨款里），
+     * 上缴会恒为 0。拨款结余纳入后，上缴随城市经营水平真实浮动；
+     * 仍保留 2 个月运营成本作为本地安全垫，不会把扩张中的分部抽干。 */
     const last = g.econ.lastClosed ? g.econ.lastClosed() : null;
     let net = 0;
     if (last) {
-      net = (last.fare || 0) + (last.reward || 0)
+      net = (last.grant || 0) + (last.fare || 0) + (last.reward || 0)
         - (last.ops || 0) - (last.interest || 0)
         - (last.principal || 0) - (last.penalty || 0);
     }
@@ -737,14 +848,14 @@
     if (!last) {
       return { net: 0, want: 0, can: 0, reserve: 0, reason: '本月还没有完整账期，月结后才计算。' };
     }
-    const net = (last.fare || 0) + (last.reward || 0)
+    const net = (last.grant || 0) + (last.fare || 0) + (last.reward || 0)
       - (last.ops || 0) - (last.interest || 0)
       - (last.principal || 0) - (last.penalty || 0);
     const reserve = 2 * (last.ops || 0);
     const want = Math.max(0, net * REMIT_RATE);
     const can = Math.max(0, Math.min(want, g.econ.funds - reserve));
-    let reason = '按上月经营现金流的 30% 预计上缴。';
-    if (net <= 0) reason = '上月经营现金流为负（票款 + 奖励 − 运营 − 利息 − 本金 − 罚款），公司池本次不会增加。';
+    let reason = '按上月净结余（含拨款结余）的 ' + Math.round(REMIT_RATE * 100) + '% 预计上缴。';
+    if (net <= 0) reason = '上月净结余为负（拨款 + 票款 + 奖励 − 运营 − 利息 − 本金 − 罚款），公司池本次不会增加。';
     else if (can <= 0.01) reason = '上月有正经营现金流，但本地现金低于 2 个月运营成本，暂不上缴。';
     return { net: net, want: want, can: can, reserve: reserve, reason: reason };
   };

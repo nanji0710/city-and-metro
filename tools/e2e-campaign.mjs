@@ -147,18 +147,53 @@ const panel = jp(await evalJs(`(async () => {
     atlasEntry: pageText.indexOf('打开全国战略地图') >= 0 });
 })()`))
 check('公司面板出现地图解锁列表', panel.rows === 53 && panel.hasAomen === true && panel.poolText === true, panel)
-check('5 亿公司池不足以解锁 8 亿城市并支付启动金', panel.btn.indexOf('不够') >= 0, panel)
+check('第一份合同完成前新城按钮为未达标（解锁资格门槛）', panel.btn.indexOf('未达标') >= 0, panel)
 check('公司面板显示月结预计上缴', panel.preview === true, panel)
 check('公司面板显示第一份公司合同', panel.contract === true, panel)
 check('公司面板显示全公司月报', panel.report === true, panel)
 check('公司面板提供公司记录备份', panel.backup === true, panel)
 check('公司面板提供全国地图统一入口', panel.atlasEntry === true, panel)
 
-// 4. 补足公司池后解锁鄂州
+// 4. 完成第一份合同（+3 站）→ 拿到解锁资格；再补 4 站触发温州验收（奖金进池、资格再 +1）
+const contract = jp(await evalJs(`(async () => {
+  const g = CM.game;
+  if (!g || g.mapId !== 'wenzhou') return JSON.stringify({ err: 'NOT-WENZHOU' });
+  const M = CM.Metro;
+  const lineId = Object.keys(g.net.lines)[0];
+  const addStations = (n) => {
+    const er = g.edit((net) => {
+      for (let k = 0; k < n; k++) {
+        let near = null, nd = -1;
+        for (const sid0 in net.stations) { const s = net.stations[sid0]; const d = CM.U.dist(64, 64, s.x, s.y); if (d > nd) { nd = d; near = sid0; } }
+        const sid = M.addStation(net, 60 + k * 3, 58, { size: 'S', type: 'surface' }, g.city);
+        const r = M.addSegment(net, lineId, near, sid, [], 'surface');
+        if (r && r.error) throw new Error(r.error);
+      }
+    });
+    if (er && er.error) return er.error;
+    g.net = JSON.parse(JSON.stringify(g.draft.net)); g.draft = null;
+    return null;
+  };
+  // 合同：4 → 7 站
+  const e1 = addStations(3);
+  if (e1) return JSON.stringify({ err: 'EDIT1 ' + e1 });
+  const cr = CM.Company.checkStarterContract(g);
+  // 温州验收：7 → 11 站（开局 4 + Δ7，36 站 × 20%）
+  const e2 = addStations(4);
+  if (e2) return JSON.stringify({ err: 'EDIT2 ' + e2 });
+  const acc = CM.Company.checkAcceptance(g);
+  const co = CM.Company.active();
+  return JSON.stringify({ contract: cr, accept: acc, pool: co.pool, quota: CM.Company.openQuota(co),
+    canEzhou: CM.Company.canStartMap(co, 'ezhou', 'challenge'),
+    need: CM.Company.acceptNeed('wenzhou'), stations: Object.keys(g.net.stations).length });
+})()`))
+check('第一份合同完成奖励 7 亿进池', contract.contract && contract.contract.ok === true && contract.contract.reward === 70000, contract)
+check('温州线网达 11 站触发验收（奖金 3.2 亿进池）', contract.accept && contract.accept.ok === true &&
+  contract.accept.reward === 32000 && contract.accept.have === 11 && contract.accept.need === 11, contract)
+check('验收后解锁资格为 2', contract.quota === 2 && contract.canEzhou === true, contract)
+
+// 4b. 从公司面板解锁鄂州：资格已够，公司池只付 0.5 亿开通费
 const unlocked = jp(await evalJs(`(async () => {
-  const co0 = CM.Company.active();
-  co0.pool = 100000;
-  CM.Company.save(co0);
   try { CM.ui.closePanel(true); } catch (e) {}
   CM.ui.openTop('company');
   await new Promise(r => setTimeout(r, 700));
@@ -172,14 +207,14 @@ const unlocked = jp(await evalJs(`(async () => {
   okBtn.click();
   await new Promise(r => setTimeout(r, 700));
   const co = CM.Company.active();
-  return JSON.stringify({ fee: txt.indexOf('公司池') >= 0 && txt.indexOf('解锁') >= 0, pool: co.pool,
+  return JSON.stringify({ fee: txt.indexOf('开通费') >= 0, capital: txt.indexOf('市政府') >= 0, pool: co.pool,
     unlocked: CM.Company.isUnlocked(co, 'ezhou'), can: CM.Company.canStartMap(co, 'ezhou', 'challenge') });
 })()`))
-check('解锁确认框说明从公司池扣费', unlocked.fee === true, unlocked)
-check('解锁后公司池扣到 2 亿', unlocked.pool === 20000, unlocked)
+check('解锁确认框说明开通费与市政府启动金', unlocked.fee === true && unlocked.capital === true, unlocked)
+check('解锁后公司池只扣 0.5 亿开通费（合同+验收后为 14.7 亿）', unlocked.pool === 147000, unlocked)
 check('鄂州变为已解锁', unlocked.unlocked === true && unlocked.can === true, unlocked)
 
-// 5. 从公司面板开始鄂州；启动金由公司池支付
+// 5. 从公司面板开始鄂州；启动金 6 亿由市政府资本金注入（不从池扣）
 const started2 = jp(await evalJs(`(async () => {
   const rows = Array.from(document.querySelectorAll('.co-jrow'));
   const ezhou = rows.find(r => r.dataset.map === 'ezhou');
@@ -196,11 +231,12 @@ const started2 = jp(await evalJs(`(async () => {
   await new Promise(r => setTimeout(r, 1500));
   const co = CM.Company.active();
   return JSON.stringify({ map: g.mapId, funds: Math.round(g.econ.funds), company: g.company || null,
-    branches: co.branches.map(b => b.mapId), pool: co.pool });
+    branches: co.branches.map(b => b.mapId), pool: co.pool,
+    startFunds: CM.Company.startFundsFor('ezhou') });
 })()`))
 check('解锁后可从公司面板开始新城', started2.map === 'ezhou', started2)
 check('新城仍带公司身份', !!(started2.company && started2.company.id), started2)
-check('新图启动金来自公司池 2 亿', started2.funds === 20000 && started2.pool === 0, started2)
+check('启动金 6 亿由市政府注入（池不扣）', started2.funds === 60000 && started2.pool === 147000, started2)
 check('新城登记为第二分部', Array.isArray(started2.branches) && started2.branches.length === 2, started2)
 
 // 5a. B 分部推进两个月，A 分部必须真实补结算到同一公司月份
@@ -240,7 +276,7 @@ const replay = jp(await evalJs(`(async () => {
   await new Promise(r => setTimeout(r, 800));
   return JSON.stringify({ funds: Math.round(g.econ.funds), expect: expect, pool: CM.Company.poolOf(CM.Company.active()) });
 })()`))
-check('已有分部重开不会白拿 30 亿', replay.funds === replay.expect && replay.funds < 300000 && replay.pool === 0, replay)
+check('已有分部重开不会白拿 30 亿', replay.funds === replay.expect && replay.funds < 300000, replay)
 
 // 6. 注资：人为把公司池补到 3 亿，紧急救援额度 2 亿
 const injected = jp(await evalJs(`(async () => {

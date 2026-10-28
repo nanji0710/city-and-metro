@@ -294,7 +294,7 @@
   function money(v) { return U.fmtMoney(v || 0); }
   function cardStatus(id) {
     const co = companyOf(), b = branchOf(co, id), st = stateOf(id), mp = cityMeta(id) || {};
-    // 已解锁的城市再进城只花启动金，不再收解锁费；只有 locked 才把解锁费算进成本。
+    // 已解锁的城市再进城由市政府注入启动金；只有 locked 才把开通费算进成本。
     const fee = co && st === 'locked' ? CM.Company.unlockFee(id) : 0;
     const start = co ? CM.Company.startFundsFor(id) : 0;
     const current = CM.game && CM.game.mapId === id;
@@ -310,12 +310,16 @@
     if (b) {
       rows.push(['分部现金', money(b.funds)]);
       rows.push(['上次上缴', b.lastRemit ? b.lastRemit.y + '年' + b.lastRemit.m + '月 · ' + money(b.lastRemit.amount) : '—']);
+      // 验收进度：当前局知道实际站数；其它分部只显示目标（后台月结时会自动补验收）。
+      const acc = CM.Company.acceptState(co, id, current ? Object.keys(CM.game.net.stations).length : null);
+      if (acc.done) rows.push(['验收', '已通过 · 奖金 ' + money(acc.rec.reward)]);
+      else rows.push(['验收目标', (acc.have != null ? acc.have + ' / ' : '达标 ') + acc.need + ' 站']);
     } else if (st === 'locked') {
-      rows.push(['解锁费', money(fee)]);
-      rows.push(['启动金', money(start)]);
-      if (co) rows.push(['合计', money(fee + start)]);
+      rows.push(['开通费', money(fee)]);
+      rows.push(['启动金', money(start) + '（市政府资本金）']);
+      if (co) rows.push(['验收目标', '线网达 ' + CM.Company.acceptNeed(id) + ' 站']);
     } else if (st === 'unlocked') {
-      rows.push(['开城启动金', money(start)]);
+      rows.push(['开城启动金', money(start) + '（市政府资本金）']);
     } else if (st === 'starter') {
       rows.push(['第一份合同', '新增 3 站 → 公司池 +7 亿']);
     }
@@ -326,8 +330,16 @@
     } else if (current) { button = '返回当前城市'; tip = '关闭全国地图，继续经营当前城市'; }
     else if (st === 'current') { button = '返回城市'; }
     else if (b) { button = b.failed ? '读取存档' : '切换到这座城市'; tip = b.slotId ? '载入该分部存档' : '该分部还没有存档'; disabled = !b.slotId && !b.failed; }
-    else if (st === 'unlocked') { button = '进入城市'; tip = '从公司池支付启动金 ' + money(start); disabled = (co.pool || 0) < start; }
-    else { button = '解锁并进入'; tip = '解锁 ' + money(fee) + ' + 启动金 ' + money(start); disabled = (co.pool || 0) < fee + start; }
+    else if (st === 'unlocked') { button = '进入城市'; tip = '启动金 ' + money(start) + ' 由市政府资本金注入，不从公司池扣'; }
+    else if (!CM.Company.canStartMap(co, id, 'challenge')) {
+      button = '解锁并进入';
+      tip = '解锁资格不足：完成第一份合同，或把已进驻城市建到验收目标（已验收 ' + CM.Company.acceptedCount(co) + ' 个）';
+      disabled = true;
+    } else if ((co.pool || 0) < fee) {
+      button = '解锁并进入'; tip = '公司池不足开通费 ' + money(fee) + '（可用 ' + money(co.pool || 0) + '）'; disabled = true;
+    } else {
+      button = '解锁并进入'; tip = '开通费 ' + money(fee) + ' 从公司池支付；启动金由市政府注入';
+    }
     return { rows, button, tip, disabled, start, fee, b, co, current };
   }
 
@@ -830,10 +842,13 @@
   A._newBranch = function (id) {
     const co = companyOf(); if (!co) return A._toast('还没有公司', 'warn');
     const mp = cityMeta(id) || {}, start = CM.Company.startFundsFor(id);
-    const fee = CM.Company.isUnlocked(co, id) ? 0 : CM.Company.unlockFee(id);
-    const need = fee + start;
-    if ((co.pool || 0) < need) {
-      return A._toast('公司池不足：解锁 + 启动金共需 ' + money(need) + '（可用 ' + money(co.pool || 0) + '）', 'warn');
+    const locked = !CM.Company.isUnlocked(co, id);
+    const fee = locked ? CM.Company.unlockFee(id) : 0;
+    if (locked && !CM.Company.canStartMap(co, id, 'challenge')) {
+      return A._toast('解锁资格不足：完成第一份合同，或把已进驻城市建到验收目标（已验收 ' + CM.Company.acceptedCount(co) + ' 个）', 'warn');
+    }
+    if ((co.pool || 0) < fee) {
+      return A._toast('公司池不足：开通费需 ' + money(fee) + '（可用 ' + money(co.pool || 0) + '）', 'warn');
     }
     // 先预加载底图；底图失败时不扣池、不登记分部。
     const preload = CM.loadGeo ? CM.loadGeo(id) : Promise.resolve();
@@ -887,9 +902,10 @@
       return;
     }
     if (st === 'unlocked') return A._newBranch(id);
-    const fee = CM.Company.unlockFee(id), start = CM.Company.startFundsFor(id);
-    if ((co.pool || 0) < fee + start) return A._toast('公司池不足：解锁 + 启动金共需 ' + money(fee + start) + '（可用 ' + money(co.pool || 0) + '）', 'warn');
-    // 解锁和开城合并为一次事务：城市创建成功后才扣费/登记。
+    const fee = CM.Company.unlockFee(id);
+    if (!CM.Company.canStartMap(co, id, 'challenge')) return A._toast('解锁资格不足：先完成分部验收（已验收 ' + CM.Company.acceptedCount(co) + ' 个）', 'warn');
+    if ((co.pool || 0) < fee) return A._toast('公司池不足：开通费需 ' + money(fee) + '（可用 ' + money(co.pool || 0) + '）', 'warn');
+    // 解锁和开城合并为一次事务：城市创建成功后才扣开通费/登记；启动金由市政府注入。
     A._newBranch(id);
   };
 

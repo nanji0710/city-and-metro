@@ -655,6 +655,7 @@ function emit(b) {
     `    region: ${JSON.stringify(m.region)},`,
     `    tagline: ${JSON.stringify(`${m.lines} 条线、${m.stations} 座站的现状网络，等你重排`)} ,`,
     `    difficulty: ${TIER_DIFF[m.tier]},`,
+    `    fullNet: {"lines":${m.lines},"stations":${m.stations},"km":${Math.round(m.lengthKm)}},`,
     `    tags: ${JSON.stringify([TIER_NAME[m.tier], `${m.stations} 站`, `${Math.round(m.lengthKm)} km`])},`,
     `    intro: ${JSON.stringify(`${START_YEAR} 年的${b.city}已经有 ${m.lines} 条地铁线、${m.stations} 座车站。你要在这张真实的城市底图上重新规划线路、加密网络、控制成本。`)},`,
     `    features: ${JSON.stringify([

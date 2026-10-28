@@ -103,7 +103,7 @@
     return wrap;
   }
 
-  /* 战役地图列表：已解锁可开始，未解锁显示公司池解锁费。 */
+  /* 战役地图列表：已解锁可开始（启动金由市政府注入），未解锁需「解锁资格」+ 开通费。 */
   function campaignMapList(self, co) {
     const wrap = h('div', { class: 'co-join' });
     const camp = CO().campaignOf(co) || { unlocked: [] };
@@ -115,6 +115,8 @@
       rows.push({
         id: id, mp: mp, fee: CO().unlockFee(id), start: CO().startFundsFor(id),
         unlocked: CO().isUnlocked(co, id),
+        eligible: CO().canStartMap(co, id, 'challenge'),
+        need: CO().acceptNeed(id),
       });
     }
     rows.sort(function (a, b) {
@@ -126,29 +128,30 @@
     }
     for (const r of rows) {
       const pool = co.pool || 0;
-      // 解锁只是购买许可；真正开城还要从公司池划出启动金，两个门槛都要满足。
-      const need = r.unlocked ? r.start : r.fee + r.start;
-      const short = pool < need;
+      // 未解锁城市：资格是「验收数 + 第一份合同」；钱只出小额开通费。
+      const short = r.unlocked ? false : (!r.eligible || pool < r.fee);
+      const tip = r.unlocked ? '启动金由市政府资本金注入，开一局新的经营挑战'
+        : (!r.eligible ? '解锁资格不足：完成第一份合同，或把已进驻城市建到验收目标（已验收 ' + CO().acceptedCount(co) + ' 个）'
+          : (pool < r.fee ? '公司池还差 ' + U.fmtMoney(r.fee - pool) : '支付开通费 ' + U.fmtMoney(r.fee) + ' 解锁；启动金由市政府注入'));
       const row = h('div', { class: 'co-jrow' + (short ? ' short' : ''), 'data-map': r.id },
-        h('span', { class: 'dot', style: { background: r.unlocked ? 'var(--good)' : 'var(--faint)' } }),
+        h('span', { class: 'dot', style: { background: r.unlocked ? 'var(--good)' : (r.eligible ? 'var(--accent)' : 'var(--faint)') } }),
         h('div', { class: 'grow' },
           h('b', null, r.mp.name || r.id),
           h('div', { class: 'tiny muted' },
             (CO().STARTER_META[r.id] ? (CO().STARTER_META[r.id].tier === 'advanced' ? '进阶 · ' : '入门 · ') + CO().STARTER_META[r.id].trait + ' · ' : '') +
             (r.mp.trait ? r.mp.trait.name + ' · ' : '') +
             (r.mp.region || '') + ' · ' + (r.mp.tags || []).join(' · ') +
-            (r.unlocked ? ' · 公司启动金 ' + U.fmtMoney(r.start) : ' · 解锁 ' + U.fmtMoney(r.fee) + ' + 启动金 ' + U.fmtMoney(r.start)))),
-        h('span', { class: 'co-fee num' }, r.unlocked ? '启动金 ' + U.fmtMoney(r.start) : U.fmtMoney(need)),
+            (r.unlocked ? ' · 启动金 ' + U.fmtMoney(r.start) : ' · 开通费 ' + U.fmtMoney(r.fee) + ' · 验收目标 ' + r.need + ' 站'))),
+        h('span', { class: 'co-fee num' }, r.unlocked ? '启动金 ' + U.fmtMoney(r.start) : U.fmtMoney(r.fee)),
         h('button', {
           class: 'btn sm' + (!short ? ' primary' : ''),
           disabled: short ? true : null,
-          'data-tip': short ? ('公司池还差 ' + U.fmtMoney(need - pool)) :
-            (r.unlocked ? '从公司池支付启动金，开一局新的经营挑战' : '从公司池支付解锁费；启动金在开城时支付'),
+          'data-tip': tip,
           onclick: function () {
             if (r.unlocked) self.companyStartBranch(r.id);
             else self.companyUnlock(r.id);
           },
-        }, r.unlocked ? (short ? '不够' : '开始') : (short ? '不够' : '解锁')));
+        }, r.unlocked ? '开始' : (short ? '未达标' : '解锁')));
       wrap.appendChild(row);
     }
     return wrap;
@@ -218,16 +221,16 @@
     const cards = h('div', { class: 'fin-cards' });
     cards.append(
       this.stat('公司金库', U.fmtMoney(treasury), '各分部现金 + 公司自有资金', 'good', 'bank'),
-      this.stat('公司池', U.fmtMoney(CO().poolOf(co)), '解锁地图与向分部注资', 'muted', 'bank'),
+      this.stat('公司池', U.fmtMoney(CO().poolOf(co)), '开通新城与向分部注资', 'muted', 'bank'),
       this.stat('分部', co.branches.length + ' 座', co.branches.length > 1 ? '可以同时经营多座城市' : '再进驻一座就能分散风险', 'muted', 'globe'),
-      this.stat('上缴比例', Math.round(CO().REMIT_RATE * 100) + '%', '上月经营现金流的 30% 进公司池', 'muted', 'percent'));
+      this.stat('上缴比例', Math.round(CO().REMIT_RATE * 100) + '%', '上月净结余（含拨款结余）的 20% 进公司池', 'muted', 'percent'));
     el.appendChild(cards);
 
     el.appendChild(this.callout('info', 'info',
       '每家分部都是一局完整的地图，各存各的档。金库 = 各分部账面现金 + 公司自有资金（' +
-      U.fmtMoney(CO().poolOf(co)) + '）；分部每月按上月经营现金流的 ' + Math.round(CO().REMIT_RATE * 100) + '% 上缴进公司池。' +
-      (isCampaign ? '解锁新地图从公司池扣费；已解锁城市可以随时开始新的经营挑战。'
-        : '旧公司保留全地图权限；新战役只开放入门图温州，其余 53 城靠公司池解锁。')));
+      U.fmtMoney(CO().poolOf(co)) + '）；分部每月按上月净结余（含拨款结余）的 ' + Math.round(CO().REMIT_RATE * 100) + '% 上缴进公司池。' +
+      (isCampaign ? '解锁新城市先要有「解锁资格」（分部验收 + 第一份合同），开通费只占小额；启动金由市政府资本金注入。'
+        : '旧公司保留全地图权限；新战役只开放入门图温州，其余城市靠验收解锁。')));
 
     // 公司记录备份：只导出公司账本，城市存档仍走存档管理。
     const file = h('input', {
@@ -282,7 +285,7 @@
     const report = h('div', { class: 'co-sec co-report' },
       h('div', { class: 'co-sh' },
         h('b', null, '全公司月报（近 12 个月）'),
-        h('span', { class: 'tiny muted' }, clock ? '公司月份 ' + clock.y + '年' + clock.m + '月 · 上缴 = 经营现金流 × ' + Math.round(CO().REMIT_RATE * 100) + '%' : '旧公司不使用统一战役月份')),
+        h('span', { class: 'tiny muted' }, clock ? '公司月份 ' + clock.y + '年' + clock.m + '月 · 上缴 = 净结余（含拨款结余）× ' + Math.round(CO().REMIT_RATE * 100) + '%' : '旧公司不使用统一战役月份')),
       h('div', { class: 'co-report-table' },
         h('div', { class: 'cr head' },
           h('span', null, '分部'), h('span', null, '上次结算'),
@@ -319,7 +322,7 @@
       if (rp) {
         el.appendChild(this.callout(rp.can > 0 ? 'good' : 'warn', 'bank',
           '下次月结预计上缴 ' + U.fmtMoney(rp.can) + '。' + rp.reason +
-          (rp.net > 0 ? ' 上月经营现金流 ' + U.fmtMoney(rp.net) + '，保留 2 个月运营现金 ' + U.fmtMoney(rp.reserve) + '。' : '')));
+          (rp.net > 0 ? ' 上月净结余 ' + U.fmtMoney(rp.net) + '，保留 2 个月运营现金 ' + U.fmtMoney(rp.reserve) + '。' : '')));
       }
     }
 
@@ -350,10 +353,10 @@
       return h('div', { class: 'note' },
         '每座城市的账是完全独立的：票价、拨款、债券、破产判定都只看那一座城市自己的数据。',
         h('br'),
-        '分部每月把上月经营现金流的 ' + Math.round(CO().REMIT_RATE * 100) + '% 划进公司池，70% 留在本地；本地现金不能跨城使用。',
+        '分部每月把上月净结余（含拨款结余）的 ' + Math.round(CO().REMIT_RATE * 100) + '% 划进公司池，80% 留在本地；本地现金不能跨城使用。',
         h('br'),
-        isCampaign ? '公司池可以解锁新地图，也可以注资当前分部；解锁费 8/10/15/20 亿，按城市档位。'
-          : '旧公司保留全地图权限；新战役只开放入门图温州，其余 53 城靠公司池解锁。',
+        isCampaign ? '解锁新城市的门槛是「分部验收」：把线网建到验收目标（开局规模 + 20% 完整线网，6~20 站），总部发验收奖金并 +1 解锁资格；公司池只付 0.5~1.6 亿开通费，启动金由市政府注入。'
+          : '旧公司保留全地图权限；新战役只开放入门图温州，其余城市靠验收解锁。',
         h('br'),
         '一座城市破产不会拖垮公司，但那个分部就停运了；公司池和本地账都空了，才是真正的战役破产。',
         h('br'),
@@ -396,7 +399,7 @@
       }, false, 'globe');
   };
 
-  /* 战役：进入已解锁城市，开一局新的经营挑战。启动金由公司池支付。 */
+  /* 战役：进入已解锁城市，开一局新的经营挑战。启动金由市政府资本金注入。 */
   UI.prototype.companyStartBranch = function (mapId) {
     const self = this;
     const co = CO().active();
@@ -406,14 +409,10 @@
     const mp = mapOf(mapId);
     if (!mp) { this.toast('地图不存在', 'bad'); return; }
     const start = CO().startFundsFor(mapId);
-    if ((co.pool || 0) < start) {
-      this.toast('公司池不足：开城需要启动金 ' + U.fmtMoney(start) + '（可用 ' + U.fmtMoney(co.pool || 0) + '）', 'warn');
-      return;
-    }
     const g = this.g();
     this.confirm('开始 ' + (mp.name || mapId),
-      '从公司池划出 ' + U.fmtMoney(start) + ' 作为「' + (mp.name || mapId) +
-      '」的启动金；之后可随时向当前分部追加注资。', '开始经营', function () {
+      '市政府以资本金注入 ' + U.fmtMoney(start) + ' 作为「' + (mp.name || mapId) +
+      '」的启动金（不从公司池扣）；把线网建到验收目标还能给公司池挣验收奖金。', '开始经营', function () {
       // 统一走 Atlas 的开城事务：预加载底图 → 创建城市 → 成功后扣池/登记分部。
       if (CM.Atlas && CM.Atlas._newBranch) {
         CM.Atlas._newBranch(mapId);
@@ -445,19 +444,22 @@
     }, false, 'play');
   };
 
-  /* 战役：从公司池购买地图解锁。 */
+  /* 战役：支付开通费解锁新城市。门槛是「解锁资格」，钱只出小额开通费。 */
   UI.prototype.companyUnlock = function (mapId) {
     const co = CO().active();
     if (!co) { this.toast('还没有公司', 'warn'); return; }
     const mp = mapOf(mapId), fee = CO().unlockFee(mapId), start = CO().startFundsFor(mapId);
-    const total = fee + start;
-    if ((co.pool || 0) < total) {
-      this.toast('公司池不足：解锁 + 首笔启动金共需 ' + U.fmtMoney(total) + '（可用 ' + U.fmtMoney(co.pool || 0) + '）', 'warn');
+    if (!CO().canStartMap(co, mapId, 'challenge')) {
+      this.toast('解锁资格不足：完成第一份合同，或把已进驻城市建到验收目标（已验收 ' + CO().acceptedCount(co) + ' 个）', 'warn');
+      return;
+    }
+    if ((co.pool || 0) < fee) {
+      this.toast('公司池不足：开通费需 ' + U.fmtMoney(fee) + '（可用 ' + U.fmtMoney(co.pool || 0) + '）', 'warn');
       return;
     }
     this.confirm('解锁 ' + (mp ? mp.name : mapId),
-      '从公司池支付 ' + U.fmtMoney(fee) + ' 解锁「' + (mp ? mp.name : mapId) +
-      '」；开城时还需 ' + U.fmtMoney(start) + ' 启动金。解锁后永久可开始新的经营挑战。',
+      '从公司池支付开通费 ' + U.fmtMoney(fee) + '，取得「' + (mp ? mp.name : mapId) +
+      '」的经营权；开城时市政府注入 ' + U.fmtMoney(start) + ' 启动金。把线网建到验收目标（' + CO().acceptNeed(mapId) + ' 站）可获验收奖金并解锁下一城。',
       '确认解锁', function () {
         const r = CO().unlockMap(co, mapId);
         if (!r.ok) { this.toast(r.error || '解锁失败', 'bad'); return; }

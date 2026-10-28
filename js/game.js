@@ -362,6 +362,7 @@
     if (this.company && CM.Company) {
       CM.Company.remit(this, y, m);
       CM.Company.checkStarterContract(this);
+      CM.Company.checkAcceptance(this);
       const co = CM.Company.active();
       if (co) CM.Company.noteMonth(co, y, m);
       CM.Company.queueSettle(this);
