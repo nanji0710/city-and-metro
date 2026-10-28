@@ -202,6 +202,24 @@ kbd { font-family: inherit; font-size: 10px; padding: 0 5px; border-radius: 5px;
 #hudTop.lt1080 .pill.opt4, #hudTop.lt1080 .daypill .k { display: none; }
 #hudTop.lt960 .jumps, #hudTop.lt960 .pill .k { display: none; }
 #hudTop.lt820 .pill.opt5, #hudTop .pill.squeezed { display: none; }
+/* 整条顶栏的按需收纳（由 UI.fitHud 测量后设置，优先级从低到高）：城市统计 → +1月/+1年 → 目标胶囊 → 搜索 */
+#hudTop.x-stats .actions .act-stats { display: none; }
+#hudTop.x-jumps .jumps { display: none; }
+#hudTop.x-goal .goalpill { display: none; }
+#hudTop.x-search .actions .act-search { display: none; }
+#hudTop.x-brand .citybar .brand { display: none; }
+#hudTop.x-ring .daypill .dayring { display: none; }
+/* 窄屏紧凑化：内边距、栏间距与圆角一起收，给 800~900px 留出安全余量 */
+@media (max-width: 900px) {
+  #hudTop { left: 8px; right: 8px; gap: 6px; }
+  .cluster { padding: 4px; gap: 2px; }
+  .hbtn { width: 36px; }
+  .pill { padding: 4px 8px 4px 4px; }
+}
+/* 极窄（尚未换行）：装饰性的 LOGO 与日期环让位给资金与操作按钮 */
+@media (max-width: 820px) {
+  .citybar .brand, .daypill .dayring { display: none; }
+}
 
 /* ---------- 左侧：视图与图层 ---------- */
 #dock { top: 76px; left: 12px; width: 56px; padding: 7px; display: flex; flex-direction: column; gap: 3px; align-items: center; max-height: calc((100vh - 240px) / var(--uiz, 1)); overflow-y: auto; scrollbar-width: none; }
@@ -2042,7 +2060,8 @@ table.tbl-help td { white-space: normal; vertical-align: top; line-height: 1.55;
   .atlas-sp, .atlas-hbtn, .atlas-icobtn, .atlas-search, .atlas-dd, .atlas-clear, .atlas-opt, .atlas-sug-item { transition: none !important; }
 }
 
-.settle-progress { position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%); z-index: 5000; width: min(430px, calc(100vw - 36px)); padding: 12px 14px 11px; border: 1px solid rgba(160,190,220,.34); border-radius: 12px; background: rgba(15,24,37,.97); color: #e8f0f8; box-shadow: 0 14px 40px rgba(0,0,0,.45); pointer-events: none; }
+/* 结算进度条悬浮在建设工具栏上方（工具栏 bottom 16 + 高约 64），不能压在工具按钮上 */
+.settle-progress { position: fixed; left: 50%; bottom: 96px; transform: translateX(-50%); z-index: 5000; width: min(430px, calc(100vw - 36px)); padding: 12px 14px 11px; border: 1px solid rgba(160,190,220,.34); border-radius: 12px; background: rgba(15,24,37,.97); color: #e8f0f8; box-shadow: 0 14px 40px rgba(0,0,0,.45); pointer-events: none; }
 .settle-progress.hidden { display: none; }
 .settle-progress.done { border-color: rgba(47,209,191,.75); }
 .settle-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; font-size: 12px; }
@@ -2052,6 +2071,7 @@ table.tbl-help td { white-space: normal; vertical-align: top; line-height: 1.55;
 .settle-bar i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #2fd1bf, #77e6d9); transition: width .18s ease; }
 .settle-progress.done .settle-bar i { background: #2fd1bf; }
 .settle-note { font-size: 10px; color: #9fb2c6; }
+@media (max-width: 760px) { .settle-progress { bottom: calc(84px + env(safe-area-inset-bottom)); } }
 
 /* 月报在 338px 的侧栏里只有约 320px 可用：五列按内容定下限，
    金额列放得下「9,999 万元」，日期列放得下「2026年10月」，不再靠省略号硬挤。 */

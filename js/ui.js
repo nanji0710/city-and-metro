@@ -121,6 +121,8 @@
         hb('menu', 'menu', '菜单', function (e) { self.showMenu(e.currentTarget); })));
     // 窄屏（手机）顶栏只保留常用按钮：深浅模式与设置改在菜单中
     this.hbtns.theme.classList.add('wide-only'); this.hbtns.settings.classList.add('wide-only');
+    // 供整条顶栏的「按优先级收纳」使用：窗口不够宽时先收起统计与搜索
+    this.hbtns.stats.classList.add('act-stats'); this.hbtns.search.classList.add('act-search');
     // 左侧：视图（2D / 2.5D / 地下 / 线路图）与图层（一个按钮，弹出图层列表）
     const vb = function (id, icon, tip, key, onclick, cls) { const b = h('button', { class: 'dockbtn ' + (cls || 'view'), 'data-tip': tip, 'data-key': key || null, 'data-side': 'right', onclick: onclick }, ic(icon)); self.tbtns[id] = b; return b; };
     this.dock = h('aside', { id: 'dock', class: 'hud glass hidden' },
@@ -232,9 +234,40 @@
     for (const k in this.pills) this.pills[k].el.classList.remove('squeezed');
     const self = this; requestAnimationFrame(function () { self.fitHud(); if (self.dropdown && self.dropdown._place) self.dropdown._place(); });
   };
-  // 指标栏放不下时，按优先级从低到高收起（经济 → 满意度 → 分担率 → 人口 → 拥堵）
+  /* 顶栏自适应（本作独有）：
+   * 1) 整条栏放不下时，按「最不重要 → 最重要」依次收起：城市统计 → +1月/+1年 → 合同目标胶囊 → 搜索；
+   * 2) 空间回来时反序恢复（每恢复一项都重新测量，避免抖动）；
+   * 3) 指标栏仍放不下时，再按 经济 → 满意度 → 分担率 → 人口 → 拥堵 收起。
+   * 只用 class 切换，不写内联样式；resize / 界面大小 / 每次 HUD 刷新都会走这里。 */
   UI.prototype.fitHud = function () {
-    const m = this.top.querySelector('.cluster.metrics'); if (!m || !m.clientWidth) return;
+    const top = this.top;
+    if (!top || top.classList.contains('hidden')) return;
+    const m = top.querySelector('.cluster.metrics');
+    // 「资金」胶囊永远不能被挤掉：指标栏至少保留它的宽度（不足就继续收次要控件）。
+    const money = this.pills && this.pills.money ? this.pills.money.el : null;
+    const needM = money ? Math.max(0, money.getBoundingClientRect().width) + 10 : 0;
+    const tight = function () {
+      return top.scrollWidth > top.clientWidth + 1 || (m && m.clientWidth > 0 && m.clientWidth < needM);
+    };
+    // 收敛式恢复：反复尝试把收起的控件放回，直到一轮下来没有任何变化。
+    // 单趟恢复会因为「先试的控件仍受后面控件占位影响」而误判，窗口从窄变宽时尤其明显。
+    const ORDER = ['x-stats', 'x-jumps', 'x-goal', 'x-search', 'x-brand', 'x-ring'];
+    let changed = true, guard = 0;
+    while (changed && guard++ < 8) {
+      changed = false;
+      for (const c of ORDER.slice().reverse()) {
+        if (!top.classList.contains(c)) continue;
+        top.classList.remove(c);
+        if (tight()) top.classList.add(c);   // 恢复后放不下就继续收着
+        else changed = true;
+      }
+    }
+    // 依然放不下：按优先级继续收起
+    for (const c of ORDER) {
+      if (!tight()) break;
+      top.classList.add(c);
+    }
+    if (!m || !m.clientWidth) return;
     for (const k of ['econ', 'sat', 'share', 'pop', 'cong']) {
       if (m.scrollWidth <= m.clientWidth + 1) break;
       const el = this.pills[k].el; if (getComputedStyle(el).display !== 'none') el.classList.add('squeezed');
