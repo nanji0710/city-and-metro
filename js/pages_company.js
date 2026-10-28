@@ -126,6 +126,7 @@
         unlocked: unlocked,
         eligible: CO().canStartMap(co, id, 'challenge'),
         threshold: CO().UNLOCK_COVER,
+        starterCover: CO().STARTER_UNLOCK_COVER,
       });
     }
     rows.sort(function (a, b) {
@@ -141,7 +142,7 @@
       const short = r.unlocked ? false : (!r.eligible || pool < r.fee);
       const tip = r.unlocked
         ? '启动金 ' + U.fmtMoney(r.start) + ' 已在解锁时结算，由市政府资本金注入'
-        : (!r.eligible ? '解锁资格不足：需要一座分部覆盖率 ≥ ' + U.fmtPct(r.threshold, 0) + '（把已进驻城市的线网建到 70% 以上）'
+        : (!r.eligible ? '解锁资格不足：需要一座分部达到覆盖率门槛（入门城 ' + U.fmtPct(r.starterCover, 0) + '，其余 ' + U.fmtPct(r.threshold, 0) + '）'
           : (pool < r.fee ? '公司池还差 ' + U.fmtMoney(r.fee - pool)
             : '开通费 ' + U.fmtMoney(r.fee) + '；启动金 ' + U.fmtMoney(r.start) +
               (r.bonus > 0 ? '（基础 ' + U.fmtMoney(r.base) + ' + 覆盖率加成 ' + U.fmtMoney(r.bonus) + '）' : '') +
@@ -154,7 +155,7 @@
             (CO().STARTER_META[r.id] ? (CO().STARTER_META[r.id].tier === 'advanced' ? '进阶 · ' : '入门 · ') + CO().STARTER_META[r.id].trait + ' · ' : '') +
             (r.mp.trait ? r.mp.trait.name + ' · ' : '') +
             (r.mp.region || '') + ' · ' + (r.mp.tags || []).join(' · ') +
-            (r.unlocked ? ' · 启动金 ' + U.fmtMoney(r.start) : ' · 开通费 ' + U.fmtMoney(r.fee) + ' · 需覆盖率 ≥ ' + U.fmtPct(r.threshold, 0)))),
+            (r.unlocked ? ' · 启动金 ' + U.fmtMoney(r.start) : ' · 开通费 ' + U.fmtMoney(r.fee) + ' · 需覆盖率 ≥ ' + U.fmtPct(r.starterCover, 0) + '/' + U.fmtPct(r.threshold, 0) + '（入门城/其余）'))),
         h('span', { class: 'co-fee num' }, r.unlocked ? '启动金 ' + U.fmtMoney(r.start) : U.fmtMoney(r.fee)),
         h('button', {
           class: 'btn sm' + (!short ? ' primary' : ''),
@@ -343,23 +344,25 @@
           el.appendChild(this.callout('info', 'flag', txt));
         }
       }
-      // 本城覆盖率与解锁机会：70% 才可解锁；每多 5% 新分部启动金 +1 亿；
+      // 本城覆盖率与解锁机会：入门城 50%、其余 70% 可解锁；70% 起每 +2% 启动金 +1 亿；
       // 解锁那一刻结算并锁定，之后再涨覆盖率不再改变已结算的启动金。
       if (g && CM.Company.acceptState) {
         const daily = g.model && g.model.daily;
         const acc = CO().acceptState(co, g.mapId, daily && daily.ready ? daily.coverage : null);
         const nm = (mapOf(g.mapId) || {}).name || g.mapId;
+        const starter = CO().isStarter(g.mapId);
         let txt;
         if (acc.usedBy) {
           txt = '「' + nm + '」覆盖率 ' + (acc.current != null ? U.fmtPct(acc.current, 1) : '—') +
             '：已用于解锁「' + ((mapOf(acc.usedBy) || {}).name || acc.usedBy) + '」，之后再涨覆盖率不再增加启动金。';
         } else if (acc.reachable) {
           txt = '「' + nm + '」覆盖率 ' + U.fmtPct(acc.current, 1) + ' ≥ ' + U.fmtPct(acc.threshold, 0) +
-            '：可解锁下一城，新分部启动金 +' + U.fmtMoney(acc.bonus) + '（每 +2% 加 1 亿）；' +
-            '在解锁那一刻结算，之后不再变化。';
+            (starter ? '（入门城门槛）' : '') +
+            '：可解锁下一城，新分部启动金 +' + U.fmtMoney(acc.bonus) +
+            '（从 ' + U.fmtPct(acc.bonusFrom, 0) + ' 起每 +2% 加 1 亿）；在解锁那一刻结算，之后不再变化。';
         } else {
           txt = '「' + nm + '」覆盖率 ' + (acc.current != null ? U.fmtPct(acc.current, 1) : '—') + ' / ' +
-            U.fmtPct(acc.threshold, 0) + '；再提升 ' +
+            U.fmtPct(acc.threshold, 0) + (starter ? '（入门城）' : '') + '；再提升 ' +
             (acc.current != null ? U.fmtPct(Math.max(0, acc.threshold - acc.current), 1) : '—') +
             ' 就能解锁下一城（当前预计启动金 +' + U.fmtMoney(acc.bonus) + '）。';
         }
@@ -502,7 +505,8 @@
     const liveCover = gd && gd.ready ? gd.coverage : null;
     const src = CO().pickUnlockSource(co, { sourceMapId: g && g.mapId, sourceCover: liveCover });
     if (!src) {
-      this.toast('解锁资格不足：需要一座分部覆盖率 ≥ ' + U.fmtPct(CO().UNLOCK_COVER, 0) + '（把本城线网建到 70% 以上）', 'warn');
+      this.toast('解锁资格不足：需要一座分部达到覆盖率门槛（入门城 ' +
+        U.fmtPct(CO().STARTER_UNLOCK_COVER, 0) + '，其余 ' + U.fmtPct(CO().UNLOCK_COVER, 0) + '）', 'warn');
       return;
     }
     if ((co.pool || 0) < fee) {

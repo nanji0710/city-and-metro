@@ -228,11 +228,11 @@
         const fee = CM.Company ? CM.Company.unlockFee(sel) : 0;
         const pool = co ? (co.pool || 0) : 0;
         const eligible = co && CM.Company.canStartMap(co, sel, 'challenge');
-        const cover = CM.Company ? U.fmtPct(CM.Company.UNLOCK_COVER, 0) : '70%';
+        const cover = CM.Company ? U.fmtPct(CM.Company.STARTER_UNLOCK_COVER, 0) + '/' + U.fmtPct(CM.Company.UNLOCK_COVER, 0) : '50%/70%';
         acts.appendChild(h('div', { class: 'note msel-lock-note' },
           ic('lock', 14), ' ' + (eligible
-            ? '已具备解锁资格 · 开通费 ' + U.fmtMoney(fee) + '（公司池 ' + U.fmtMoney(pool) + '）；启动金按解锁时来源分部覆盖率结算（每 +2% 加 1 亿）。'
-            : '未解锁 · 门槛是任一已进驻分部覆盖率 ≥ ' + cover + ' + 开通费 ' + U.fmtMoney(fee) + '；公司池 ' + U.fmtMoney(pool) +
+            ? '已具备解锁资格 · 开通费 ' + U.fmtMoney(fee) + '（公司池 ' + U.fmtMoney(pool) + '）；启动金按解锁时来源分部覆盖率结算（70% 起每 +2% 加 1 亿）。'
+            : '未解锁 · 门槛是任一已进驻分部覆盖率达到 ' + cover + '（入门城/其余）+ 开通费 ' + U.fmtMoney(fee) + '；公司池 ' + U.fmtMoney(pool) +
               (co ? '。进入任意已进驻城市后，在公司面板解锁。' : '。先选择一张战役图开始战役。'))));
       }
       if (mp.tutorial) acts.appendChild(modeBtn('free', 'play', 'b-teal', '开始教程', '从头开始 15 个引导任务（约 20 分钟，不限资金）', true));

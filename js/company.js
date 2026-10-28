@@ -56,6 +56,10 @@
    * - 加成在玩家**手动解锁的那一刻**按来源分部当时的覆盖率结算并写入公司记录，
    *   之后来源分部再涨覆盖率也不会改已解锁城市的启动金。 */
   const UNLOCK_COVER = 0.70;
+  /* 入门城（温州）单独放宽到 50%：首城从 4 站起步、人口又均匀铺满全图，
+   * 70% 需要 150+ 站，会把整个战役卡在第一城。其余城市仍按 70%。
+   * 启动金加成仍从 70% 起算，入门城不会因为门槛低而白拿加成。 */
+  const STARTER_UNLOCK_COVER = 0.50;
   const SEED_STEP = 0.02;
   const SEED_STEP_BONUS = 10000;   // 万元，即 1 亿
 
@@ -165,11 +169,14 @@
   Company.acceptDelta = acceptDelta;
   Company.coverTarget = coverTarget;
   Company.UNLOCK_COVER = UNLOCK_COVER;
+  Company.STARTER_UNLOCK_COVER = STARTER_UNLOCK_COVER;
   Company.SEED_STEP = SEED_STEP;
   Company.SEED_STEP_BONUS = SEED_STEP_BONUS;
   Company.seedBonus = seedBonus;
-  /* 兼容旧调用：解锁定为固定 70%，不再按每城基线浮动。 */
-  Company.acceptTarget = function () { return UNLOCK_COVER; };
+  /* 单座城市的解锁门槛：入门城 50%，其余 70%。 */
+  Company.unlockCoverFor = function (mapId) { return Company.isStarter(mapId) ? STARTER_UNLOCK_COVER : UNLOCK_COVER; };
+  /* 兼容旧调用（返回默认 70%）。 */
+  Company.acceptTarget = function (mapId) { return Company.unlockCoverFor(mapId); };
   Company.acceptBase = function (mapId) {
     const mp = CM.MAPS && CM.MAPS[mapId];
     return (mp && typeof mp.coverBase === 'number' && mp.coverBase > 0) ? mp.coverBase : 0.05;
@@ -306,10 +313,11 @@
     co.updatedAt = nowIso();
     const r = Company.commit(c0, co);
     if (!r.ok) return { ok: false, error: r.error };
-    if (prev == null && cur >= UNLOCK_COVER) {
+    const th = Company.unlockCoverFor(g.mapId);
+    if (prev == null && cur >= th) {
       const name = (CM.MAPS[g.mapId] && CM.MAPS[g.mapId].name) || g.mapId;
       const msg = '「' + name + '」覆盖率达到 ' + U.fmtPct(cur, 1) + '：现在可以解锁下一座城市';
-      if (g.logEvent) g.logEvent({ tag: '公司', title: msg, desc: '解锁门槛 ' + U.fmtPct(UNLOCK_COVER, 0) + '；覆盖率越高，新分部启动金越高（每 +5% 加 1 亿）' });
+      if (g.logEvent) g.logEvent({ tag: '公司', title: msg, desc: '本城解锁门槛 ' + U.fmtPct(th, 0) + '；启动金从 ' + U.fmtPct(UNLOCK_COVER, 0) + ' 起每 +2% 加 1 亿' });
       if (g.emit) g.emit('toast', { kind: 'good', text: msg });
     }
     return { ok: true, mapId: g.mapId, coverage: cur, bonus: seedBonus(cur) };
@@ -325,23 +333,26 @@
     for (const b of (co.branches || [])) {
       if (uses[b.mapId]) continue;
       const cov = Company.coverOf(co, b.mapId);
-      if (cov != null && cov + 1e-9 >= UNLOCK_COVER) out.push({ mapId: b.mapId, cover: cov, bonus: seedBonus(cov) });
+      const th = Company.unlockCoverFor(b.mapId);
+      if (cov != null && cov + 1e-9 >= th) out.push({ mapId: b.mapId, cover: cov, threshold: th, bonus: seedBonus(cov) });
     }
     out.sort(function (a, b) { return b.cover - a.cover; });
     return out;
   };
-  /* 覆盖率状态（UI 用）：当前值、门槛、是否达标、是否已用于解锁、加成与预计启动金。 */
+  /* 覆盖率状态（UI 用）：当前值、本城门槛、是否达标、是否已用于解锁、加成与预计启动金。 */
   Company.acceptState = function (c, mapId, curCover) {
     const co = Company.fresh(c) || c;
     const camp = Company.campaignOf(co);
     const cov = typeof curCover === 'number' ? curCover : Company.coverOf(co, mapId);
     const uses = (camp && camp.unlockUses) || {};
     const seeds = (camp && camp.seeds) || {};
+    const th = Company.unlockCoverFor(mapId);
     return {
       mapId: mapId,
       current: cov,
-      threshold: UNLOCK_COVER,
-      reachable: cov != null && cov + 1e-9 >= UNLOCK_COVER,
+      threshold: th,
+      bonusFrom: UNLOCK_COVER,
+      reachable: cov != null && cov + 1e-9 >= th,
       usedBy: uses[mapId] || null,
       bonus: seedBonus(cov),
       base: Company.acceptBase(mapId),
@@ -724,7 +735,8 @@
       }).sort(function (a, b) { return (b.cover || 0) - (a.cover || 0); })[0];
       return {
         ok: false,
-        error: '解锁资格不足：需要一座分部的覆盖率 ≥ ' + U.fmtPct(UNLOCK_COVER, 0) +
+        error: '解锁资格不足：需要一座分部达到覆盖率门槛（入门城 ' + U.fmtPct(STARTER_UNLOCK_COVER, 0) +
+          '，其余 ' + U.fmtPct(UNLOCK_COVER, 0) + '）' +
           (best && best.cover != null ? '（当前最高「' + ((CM.MAPS[best.mapId] && CM.MAPS[best.mapId].name) || best.mapId) + '」' + U.fmtPct(best.cover, 1) + '）' : ''),
       };
     }
@@ -892,7 +904,7 @@
     if (fee > 0) {
       src = pickSource(co, opts);
       if (!src) {
-        return { ok: false, error: '解锁资格不足：需要一座分部覆盖率 ≥ ' + U.fmtPct(UNLOCK_COVER, 0) };
+        return { ok: false, error: '解锁资格不足：需要一座分部达到覆盖率门槛（入门城 ' + U.fmtPct(STARTER_UNLOCK_COVER, 0) + '，其余 ' + U.fmtPct(UNLOCK_COVER, 0) + '）' };
       }
     }
     const start = opts && typeof opts.startFunds === 'number'

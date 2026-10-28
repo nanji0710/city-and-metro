@@ -188,13 +188,14 @@ const contract = jp(await evalJs(`(async () => {
   const st = CM.Company.acceptState(co, 'wenzhou', 0.76);
   return JSON.stringify({ contract: cr, accept: acc, pool: co.pool, quota: CM.Company.openQuota(co),
     canEzhou: CM.Company.canStartMap(co, 'ezhou', 'challenge'),
-    threshold: CM.Company.UNLOCK_COVER, coverage: 0.76,
+    threshold: st.threshold, otherThreshold: CM.Company.UNLOCK_COVER, coverage: 0.76,
     seedBonus: CM.Company.seedBonus(0.76), seedPreview: CM.Company.baseSeed('ezhou') + CM.Company.seedBonus(0.76),
     reachable: st.reachable, bonus: st.bonus });
 })()`))
 check('第一份合同完成奖励 7 亿进池', contract.contract && contract.contract.ok === true && contract.contract.reward === 70000, contract)
-check('覆盖率达到 70% 门槛才算有解锁机会', contract.accept && contract.accept.ok === true &&
-  contract.threshold === 0.7 && contract.reachable === true && contract.coverage >= contract.threshold, contract)
+check('入门城门槛 50%、其余 70%；76% 算达标', contract.accept && contract.accept.ok === true &&
+  contract.threshold === 0.5 && contract.otherThreshold === 0.7 &&
+  contract.reachable === true && contract.coverage >= contract.threshold, contract)
 check('每多 2% 覆盖率新分部启动金 +1 亿（76% → +3 亿）', contract.seedBonus === 30000 && contract.bonus === 30000, contract)
 check('解锁资格为 1（每座分部只能贡献一次解锁）', contract.quota === 1 && contract.canEzhou === true, contract)
 
@@ -320,11 +321,15 @@ const cover = jp(await evalJs(`(() => {
     };
   });
   return JSON.stringify({ rows: rows, threshold: CM.Company.UNLOCK_COVER,
-    b72: CM.Company.seedBonus(0.72), b70: CM.Company.seedBonus(0.70), b100: CM.Company.seedBonus(1.0),
+    starter: CM.Company.unlockCoverFor('wenzhou'), other: CM.Company.unlockCoverFor('ezhou'),
+    b52: CM.Company.seedBonus(0.52), b72: CM.Company.seedBonus(0.72),
+    b70: CM.Company.seedBonus(0.70), b100: CM.Company.seedBonus(1.0),
     step: CM.Company.SEED_STEP, per: CM.Company.SEED_STEP_BONUS });
 })()`))
 check('所有城市开局都是 1 条线 ≤4 站（mapVersion 2）', Array.isArray(cover.rows) && cover.rows.every(x => x.ok), cover.rows)
-check('解锁门槛固定 70%', cover.threshold === 0.7 && cover.rows.every(x => x.target === 0.7), cover)
+check('非入门城门槛固定 70%', cover.threshold === 0.7 && cover.rows.every(x => x.target === 0.7), cover)
+check('入门城温州门槛放宽到 50%，其余 70%', cover.starter === 0.5 && cover.other === 0.7, cover)
+check('入门城低门槛不白拿加成（52% 仍为 0）', cover.b52 === 0, cover)
 check('启动金加成：70% 为 0 / 72% 加 1 亿 / 100% 加 15 亿', cover.b70 === 0 && cover.b72 === 10000 && cover.b100 === 150000 && cover.step === 0.02, cover)
 
 // 5a. B 分部推进两个月，A 分部必须真实补结算到同一公司月份

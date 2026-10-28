@@ -335,15 +335,14 @@
       return d && d.ready && typeof d.coverage === 'number' ? d.coverage : null;
     };
     const gNow = CM.game;
-    const threshold = CM.Company.UNLOCK_COVER;
     if (b) {
       rows.push(['分部现金', money(b.funds)]);
       rows.push(['上次上缴', b.lastRemit ? b.lastRemit.y + '年' + b.lastRemit.m + '月 · ' + money(b.lastRemit.amount) : '—']);
       const acc = CM.Company.acceptState(co, id, liveFor(id));
       rows.push(['覆盖', acc.current != null ? U.fmtPct(acc.current, 1) : '—']);
-      rows.push(['解锁门槛', '≥ ' + U.fmtPct(threshold, 0) + ' · ' + (acc.reachable ? '已达标' : '未达标')]);
+      rows.push(['解锁门槛', '≥ ' + U.fmtPct(acc.threshold, 0) + (CM.Company.isStarter(id) ? '（入门城）' : '') + ' · ' + (acc.reachable ? '已达标' : '未达标')]);
       if (acc.usedBy) rows.push(['解锁', '已用于解锁「' + ((CM.MAPS[acc.usedBy] || {}).name || acc.usedBy) + '」']);
-      else if (acc.reachable) rows.push(['启动金加成', '+' + money(acc.bonus) + '（每 +2% 加 1 亿）']);
+      else if (acc.reachable) rows.push(['启动金加成', '+' + money(acc.bonus) + '（' + U.fmtPct(CM.Company.UNLOCK_COVER, 0) + ' 起每 +2% 加 1 亿）']);
     } else if (st === 'locked') {
       rows.push(['开通费', money(fee)]);
       const src = co ? CM.Company.pickUnlockSource(co, { sourceMapId: gNow && gNow.mapId, sourceCover: liveFor(gNow && gNow.mapId) }) : null;
@@ -352,7 +351,8 @@
       const srcs = co ? CM.Company.unlockSources(co) : [];
       let best = srcs[0] || null;
       if (best) { const lv = liveFor(best.mapId); if (lv != null) best = Object.assign({}, best, { cover: lv }); }
-      if (co) rows.push(['解锁条件', '任一分部覆盖率 ≥ ' + U.fmtPct(threshold, 0) +
+      if (co) rows.push(['解锁条件', '任一分部达到覆盖率门槛（入门城 ' + U.fmtPct(CM.Company.STARTER_UNLOCK_COVER, 0) +
+        '，其余 ' + U.fmtPct(CM.Company.UNLOCK_COVER, 0) + '）' +
         (best ? '（最高「' + ((CM.MAPS[best.mapId] || {}).name || best.mapId) + '」' + U.fmtPct(best.cover, 1) + '）' : '（暂无分部达标）')]);
     } else if (st === 'unlocked') {
       rows.push(['开城启动金', money(CM.Company.seedFor(co, id)) + '（解锁时已结算）']);
@@ -906,8 +906,8 @@
     const liveCover = gDaily && gDaily.ready ? gDaily.coverage : null;
     const src = locked ? CM.Company.pickUnlockSource(co, { sourceMapId: gNow && gNow.mapId, sourceCover: liveCover }) : null;
     if (locked && !src) {
-      return A._toast('解锁资格不足：需要一座分部的覆盖率 ≥ ' + U.fmtPct(CM.Company.UNLOCK_COVER, 0) +
-        '（把已进驻城市的线网建到 70% 以上）', 'warn');
+      return A._toast('解锁资格不足：需要一座分部达到覆盖率门槛（入门城 ' +
+        U.fmtPct(CM.Company.STARTER_UNLOCK_COVER, 0) + '，其余 ' + U.fmtPct(CM.Company.UNLOCK_COVER, 0) + '）', 'warn');
     }
     const start = locked ? (CM.Company.startFundsFor(id) + src.bonus) : CM.Company.seedFor(co, id);
     if ((co.pool || 0) < fee) {
@@ -966,7 +966,7 @@
     }
     if (st === 'unlocked') return A._newBranch(id);
     const fee = CM.Company.unlockFee(id);
-    if (!CM.Company.canStartMap(co, id, 'challenge')) return A._toast('解锁资格不足：需要一座分部覆盖率 ≥ ' + U.fmtPct(CM.Company.UNLOCK_COVER, 0) + '（每座分部只能贡献一次解锁）', 'warn');
+    if (!CM.Company.canStartMap(co, id, 'challenge')) return A._toast('解锁资格不足：需要一座分部达到覆盖率门槛（入门城 ' + U.fmtPct(CM.Company.STARTER_UNLOCK_COVER, 0) + '，其余 ' + U.fmtPct(CM.Company.UNLOCK_COVER, 0) + '；每座分部只能用一次）', 'warn');
     if ((co.pool || 0) < fee) return A._toast('公司池不足：开通费需 ' + money(fee) + '（可用 ' + money(co.pool || 0) + '）', 'warn');
     // 解锁和开城合并为一次事务：城市创建成功后才扣开通费/登记；启动金由市政府注入。
     A._newBranch(id);

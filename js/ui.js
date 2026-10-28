@@ -527,11 +527,14 @@
         this._covTipT = performance.now();
         const co = CM.Company.active();
         const st = co ? CM.Company.acceptState(co, g.mapId, cov) : null;
+        const isStarter = CM.Company.isStarter(g.mapId);
         let tip = cov == null ? '覆盖率会在首个完整账期后显示' :
-          '人口覆盖率 ' + U.fmtPct(cov, 1) + '（解锁门槛 ' + U.fmtPct(CM.Company.UNLOCK_COVER, 0) + '）';
+          '人口覆盖率 ' + U.fmtPct(cov, 1) + '（本城解锁门槛 ' + U.fmtPct(CM.Company.unlockCoverFor(g.mapId), 0) +
+          (isStarter ? '，入门城' : '') + '）';
         if (st) {
           if (st.usedBy) tip += '；本城已用于解锁「' + ((CM.MAPS[st.usedBy] || {}).name || st.usedBy) + '」，再涨不再增加启动金';
-          else if (st.reachable) tip += '；可解锁下一城，当前启动金加成 +' + U.fmtMoney(st.bonus) + '（每 +2% 加 1 亿）';
+          else if (st.reachable) tip += '；可解锁下一城，启动金加成 +' + U.fmtMoney(st.bonus) +
+            '（' + U.fmtPct(st.bonusFrom, 0) + ' 起每 +2% 加 1 亿）';
           else tip += '；还差 ' + U.fmtPct(Math.max(0, st.threshold - (cov || 0)), 1) + ' 才能解锁下一城';
         }
         tip += '。点击查看公司面板';
