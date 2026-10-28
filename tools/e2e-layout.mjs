@@ -88,6 +88,9 @@ for (const [w, h] of SIZES) {
   // 全国图：顶栏条不出屏、各行控件不重叠
   const a = JSON.parse(await evalJs(`(async () => {
     CM.Atlas.open(); await new Promise(r=>setTimeout(r,380));
+    const A = CM.Atlas;
+    if (A.sel !== 'wenzhou') { A.sel = 'wenzhou'; }
+    A.updateCard(); A.render(); await new Promise(r=>setTimeout(r,120));
     const rect = el => { const b = el.getBoundingClientRect(); return { x: Math.round(b.left), y: Math.round(b.top), r: Math.round(b.right), b: Math.round(b.bottom) }; };
     const hit = (a2, b2) => !(a2.r <= b2.x + 1 || b2.r <= a2.x + 1 || a2.b <= b2.y + 1 || b2.b <= a2.y + 1);
     const bar = document.querySelector('.atlas-bar');
@@ -95,10 +98,31 @@ for (const [w, h] of SIZES) {
     const over = [];
     for (let i = 0; i < parts.length; i++) for (let j = i + 1; j < parts.length; j++) if (hit(parts[i], parts[j])) over.push(parts[i].cls + '×' + parts[j].cls);
     const outside = parts.filter(x => x.r > innerWidth + 1 || x.x < -1).map(x => x.cls);
-    CM.Atlas.close(); await new Promise(r=>setTimeout(r,150));
-    return JSON.stringify({ over: over, outside: outside, parts: parts.length });
+    // 筛选条内部（搜索/省份/状态/计数）不能溢出到右侧操作区
+    const filter = document.querySelector('.atlas-filter');
+    const filterOver = filter ? Math.max(0, filter.scrollWidth - filter.clientWidth) : 0;
+    // 城市卡片：不压指挥栏、操作行完整在卡内、底板不透底
+    const card = A.card && !A.card.classList.contains('hidden') ? A.card : null;
+    const cr = card ? rect(card) : null;
+    const zone = ['.atlas-head', '.atlas-filter', '.atlas-tail'].map(s => document.querySelector(s)).filter(Boolean).map(rect);
+    const cardVsBar = cr ? zone.some(z => hit(cr, z)) : false;
+    const act = card ? card.querySelector('.atlas-card-actions') : null;
+    const actClipped = !!(act && cr && rect(act).b > cr.b + 1);
+    const bg = card ? getComputedStyle(card).backgroundColor : '';
+    const alpha = (function (s) {
+      const m = String(s).match(/rgba?\\(([^)]+)\\)/);
+      if (!m) return 1;
+      const p = m[1].split(',').map(x => parseFloat(x));
+      return p.length >= 4 ? p[3] : 1;
+    })(bg);
+    A.close(); await new Promise(r=>setTimeout(r,150));
+    return JSON.stringify({ over: over, outside: outside, parts: parts.length, filterOver: filterOver,
+      cardVsBar: cardVsBar, actClipped: actClipped, bgAlpha: alpha });
   })()`))
   check(w + '×' + h + ' 全国图顶栏不重叠/不出屏', a.parts > 0 && a.over.length === 0 && a.outside.length === 0, a)
+  check(w + '×' + h + ' 全国图筛选条内部不溢出', a.filterOver <= 1, a)
+  check(w + '×' + h + ' 全国图卡片不压指挥栏且操作行完整', a.cardVsBar === false && a.actClipped === false, a)
+  check(w + '×' + h + ' 全国图卡片不透底（地图文字不透出）', a.bgAlpha >= 0.99, a)
   // 结算进度条不能压在底部建设工具栏上
   const sp = JSON.parse(await evalJs(`(async () => {
     if (!CM.SettleUI) return JSON.stringify({ skip: true });
@@ -114,6 +138,25 @@ for (const [w, h] of SIZES) {
   })()`))
   check(w + '×' + h + ' 结算条不压建设工具栏', sp.skip === true || sp.overlap === false, sp)
 }
+
+// 画布城市标签：长三角放大后不能叠在一起（碰撞避让生效）
+await send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, deviceScaleFactor: 1, mobile: false })
+await sleep(350)
+const lb = JSON.parse(await evalJs(`(async () => {
+  CM.Atlas.open(); await new Promise(r=>setTimeout(r,380));
+  const A = CM.Atlas;
+  A.cam.zoom = 2.8; A.centerCity('shanghai', 2.8); A.render(); await new Promise(r=>setTimeout(r,120));
+  const boxes = A.labelBoxes || [];
+  let over = 0;
+  for (let i = 0; i < boxes.length; i++) for (let j = i + 1; j < boxes.length; j++) {
+    const a = boxes[i], b = boxes[j];
+    if (!(a.x + a.w <= b.x || b.x + b.w <= a.x || a.y + a.h <= b.y || b.y + b.h <= a.y)) over++;
+  }
+  const out = { n: boxes.length, over: over };
+  A.close(); await new Promise(r=>setTimeout(r,150));
+  return JSON.stringify(out);
+})()`))
+check('密集区城市标签不互相重叠', lb.n > 3 && lb.over === 0, lb)
 
 // 界面大小：大字号会把有效宽度变小，资金胶囊仍必须可见
 for (const scale of [1.15, 0.9]) {

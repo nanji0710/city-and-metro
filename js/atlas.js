@@ -247,6 +247,7 @@
     for (const prov of DATA().provinces) for (const ring of prov.rings) { drawPath(ctx, ring, sx, sy, sc); ctx.stroke(); }
     // 城市点 / 聚合
     A.hits = [];
+    const labels = [];
     const list = visibleCities();
     if (A.count) paintCount(list.length);
     for (const item of clusters(list)) {
@@ -281,13 +282,33 @@
       }
       const showLabel = selected || isW || (A.cam.zoom >= 2.15) || s === 'current';
       if (showLabel) {
-        ctx.fillStyle = selected ? T.selectedLabel : T.label;
-        ctx.font = (selected ? '700 12px' : '600 10px') + ' ' + (CM.CFG.font || 'system-ui, sans-serif');
-        ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-        ctx.fillText(c.name, item.x + 10, item.y);
+        labels.push({
+          text: c.name, x: item.x + 10, y: item.y, selected: selected,
+          pr: selected ? 3 : ((isW || s === 'current') ? 2 : 1),
+        });
       }
       A.hits.push({ kind: 'city', x: item.x, y: item.y, r: selected ? 18 : 12, id: c.id });
     }
+    /* 标签避让：先放选中的城市，再放温州/当前经营，最后才是普通城市。
+     * 任何一个标签与已放置的标签相交就跳过 —— 长三角、珠三角放大后
+     * 城市名会挤在一起，宁可少显示几个，也不能叠成一团。 */
+    labels.sort(function (a, b) { return b.pr - a.pr; });
+    const placed = [];
+    for (const L of labels) {
+      ctx.font = (L.selected ? '700 12px' : '600 10px') + ' ' + (CM.CFG.font || 'system-ui, sans-serif');
+      const tw = ctx.measureText(L.text).width;
+      const box = { x: L.x - 2, y: L.y - 7, w: tw + 4, h: 14 };
+      let clash = false;
+      for (const p of placed) {
+        if (!(box.x + box.w <= p.x || p.x + p.w <= box.x || box.y + box.h <= p.y || p.y + p.h <= box.y)) { clash = true; break; }
+      }
+      if (clash) continue;
+      placed.push(box);
+      ctx.fillStyle = L.selected ? T.selectedLabel : T.label;
+      ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText(L.text, L.x, L.y);
+    }
+    A.labelBoxes = placed;   // 供布局回归检查「标签不重叠」
   }
 
   /* ---------------- 城市卡片 ---------------- */
@@ -349,6 +370,13 @@
     const id = A.sel, c = DATA().cities.find(function (x) { return x.id === id; });
     if (!c) return;
     const st = cardStatus(id), mp = cityMeta(id) || {};
+    /* 内容没变就不重建：卡片每 500ms 会被刷新一次，重建会把手动滚动的位置顶回顶部，
+     * 矮屏上玩家刚往下滚就跳回去，看起来像内容重叠/抖动。 */
+    const sig = [id, st.button, st.tip, st.disabled ? 1 : 0, JSON.stringify(st.rows),
+      st.b && st.b.lastRemit ? [st.b.lastRemit.y, st.b.lastRemit.m, st.b.lastRemit.amount].join(':') : ''].join('|');
+    const wasHidden = A.card.classList.contains('hidden');
+    if (!wasHidden && A.cardSig === sig) return;
+    A.cardSig = sig;
     A.card.innerHTML = '';
     const close = h('button', { class: 'iconbtn sm', 'aria-label': '关闭城市卡片', onclick: function () { A.sel = null; A.updateCard(); } }, ic('close'));
     A.card.append(h('div', { class: 'atlas-card-h' },
@@ -358,6 +386,12 @@
         h('small', null, c.province || '')),
       close));
     const body = h('div', { class: 'atlas-card-body' });
+    // 正文可滚动时给底部加渐隐，避免内容在半行处被硬切断（看起来像重叠）
+    const syncFade = function () {
+      body.classList.toggle('more', body.scrollHeight - body.scrollTop - body.clientHeight > 4);
+    };
+    body.addEventListener('scroll', syncFade);
+    setTimeout(syncFade, 0);
     const tags = h('div', { class: 'atlas-tags' });
     if (mp.trait) tags.append(h('span', { class: 'atlas-tag trait' }, mp.trait.name));
     if (mp.data && mp.data.anchors) mp.data.anchors.forEach(function (a) { tags.append(h('span', { class: 'atlas-tag anchor' }, a.name)); });
@@ -369,11 +403,12 @@
       body.appendChild(h('div', { class: 'atlas-note' },
         '上次真实月结：' + st.b.lastRemit.y + '年' + st.b.lastRemit.m + '月'));
     }
+    A.card.appendChild(body);
+    // 开城成本固定放在滚动区外：矮屏上不会被正文的滚动边界裁掉半行
     if (!st.b && (st.fee || st.start)) {
-      body.appendChild(h('div', { class: 'atlas-cost' },
+      A.card.appendChild(h('div', { class: 'atlas-cost' },
         h('span', null, '开城成本'), h('b', null, money(st.fee + st.start))));
     }
-    A.card.appendChild(body);
     A.card.appendChild(h('div', { class: 'atlas-card-actions' },
       h('button', {
         class: 'btn primary sm fill', disabled: st.disabled ? true : null, 'data-tip': st.tip,

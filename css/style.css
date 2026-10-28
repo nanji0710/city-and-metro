@@ -1752,8 +1752,8 @@ table.tbl-help td { white-space: normal; vertical-align: top; line-height: 1.55;
   display: flex; align-items: center; gap: clamp(8px, 1vw, 14px);
   padding: 7px clamp(9px, 1vw, 13px);
   border: 1px solid var(--line); border-radius: 18px;
-  background: var(--surface); backdrop-filter: blur(18px) saturate(1.15);
-  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  /* 不透底：底下的城市名/省界不能从指挥栏里透出来 */
+  background: var(--surface-solid);
   box-shadow: var(--shadow); animation: atlas-slide-down .38s var(--ease) both;
 }
 @keyframes atlas-slide-down { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: translateY(0); } }
@@ -1923,13 +1923,14 @@ table.tbl-help td { white-space: normal; vertical-align: top; line-height: 1.55;
 .atlas-count b { color: var(--text); font-size: 12px; font-weight: 750; font-variant-numeric: tabular-nums; }
 .atlas-count span { color: var(--faint); font-variant-numeric: tabular-nums; }
 
-/* 城市信息面板 */
+/* 城市信息面板：底板必须不透底，否则地图上的城市名会从卡片里「透」出来，看起来像文字重叠。
+   正文独立滚动、底部操作行常驻，矮屏（如 800×600）也不会把按钮裁掉一半。 */
 .atlas-card {
   position: absolute; right: clamp(12px, 2vw, 22px); top: 82px;
-  width: min(340px, calc(100vw - 28px)); max-height: calc(100vh - 150px); overflow: auto;
+  width: min(340px, calc(100vw - 28px)); max-height: calc(100vh - 150px);
+  display: flex; flex-direction: column; overflow: hidden;
   padding: 14px; border: 1px solid var(--line); border-radius: 20px;
-  background: var(--surface); backdrop-filter: blur(20px) saturate(1.12);
-  -webkit-backdrop-filter: blur(20px) saturate(1.12);
+  background: var(--surface-solid);
   box-shadow: var(--shadow); animation: atlas-panel-in .32s var(--ease) both;
 }
 @keyframes atlas-panel-in { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: translateX(0); } }
@@ -1950,7 +1951,12 @@ table.tbl-help td { white-space: normal; vertical-align: top; line-height: 1.55;
 .atlas-status.st-failed { color: var(--bad); background: var(--bad-soft); }
 .atlas-status.st-starter { color: var(--gold); background: var(--warn-soft); }
 .atlas-status.st-locked { color: var(--muted); background: var(--surface-3); }
-.atlas-card-body { display: flex; flex-direction: column; gap: 10px; padding-top: 11px; }
+.atlas-card-body { display: flex; flex-direction: column; gap: 10px; padding-top: 11px; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+/* 还有内容没滚出来时，底部 18px 渐隐，避免行被硬切一半 */
+.atlas-card-body.more {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 20px), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 20px), transparent 100%);
+}
 .atlas-tags { display: flex; flex-wrap: wrap; gap: 5px; }
 .atlas-tag {
   padding: 3px 8px; border-radius: 999px; font-size: 10.5px; cursor: default;
@@ -1968,6 +1974,7 @@ table.tbl-help td { white-space: normal; vertical-align: top; line-height: 1.55;
 }
 .atlas-cost {
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  flex: none; margin-top: 10px;
   padding: 9px 11px; border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
   border-radius: 12px; background: var(--accent-soft); font-size: 11px;
 }
@@ -1984,8 +1991,7 @@ table.tbl-help td { white-space: normal; vertical-align: top; line-height: 1.55;
   position: absolute; left: clamp(12px, 2vw, 22px); bottom: 50px; z-index: 3;
   display: flex; flex-wrap: wrap; gap: 7px 12px; align-items: center;
   padding: 8px 11px; border: 1px solid var(--line); border-radius: 13px;
-  background: color-mix(in srgb, var(--surface) 86%, transparent);
-  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  background: var(--surface-solid);
   box-shadow: var(--shadow-sm); font-size: 11px; color: var(--muted);
   animation: atlas-slide-up .38s var(--ease) .08s both;
 }
@@ -1999,8 +2005,16 @@ table.tbl-help td { white-space: normal; vertical-align: top; line-height: 1.55;
 .atlas-hint { letter-spacing: .03em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .atlas-coord { white-space: nowrap; opacity: .72; }
 
-@media (max-width: 1080px) {
+/* 统计块最占地方：1300 以下收起，把宽度让给搜索与计数，避免计数被右侧倍速按钮盖住 */
+@media (max-width: 1300px) {
   .atlas-stats { display: none; }
+}
+@media (max-width: 1080px) {
+  .atlas-search { min-width: 120px; }
+}
+/* 更窄时先收起「54 / 54 城」计数（筛选结果仍用地图点表达） */
+@media (max-width: 1020px) {
+  .atlas-count { display: none; }
 }
 @media (max-width: 900px) {
   /* 单行顶栏塞不下三段：品牌和右侧操作留在第一行，筛选整行下移 */
@@ -2054,6 +2068,8 @@ table.tbl-help td { white-space: normal; vertical-align: top; line-height: 1.55;
 .atlas-toast.warn { border-color: color-mix(in srgb, var(--warn) 55%, transparent); }
 .atlas-toast.bad { border-color: color-mix(in srgb, var(--bad) 55%, transparent); color: var(--bad); }
 .atlas-toast.good { border-color: color-mix(in srgb, var(--good) 55%, transparent); color: var(--good); }
+/* 窄屏城市卡片从底部升起，toast 改到顶部指挥栏下方，避免压在卡片上 */
+@media (max-width: 760px) { .atlas-toast { bottom: auto; top: 164px; } }
 
 @media (prefers-reduced-motion: reduce) {
   #atlas, .atlas-bar, .atlas-card, .atlas-legend, .atlas-sug, .atlas-dd-menu { animation: none !important; }
